@@ -1,0 +1,101 @@
+<project default="distribution">
+
+    <!-- Builds an OWL API Tools release
+         as one jar file containing the binary code, one jar file containing
+         the source code -->
+
+    <!-- The version of the API being built - this is used to name
+          the zip file produced by the build.  For release builds this
+          should be of the format <major>.<minor>.<revision>.  Note that the svn
+            revision number will automatically be appended to this build number! -->
+    <property name="version" value="1.0.0"/>
+
+    <!-- The directory that contains the jar file dependencies for
+         the class path and building a release -->
+    <property name="libdir" value="./lib"/>
+
+    <!-- The directory where intermediate build products will be placed -->
+    <property name="builddir" value="build"/>
+
+    <!-- A directory into which class files will be placed during the build answer-->
+    <property name="classesdir" value="${builddir}/classes"/>
+
+    <!-- The name of the jar file which contains the class files-->
+    <property name="bin-name" value="owlapitools-bin.jar"/>
+
+    <!-- The name of the jar file that contains the gathered source files-->
+    <property name="src-name" value="owlapitools-src.jar"/>
+
+    <property name="sourcepath" value="src/main/java/**/*.java"/>
+
+
+    <!-- For the classpath, we just use all of the libraries in the
+         lib directory -->
+    <path id="classpath">
+        <fileset dir="${libdir}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+
+    <!-- Deletes all build products-->
+    <target name="clean">
+        <delete dir="${builddir}"/>
+    </target>
+
+    <!-- Compiles the source into a directory called classes inside
+         the build directory -->
+    <target name="compile">
+        <mkdir dir="${classesdir}"/>
+        <javac srcdir="./.." destdir="${classesdir}" debug="on" target="1.5" source="1.5" compiler="javac1.5" fork="yes" >
+            <classpath refid="classpath"/>
+            <include name="owlapitools/${sourcepath}"/>
+        </javac>
+    </target>
+
+    <!-- Creates a jar containing the OWL API Tools binary code -->
+    <target name="binjar" depends="compile">
+        <!-- Get the SVN revision number -->
+        <exec executable="svn" output="build/svn.properties">
+            <arg value="info" />
+        </exec>
+      <property prefix="svn" file="build/svn.properties"/>
+        <jar basedir="${classesdir}" destfile="${builddir}/${bin-name}">
+            <manifest>
+                <attribute name="Title" value="OWL API Tools"/>
+                <attribute name="Built-By" value="${user.name}"/>
+                <attribute name="Implementation-Version" value="${version}.${svn.Revision}"/>
+            </manifest>
+        </jar>
+    </target>
+
+
+    <!-- Creates a jar containing the OWL API Tools source code -->
+    <target name="srcjar">
+        <jar destfile="${builddir}/${src-name}">
+            <manifest>
+                <attribute name="title" value="The OWL API Source Code"/>
+                <attribute name="built-by" value="${user.name}"/>
+                <attribute name="version" value="${version}"/>
+            </manifest>
+            <fileset dir="../owlapitools/src/main/java"/>
+        </jar>
+    </target>
+
+    <!-- Creates a zip file containing the jar file containing the OWL API Tools
+         class files, a jar file containing the source, a lib directory containing
+         the dependencies for the distribution.  The zip file is names
+         owlapitools-${version}.zip -->
+    <target name="distribution" depends="clean, binjar, srcjar">
+        <property name="distdir" value="${builddir}/dist"/>
+        <mkdir dir="${distdir}"/>
+        <copy todir="${distdir}/lib">
+            <fileset dir="${libdir}"/>
+        </copy>
+
+        <zip destfile="${builddir}/owlapitools-${version}.zip">
+            <fileset dir="${distdir}"/>
+        </zip>
+    </target>
+
+</project>

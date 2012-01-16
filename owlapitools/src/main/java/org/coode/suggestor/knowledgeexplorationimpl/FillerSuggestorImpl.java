@@ -241,53 +241,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
 			return true;
 		}
 
-		public final NodeSet<F> getLeaves(OWLClassExpression c, P p, R start,
-				boolean direct) {
-			Set<Node<F>> toReturn = new HashSet<Node<F>>();
-			RootNode root = r.getRoot(c);
-			if (root.getNode() == null) {
-				System.out
-						.println("FillerSuggestorImpl.AbstractMatcher.getLeaves() null root? "
-								+ c + "\t" + p + "\t" + start + "\t" + direct);
-			} else {
-				Node<? extends OWLObjectPropertyExpression> responses = r
-						.getObjectNeighbours(root, true);
-				//Set<OWLClass> results = new HashSet<OWLClass>();
-				for (OWLObjectPropertyExpression p1 : responses.getEntities()) {
-					final Collection<RootNode> objectNeighbours = r.getObjectNeighbours(
-							root, p1.asOWLObjectProperty());
-					for (RootNode pointer : objectNeighbours) {
-						final Node<? extends OWLClassExpression> objectLabel = r
-								.getObjectLabel(pointer, direct);
-						//TODO what about dataranges?
-						Set<OWLClass> node = new HashSet<OWLClass>();
-						for (OWLClassExpression c1 : objectLabel.getEntities()) {
-							if (c1 == null) {
-								// TODO anonymous expressions
-								//							System.out
-								//									.println("warning: null FillerSuggestorImpl.AbstractMatcher.getLeaves() "+c+"\t"+p+"\t"+start+"\t"+direct);
-							} else {
-								node.add(c1.asOWLClass());
-							}
-						}
-						toReturn.add((Node<F>) new OWLClassNode(node));
-					}
-				}
-			}
-			return createNodeSet((Set<Node<F>>) toReturn);
-			//
-			//            Set<Node<F>> nodes = new HashSet<Node<F>>();
-			//
-			//            if (isMatch(c, p, start)) {
-			//                for (Node<F> sub : getDirectSubs(start)){
-			//                    nodes.addAll(getLeaves(c, p, sub.getRepresentativeElement(), direct).getNodes());
-			//                }
-			//                if (!direct || (nodes.isEmpty() && !start.isTopEntity())){
-			//                    nodes.add(getEquivalents(start)); // non-optimal as we already had the node before recursing
-			//                }
-			//            }
-			//            return createNodeSet(nodes);
-		}
+
 
 		public final NodeSet<F> getRoots(OWLClassExpression c, P p, R start,
 				boolean direct) {
@@ -327,6 +281,42 @@ class FillerSuggestorImpl implements FillerSuggestor {
 		protected final NodeSet<OWLClass> createNodeSet(Set<Node<OWLClass>> nodes) {
 			return new OWLClassNodeSet(nodes);
 		}
+		public final NodeSet<OWLClass> getLeaves(OWLClassExpression c, OWLObjectPropertyExpression p, OWLClassExpression start,
+				boolean direct) {
+			Set<Node<OWLClass>> toReturn = new HashSet<Node<OWLClass>>();
+			RootNode root = r.getRoot(c);
+			if (root.getNode() == null) {
+				System.out
+						.println("FillerSuggestorImpl.AbstractMatcher.getLeaves() null root? "
+								+ c + "\t" + p + "\t" + start + "\t" + direct);
+			} else {
+				Node<? extends OWLObjectPropertyExpression> responses = r
+						.getObjectNeighbours(root, true);
+
+				for (OWLObjectPropertyExpression p1 : responses.getEntities()) {
+					final Collection<RootNode> objectNeighbours = r.getObjectNeighbours(
+							root, p1.asOWLObjectProperty());
+					for (RootNode pointer : objectNeighbours) {
+						final Node<? extends OWLClassExpression> objectLabel = r
+								.getObjectLabel(pointer, direct);
+
+	Set<OWLClass> node = new HashSet<OWLClass>();
+						for (OWLClassExpression c1 : objectLabel.getEntities()) {
+							if (c1 == null) {
+								// TODO anonymous expressions
+								//							System.out
+								//									.println("warning: null FillerSuggestorImpl.AbstractMatcher.getLeaves() "+c+"\t"+p+"\t"+start+"\t"+direct);
+							} else {
+								node.add(c1.asOWLClass());
+							}
+						}
+						toReturn.add( new OWLClassNode(node));
+					}
+				}
+			}
+			return createNodeSet( toReturn);
+
+		}
 	}
 
 	private abstract class AbstractDPMatcher extends
@@ -344,6 +334,42 @@ class FillerSuggestorImpl implements FillerSuggestor {
 		@Override
 		protected NodeSet<OWLDatatype> createNodeSet(Set<Node<OWLDatatype>> nodes) {
 			return new OWLDatatypeNodeSet(nodes);
+		}
+		public final NodeSet<OWLDatatype> getLeaves(OWLClassExpression c, OWLDataPropertyExpression p, OWLDataRange start,
+				boolean direct) {
+			Set<Node<OWLDatatype>> toReturn = new HashSet<Node<OWLDatatype>>();
+			RootNode root = r.getRoot(c);
+			if (root.getNode() == null) {
+				System.out
+						.println("FillerSuggestorImpl.AbstractMatcher.getLeaves() null root? "
+								+ c + "\t" + p + "\t" + start + "\t" + direct);
+			} else {
+				Node<? extends OWLDataPropertyExpression> responses = r
+						.getDataNeighbours(root, true);
+
+				for (OWLDataPropertyExpression p1 : responses.getEntities()) {
+					final Collection<RootNode> objectNeighbours = r.getDataNeighbours(
+							root, p1.asOWLDataProperty());
+					for (RootNode pointer : objectNeighbours) {
+						final Node<? extends OWLDataRange> objectLabel = r
+								.getDataLabel(pointer, direct);
+
+						Set<OWLDatatype> node = new HashSet<OWLDatatype>();
+						for (OWLDataRange c1 : objectLabel.getEntities()) {
+							if (c1 == null) {
+								// TODO anonymous expressions
+								//							System.out
+								//									.println("warning: null FillerSuggestorImpl.AbstractMatcher.getLeaves() "+c+"\t"+p+"\t"+start+"\t"+direct);
+							} else {
+								node.add(c1.asOWLDatatype());
+							}
+						}
+						toReturn.add( new OWLDatatypeNode(node));
+					}
+				}
+			}
+			return createNodeSet( toReturn);
+
 		}
 	}
 	//
