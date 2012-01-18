@@ -1,3 +1,11 @@
+/*
+ * Date: Jan 13, 2012
+ *
+ * code made available under Mozilla Public License (http://www.mozilla.org/MPL/MPL-1.1.html)
+ *
+ * copyright 2012, Ignazio Palmisano, University of Manchester
+ *
+ */
 package utils.reasonercomparator;
 
 import java.lang.management.ManagementFactory;
@@ -34,17 +42,17 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.util.Version;
 
 public class ComparisonReasoner implements OWLReasoner {
-	public static final String[] methodNames = new String[] { "precomputeInferences", "isConsistent", 
+	public static final String[] methodNames = new String[] { "precomputeInferences", "isConsistent",
 		"isSatisfiable", "getUnsatisfiableClasses", "isEntailed",  "getSubClasses", "getSuperClasses",
-			"getEquivalentClasses", "getDisjointClasses", "getTopObjectPropertyNode", "getBottomObjectPropertyNode", 
-			"getSubObjectProperties", "getSuperObjectProperties", "getEquivalentObjectProperties", 
+			"getEquivalentClasses", "getDisjointClasses", "getTopObjectPropertyNode", "getBottomObjectPropertyNode",
+			"getSubObjectProperties", "getSuperObjectProperties", "getEquivalentObjectProperties",
 			"getDisjointObjectProperties", "getInverseObjectProperties",
-			"getObjectPropertyDomains", "getObjectPropertyRanges", "getTopDataPropertyNode", 
-			"getBottomDataPropertyNode", "getSubDataProperties", "getSuperDataProperties", 
+			"getObjectPropertyDomains", "getObjectPropertyRanges", "getTopDataPropertyNode",
+			"getBottomDataPropertyNode", "getSubDataProperties", "getSuperDataProperties",
 			"getEquivalentDataProperties", "getDisjointDataProperties", "getDataPropertyDomains", "getTypes",
 			"getInstances", "getObjectPropertyValues", "getDataPropertyValues", "getSameIndividuals", "getDifferentIndividuals",
 			"getTopClassNode", "getBottomClassNode","init",
-			"isEntailmentCheckingSupported", 
+			"isEntailmentCheckingSupported",
 			"getTimeOut", "getFreshEntityPolicy", "getIndividualNodeSetPolicy", "interrupt", "dispose",  "flush", "isPrecomputed",
 			"getPrecomputableInferenceTypes", "getPendingChanges", "getPendingAxiomAdditions", "getPendingAxiomRemovals" };
 

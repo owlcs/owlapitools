@@ -1,3 +1,11 @@
+/*
+ * Date: Jan 13, 2012
+ *
+ * code made available under Mozilla Public License (http://www.mozilla.org/MPL/MPL-1.1.html)
+ *
+ * copyright 2012, Ignazio Palmisano, University of Manchester
+ *
+ */
 package utils.reasonercomparator;
 
 import java.lang.reflect.Method;
@@ -7,7 +15,6 @@ import java.util.Set;
 import org.semanticweb.owlapi.model.*;
 
 @SuppressWarnings( {"rawtypes", "unchecked"})
-//TODO move to owlapitools
 public class OWLOntologyLoggingWrapper implements OWLMutableOntology {
 	private final OWLMutableOntology delegate;
 
