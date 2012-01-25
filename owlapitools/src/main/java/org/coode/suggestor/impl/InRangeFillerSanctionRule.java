@@ -15,24 +15,28 @@ package org.coode.suggestor.impl;
 import org.coode.suggestor.api.FillerSanctionRule;
 import org.coode.suggestor.api.FillerSuggestor;
 import org.coode.suggestor.util.ReasonerHelper;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLDataRange;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 
 /**
  * Checks if the filler is in the asserted range.
  */
 public class InRangeFillerSanctionRule implements FillerSanctionRule {
+	private ReasonerHelper reasonerHelper;
 
-    private FillerSuggestor fs;
+	public void setSuggestor(FillerSuggestor fs) {
+		reasonerHelper= new ReasonerHelper(fs.getReasoner());
+	}
 
-    public void setSuggestor(FillerSuggestor fs) {
-        this.fs = fs;
-    }
+	public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p,
+			OWLClassExpression f) {
 
-    public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p, OWLClassExpression f) {
-        return new ReasonerHelper(fs.getReasoner()).isInAssertedRange(p, f);
-    }
+		return reasonerHelper.isInAssertedRange(p, f);
+	}
 
-    public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p, OWLDataRange f) {
-        return new ReasonerHelper(fs.getReasoner()).isInAssertedRange(p, f);
-    }
+	public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p, OWLDataRange f) {
+		return reasonerHelper.isInAssertedRange(p, f);
+	}
 }

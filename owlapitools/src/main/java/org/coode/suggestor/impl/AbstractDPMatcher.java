@@ -1,23 +1,22 @@
 package org.coode.suggestor.impl;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.coode.suggestor.util.ReasonerHelper;
-
-import java.util.*;
-
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.reasoner.*;
-import org.semanticweb.owlapi.reasoner.impl.OWLClassNodeSet;
+import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
+import org.semanticweb.owlapi.model.OWLDataRange;
+import org.semanticweb.owlapi.model.OWLDatatype;
+import org.semanticweb.owlapi.reasoner.Node;
+import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.impl.OWLDatatypeNodeSet;
-
 
 abstract class AbstractDPMatcher extends
 		AbstractMatcher<OWLDataRange, OWLDatatype, OWLDataPropertyExpression> {
 	private ReasonerHelper helper;
 
-	public AbstractDPMatcher(ReasonerHelper h) {this.helper=h;}
+	public AbstractDPMatcher(ReasonerHelper h) {
+		this.helper = h;
+	}
 
 	@Override
 	protected final NodeSet<OWLDatatype> getDirectSubs(OWLDataRange r) {

@@ -1,13 +1,15 @@
 package org.coode.suggestor.impl;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.*;
 
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.reasoner.*;
+import java.util.Set;
+
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
+import org.semanticweb.owlapi.reasoner.Node;
+import org.semanticweb.owlapi.reasoner.NodeSet;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.impl.OWLClassNodeSet;
-import org.semanticweb.owlapi.reasoner.impl.OWLDatatypeNodeSet;
-import org.coode.suggestor.util.ReasonerHelper;
+
 abstract class AbstractOPMatcher extends
 		AbstractMatcher<OWLClassExpression, OWLClass, OWLObjectPropertyExpression> {
 	private OWLReasoner r;

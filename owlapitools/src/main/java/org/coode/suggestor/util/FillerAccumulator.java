@@ -19,27 +19,25 @@ import java.util.Set;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLPropertyExpression;
-import org.semanticweb.owlapi.model.OWLRestriction;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 /**
  * An abstract class that helps get all fillers for a given class/property
  */
 abstract class FillerAccumulator<O extends OWLObject> extends RestrictionAccumulator {
+	private final Set<O> fillers = new HashSet<O>();
 
-    private final Set<O> fillers = new HashSet<O>();
+	public FillerAccumulator(OWLReasoner r) {
+		super(r);
+	}
 
-    public FillerAccumulator(OWLReasoner r) {
-        super(r);
-    }
+	public Set<O> getFillers(OWLClassExpression descr, OWLPropertyExpression<?,?> prop) {
+		fillers.clear();
+		accummulateRestrictions(descr, prop, null);
+		return Collections.unmodifiableSet(fillers);
+	}
 
-    public Set<O> getFillers(OWLClassExpression descr, OWLPropertyExpression prop) {
-        fillers.clear();
-        accummulateRestrictions(descr, prop, null);
-        return Collections.unmodifiableSet(fillers);
-    }
-
-    protected void add(O filler) {
-        fillers.add(filler);
-    }
+	protected void add(O filler) {
+		fillers.add(filler);
+	}
 }

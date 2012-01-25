@@ -15,28 +15,30 @@ package org.coode.suggestor.knowledgeexplorationimpl;
 import org.coode.suggestor.api.PropertySanctionRule;
 import org.coode.suggestor.api.PropertySuggestor;
 import org.coode.suggestor.util.RestrictionAccumulator;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataAllValuesFrom;
+import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLObjectAllValuesFrom;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.reasoner.knowledgeexploration.OWLKnowledgeExplorerReasoner;
-
 
 /**
  * Check the restrictions on the class for universals
  */
 public class UniversalRestrictionsSanctionRule implements PropertySanctionRule {
+	private OWLKnowledgeExplorerReasoner r;
 
-    private OWLKnowledgeExplorerReasoner r;
+	public void setSuggestor(PropertySuggestor ps) {
+		this.r = (OWLKnowledgeExplorerReasoner) ps.getReasoner();
+	}
 
-    public void setSuggestor(PropertySuggestor ps) {
-        this.r =(OWLKnowledgeExplorerReasoner) ps.getReasoner();
-    }
+	public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p) {
+		RestrictionAccumulator acc = new RestrictionAccumulator(r);
+		return !acc.getRestrictions(c, p, OWLObjectAllValuesFrom.class).isEmpty();
+	}
 
-    public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p) {
-        RestrictionAccumulator acc = new RestrictionAccumulator(r);
-        return !acc.getRestrictions(c, p, OWLObjectAllValuesFrom.class).isEmpty();
-    }
-
-    public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p) {
-        RestrictionAccumulator acc = new RestrictionAccumulator(r);
-        return !acc.getRestrictions(c, p, OWLDataAllValuesFrom.class).isEmpty();
-    }
+	public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p) {
+		RestrictionAccumulator acc = new RestrictionAccumulator(r);
+		return !acc.getRestrictions(c, p, OWLDataAllValuesFrom.class).isEmpty();
+	}
 }

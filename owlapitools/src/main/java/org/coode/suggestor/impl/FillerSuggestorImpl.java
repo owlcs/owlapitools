@@ -12,25 +12,35 @@
  */
 package org.coode.suggestor.impl;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.coode.suggestor.api.FillerSanctionRule;
 import org.coode.suggestor.api.FillerSuggestor;
 import org.coode.suggestor.util.ReasonerHelper;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
+import org.semanticweb.owlapi.model.OWLDataRange;
+import org.semanticweb.owlapi.model.OWLDatatype;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
+import org.semanticweb.owlapi.model.OWLPropertyExpression;
+import org.semanticweb.owlapi.model.OWLPropertyRange;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import org.semanticweb.owlapi.reasoner.impl.*;
-
-import java.util.HashSet;
-import java.util.Set;
+import org.semanticweb.owlapi.reasoner.impl.OWLClassNodeSet;
+import org.semanticweb.owlapi.reasoner.impl.OWLDatatypeNodeSet;
 
 /**
  * Default implementation of the FillerSuggestor.
  */
 class FillerSuggestorImpl implements FillerSuggestor {
-	private final OWLReasoner r;
-	private final OWLDataFactory df;
-	private final ReasonerHelper helper;
+	protected final OWLReasoner r;
+	protected	final OWLDataFactory df;
+	protected final ReasonerHelper helper;
 	private final Set<FillerSanctionRule> sanctioningRules = new HashSet<FillerSanctionRule>();
 	private final AbstractOPMatcher currentOPMatcher = new AbstractOPMatcher() {
 		public boolean isMatch(OWLClassExpression c, OWLObjectPropertyExpression p,
@@ -201,6 +211,9 @@ class FillerSuggestorImpl implements FillerSuggestor {
 
 	private abstract class AbstractMatcher<R extends OWLPropertyRange, F extends R, P extends OWLPropertyExpression<R, P>>
 			implements Matcher<R, F, P> {
+		public AbstractMatcher() {
+
+		}
 		public final boolean isMatch(OWLClassExpression c, P p, R f, boolean direct) {
 			if (!direct) {
 				return isMatch(c, p, f);
@@ -261,6 +274,9 @@ class FillerSuggestorImpl implements FillerSuggestor {
 
 	private abstract class AbstractOPMatcher extends
 			AbstractMatcher<OWLClassExpression, OWLClass, OWLObjectPropertyExpression> {
+		public AbstractOPMatcher() {
+
+		}
 		@Override
 		protected final NodeSet<OWLClass> getDirectSubs(OWLClassExpression c) {
 			return r.getSubClasses(c, true);
@@ -279,9 +295,12 @@ class FillerSuggestorImpl implements FillerSuggestor {
 
 	private abstract class AbstractDPMatcher extends
 			AbstractMatcher<OWLDataRange, OWLDatatype, OWLDataPropertyExpression> {
+		public AbstractDPMatcher() {
+
+		}
 		@Override
-		protected final NodeSet<OWLDatatype> getDirectSubs(OWLDataRange r) {
-			return helper.getSubtypes(r);
+		protected final NodeSet<OWLDatatype> getDirectSubs(OWLDataRange range) {
+			return helper.getSubtypes(range);
 		}
 
 		@Override

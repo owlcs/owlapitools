@@ -55,6 +55,7 @@ public final class CachedOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 			this.classExpression = classExpression;
 		}
 
+		@SuppressWarnings("boxing")
 		public Object compute() {
 			try {
 				return delegate.isSatisfiable(classExpression);
@@ -249,7 +250,7 @@ public final class CachedOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 			}
 			throw new RuntimeException(e);
 		}
-		return b;
+		return b.booleanValue();
 	}
 
 	public Node<OWLClass> getUnsatisfiableClasses() throws ReasonerInterruptedException,
@@ -262,6 +263,7 @@ public final class CachedOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 			AxiomNotInProfileException, FreshEntitiesException,
 			InconsistentOntologyException {
 		ComputableAllThrowables<Object> entailer = new ComputableAllThrowables<Object>() {
+			@SuppressWarnings("boxing")
 			public Object compute() {
 				try {
 					return delegate.isEntailed(axiom);
@@ -300,7 +302,7 @@ public final class CachedOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 			}
 			throw new RuntimeException(e);
 		}
-		return b;
+		return b.booleanValue();
 	}
 
 	public boolean isEntailed(Set<? extends OWLAxiom> axioms)
@@ -1409,15 +1411,13 @@ public final class CachedOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		delegate.dispose();
 	}
 
+	@SuppressWarnings("unused")
 	public void ontologiesChanged(List<? extends OWLOntologyChange> changes)
 			throws OWLException {
 		//only invalidate the caches, the changes are supposed to go to the reasoner via its own listener
 		cache.clear();
 	}
 }
-
-
-
 //
 //
 //import java.util.ArrayList;

@@ -20,21 +20,20 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
  * Implementation binding.
  */
 public class SuggestorFactory {
+	private final OWLReasoner r;
 
-    private final OWLReasoner r;
+	public SuggestorFactory(OWLReasoner r) {
+		if (r == null) {
+			throw new IllegalArgumentException("Reasoner cannot be null");
+		}
+		this.r = r;
+	}
 
-    public SuggestorFactory(OWLReasoner r) {
-        if (r == null){
-            throw new IllegalArgumentException("Reasoner cannot be null");
-        }
-        this.r = r;
-    }
+	public final PropertySuggestor getPropertySuggestor() {
+		return new PropertySuggestorImpl(r);
+	}
 
-    public final PropertySuggestor getPropertySuggestor(){
-        return new PropertySuggestorImpl(r);
-    }
-
-    public final FillerSuggestor getFillerSuggestor(){
-        return new FillerSuggestorImpl(r);
-    }
+	public final FillerSuggestor getFillerSuggestor() {
+		return new FillerSuggestorImpl(r);
+	}
 }

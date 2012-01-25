@@ -13,23 +13,24 @@
 package org.coode.suggestor.test;
 
 import junit.framework.TestCase;
+
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLObjectComplementOf;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 public class OWLSandbox extends TestCase {
-
-
-    public void testNNF(){
-        OWLOntologyManager mngr = OWLManager.createOWLOntologyManager();
-        OWLDataFactory df = mngr.getOWLDataFactory();
-
-        OWLObjectProperty p = df.getOWLObjectProperty(IRI.create("http://example.com/p"));
-        OWLClass c = df.getOWLClass(IRI.create("http://example.com/c"));
-
-        OWLObjectComplementOf notPSomeNotD = df.getOWLObjectComplementOf(df.getOWLObjectSomeValuesFrom(p, df.getOWLObjectComplementOf(c)));
-
-        System.out.println("notPSomeNotD = " + notPSomeNotD);
-
-        System.out.println("notPSomeNotD.getNNF() = " + notPSomeNotD.getNNF());
-    }
+	public void testNNF() {
+		OWLOntologyManager mngr = OWLManager.createOWLOntologyManager();
+		OWLDataFactory df = mngr.getOWLDataFactory();
+		OWLObjectProperty p = df.getOWLObjectProperty(IRI.create("http://example.com/p"));
+		OWLClass c = df.getOWLClass(IRI.create("http://example.com/c"));
+		OWLObjectComplementOf notPSomeNotD = df.getOWLObjectComplementOf(df
+				.getOWLObjectSomeValuesFrom(p, df.getOWLObjectComplementOf(c)));
+		System.out.println("notPSomeNotD = " + notPSomeNotD);
+		System.out.println("notPSomeNotD.getNNF() = " + notPSomeNotD.getNNF());
+	}
 }
