@@ -67,7 +67,11 @@ public class ReasonerHelper {
 	}
 
 	public boolean isDescendantOf(OWLClassExpression cls1, OWLClassExpression cls2) {
-		return isAncestorOf(cls2, cls1);
+		//return isAncestorOf(cls2, cls1);
+		if (!cls1.isAnonymous()) {
+			return r.getSubClasses(cls2, false).containsEntity(cls1.asOWLClass());
+		}
+		return r.isEntailed(df.getOWLSubClassOfAxiom(cls1, cls2));
 	}
 
 	public boolean isAncestorOf(OWLClassExpression cls1, OWLClassExpression cls2) {
@@ -112,7 +116,7 @@ public class ReasonerHelper {
 	 * <p>
 	 * Check the ontologies for range assertions on p and all ancestors of p.
 	 * </p>
-	 * 
+	 *
 	 * @param p
 	 *            the object property for which a range is wanted
 	 * @return an intersection of the non-redundant ranges or Thing if no range
@@ -149,7 +153,7 @@ public class ReasonerHelper {
 	 * If multiple ranges are found, they are pulled together into an
 	 * intersection.
 	 * </p>
-	 * 
+	 *
 	 * @param p
 	 *            the property we are querying
 	 * @return the range of this property or Top if none is found
@@ -182,7 +186,7 @@ public class ReasonerHelper {
 	 * Subsumption checking between dataranges/types. This will only work if
 	 * there is a suitable data property in the ontology. This must satisfy the
 	 * criteria in {@link #getCandidatePropForRangeSubsumptionCheck)}.
-	 * 
+	 *
 	 * @param subRange
 	 * @param superRange
 	 * @return true if subRange is subsumed by superRange
@@ -204,7 +208,7 @@ public class ReasonerHelper {
 	 * Subsumption between dataranges/types. This will only work if there is a
 	 * suitable data property in the ontology. This must satisfy the criteria in
 	 * {@link #getCandidatePropForRangeSubsumptionCheck)}.
-	 * 
+	 *
 	 * @param range
 	 *            The data range for which we will retrieve subtypes
 	 * @return a NodeSet containing named datatypes that are known to be
@@ -242,7 +246,7 @@ public class ReasonerHelper {
 	 * Equivalence between dataranges/types. This will only work if there is a
 	 * suitable data property in the ontology. This must satisfy the criteria in
 	 * {@link #getCandidatePropForRangeSubsumptionCheck)}.
-	 * 
+	 *
 	 * @param range
 	 *            The data range for which we will retrieve equivalents
 	 * @return a NodeSet containing named datatypes that are known to be
@@ -288,7 +292,7 @@ public class ReasonerHelper {
 	 * ANY data property (APART FROM Top) in the signature of {O} that satifies
 	 * the criteria isSatisfiable(SomeValuesFrom(p, range).
 	 * </p>
-	 * 
+	 *
 	 * @param range
 	 *            the data range from which will be used in the above test
 	 * @return a candidate property that fulfils the above criteria or null if
