@@ -651,6 +651,20 @@ public class OWLOntologyLoggingWrapper implements OWLMutableOntology {
 		System.out.println("System.out.println(o1.getReferencingAxioms" + o1);
 		return delegate.getReferencingAxioms(o1);
 	}
+	public boolean hasReferencingAxioms(OWLEntity o1) {
+		System.out.println("System.out.println(o1.hasReferencingAxioms" + o1);
+		return delegate.hasReferencingAxioms(o1);
+	}
+
+	public boolean hasReferencingAxioms(OWLEntity o1, boolean o2) {
+		System.out.println("System.out.println(o1.hasReferencingAxioms" + o1 + o2);
+		return delegate.hasReferencingAxioms(o1, o2);
+	}
+
+	public boolean hasReferencingAxioms(OWLAnonymousIndividual o1) {
+		System.out.println("System.out.println(o1.hasReferencingAxioms" + o1);
+		return delegate.hasReferencingAxioms(o1);
+	}
 
 	public boolean containsEntityInSignature(OWLEntity o1, boolean o2) {
 		System.out.println("System.out.println(o1.containsEntityInSignature());" + o1
