@@ -69,12 +69,17 @@ public class ComparisonReasoner implements OWLReasoner {
 		Column(String s) {
 			header = s;
 		}
+		@Override
+		public String toString() {
+
+			return header+"\t"+values;
+		}
 	}
 
 	List<OWLReasoner> delegates = new ArrayList<OWLReasoner>();
 	private OWLOntology root;
 	IdentityHashMap<OWLReasoner, Map<String, Column>> timings = new IdentityHashMap<OWLReasoner, Map<String, Column>>();
-	boolean tolerateDifferences = false;
+	boolean tolerateDifferences = true;
 	boolean log = false;
 	private final ThreadMXBean bean = ManagementFactory.getThreadMXBean();
 

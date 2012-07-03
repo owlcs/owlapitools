@@ -139,18 +139,21 @@ public class ThreadedReasoner implements OWLReasoner {
 				return toReturn.get();
 			}
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			interrupt();
 			exec.shutdownNow();
 			throw new ReasonerInterruptedException(
 					"Reasoning was interrupted; future reasoning tasks might be affected",
 					e);
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			interrupt();
 			exec.shutdownNow();
 			throw new ReasonerInternalException(
 					"Execution problem; future reasoning tasks might be affected", e);
 		} catch (TimeoutException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			interrupt();
 			exec.shutdownNow();
 			throw new TimeOutException(
 					"Timeout occurred; future reasoning tasks might be affected", e);
