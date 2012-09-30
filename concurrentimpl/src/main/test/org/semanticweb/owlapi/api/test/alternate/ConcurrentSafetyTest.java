@@ -36,53 +36,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.semanticweb.owlapi.api.test.alternate;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
 
+import org.junit.Test;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.owldatafactory.DataFactoryCSR;
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.test.MultiThreadChecker;
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.test.TestMultithreadCallBack;
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.test.Tester;
+
 @SuppressWarnings("javadoc")
-public class ConcurrentSafetyTest extends TestCase {
-	private class CallBack1 implements TestMultithreadCallBack {
-		private final OWLDataFactory f;
-		private final Tester t;
+public class ConcurrentSafetyTest {
+    private class CallBack1 implements TestMultithreadCallBack {
+        private final OWLDataFactory f;
+        private final Tester t;
 
-		public CallBack1(OWLDataFactory factory, Tester t) {
-			f = factory;
-			this.t = t;
-		}
+        public CallBack1(OWLDataFactory factory, Tester t) {
+            f = factory;
+            this.t = t;
+        }
 
-		public void execute() throws Exception {
-			t.run(f);
-		}
+        public void execute() throws Exception {
+            t.run(f);
+        }
 
-		public String getId() {
-			return "test for " + f.getClass().getSimpleName();
-		}
-	}
+        public String getId() {
+            return "test for " + f.getClass().getSimpleName();
+        }
+    }
 
-	private Tester tester = new Tester();
-	private OWLDataFactory[] factories = new OWLDataFactory[] {
-			 new DataFactoryCSR()
-};//,new OWLDataFactoryImpl() };
+    private Tester tester = new Tester();
+    private OWLDataFactory[] factories = new OWLDataFactory[] { new DataFactoryCSR() };// ,new
+                                                                                       // OWLDataFactoryImpl()
+                                                                                       // };
 
-	public void testSafeImplementation() {
-		for (OWLDataFactory d : factories) {
-			actualrun(d);
-			d.purge();
-		}
-	}
+    @Test
+    public void testSafeImplementation() {
+        for (OWLDataFactory d : factories) {
+            actualrun(d);
+            d.purge();
+        }
+    }
 
-	private void actualrun(OWLDataFactory d) {
-		MultiThreadChecker checker = new MultiThreadChecker();
-		checker.check(new CallBack1(d, tester));
-		System.out.println(checker.getTrace());
-		assertTrue(checker.getTrace(), checker.isSuccessful());
-	}
+    private void actualrun(OWLDataFactory d) {
+        MultiThreadChecker checker = new MultiThreadChecker();
+        checker.check(new CallBack1(d, tester));
+        System.out.println(checker.getTrace());
+        assertTrue(checker.getTrace(), checker.isSuccessful());
+    }
 }

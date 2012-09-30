@@ -36,11 +36,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package uk.ac.manchester.cs.owl.owlapi.alternateimpls.test;
 
-import junit.framework.TestCase;
-
+import org.junit.After;
+import org.junit.Test;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 
 import uk.ac.manchester.cs.owl.owlapi.InternalsNoCache;
@@ -50,70 +49,62 @@ import uk.ac.manchester.cs.owl.owlapi.alternateimpls.owldatafactory.DataFactoryN
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.owldatafactory.InternalsCSR;
 
 @SuppressWarnings("javadoc")
-public class OWLDataFactoryInternalsPerformanceTest extends TestCase {
-	private final static OWLDataFactory factory = new DataFactoryNoCache();
-	private final InternalsTester tester = new InternalsTester();
+public class OWLDataFactoryInternalsPerformanceTest {
+    private final static OWLDataFactory factory = new DataFactoryNoCache();
+    private final InternalsTester tester = new InternalsTester();
 
-	public void testBaseline() {
-		OWLDataFactoryInternals i = new InternalsNoCache(factory, false);
-		tester.run(i);
-	}
+    @Test
+    public void testBaseline() {
+        OWLDataFactoryInternals i = new InternalsNoCache(factory, false);
+        tester.run(i);
+    }
 
-	public void testDefault() {
-		OWLDataFactoryInternals i = new OWLDataFactoryInternalsImpl(factory, false);
-		tester.run(i);
-	}
+    @Test
+    public void testDefault() {
+        OWLDataFactoryInternals i = new OWLDataFactoryInternalsImpl(factory, false);
+        tester.run(i);
+    }
 
+    @Test
+    public void testConcurrentHashMapsStrongRefs() {
+        OWLDataFactoryInternals i = new InternalsCSR(factory, false);
+        tester.run(i);
+    }
 
+    @After
+    public void tearDown() throws Exception {
+        System.gc();
+    }
 
-	public void testConcurrentHashMapsStrongRefs() {
-		OWLDataFactoryInternals i = new InternalsCSR(factory, false);
-		tester.run(i);
-	}
-
-
-
-	@Override
-	protected void tearDown() throws Exception {
-		System.gc();
-	}
-
-	public static void main(String[] args) {
-		OWLDataFactoryInternalsPerformanceTest t = new OWLDataFactoryInternalsPerformanceTest();
-		t.testBaseline();
-		t.testDefault();
-
-	t.testConcurrentHashMapsStrongRefs();
-
-		long start = System.currentTimeMillis();
-		t.testBaseline();
-		System.out.println("baseline\t" + (System.currentTimeMillis() - start));
-		start = System.currentTimeMillis();
-		t.testDefault();
-		System.out.println("default:\t" + (System.currentTimeMillis() - start));
-		start = System.currentTimeMillis();
-
-		System.out.println("FUT:\t" + (System.currentTimeMillis() - start));
-		start = System.currentTimeMillis();
-		start = System.currentTimeMillis();
-
-		System.out.println("LWR:\t" + (System.currentTimeMillis() - start));
-		start = System.currentTimeMillis();
-
-		System.out.println("LSR:\t" + (System.currentTimeMillis() - start));
-		start = System.currentTimeMillis();
-		t.testConcurrentHashMapsStrongRefs();
-		System.out.println("CSR:\t" + (System.currentTimeMillis() - start));
-		start = System.currentTimeMillis();
-
-		System.out.println("CWR:\t" + (System.currentTimeMillis() - start));
-		start = System.currentTimeMillis();
-
-		System.out.println("FUTS:\t" + (System.currentTimeMillis() - start));
-		System.out
-				.println("OWLDataFactoryInternalsPerformanceTest.main() waiting for you to capture the memory snapshot");
-//		while(true) {
-//
-//		}
-	}
+    public static void main(String[] args) {
+        OWLDataFactoryInternalsPerformanceTest t = new OWLDataFactoryInternalsPerformanceTest();
+        t.testBaseline();
+        t.testDefault();
+        t.testConcurrentHashMapsStrongRefs();
+        long start = System.currentTimeMillis();
+        t.testBaseline();
+        System.out.println("baseline\t" + (System.currentTimeMillis() - start));
+        start = System.currentTimeMillis();
+        t.testDefault();
+        System.out.println("default:\t" + (System.currentTimeMillis() - start));
+        start = System.currentTimeMillis();
+        System.out.println("FUT:\t" + (System.currentTimeMillis() - start));
+        start = System.currentTimeMillis();
+        start = System.currentTimeMillis();
+        System.out.println("LWR:\t" + (System.currentTimeMillis() - start));
+        start = System.currentTimeMillis();
+        System.out.println("LSR:\t" + (System.currentTimeMillis() - start));
+        start = System.currentTimeMillis();
+        t.testConcurrentHashMapsStrongRefs();
+        System.out.println("CSR:\t" + (System.currentTimeMillis() - start));
+        start = System.currentTimeMillis();
+        System.out.println("CWR:\t" + (System.currentTimeMillis() - start));
+        start = System.currentTimeMillis();
+        System.out.println("FUTS:\t" + (System.currentTimeMillis() - start));
+        System.out
+                .println("OWLDataFactoryInternalsPerformanceTest.main() waiting for you to capture the memory snapshot");
+        // while(true) {
+        //
+        // }
+    }
 }
