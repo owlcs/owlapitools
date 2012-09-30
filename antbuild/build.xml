@@ -50,6 +50,7 @@
         <javac srcdir="./.." destdir="${classesdir}" debug="on" target="1.5" source="1.5" compiler="javac1.5" fork="yes" >
             <classpath refid="classpath"/>
             <include name="owlapitools/${sourcepath}"/>
+        	<include name="concurrentimpl/${sourcepath}"/>
         </javac>
     </target>
 
@@ -79,6 +80,7 @@
                 <attribute name="version" value="${version}"/>
             </manifest>
             <fileset dir="../owlapitools/src/main/java"/>
+        	<fileset dir="../concurrentimpl/src/main/java"/>
         </jar>
     </target>
 
