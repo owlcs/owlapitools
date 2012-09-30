@@ -5,8 +5,6 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.semanticweb.owlapi.model.OWLAxiom;
-
 public class TOntologyAtom {
     static Comparator<TOntologyAtom> comparator = new Comparator<TOntologyAtom>() {
         public int compare(TOntologyAtom arg0, TOntologyAtom arg1) {
@@ -14,9 +12,9 @@ public class TOntologyAtom {
         }
     };
     /** set of axioms in the atom */
-    Set<OWLAxiom> AtomAxioms = new HashSet<OWLAxiom>();
+    Set<AxiomWrapper> AtomAxioms = new HashSet<AxiomWrapper>();
     /** set of axioms in the module (Atom's ideal) */
-    Set<OWLAxiom> ModuleAxioms = new HashSet<OWLAxiom>();
+    Set<AxiomWrapper> ModuleAxioms = new HashSet<AxiomWrapper>();
     /** set of atoms current one depends on */
     Set<TOntologyAtom> DepAtoms = new HashSet<TOntologyAtom>();
     /** set of all atoms current one depends on */
@@ -48,12 +46,12 @@ public class TOntologyAtom {
 
     // fill in the sets
     /** set the module axioms */
-    public void setModule(Collection<OWLAxiom> module) {
-        ModuleAxioms = new HashSet<OWLAxiom>(module);
+    public void setModule(Collection<AxiomWrapper> module) {
+        ModuleAxioms = new HashSet<AxiomWrapper>(module);
     }
 
     /** add axiom AX to an atom */
-    public void addAxiom(OWLAxiom ax, AxiomStructure as) {
+    public void addAxiom(AxiomWrapper ax, AxiomStructure as) {
         AtomAxioms.add(ax);
         as.setAtomForAxiom(ax, this);
     }
@@ -76,12 +74,12 @@ public class TOntologyAtom {
 
     // access to axioms
     /** get all the atom's axioms */
-    public Set<OWLAxiom> getAtomAxioms() {
+    public Set<AxiomWrapper> getAtomAxioms() {
         return AtomAxioms;
     }
 
     /** get all the module axioms */
-    public Set<OWLAxiom> getModule() {
+    public Set<AxiomWrapper> getModule() {
         return ModuleAxioms;
     }
 

@@ -1,5 +1,7 @@
 package decomposition;
 
+import static org.semanticweb.owlapi.model.AxiomType.AXIOM_TYPES;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -14,22 +16,21 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import uk.ac.manchester.cs.owlapi.modularity.ModuleType;
 
 public class Test {
-    private List<OWLAxiom> axioms = new ArrayList<OWLAxiom>();
+    private List<AxiomWrapper> axioms = new ArrayList<AxiomWrapper>();
     AtomicDecomposer AD;
 
     public Test(OWLOntology o) {
         for (OWLOntology ont : o.getImportsClosure()) {
-            for (OWLAxiom ax : ont.getLogicalAxioms()) {
-                OWLAxiom axiom = ax.getAxiomWithoutAnnotations();
-                axioms.add(axiom);
-            }
-            for (OWLAxiom ax : ont.getAxioms(AxiomType.DECLARATION)) {
-                OWLAxiom axiom = ax.getAxiomWithoutAnnotations();
-                axioms.add(axiom);
+            for (AxiomType type : AXIOM_TYPES) {
+                if (type.isLogical() || type.equals(AxiomType.DECLARATION)) {
+                    for (OWLAxiom ax : ont.<OWLAxiom> getAxioms(type)) {
+                        axioms.add(new AxiomWrapper(ax));
+                    }
+                }
             }
         }
-        AxiomStructure as = new AxiomStructure(axioms);
-        TModularizer Mod = new TModularizer(new SyntacticLocalityChecker(as), as);
+        AxiomStructure as = new AxiomStructure();
+        TModularizer Mod = new TModularizer(new SyntacticLocalityChecker(), as);
         AD = new AtomicDecomposer(Mod, as);
         Mod.preprocessOntology(axioms);
     }
@@ -39,17 +40,25 @@ public class Test {
     }
 
     public Set<OWLAxiom> getTautologies() {
-        return new HashSet<OWLAxiom>(AD.getTautologies());
+        return asSet(AD.getTautologies());
+    }
+
+    protected Set<OWLAxiom> asSet(Collection<AxiomWrapper> c) {
+        Set<OWLAxiom> axioms = new HashSet<OWLAxiom>();
+        for (AxiomWrapper p : c) {
+            axioms.add(p.getAxiom());
+        }
+        return axioms;
     }
 
     /** get a set of axioms that corresponds to the atom with the id INDEX */
     public Set<OWLAxiom> getAtomAxioms(int index) {
-        return AD.getAOS().get(index).getAtomAxioms();
+        return asSet(AD.getAOS().get(index).getAtomAxioms());
     }
 
     /** get a set of axioms that corresponds to the module of the atom with the */
     // id INDEX
-    public Set<OWLAxiom> getAtomModule(int index) {
+    public Set<AxiomWrapper> getAtomModule(int index) {
         return AD.getAOS().get(index).getModule();
     }
 
@@ -59,8 +68,8 @@ public class Test {
     }
 
     /** get a set of axioms that corresponds to the atom with the id INDEX */
-    public Collection<OWLAxiom> getModule(Set<OWLEntity> signature, boolean useSemantics,
-            ModuleType moduletype) {
+    public Collection<AxiomWrapper> getModule(Set<OWLEntity> signature,
+            boolean useSemantics, ModuleType moduletype) {
         // init signature
         TSignature Sig = new TSignature(signature);
         Sig.setLocality(false);
@@ -78,9 +87,9 @@ public class Test {
         TModularizer Mod = AD.getModularizer();
         Mod.getLocalityChecker().setSignatureValue(Sig);
         Set<OWLAxiom> Result = new HashSet<OWLAxiom>();
-        for (OWLAxiom p : axioms) {
-            if (!Mod.getLocalityChecker().local(p)) {
-                Result.add(p);
+        for (AxiomWrapper p : axioms) {
+            if (!Mod.getLocalityChecker().local(p.getAxiom())) {
+                Result.add(p.getAxiom());
             }
         }
         return Result;

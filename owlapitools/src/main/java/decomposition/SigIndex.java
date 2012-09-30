@@ -4,18 +4,17 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.util.MultiMap;
 
 public class SigIndex {
     /** map between entities and axioms that contains them in their signature */
-    MultiMap<OWLEntity, OWLAxiom> Base = new MultiMap<OWLEntity, OWLAxiom>();
+    MultiMap<OWLEntity, AxiomWrapper> Base = new MultiMap<OWLEntity, AxiomWrapper>();
     /** locality checker */
     LocalityChecker Checker;
     /** sets of axioms non-local wrt the empty signature */
-    Set<OWLAxiom> NonLocalTrue = new HashSet<OWLAxiom>();
-    Set<OWLAxiom> NonLocalFalse = new HashSet<OWLAxiom>();
+    Set<AxiomWrapper> NonLocalTrue = new HashSet<AxiomWrapper>();
+    Set<AxiomWrapper> NonLocalFalse = new HashSet<AxiomWrapper>();
     /** empty signature to test the non-locality */
     TSignature emptySig = new TSignature();
     /** number of registered axioms */
@@ -31,10 +30,10 @@ public class SigIndex {
     }
 
     /** add axiom AX to the non-local set with top-locality value TOP */
-    private void checkNonLocal(OWLAxiom ax, boolean top) {
+    private void checkNonLocal(AxiomWrapper ax, boolean top) {
         emptySig.setLocality(top);
         Checker.setSignatureValue(emptySig);
-        if (!Checker.local(ax)) {
+        if (!Checker.local(ax.getAxiom())) {
             if (top) {
                 NonLocalFalse.add(ax);
             } else {
@@ -51,8 +50,8 @@ public class SigIndex {
 
     // work with axioms
     /** register an axiom */
-    private void registerAx(OWLAxiom ax) {
-        for (OWLEntity p : ax.getSignature()) {
+    private void registerAx(AxiomWrapper ax) {
+        for (OWLEntity p : ax.getAxiom().getSignature()) {
             Base.put(p, ax);
         }
         // check whether the axiom is non-local
@@ -62,8 +61,8 @@ public class SigIndex {
     }
 
     /** unregister an axiom AX */
-    private void unregisterAx(OWLAxiom ax) {
-        for (OWLEntity p : ax.getSignature()) {
+    private void unregisterAx(AxiomWrapper ax) {
+        for (OWLEntity p : ax.getAxiom().getSignature()) {
             Base.get(p).remove(ax);
         }
         // remove from the non-locality
@@ -73,8 +72,8 @@ public class SigIndex {
     }
 
     /** process an axiom wrt its Used status */
-    public void processAx(OWLAxiom ax) {
-        if (as.isUsed(ax)) {
+    public void processAx(AxiomWrapper ax) {
+        if (ax.isUsed()) {
             registerAx(ax);
         } else {
             unregisterAx(ax);
@@ -82,8 +81,8 @@ public class SigIndex {
     }
 
     // / preprocess given set of axioms
-    public void preprocessOntology(Collection<OWLAxiom> axioms) {
-        for (OWLAxiom ax : axioms) {
+    public void preprocessOntology(Collection<AxiomWrapper> axioms) {
+        for (AxiomWrapper ax : axioms) {
             processAx(ax);
         }
     }
@@ -98,13 +97,12 @@ public class SigIndex {
     // get the set by the index
     /** given an entity, return a set of all axioms that tontain this entity in */
     // a signature
-    public Collection<OWLAxiom> getAxioms(OWLEntity entity) {
-        final Collection<OWLAxiom> collection = Base.get(entity);
-        return collection;
+    public Collection<AxiomWrapper> getAxioms(OWLEntity entity) {
+        return Base.get(entity);
     }
 
     /** get the non-local axioms with top-locality value TOP */
-    public Set<OWLAxiom> getNonLocal(boolean top) {
+    public Set<AxiomWrapper> getNonLocal(boolean top) {
         return top ? NonLocalFalse : NonLocalTrue;
     }
 }

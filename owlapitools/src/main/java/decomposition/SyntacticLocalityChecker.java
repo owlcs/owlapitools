@@ -38,7 +38,6 @@ import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLReflexiveObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
 import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
@@ -60,7 +59,6 @@ public class SyntacticLocalityChecker extends SigAccessor implements OWLAxiomVis
     BotEquivalenceEvaluator BotEval;
     /** remember the axiom locality value here */
     boolean isLocal;
-    private AxiomStructure as;
 
     /** @return true iff EXPR is top equivalent */
     boolean isTopEquivalent(OWLObject expr) {
@@ -79,8 +77,7 @@ public class SyntacticLocalityChecker extends SigAccessor implements OWLAxiomVis
     }
 
     /** init c'tor */
-    public SyntacticLocalityChecker(AxiomStructure as) {
-        this.as = as;
+    public SyntacticLocalityChecker() {
         TopEval = new TopEquivalenceEvaluator();
         BotEval = new BotEquivalenceEvaluator();
         TopEval.setBotEval(BotEval);
@@ -103,15 +100,6 @@ public class SyntacticLocalityChecker extends SigAccessor implements OWLAxiomVis
     public boolean local(OWLAxiom axiom) {
         axiom.accept(this);
         return isLocal;
-    }
-
-    /** load ontology to a given KB */
-    public void visitOntology(OWLOntology ontology) {
-        for (OWLAxiom p : ontology.getAxioms()) {
-            if (as.isUsed(p)) {
-                p.accept(this);
-            }
-        }
     }
 
     // TODO check
@@ -363,10 +351,10 @@ public class SyntacticLocalityChecker extends SigAccessor implements OWLAxiomVis
         isLocal = !sig.topRLocal() && isBotEquivalent(axiom.getProperty());
     }
 
-    public void preprocessOntology(Collection<OWLAxiom> s) {
+    public void preprocessOntology(Collection<AxiomWrapper> s) {
         sig = new TSignature();
-        for (OWLAxiom ax : s) {
-            sig.addAll(ax.getSignature());
+        for (AxiomWrapper ax : s) {
+            sig.addAll(ax.getAxiom().getSignature());
         }
     }
 

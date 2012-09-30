@@ -8,7 +8,7 @@ public interface LocalityChecker {
     boolean local(OWLAxiom axiom);
 
     /** allow the checker to preprocess an ontology if necessary */
-    void preprocessOntology(Collection<OWLAxiom> vec);
+    void preprocessOntology(Collection<AxiomWrapper> vec);
 
     void setSignatureValue(TSignature sig);
 

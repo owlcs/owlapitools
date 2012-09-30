@@ -17,7 +17,7 @@ public class TModularizer {
     /** internal syntactic locality checker */
     LocalityChecker Checker;
     /** module as a list of axioms */
-    List<OWLAxiom> Module = new ArrayList<OWLAxiom>();
+    List<AxiomWrapper> Module = new ArrayList<AxiomWrapper>();
     /** pointer to a sig index; if not NULL then use optimized algo */
     SigIndex sigIndex = null;
     // / true if no atoms are processed ATM
@@ -31,9 +31,9 @@ public class TModularizer {
     private AxiomStructure as;
 
     /** update SIG wrt the axiom signature */
-    void addAxiomSig(OWLAxiom axiom) {
+    void addAxiomSig(AxiomWrapper axiom) {
         if (sigIndex != null) {
-            for (OWLEntity p : axiom.getSignature()) {
+            for (OWLEntity p : axiom.getAxiom().getSignature()) {
                 if (sig.add(p)) {
                     WorkQueue.add(p);
                 }
@@ -42,8 +42,8 @@ public class TModularizer {
     }
 
     /** add an axiom to a module */
-    void addAxiomToModule(OWLAxiom axiom) {
-        as.putInModule(axiom);
+    void addAxiomToModule(AxiomWrapper axiom) {
+        axiom.setInModule(true);
         Module.add(axiom);
         // update the signature
         addAxiomSig(axiom);
@@ -67,20 +67,20 @@ public class TModularizer {
     }
 
     /** add an axiom if it is non-local (or if noCheck is true) */
-    void addNonLocal(OWLAxiom ax, boolean noCheck) {
-        if (noCheck || isNonLocal(ax)) {
+    void addNonLocal(AxiomWrapper ax, boolean noCheck) {
+        if (noCheck || isNonLocal(ax.getAxiom())) {
             addAxiomToModule(ax);
         }
     }
 
     /** mark the ontology O such that all the marked axioms creates the module */
     // wrt SIG
-    void extractModuleLoop(Collection<OWLAxiom> args) {
+    void extractModuleLoop(Collection<AxiomWrapper> args) {
         int sigSize;
         do {
             sigSize = sig.size();
-            for (OWLAxiom p : args) {
-                if (!as.isInModule(p) && as.isUsed(p)) {
+            for (AxiomWrapper p : args) {
+                if (!p.isInModule() && p.isUsed()) {
                     this.addNonLocal(p, false);
                 }
             }
@@ -88,9 +88,9 @@ public class TModularizer {
     }
 
     /** add all the non-local axioms from given axiom-set AxSet */
-    void addNonLocal(Collection<OWLAxiom> AxSet, boolean noCheck) {
-        for (OWLAxiom q : AxSet) {
-            if (!as.isInModule(q) && as.isSS(q)) {
+    void addNonLocal(Collection<AxiomWrapper> AxSet, boolean noCheck) {
+        for (AxiomWrapper q : AxSet) {
+            if (!q.isInModule() && q.isInSearchSpace()) {
                 this.addNonLocal(q, noCheck);
             }
         }
@@ -114,20 +114,20 @@ public class TModularizer {
     }
 
     /** extract module wrt presence of a sig index */
-    void extractModule(Collection<OWLAxiom> args) {
+    void extractModule(Collection<AxiomWrapper> args) {
         Module.clear();
         // clear the module flag in the input
-        for (OWLAxiom p : args) {
-            as.removeFromModule(p);
+        for (AxiomWrapper p : args) {
+            p.setInModule(false);
         }
-        for (OWLAxiom p : args) {
-            if (as.isUsed(p)) {
-                as.putInSS(p);
+        for (AxiomWrapper p : args) {
+            if (p.isUsed()) {
+                p.setInSearchSpace(true);
             }
         }
         extractModuleQueue();
-        for (OWLAxiom p : args) {
-            as.removeFromSS(p);
+        for (AxiomWrapper p : args) {
+            p.setInSearchSpace(false);
         }
     }
 
@@ -142,7 +142,7 @@ public class TModularizer {
     }
 
     /** allow the checker to preprocess an ontology if necessary */
-    public void preprocessOntology(Collection<OWLAxiom> vec) {
+    public void preprocessOntology(Collection<AxiomWrapper> vec) {
         Checker.preprocessOntology(vec);
         sigIndex.clear();
         sigIndex.preprocessOntology(vec);
@@ -174,14 +174,14 @@ public class TModularizer {
         return Checker;
     }
 
-    void extract(OWLAxiom begin, TSignature signature, ModuleType type) {
+    void extract(AxiomWrapper begin, TSignature signature, ModuleType type) {
         this.extract(Collections.singletonList(begin), signature, type);
     }
 
     /** extract module wrt SIGNATURE and TYPE from the set of axioms */
     // [BEGIN,END)
-    public void
-            extract(Collection<OWLAxiom> begin, TSignature signature, ModuleType type) {
+    public void extract(Collection<AxiomWrapper> begin, TSignature signature,
+            ModuleType type) {
         boolean topLocality = type == ModuleType.TOP;
         sig = signature;
         Checker.setSignatureValue(sig);
@@ -192,7 +192,7 @@ public class TModularizer {
         }
         // here there is a star: do the cycle until stabilization
         int size;
-        List<OWLAxiom> oldModule = new ArrayList<OWLAxiom>();
+        List<AxiomWrapper> oldModule = new ArrayList<AxiomWrapper>();
         do {
             size = Module.size();
             oldModule.clear();
@@ -215,14 +215,14 @@ public class TModularizer {
     }
 
     /** extract module wrt SIGNATURE and TYPE from O; @return result in the Set */
-    public List<OWLAxiom> extractModule(List<OWLAxiom> list, TSignature signature,
-            ModuleType type) {
+    public List<AxiomWrapper> extractModule(List<AxiomWrapper> list,
+            TSignature signature, ModuleType type) {
         this.extract(list, signature, type);
         return Module;
     }
 
     /** get the last computed module */
-    public List<OWLAxiom> getModule() {
+    public List<AxiomWrapper> getModule() {
         return Module;
     }
 

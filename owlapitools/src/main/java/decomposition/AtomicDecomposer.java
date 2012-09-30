@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import org.semanticweb.owlapi.model.OWLAxiom;
-
 import uk.ac.manchester.cs.owlapi.modularity.ModuleType;
 
 /** atomical decomposer of the ontology */
@@ -15,7 +13,7 @@ public class AtomicDecomposer {
     /** modularizer to build modules */
     TModularizer Modularizer;
     /** tautologies of the ontology */
-    List<OWLAxiom> Tautologies = new ArrayList<OWLAxiom>();
+    List<AxiomWrapper> Tautologies = new ArrayList<AxiomWrapper>();
     /** progress indicator */
     ProgressIndicatorInterface PI = null;
     /** fake atom that represents the whole ontology */
@@ -35,8 +33,8 @@ public class AtomicDecomposer {
 
     /** restore all tautologies back */
     void restoreTautologies() {
-        for (OWLAxiom p : Tautologies) {
-            as.use(p);
+        for (AxiomWrapper p : Tautologies) {
+            p.setUsed(true);
         }
     }
 
@@ -48,21 +46,21 @@ public class AtomicDecomposer {
     // #define RKG_DEBUG_AD
     /** remove tautologies (axioms that are always local) from the ontology */
     // temporarily
-    void removeTautologies(List<OWLAxiom> axioms) {
+    void removeTautologies(List<AxiomWrapper> axioms) {
         // we might use it for another decomposition
         Tautologies.clear();
         long nAx = 0;
-        for (OWLAxiom p : axioms) {
+        for (AxiomWrapper p : axioms) {
             final String string = p.toString();
             if (string.contains("Declaration")) {
-                Modularizer.extract(p, new TSignature(p.getSignature()), type);
+                Modularizer.extract(p, new TSignature(p.getAxiom().getSignature()), type);
             }
-            if (as.isUsed(p)) {
+            if (p.isUsed()) {
                 // check whether an axiom is local wrt its own signature
-                Modularizer.extract(p, new TSignature(p.getSignature()), type);
-                if (Modularizer.isTautology(p, type)) {
+                Modularizer.extract(p, new TSignature(p.getAxiom().getSignature()), type);
+                if (Modularizer.isTautology(p.getAxiom(), type)) {
                     Tautologies.add(p);
-                    as.disuse(p);
+                    p.setUsed(false);
                 } else {
                     ++nAx;
                 }
@@ -73,8 +71,8 @@ public class AtomicDecomposer {
         }
     }
 
-    public List<OWLAxiom> getTautologies() {
-        return new ArrayList<OWLAxiom>(Tautologies);
+    public List<AxiomWrapper> getTautologies() {
+        return new ArrayList<AxiomWrapper>(Tautologies);
     }
 
     /** build a module for given axiom AX; use parent atom's module as a base */
@@ -82,7 +80,7 @@ public class AtomicDecomposer {
     TOntologyAtom buildModule(TSignature sig, TOntologyAtom parent) {
         // build a module for a given signature
         Modularizer.extract(parent.getModule(), sig, type);
-        List<OWLAxiom> Module = Modularizer.getModule();
+        List<AxiomWrapper> Module = Modularizer.getModule();
         // if module is empty (empty bottom atom) -- do nothing
         if (Module.isEmpty()) {
             return null;
@@ -104,14 +102,14 @@ public class AtomicDecomposer {
 
     /** create atom for given axiom AX; use parent atom's module as a base for */
     // the module search
-    TOntologyAtom createAtom(OWLAxiom ax, TOntologyAtom parent) {
+    TOntologyAtom createAtom(AxiomWrapper ax, TOntologyAtom parent) {
         // check whether axiom already has an atom
         TOntologyAtom atom = as.getAtom(ax);
         if (atom != null) {
             return atom;
         }
         // build an atom: use a module to find atomic dependencies
-        atom = buildModule(new TSignature(ax.getSignature()), parent);
+        atom = buildModule(new TSignature(ax.getAxiom().getSignature()), parent);
         // no empty modules should be here
         assert atom != null;
         // register axiom as a part of an atom
@@ -122,13 +120,9 @@ public class AtomicDecomposer {
         }
         // not the same as parent: for all atom's axioms check their atoms and
         // make ATOM depend on them
-        // #ifdef RKG_DEBUG_AD
-        /** / do cycle via set to keep the order */
-        // typedef std::set<TDLAxiom*> AxSet;
-        // Set<Axiom> M=new HashSet<Axiom> ( atom.getModule() );
-        // for ( Axiom q : M )
-        // #else
-        for (OWLAxiom q : atom.getModule()) {
+        /** do cycle via set to keep the order */
+        // XXX verify the equals
+        for (AxiomWrapper q : atom.getModule()) {
             // #endif
             if (!q.equals(ax)) {
                 atom.addDepAtom(createAtom(q, atom));
@@ -142,7 +136,7 @@ public class AtomicDecomposer {
     }
 
     /** get the atomic structure for given module type T */
-    public AOStructure getAOS(List<OWLAxiom> axioms, ModuleType t) {
+    public AOStructure getAOS(List<AxiomWrapper> axioms, ModuleType t) {
         // remember the type of the module
         type = t;
         // prepare a new AO structure
@@ -154,17 +148,17 @@ public class AtomicDecomposer {
         removeTautologies(axioms);
         // init the root atom
         rootAtom = new TOntologyAtom();
-        rootAtom.setModule(new HashSet<OWLAxiom>(axioms));
+        rootAtom.setModule(new HashSet<AxiomWrapper>(axioms));
         // build the "bottom" atom for an empty signature
         TOntologyAtom BottomAtom = buildModule(new TSignature(), rootAtom);
         if (BottomAtom != null) {
-            for (OWLAxiom q : BottomAtom.getModule()) {
+            for (AxiomWrapper q : BottomAtom.getModule()) {
                 BottomAtom.addAxiom(q, as);
             }
         }
         // create atoms for all the axioms in the ontology
-        for (OWLAxiom p : axioms) {
-            if (as.isUsed(p) && as.getAtom(p) == null) {
+        for (AxiomWrapper p : axioms) {
+            if (p.isUsed() && as.getAtom(p) == null) {
                 createAtom(p, rootAtom);
             }
         }
