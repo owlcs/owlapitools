@@ -10,7 +10,7 @@ public interface LocalityChecker {
     /** allow the checker to preprocess an ontology if necessary */
     void preprocessOntology(Collection<AxiomWrapper> vec);
 
-    void setSignatureValue(TSignature sig);
+    void setSignatureValue(Signature sig);
 
-    TSignature getSignature();
+    Signature getSignature();
 }

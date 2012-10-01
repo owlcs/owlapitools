@@ -9,19 +9,16 @@ import org.semanticweb.owlapi.util.MultiMap;
 
 public class SigIndex {
     /** map between entities and axioms that contains them in their signature */
-    MultiMap<OWLEntity, AxiomWrapper> Base = new MultiMap<OWLEntity, AxiomWrapper>();
+    private MultiMap<OWLEntity, AxiomWrapper> Base = new MultiMap<OWLEntity, AxiomWrapper>();
     /** locality checker */
-    LocalityChecker Checker;
+    private LocalityChecker Checker;
     /** sets of axioms non-local wrt the empty signature */
-    Set<AxiomWrapper> NonLocalTrue = new HashSet<AxiomWrapper>();
-    Set<AxiomWrapper> NonLocalFalse = new HashSet<AxiomWrapper>();
+    private Set<AxiomWrapper> NonLocalTrue = new HashSet<AxiomWrapper>();
+    private Set<AxiomWrapper> NonLocalFalse = new HashSet<AxiomWrapper>();
     /** empty signature to test the non-locality */
-    TSignature emptySig = new TSignature();
+    private Signature emptySig = new Signature();
     /** number of registered axioms */
-    int nRegistered = 0;
-    /** number of registered axioms */
-    int nUnregistered = 0;
-    private AxiomStructure as;
+    private int nRegistered = 0;
 
     // access to statistics
     /** @return number of ever processed axioms */
@@ -43,9 +40,8 @@ public class SigIndex {
     }
 
     /** empty c'tor */
-    public SigIndex(LocalityChecker c, AxiomStructure as) {
+    public SigIndex(LocalityChecker c) {
         Checker = c;
-        this.as = as;
     }
 
     // work with axioms
@@ -68,7 +64,6 @@ public class SigIndex {
         // remove from the non-locality
         NonLocalFalse.remove(ax);
         NonLocalTrue.remove(ax);
-        ++nUnregistered;
     }
 
     /** process an axiom wrt its Used status */

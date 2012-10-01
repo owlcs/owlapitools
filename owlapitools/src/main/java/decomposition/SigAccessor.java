@@ -2,14 +2,15 @@ package decomposition;
 
 import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLDatatype;
+import org.semanticweb.owlapi.util.OWLObjectVisitorAdapter;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 
 /** helper class to set signature and locality class */
-public class SigAccessor {
+public class SigAccessor extends OWLObjectVisitorAdapter {
     /** signature of a module */
-    TSignature sig;
+    Signature sig;
 
-    public void setSignature(TSignature s) {
+    public void setSignature(Signature s) {
         sig = s;
     }
 

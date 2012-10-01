@@ -9,7 +9,7 @@ import java.util.Set;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 /** class to hold the signature of a module */
-public class TSignature {
+public class Signature {
     /** set to keep all the elements in signature */
     private Set<OWLEntity> set = new HashSet<OWLEntity>();
     /** true if concept TOP-locality; false if concept BOTTOM-locality */
@@ -17,13 +17,13 @@ public class TSignature {
     /** true if role TOP-locality; false if role BOTTOM-locality */
     private boolean topRLocality = false;
 
-    public TSignature() {}
+    public Signature() {}
 
-    public TSignature(Collection<OWLEntity> sig) {
+    public Signature(Collection<OWLEntity> sig) {
         addAll(sig);
     }
 
-    public TSignature(TSignature copy) {
+    public Signature(Signature copy) {
         this(copy.set);
         topCLocality = copy.topCLocality;
         topRLocality = copy.topRLocality;
@@ -44,7 +44,7 @@ public class TSignature {
     }
 
     /** add another signature to a given one */
-    void add(TSignature Sig) {
+    void add(Signature Sig) {
         set.addAll(Sig.set);
     }
 
@@ -68,8 +68,8 @@ public class TSignature {
         if (this == obj) {
             return true;
         }
-        if (obj instanceof TSignature) {
-            return set.equals(((TSignature) obj).set);
+        if (obj instanceof Signature) {
+            return set.equals(((Signature) obj).set);
         }
         return false;
     }
@@ -108,7 +108,7 @@ public class TSignature {
         return topRLocality;
     }
 
-    public List<OWLEntity> intersect(TSignature s2) {
+    public List<OWLEntity> intersect(Signature s2) {
         List<OWLEntity> ret = new ArrayList<OWLEntity>();
         Set<OWLEntity> s = new HashSet<OWLEntity>(set);
         s.retainAll(s2.set);

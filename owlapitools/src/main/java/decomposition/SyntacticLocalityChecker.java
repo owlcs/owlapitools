@@ -50,7 +50,7 @@ import org.semanticweb.owlapi.model.OWLTransitiveObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.SWRLRule;
 
 /** syntactic locality checker for DL axioms */
-@SuppressWarnings("javadoc")
+@SuppressWarnings("unused")
 public class SyntacticLocalityChecker extends SigAccessor implements OWLAxiomVisitor,
         LocalityChecker {
     /** top evaluator */
@@ -84,12 +84,12 @@ public class SyntacticLocalityChecker extends SigAccessor implements OWLAxiomVis
         BotEval.setTopEval(TopEval);
     }
 
-    public TSignature getSignature() {
+    public Signature getSignature() {
         return sig;
     }
 
     /** set a new value of a signature (without changing a locality parameters) */
-    public void setSignatureValue(TSignature Sig) {
+    public void setSignatureValue(Signature Sig) {
         sig = Sig;
         TopEval.sig = sig;
         BotEval.sig = sig;
@@ -352,7 +352,7 @@ public class SyntacticLocalityChecker extends SigAccessor implements OWLAxiomVis
     }
 
     public void preprocessOntology(Collection<AxiomWrapper> s) {
-        sig = new TSignature();
+        sig = new Signature();
         for (AxiomWrapper ax : s) {
             sig.addAll(ax.getAxiom().getSignature());
         }

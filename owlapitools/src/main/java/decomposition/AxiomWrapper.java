@@ -7,6 +7,7 @@ public class AxiomWrapper {
     private boolean used;
     private boolean searchspace;
     private boolean module;
+    private OntologyAtom atom;
 
     public AxiomWrapper(OWLAxiom axiom) {
         this.axiom = axiom;
@@ -38,5 +39,13 @@ public class AxiomWrapper {
 
     public boolean isInModule() {
         return module;
+    }
+
+    public void setAtom(OntologyAtom atom) {
+        this.atom = atom;
+    }
+
+    public OntologyAtom getAtom() {
+        return atom;
     }
 }

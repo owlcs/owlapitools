@@ -91,7 +91,7 @@ import org.semanticweb.owlapi.model.SWRLVariable;
 
 /** check whether class expressions are equivalent to bottom wrt given locality
  * class */
-@SuppressWarnings({ "unused", "javadoc" })
+@SuppressWarnings("unused")
 // XXX verify unused parameters
 public class BotEquivalenceEvaluator extends SigAccessor implements OWLObjectVisitor {
     /** corresponding top evaluator */
