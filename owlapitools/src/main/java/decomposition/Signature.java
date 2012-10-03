@@ -94,7 +94,7 @@ public class Signature {
         set.clear();
     }
 
-    public Set<OWLEntity> begin() {
+    public Set<OWLEntity> getSignature() {
         return set;
     }
 

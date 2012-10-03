@@ -2,13 +2,16 @@ package uk.ac.manchester.cs.atomicdecomposition;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 public class Atom {
     private final Collection<OWLAxiom> axioms;
+    private List<OWLEntity> signature = new ArrayList<OWLEntity>();
     private Collection<OWLEntity> label;
 
     public boolean contains(OWLAxiom ax) {
@@ -17,14 +20,15 @@ public class Atom {
 
     public Atom(Collection<OWLAxiom> axioms) {
         this.axioms = axioms;
+        Set<OWLEntity> set = new HashSet<OWLEntity>();
+        for (OWLAxiom ax : axioms) {
+            set.addAll(ax.getSignature());
+        }
+        signature.addAll(set);
     }
 
     public Collection<OWLEntity> getSignature() {
-        List<OWLEntity> toReturn = new ArrayList<OWLEntity>();
-        for (OWLAxiom ax : axioms) {
-            toReturn.addAll(ax.getSignature());
-        }
-        return toReturn;
+        return signature;
     }
 
     public Collection<OWLAxiom> getAxioms() {

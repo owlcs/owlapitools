@@ -60,7 +60,7 @@ public class Test {
 
     /** get a set of axioms that corresponds to the module of the atom with the
      * id INDEX */
-    public Set<AxiomWrapper> getAtomModule(int index) {
+    public Collection<AxiomWrapper> getAtomModule(int index) {
         return AD.getAOS().get(index).getModule();
     }
 
@@ -68,7 +68,7 @@ public class Test {
      *            index of depending atom
      * @return set of dependent atoms */
     public Set<OntologyAtom> getAtomDependents(int index) {
-        return AD.getAOS().get(index).getDepAtoms();
+        return AD.getAOS().get(index).getDependencies();
     }
 
     /** get a set of axioms that corresponds to the atom with the id INDEX */
@@ -85,17 +85,17 @@ public class Test {
     /** get a set of axioms that corresponds to the atom with the id INDEX */
     public Set<OWLAxiom> getNonLocal(Set<OWLEntity> signature, ModuleType moduletype) {
         // init signature
-        Signature Sig = new Signature(signature);
-        Sig.setLocality(false);
+        Signature sig = new Signature(signature);
+        sig.setLocality(false);
         // do check
         Modularizer Mod = AD.getModularizer();
-        Mod.getLocalityChecker().setSignatureValue(Sig);
-        Set<OWLAxiom> Result = new HashSet<OWLAxiom>();
+        Mod.getLocalityChecker().setSignatureValue(sig);
+        Set<OWLAxiom> result = new HashSet<OWLAxiom>();
         for (AxiomWrapper p : axioms) {
             if (!Mod.getLocalityChecker().local(p.getAxiom())) {
-                Result.add(p.getAxiom());
+                result.add(p.getAxiom());
             }
         }
-        return Result;
+        return result;
     }
 }

@@ -1,8 +1,8 @@
 package decomposition;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.util.MultiMap;
@@ -11,10 +11,10 @@ public class SigIndex {
     /** map between entities and axioms that contains them in their signature */
     private MultiMap<OWLEntity, AxiomWrapper> Base = new MultiMap<OWLEntity, AxiomWrapper>();
     /** locality checker */
-    private LocalityChecker Checker;
+    private LocalityChecker checker;
     /** sets of axioms non-local wrt the empty signature */
-    private Set<AxiomWrapper> NonLocalTrue = new HashSet<AxiomWrapper>();
-    private Set<AxiomWrapper> NonLocalFalse = new HashSet<AxiomWrapper>();
+    private List<AxiomWrapper> NonLocalTrue = new ArrayList<AxiomWrapper>();
+    private List<AxiomWrapper> NonLocalFalse = new ArrayList<AxiomWrapper>();
     /** empty signature to test the non-locality */
     private Signature emptySig = new Signature();
     /** number of registered axioms */
@@ -29,8 +29,8 @@ public class SigIndex {
     /** add axiom AX to the non-local set with top-locality value TOP */
     private void checkNonLocal(AxiomWrapper ax, boolean top) {
         emptySig.setLocality(top);
-        Checker.setSignatureValue(emptySig);
-        if (!Checker.local(ax.getAxiom())) {
+        checker.setSignatureValue(emptySig);
+        if (!checker.local(ax.getAxiom())) {
             if (top) {
                 NonLocalFalse.add(ax);
             } else {
@@ -41,7 +41,7 @@ public class SigIndex {
 
     /** empty c'tor */
     public SigIndex(LocalityChecker c) {
-        Checker = c;
+        checker = c;
     }
 
     // work with axioms
@@ -59,7 +59,7 @@ public class SigIndex {
     /** unregister an axiom AX */
     private void unregisterAx(AxiomWrapper ax) {
         for (OWLEntity p : ax.getAxiom().getSignature()) {
-            Base.get(p).remove(ax);
+            Base.remove(p, ax);
         }
         // remove from the non-locality
         NonLocalFalse.remove(ax);
@@ -97,7 +97,7 @@ public class SigIndex {
     }
 
     /** get the non-local axioms with top-locality value TOP */
-    public Set<AxiomWrapper> getNonLocal(boolean top) {
+    public Collection<AxiomWrapper> getNonLocal(boolean top) {
         return top ? NonLocalFalse : NonLocalTrue;
     }
 }

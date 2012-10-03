@@ -152,7 +152,7 @@ public class TopEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
 
     @Override
     public void visit(OWLDataAllValuesFrom expr) {
-        isTopEq = isTopDT(expr.getFiller()) || !sig.topRLocal()
+        isTopEq = expr.getFiller().isTopDatatype() || !sig.topRLocal()
                 && isBotEquivalent(expr.getProperty());
     }
 

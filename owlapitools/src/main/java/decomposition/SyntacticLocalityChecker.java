@@ -287,7 +287,7 @@ public class SyntacticLocalityChecker extends SigAccessor implements OWLAxiomVis
     }
 
     public void visit(OWLDataPropertyRangeAxiom axiom) {
-        isLocal = isTopDT(axiom.getRange());
+        isLocal = axiom.getRange().isTopDatatype();
         if (!sig.topRLocal()) {
             isLocal |= isBotEquivalent(axiom.getProperty());
         }

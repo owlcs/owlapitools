@@ -219,7 +219,7 @@ public class BotEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
     @Override
     public void visit(OWLDataAllValuesFrom expr) {
         isBotEq = sig.topRLocal() && isTopEquivalent(expr.getProperty())
-                && !isTopDT(expr.getFiller());
+                && !expr.getFiller().isTopDatatype();
     }
 
     @Override

@@ -13,7 +13,7 @@ public class Decomposer {
     /** modularizer to build modules */
     private Modularizer modularizer;
     /** tautologies of the ontology */
-    private List<AxiomWrapper> Tautologies = new ArrayList<AxiomWrapper>();
+    private List<AxiomWrapper> tautologies = new ArrayList<AxiomWrapper>();
     /** fake atom that represents the whole ontology */
     private OntologyAtom rootAtom = null;
     /** module type for current AOS creation */
@@ -29,27 +29,22 @@ public class Decomposer {
 
     /** restore all tautologies back */
     private void restoreTautologies() {
-        for (AxiomWrapper p : Tautologies) {
+        for (AxiomWrapper p : tautologies) {
             p.setUsed(true);
         }
     }
 
-    // #define RKG_DEBUG_AD
     /** remove tautologies (axioms that are always local) from the ontology
      * temporarily */
     private void removeTautologies(List<AxiomWrapper> axioms) {
         // we might use it for another decomposition
-        Tautologies.clear();
+        tautologies.clear();
         for (AxiomWrapper p : axioms) {
-            final String string = p.toString();
-            if (string.contains("Declaration")) {
-                modularizer.extract(p, new Signature(p.getAxiom().getSignature()), type);
-            }
             if (p.isUsed()) {
                 // check whether an axiom is local wrt its own signature
                 modularizer.extract(p, new Signature(p.getAxiom().getSignature()), type);
                 if (modularizer.isTautology(p.getAxiom(), type)) {
-                    Tautologies.add(p);
+                    tautologies.add(p);
                     p.setUsed(false);
                 }
             }
@@ -57,12 +52,12 @@ public class Decomposer {
     }
 
     public List<AxiomWrapper> getTautologies() {
-        return new ArrayList<AxiomWrapper>(Tautologies);
+        return tautologies;
     }
 
-    /** build a module for given axiom AX; use parent atom's module as a base */
-    // for the module search
-    OntologyAtom buildModule(Signature sig, OntologyAtom parent) {
+    /** build a module for given axiom AX; use parent atom's module as a base for
+     * the module search */
+    private OntologyAtom buildModule(Signature sig, OntologyAtom parent) {
         // build a module for a given signature
         modularizer.extract(parent.getModule(), sig, type);
         List<AxiomWrapper> Module = modularizer.getModule();
@@ -104,7 +99,7 @@ public class Decomposer {
         /** do cycle via set to keep the order */
         for (AxiomWrapper q : atom.getModule()) {
             // #endif
-            if (!q.getAxiom().equals(ax.getAxiom())) {
+            if (!q.equals(ax)) {
                 atom.addDepAtom(createAtom(q, atom));
             }
         }
@@ -129,11 +124,9 @@ public class Decomposer {
         rootAtom = new OntologyAtom();
         rootAtom.setModule(new HashSet<AxiomWrapper>(axioms));
         // build the "bottom" atom for an empty signature
-        OntologyAtom BottomAtom = buildModule(new Signature(), rootAtom);
-        if (BottomAtom != null) {
-            for (AxiomWrapper q : BottomAtom.getModule()) {
-                BottomAtom.addAxiom(q);
-            }
+        OntologyAtom bottomAtom = buildModule(new Signature(), rootAtom);
+        if (bottomAtom != null) {
+            bottomAtom.addAxioms(bottomAtom.getModule());
         }
         // create atoms for all the axioms in the ontology
         for (AxiomWrapper p : axioms) {

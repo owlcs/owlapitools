@@ -3,6 +3,7 @@ package uk.ac.manchester.cs.atomicdecomposition;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,6 +15,7 @@ import org.semanticweb.owlapi.util.MultiMap;
 
 import uk.ac.manchester.cs.chainsaw.ArrayIntMap;
 import uk.ac.manchester.cs.chainsaw.FastSet;
+import uk.ac.manchester.cs.owlapi.modularity.ModuleType;
 import decomposition.OntologyAtom;
 import decomposition.Test;
 
@@ -22,7 +24,7 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
     Set<OWLAxiom> tautologies;
     final MultiMap<OWLEntity, Atom> termBasedIndex = new MultiMap<OWLEntity, Atom>();
     List<Atom> atoms = new ArrayList<Atom>();
-    Map<Atom, Integer> map = new HashMap<Atom, Integer>();
+    Map<Atom, Integer> map = new IdentityHashMap<Atom, Integer>();
     ArrayIntMap dependents = new ArrayIntMap();
     ArrayIntMap dependencies = new ArrayIntMap();
     Test delegate;
@@ -31,15 +33,14 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
     public AtomicDecomposerOWLAPITOOLS(OWLOntology o) {
         type = 0;
         delegate = new Test(o);
-        int size = delegate
-                .getAtomicDecompositionSize(uk.ac.manchester.cs.owlapi.modularity.ModuleType.BOT);
+        int size = delegate.getAtomicDecompositionSize(ModuleType.BOT);
         atoms.add(null);
         for (int i = 0; i < size; i++) {
-            final Atom extendedAtomImpl = new Atom(delegate.getAtomAxioms(i));
-            atoms.add(extendedAtomImpl);
-            map.put(extendedAtomImpl, i + 1);
-            for (OWLEntity e : extendedAtomImpl.getSignature()) {
-                termBasedIndex.put(e, extendedAtomImpl);
+            final Atom atom = new Atom(delegate.getAtomAxioms(i));
+            atoms.add(atom);
+            map.put(atom, i + 1);
+            for (OWLEntity e : atom.getSignature()) {
+                termBasedIndex.put(e, atom);
             }
         }
         for (int i = 1; i <= size; i++) {
@@ -129,8 +130,8 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
         if (direct) {
             return asSet(multimap.get(map.get(atom)));
         }
-        Set<Atom> toReturn = new HashSet<Atom>();
-        toReturn.add(atom);
+        Map<Atom, Atom> toReturn = new IdentityHashMap<Atom, Atom>();
+        toReturn.put(atom, atom);
         List<Atom> toDo = new ArrayList<Atom>();
         toDo.add(atom);
         for (int i = 0; i < toDo.size(); i++) {
@@ -139,13 +140,13 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
                 FastSet c = multimap.get(key);
                 for (int j = 0; j < c.size(); j++) {
                     Atom a = atoms.get(c.get(j));
-                    if (toReturn.add(a)) {
+                    if (toReturn.put(a, a) == null) {
                         toDo.add(a);
                     }
                 }
             }
         }
-        return toReturn;
+        return toReturn.keySet();
     }
 
     public Set<Atom> getRelatedAtoms(Atom atom) {
