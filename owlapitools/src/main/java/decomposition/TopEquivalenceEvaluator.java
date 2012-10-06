@@ -30,29 +30,21 @@ import org.semanticweb.owlapi.model.OWLSubPropertyChainOfAxiom;
 /** check whether class expressions are equivalent to top wrt given locality
  * class */
 public class TopEquivalenceEvaluator extends SigAccessor implements OWLObjectVisitor {
-    /** corresponding bottom evaluator */
-    BotEquivalenceEvaluator BotEval = null;
     /** keep the value here */
     boolean isTopEq = false;
 
-    /** check whether the expression is top-equivalent */
-    boolean isBotEquivalent(OWLObject expr) {
-        return BotEval.isBotEquivalent(expr);
+    public TopEquivalenceEvaluator(LocalityChecker l) {
+        super(l);
     }
 
     /** @return true iff role expression in equivalent to const wrt locality */
     boolean isREquivalent(OWLObject expr) {
-        return topRLocal() ? isTopEquivalent(expr) : isBotEquivalent(expr);
-    }
-
-    // set fields
-    /** set the corresponding bottom evaluator */
-    void setBotEval(BotEquivalenceEvaluator eval) {
-        BotEval = eval;
+        return topRLocal() ? isTopEquivalent(expr) : localityChecker
+                .isBotEquivalent(expr);
     }
 
     /** @return true iff an EXPRession is equivalent to top wrt defined policy */
-    boolean isTopEquivalent(OWLObject expr) {
+    public boolean isTopEquivalent(OWLObject expr) {
         if (expr.isTopEntity()) {
             return true;
         }
@@ -63,12 +55,12 @@ public class TopEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
     // concept expressions
     @Override
     public void visit(OWLClass expr) {
-        isTopEq = sig.topCLocal() && !sig.contains(expr);
+        isTopEq = getSignature().topCLocal() && !getSignature().contains(expr);
     }
 
     @Override
     public void visit(OWLObjectComplementOf expr) {
-        isTopEq = isBotEquivalent(expr.getOperand());
+        isTopEq = localityChecker.isBotEquivalent(expr.getOperand());
     }
 
     @Override
@@ -99,67 +91,69 @@ public class TopEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
 
     @Override
     public void visit(OWLObjectHasSelf expr) {
-        isTopEq = sig.topRLocal() && isTopEquivalent(expr.getProperty());
+        isTopEq = getSignature().topRLocal() && isTopEquivalent(expr.getProperty());
     }
 
     @Override
     public void visit(OWLObjectHasValue expr) {
-        isTopEq = sig.topRLocal() && isTopEquivalent(expr.getProperty());
+        isTopEq = getSignature().topRLocal() && isTopEquivalent(expr.getProperty());
     }
 
     @Override
     public void visit(OWLObjectSomeValuesFrom expr) {
-        isTopEq = sig.topRLocal() && isTopEquivalent(expr.getProperty())
+        isTopEq = getSignature().topRLocal() && isTopEquivalent(expr.getProperty())
                 && isTopEquivalent(expr.getFiller());
     }
 
     @Override
     public void visit(OWLObjectAllValuesFrom expr) {
-        isTopEq = isTopEquivalent(expr.getFiller()) || !sig.topRLocal()
-                && isBotEquivalent(expr.getProperty());
+        isTopEq = isTopEquivalent(expr.getFiller()) || !getSignature().topRLocal()
+                && localityChecker.isBotEquivalent(expr.getProperty());
     }
 
     @Override
     public void visit(OWLObjectMinCardinality expr) {
-        isTopEq = expr.getCardinality() == 0 || sig.topRLocal()
+        isTopEq = expr.getCardinality() == 0 || getSignature().topRLocal()
                 && isTopEquivalent(expr.getProperty())
                 && isTopEquivalent(expr.getFiller());
     }
 
     @Override
     public void visit(OWLObjectMaxCardinality expr) {
-        isTopEq = isBotEquivalent(expr.getFiller()) || !sig.topRLocal()
-                && isBotEquivalent(expr.getProperty());
+        isTopEq = localityChecker.isBotEquivalent(expr.getFiller())
+                || !getSignature().topRLocal()
+                && localityChecker.isBotEquivalent(expr.getProperty());
     }
 
     @Override
     public void visit(OWLObjectExactCardinality expr) {
         isTopEq = expr.getCardinality() == 0
-                && (isBotEquivalent(expr.getFiller()) || !sig.topRLocal()
-                        && isBotEquivalent(expr.getProperty()));
+                && (localityChecker.isBotEquivalent(expr.getFiller()) || !getSignature()
+                        .topRLocal()
+                        && localityChecker.isBotEquivalent(expr.getProperty()));
     }
 
     @Override
     public void visit(OWLDataHasValue expr) {
-        isTopEq = sig.topRLocal() && isTopEquivalent(expr.getProperty());
+        isTopEq = getSignature().topRLocal() && isTopEquivalent(expr.getProperty());
     }
 
     @Override
     public void visit(OWLDataSomeValuesFrom expr) {
-        isTopEq = sig.topRLocal() && isTopEquivalent(expr.getProperty())
+        isTopEq = getSignature().topRLocal() && isTopEquivalent(expr.getProperty())
                 && isTopOrBuiltInDataType(expr.getFiller());
     }
 
     @Override
     public void visit(OWLDataAllValuesFrom expr) {
-        isTopEq = expr.getFiller().isTopDatatype() || !sig.topRLocal()
-                && isBotEquivalent(expr.getProperty());
+        isTopEq = expr.getFiller().isTopDatatype() || !getSignature().topRLocal()
+                && localityChecker.isBotEquivalent(expr.getProperty());
     }
 
     @Override
     public void visit(OWLDataMinCardinality expr) {
         isTopEq = expr.getCardinality() == 0;
-        if (sig.topRLocal()) {
+        if (getSignature().topRLocal()) {
             isTopEq |= isTopEquivalent(expr.getProperty())
                     && (expr.getCardinality() == 1 ? isTopOrBuiltInDataType(expr
                             .getFiller()) : isTopOrBuiltInDataType(expr.getFiller()));
@@ -168,18 +162,19 @@ public class TopEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
 
     @Override
     public void visit(OWLDataMaxCardinality expr) {
-        isTopEq = !sig.topRLocal() && isBotEquivalent(expr.getProperty());
+        isTopEq = !getSignature().topRLocal()
+                && localityChecker.isBotEquivalent(expr.getProperty());
     }
 
     @Override
     public void visit(OWLDataExactCardinality expr) {
-        isTopEq = !sig.topRLocal() && expr.getCardinality() == 0
-                && isBotEquivalent(expr.getProperty());
+        isTopEq = !getSignature().topRLocal() && expr.getCardinality() == 0
+                && localityChecker.isBotEquivalent(expr.getProperty());
     }
 
     @Override
     public void visit(OWLObjectProperty expr) {
-        isTopEq = sig.topRLocal() && !sig.contains(expr);
+        isTopEq = getSignature().topRLocal() && !getSignature().contains(expr);
     }
 
     @Override
@@ -200,6 +195,6 @@ public class TopEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
     // data role expressions
     @Override
     public void visit(OWLDataProperty expr) {
-        isTopEq = sig.topRLocal() && !sig.contains(expr);
+        isTopEq = getSignature().topRLocal() && !getSignature().contains(expr);
     }
 }

@@ -1,6 +1,7 @@
 package uk.ac.manchester.cs.atomicdecomposition;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
@@ -16,8 +17,11 @@ import org.semanticweb.owlapi.util.MultiMap;
 import uk.ac.manchester.cs.chainsaw.ArrayIntMap;
 import uk.ac.manchester.cs.chainsaw.FastSet;
 import uk.ac.manchester.cs.owlapi.modularity.ModuleType;
+import decomposition.AxiomSelector;
+import decomposition.AxiomWrapper;
+import decomposition.Decomposer;
 import decomposition.OntologyAtom;
-import decomposition.Test;
+import decomposition.SyntacticLocalityChecker;
 
 public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
     Set<OWLAxiom> globalAxioms;
@@ -27,16 +31,33 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
     Map<Atom, Integer> map = new IdentityHashMap<Atom, Integer>();
     ArrayIntMap dependents = new ArrayIntMap();
     ArrayIntMap dependencies = new ArrayIntMap();
-    Test delegate;
-    private final int type;
+    Decomposer decomposer;
+    private final ModuleType type;
+
+    protected Set<OWLAxiom> asSet(Collection<AxiomWrapper> c) {
+        Set<OWLAxiom> toReturn = new HashSet<OWLAxiom>();
+        for (AxiomWrapper p : c) {
+            toReturn.add(p.getAxiom());
+        }
+        return toReturn;
+    }
 
     public AtomicDecomposerOWLAPITOOLS(OWLOntology o) {
-        type = 0;
-        delegate = new Test(o);
-        int size = delegate.getAtomicDecompositionSize(ModuleType.BOT);
+        this(AxiomSelector.selectAxioms(o), ModuleType.BOT);
+    }
+
+    public AtomicDecomposerOWLAPITOOLS(OWLOntology o, ModuleType type) {
+        this(AxiomSelector.selectAxioms(o), type);
+    }
+
+    public AtomicDecomposerOWLAPITOOLS(List<OWLAxiom> axioms, ModuleType type) {
+        this.type = type;
+        decomposer = new Decomposer(AxiomSelector.wrap(axioms),
+                new SyntacticLocalityChecker());
+        int size = decomposer.getAOS(this.type).size();
         atoms.add(null);
         for (int i = 0; i < size; i++) {
-            final Atom atom = new Atom(delegate.getAtomAxioms(i));
+            final Atom atom = new Atom(asSet(decomposer.getAOS().get(i).getAtomAxioms()));
             atoms.add(atom);
             map.put(atom, i + 1);
             for (OWLEntity e : atom.getSignature()) {
@@ -44,7 +65,8 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
             }
         }
         for (int i = 1; i <= size; i++) {
-            Set<OntologyAtom> dependentIndexes = delegate.getAtomDependents(i - 1);
+            Set<OntologyAtom> dependentIndexes = decomposer.getAOS().get(i - 1)
+                    .getDependencies();
             for (OntologyAtom j : dependentIndexes) {
                 dependencies.put(i, j.getId() + 1);
                 dependents.put(j.getId() + 1, i);
@@ -53,7 +75,7 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
     }
 
     public int getModuleType() {
-        return type;
+        return type.ordinal();
     }
 
     public DirectedGraph<Atom, Object> getGraph() {
@@ -196,7 +218,7 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
     }
 
     public Set<OWLAxiom> getTautologies() {
-        return delegate.getTautologies();
+        return asSet(decomposer.getTautologies());
     }
 
     public void setTautologies(Set<OWLAxiom> tautologies) {
@@ -213,5 +235,16 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
 
     public void setTermBasedIndex(Map<OWLEntity, Set<Atom>> termBasedIndex) {
         // this.termBasedIndex = termBasedIndex;
+    }
+
+    /** get a set of axioms that corresponds to the module of the atom with the
+     * id INDEX */
+    public Collection<AxiomWrapper> getAtomModule(int index) {
+        return decomposer.getAOS().get(index).getModule();
+    }
+
+    public Collection<AxiomWrapper> getModule(Set<OWLEntity> signature,
+            boolean useSemantics, ModuleType moduletype) {
+        return decomposer.getModule(signature, useSemantics, moduletype);
     }
 }

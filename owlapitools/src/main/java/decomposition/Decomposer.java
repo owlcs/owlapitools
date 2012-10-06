@@ -1,8 +1,13 @@
 package decomposition;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import uk.ac.manchester.cs.owlapi.modularity.ModuleType;
 
@@ -18,9 +23,12 @@ public class Decomposer {
     private OntologyAtom rootAtom = null;
     /** module type for current AOS creation */
     private ModuleType type;
+    private List<AxiomWrapper> axioms;
 
-    public Decomposer(Modularizer c) {
-        modularizer = c;
+    public Decomposer(List<AxiomWrapper> axioms, LocalityChecker c) {
+        this.axioms = axioms;
+        modularizer = new Modularizer(c);
+        modularizer.preprocessOntology(axioms);
     }
 
     public Modularizer getModularizer() {
@@ -36,7 +44,7 @@ public class Decomposer {
 
     /** remove tautologies (axioms that are always local) from the ontology
      * temporarily */
-    private void removeTautologies(List<AxiomWrapper> axioms) {
+    private void removeTautologies() {
         // we might use it for another decomposition
         tautologies.clear();
         for (AxiomWrapper p : axioms) {
@@ -111,7 +119,7 @@ public class Decomposer {
     }
 
     /** get the atomic structure for given module type T */
-    public AtomList getAOS(List<AxiomWrapper> axioms, ModuleType t) {
+    public AtomList getAOS(ModuleType t) {
         // remember the type of the module
         type = t;
         // prepare a new AO structure
@@ -119,7 +127,7 @@ public class Decomposer {
         // init semantic locality checker
         modularizer.preprocessOntology(axioms);
         // we don't need tautologies here
-        removeTautologies(axioms);
+        removeTautologies();
         // init the root atom
         rootAtom = new OntologyAtom();
         rootAtom.setModule(new HashSet<AxiomWrapper>(axioms));
@@ -140,5 +148,31 @@ public class Decomposer {
         // reduce graph
         atomList.reduceGraph();
         return atomList;
+    }
+
+    /** get a set of axioms that corresponds to the atom with the id INDEX */
+    public Set<OWLAxiom> getNonLocal(Set<OWLEntity> signature, ModuleType moduletype) {
+        // init signature
+        Signature sig = new Signature(signature);
+        sig.setLocality(false);
+        // do check
+        modularizer.getLocalityChecker().setSignatureValue(sig);
+        Set<OWLAxiom> result = new HashSet<OWLAxiom>();
+        for (AxiomWrapper p : axioms) {
+            if (!modularizer.getLocalityChecker().local(p.getAxiom())) {
+                result.add(p.getAxiom());
+            }
+        }
+        return result;
+    }
+
+    /** get a set of axioms that corresponds to the atom with the id INDEX */
+    public Collection<AxiomWrapper> getModule(Set<OWLEntity> signature,
+            boolean useSemantics, ModuleType moduletype) {
+        // init signature
+        Signature Sig = new Signature(signature);
+        Sig.setLocality(false);
+        modularizer.extract(axioms, Sig, moduletype);
+        return modularizer.getModule();
     }
 }

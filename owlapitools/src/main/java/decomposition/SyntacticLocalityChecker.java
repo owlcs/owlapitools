@@ -51,8 +51,8 @@ import org.semanticweb.owlapi.model.SWRLRule;
 
 /** syntactic locality checker for DL axioms */
 @SuppressWarnings("unused")
-public class SyntacticLocalityChecker extends SigAccessor implements OWLAxiomVisitor,
-        LocalityChecker {
+public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecker {
+    private Signature sig;
     /** top evaluator */
     TopEquivalenceEvaluator TopEval;
     /** bottom evaluator */
@@ -61,27 +61,26 @@ public class SyntacticLocalityChecker extends SigAccessor implements OWLAxiomVis
     boolean isLocal;
 
     /** @return true iff EXPR is top equivalent */
-    boolean isTopEquivalent(OWLObject expr) {
+    public boolean isTopEquivalent(OWLObject expr) {
         final boolean topEquivalent = TopEval.isTopEquivalent(expr);
         return topEquivalent;
     }
 
     /** @return true iff EXPR is bottom equivalent */
-    boolean isBotEquivalent(OWLObject expr) {
-        return BotEval.isBotEquivalent(expr);
+    public boolean isBotEquivalent(OWLObject expr) {
+        final boolean botEquivalent = BotEval.isBotEquivalent(expr);
+        return botEquivalent;
     }
 
     /** @return true iff role expression in equivalent to const wrt locality */
-    boolean isREquivalent(OWLObject expr) {
+    public boolean isREquivalent(OWLObject expr) {
         return sig.topRLocal() ? isTopEquivalent(expr) : isBotEquivalent(expr);
     }
 
     /** init c'tor */
     public SyntacticLocalityChecker() {
-        TopEval = new TopEquivalenceEvaluator();
-        BotEval = new BotEquivalenceEvaluator();
-        TopEval.setBotEval(BotEval);
-        BotEval.setTopEval(TopEval);
+        TopEval = new TopEquivalenceEvaluator(this);
+        BotEval = new BotEquivalenceEvaluator(this);
     }
 
     public Signature getSignature() {
@@ -91,8 +90,6 @@ public class SyntacticLocalityChecker extends SigAccessor implements OWLAxiomVis
     /** set a new value of a signature (without changing a locality parameters) */
     public void setSignatureValue(Signature Sig) {
         sig = Sig;
-        TopEval.sig = sig;
-        BotEval.sig = sig;
     }
 
     // set fields

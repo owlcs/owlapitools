@@ -8,10 +8,12 @@ import java.util.Set;
 
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import utils.Bag;
+
 /** class to hold the signature of a module */
 public class Signature {
     /** set to keep all the elements in signature */
-    private Set<OWLEntity> set = new HashSet<OWLEntity>();
+    private final Set<OWLEntity> set = new HashSet<OWLEntity>();
     /** true if concept TOP-locality; false if concept BOTTOM-locality */
     private boolean topCLocality = false;
     /** true if role TOP-locality; false if role BOTTOM-locality */
@@ -23,12 +25,6 @@ public class Signature {
         addAll(sig);
     }
 
-    public Signature(Signature copy) {
-        this(copy.set);
-        topCLocality = copy.topCLocality;
-        topRLocality = copy.topRLocality;
-    }
-
     /** add names to signature */
     public boolean add(OWLEntity p) {
         return set.add(p);
@@ -36,16 +32,6 @@ public class Signature {
 
     public void addAll(Collection<OWLEntity> p) {
         set.addAll(p);
-    }
-
-    /** remove given element from a signature */
-    public void remove(OWLEntity p) {
-        set.remove(p);
-    }
-
-    /** add another signature to a given one */
-    void add(Signature Sig) {
-        set.addAll(Sig.set);
     }
 
     /** set new locality polarity */
@@ -79,19 +65,21 @@ public class Signature {
         return set.hashCode();
     }
 
+    private static Bag<OWLEntity> bag = new Bag<OWLEntity>();
+
     /** @return true iff signature contains given element */
     public boolean contains(OWLEntity p) {
+        // bag.add(p);
+        // if (bag.size() % 100 == 0) {
+        // final List<OWLEntity> subList = bag.sortedList(false).subList(0, 10);
+        // for (OWLEntity e : subList) {
+        // System.out.println("Signature.contains() " + bag.check(e) + "\t" +
+        // e);
+        // }
+        // System.out
+        // .println("===========================================================");
+        // }
         return set.contains(p);
-    }
-
-    /** @return size of the signature */
-    public int size() {
-        return set.size();
-    }
-
-    /** clear the signature */
-    public void clear() {
-        set.clear();
     }
 
     public Set<OWLEntity> getSignature() {

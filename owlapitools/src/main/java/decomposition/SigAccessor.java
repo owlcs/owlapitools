@@ -5,11 +5,10 @@ import org.semanticweb.owlapi.util.OWLObjectVisitorAdapter;
 
 /** helper class to set signature and locality class */
 public class SigAccessor extends OWLObjectVisitorAdapter {
-    /** signature of a module */
-    Signature sig;
+    LocalityChecker localityChecker;
 
-    public void setSignature(Signature s) {
-        sig = s;
+    public SigAccessor(LocalityChecker c) {
+        localityChecker = c;
     }
 
     /** @return true iff EXPR is a top datatype or a built-in datatype; */
@@ -20,6 +19,10 @@ public class SigAccessor extends OWLObjectVisitorAdapter {
 
     /** @return true iff roles are treated as TOPs */
     public boolean topRLocal() {
-        return sig.topRLocal();
+        return localityChecker.getSignature().topRLocal();
+    }
+
+    protected Signature getSignature() {
+        return localityChecker.getSignature();
     }
 }
