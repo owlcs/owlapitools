@@ -1,10 +1,11 @@
 package decomposition;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -22,7 +23,7 @@ public class Modularizer {
     /** pointer to a sig index; if not NULL then use optimized algo */
     private SigIndex sigIndex = null;
     /** queue of unprocessed entities */
-    private LinkedList<OWLEntity> workQueue = new LinkedList<OWLEntity>();
+    private Queue<OWLEntity> workQueue;
 
     /** update SIG wrt the axiom signature */
     private void addAxiomSig(AxiomWrapper axiom) {
@@ -74,26 +75,26 @@ public class Modularizer {
         // main cycle
         while (!workQueue.isEmpty()) {
             // for all the axioms that contains entity in their signature
-            Collection<AxiomWrapper> axioms = sigIndex.getAxioms(workQueue.pop());
+            Collection<AxiomWrapper> axioms = sigIndex.getAxioms(workQueue.poll());
             this.addNonLocal(axioms, false);
         }
     }
 
     /** extract module wrt presence of a sig index */
-    private void extractModule(Collection<AxiomWrapper> args) {
+    private void extractModule(List<AxiomWrapper> args) {
         module.clear();
         // clear the module flag in the input
-        for (AxiomWrapper p : args) {
+        final int size = args.size();
+        for (int i = 0; i < size; i++) {
+            AxiomWrapper p = args.get(i);
             p.setInModule(false);
-        }
-        for (AxiomWrapper p : args) {
             if (p.isUsed()) {
                 p.setInSearchSpace(true);
             }
         }
         extractModuleQueue();
-        for (AxiomWrapper p : args) {
-            p.setInSearchSpace(false);
+        for (int i = 0; i < size; i++) {
+            args.get(i).setInSearchSpace(false);
         }
     }
 
@@ -110,6 +111,7 @@ public class Modularizer {
         checker.preprocessOntology(vec);
         sigIndex.clear();
         sigIndex.preprocessOntology(vec);
+        workQueue = new ArrayDeque<OWLEntity>(vec.size());
     }
 
     /** @return true iff the axiom AX is a tautology wrt given type */
@@ -138,8 +140,7 @@ public class Modularizer {
 
     /** extract module wrt SIGNATURE and TYPE from the set of axioms */
     // [BEGIN,END)
-    public void extract(Collection<AxiomWrapper> begin, Signature signature,
-            ModuleType type) {
+    public void extract(List<AxiomWrapper> begin, Signature signature, ModuleType type) {
         boolean topLocality = type == ModuleType.TOP;
         sig = signature;
         checker.setSignatureValue(sig);

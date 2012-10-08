@@ -145,8 +145,8 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker
      * 
      * @throws OWLOntologyCreationException */
     public void preprocessOntology(Collection<AxiomWrapper> axioms) {
-        Signature s = new Signature();
         ExprMap.clear();
+        Signature s = new Signature();
         for (AxiomWrapper q : axioms) {
             if (q.isUsed()) {
                 ExprMap.putAll(q.getAxiom(), getExpr(q.getAxiom()));

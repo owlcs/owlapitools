@@ -2,32 +2,37 @@ package uk.ac.manchester.cs.atomicdecomposition;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 public class Atom {
     private final Collection<OWLAxiom> axioms;
-    private List<OWLEntity> signature = new ArrayList<OWLEntity>();
+    private List<OWLEntity> signature;
     private Collection<OWLEntity> label;
+    private int hashcode;
 
     public boolean contains(OWLAxiom ax) {
         return axioms.contains(ax);
     }
 
+    private void initSignature() {
+        if (signature == null) {
+            signature = new ArrayList<OWLEntity>();
+            for (OWLAxiom ax : axioms) {
+                signature.addAll(ax.getSignature());
+            }
+        }
+    }
+
     public Atom(Collection<OWLAxiom> axioms) {
         this.axioms = axioms;
-        Set<OWLEntity> set = new HashSet<OWLEntity>();
-        for (OWLAxiom ax : axioms) {
-            set.addAll(ax.getSignature());
-        }
-        signature.addAll(set);
+        hashcode = this.axioms.hashCode();
     }
 
     public Collection<OWLEntity> getSignature() {
+        initSignature();
         return signature;
     }
 
@@ -59,7 +64,7 @@ public class Atom {
 
     @Override
     public int hashCode() {
-        return axioms.hashCode();
+        return hashcode;
     }
 
     @Override

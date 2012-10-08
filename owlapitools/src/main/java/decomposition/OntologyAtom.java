@@ -82,12 +82,12 @@ public class OntologyAtom {
 
     // access to axioms
     /** get all the atom's axioms */
-    public Collection<AxiomWrapper> getAtomAxioms() {
+    public List<AxiomWrapper> getAtomAxioms() {
         return axioms;
     }
 
     /** get all the module axioms */
-    public Collection<AxiomWrapper> getModule() {
+    public List<AxiomWrapper> getModule() {
         return module;
     }
 
