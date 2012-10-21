@@ -2,6 +2,7 @@ package uk.ac.manchester.cs.atomicdecomposition;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
@@ -14,23 +15,26 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.util.MultiMap;
 
-import uk.ac.manchester.cs.chainsaw.ArrayIntMap;
 import uk.ac.manchester.cs.chainsaw.FastSet;
 import uk.ac.manchester.cs.owlapi.modularity.ModuleType;
 import decomposition.AxiomSelector;
 import decomposition.AxiomWrapper;
 import decomposition.Decomposer;
+import decomposition.IdentityMultiMap;
 import decomposition.OntologyAtom;
 import decomposition.SyntacticLocalityChecker;
 
 public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
     Set<OWLAxiom> globalAxioms;
     Set<OWLAxiom> tautologies;
-    final MultiMap<OWLEntity, Atom> termBasedIndex = new MultiMap<OWLEntity, Atom>();
-    List<Atom> atoms = new ArrayList<Atom>();
-    Map<Atom, Integer> map = new IdentityHashMap<Atom, Integer>();
-    ArrayIntMap dependents = new ArrayIntMap();
-    ArrayIntMap dependencies = new ArrayIntMap();
+    final MultiMap<OWLEntity, Atom> termBasedIndex = new MultiMap<OWLEntity, Atom>() {
+        protected Collection<Atom> createCollection() {
+            return Collections.newSetFromMap(new IdentityHashMap<Atom, Boolean>());
+        }
+    };
+    List<Atom> atoms;
+    IdentityMultiMap<Atom, Atom> dependents = new IdentityMultiMap<Atom, Atom>();
+    IdentityMultiMap<Atom, Atom> dependencies = new IdentityMultiMap<Atom, Atom>();
     Decomposer decomposer;
     private final ModuleType type;
 
@@ -55,21 +59,20 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
         decomposer = new Decomposer(AxiomSelector.wrap(axioms),
                 new SyntacticLocalityChecker());
         int size = decomposer.getAOS(this.type).size();
-        atoms.add(null);
+        atoms = new ArrayList<Atom>();
         for (int i = 0; i < size; i++) {
             final Atom atom = new Atom(asSet(decomposer.getAOS().get(i).getAtomAxioms()));
             atoms.add(atom);
-            map.put(atom, i + 1);
             for (OWLEntity e : atom.getSignature()) {
                 termBasedIndex.put(e, atom);
             }
         }
-        for (int i = 1; i <= size; i++) {
-            Set<OntologyAtom> dependentIndexes = decomposer.getAOS().get(i - 1)
+        for (int i = 0; i < size; i++) {
+            Set<OntologyAtom> dependentIndexes = decomposer.getAOS().get(i)
                     .getDependencies();
             for (OntologyAtom j : dependentIndexes) {
-                dependencies.put(i, j.getId() + 1);
-                dependents.put(j.getId() + 1, i);
+                dependencies.put(atoms.get(i), atoms.get(j.getId()));
+                dependents.put(atoms.get(j.getId()), atoms.get(i));
             }
         }
     }
@@ -84,11 +87,11 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
     }
 
     public Set<Atom> getAtoms() {
-        return new HashSet<Atom>(atoms.subList(1, atoms.size()));
+        return new HashSet<Atom>(atoms);
     }
 
     public Atom getAtomForAxiom(OWLAxiom axiom) {
-        for (int i = 1; i < atoms.size(); i++) {
+        for (int i = 0; i < atoms.size(); i++) {
             if (atoms.get(i).contains(axiom)) {
                 return atoms.get(i);
             }
@@ -108,11 +111,11 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
     }
 
     public boolean isTopAtom(Atom atom) {
-        return !dependencies.containsKey(map.get(atom));
+        return !dependencies.containsKey(atom);
     }
 
     public boolean isBottomAtom(Atom atom) {
-        return !dependents.containsKey(map.get(atom));
+        return !dependents.containsKey(atom);
     }
 
     public void addAxiomToAtom(OWLAxiom axiom, Atom atom) {
@@ -148,20 +151,24 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
         return explore(atom, direct, dependents);
     }
 
-    public Set<Atom> explore(Atom atom, boolean direct, ArrayIntMap multimap) {
+    public Set<Atom> explore(Atom atom, boolean direct,
+            IdentityMultiMap<Atom, Atom> multimap) {
         if (direct) {
-            return asSet(multimap.get(map.get(atom)));
+            Set<Atom> hashSet = new HashSet<Atom>(multimap.get(atom));
+            for (Atom a : multimap.get(atom)) {
+                hashSet.removeAll(multimap.get(a));
+            }
+            return hashSet;
         }
-        Map<Atom, Atom> toReturn = new IdentityHashMap<Atom, Atom>();
+        Map<Atom, Atom> toReturn = new HashMap<Atom, Atom>();
         toReturn.put(atom, atom);
         List<Atom> toDo = new ArrayList<Atom>();
         toDo.add(atom);
         for (int i = 0; i < toDo.size(); i++) {
-            final Integer key = map.get(toDo.get(i));
+            final Atom key = toDo.get(i);
             if (key != null) {
-                FastSet c = multimap.get(key);
-                for (int j = 0; j < c.size(); j++) {
-                    Atom a = atoms.get(c.get(j));
+                Collection<Atom> c = multimap.get(key);
+                for (Atom a : c) {
                     if (toReturn.put(a, a) == null) {
                         toDo.add(a);
                     }
@@ -178,9 +185,9 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
     }
 
     public Set<Atom> getTopAtoms() {
-        List<Integer> keys = dependents.keySet();
+        Set<Atom> keys = new HashSet<Atom>(dependents.keySet());
         keys.removeAll(dependents.getAllValues());
-        return asSet(keys);
+        return keys;
     }
 
     public Set<Atom> asSet(Iterable<Integer> keys) {
@@ -200,9 +207,9 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
     }
 
     public Set<Atom> getBottomAtoms() {
-        List<Integer> keys = dependents.getAllValues();
+        Set<Atom> keys = new HashSet<Atom>(dependents.getAllValues());
         keys.removeAll(dependents.keySet());
-        return asSet(keys);
+        return keys;
     }
 
     public Atom getAtomByID(Object id) {
