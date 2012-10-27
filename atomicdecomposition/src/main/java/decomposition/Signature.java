@@ -8,8 +8,6 @@ import java.util.Set;
 
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import utils.Bag;
-
 /** class to hold the signature of a module */
 public class Signature {
     /** set to keep all the elements in signature */
@@ -64,8 +62,6 @@ public class Signature {
     public int hashCode() {
         return set.hashCode();
     }
-
-    private static Bag<OWLEntity> bag = new Bag<OWLEntity>();
 
     /** @return true iff signature contains given element */
     public boolean contains(OWLEntity p) {
