@@ -1,6 +1,4 @@
 /bin
 /.classpath
 /.project
-/atomicdecomposition/target
-/concurrentimpl/target
-/owlapitools/target
+/*/target
