@@ -19,7 +19,7 @@ public class OWLOntologyLoggingWrapper implements OWLMutableOntology {
 	private final OWLMutableOntology delegate;
 
 	public OWLOntologyLoggingWrapper(OWLMutableOntology o) {
-		this.delegate = o;
+		delegate = o;
 	}
 
 	public static void main(String[] args) {
@@ -1089,4 +1089,40 @@ public class OWLOntologyLoggingWrapper implements OWLMutableOntology {
 	public int hashCode() {
 		return delegate.hashCode();
 	}
+
+    @Override
+    public void accept(OWLNamedObjectVisitor visitor) {
+        visitor.visit(delegate);
+    }
+
+
+    @Override
+    public boolean containsReference(OWLClass entity) {
+        return delegate.containsReference(entity);
+    }
+
+    @Override
+    public boolean containsReference(OWLObjectProperty entity) {
+        return delegate.containsReference(entity);
+    }
+
+    @Override
+    public boolean containsReference(OWLDataProperty entity) {
+        return delegate.containsReference(entity);
+    }
+
+    @Override
+    public boolean containsReference(OWLNamedIndividual entity) {
+        return delegate.containsReference(entity);
+    }
+
+    @Override
+    public boolean containsReference(OWLDatatype entity) {
+        return delegate.containsReference(entity);
+    }
+
+    @Override
+    public boolean containsReference(OWLAnnotationProperty entity) {
+        return delegate.containsReference(entity);
+    }
 }
