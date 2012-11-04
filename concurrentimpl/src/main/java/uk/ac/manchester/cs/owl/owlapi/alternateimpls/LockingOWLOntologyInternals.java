@@ -38,9 +38,7 @@
  */
 package uk.ac.manchester.cs.owl.owlapi.alternateimpls;
 
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.locks.ReadWriteLock;
 
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;

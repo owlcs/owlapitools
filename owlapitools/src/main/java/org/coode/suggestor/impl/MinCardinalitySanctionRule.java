@@ -28,11 +28,13 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 public class MinCardinalitySanctionRule implements PropertySanctionRule {
 	private OWLReasoner r;
 
-	public void setSuggestor(PropertySuggestor ps) {
+	@Override
+    public void setSuggestor(PropertySuggestor ps) {
 		this.r = ps.getReasoner();
 	}
 
-	public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p) {
+	@Override
+    public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p) {
 		RestrictionAccumulator acc = new RestrictionAccumulator(r);
 		for (OWLObjectMinCardinality restr : acc.getRestrictions(c, p,
 				OWLObjectMinCardinality.class)) {
@@ -43,7 +45,8 @@ public class MinCardinalitySanctionRule implements PropertySanctionRule {
 		return false;
 	}
 
-	public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p) {
+	@Override
+    public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p) {
 		RestrictionAccumulator acc = new RestrictionAccumulator(r);
 		for (OWLDataMinCardinality restr : acc.getRestrictions(c, p,
 				OWLDataMinCardinality.class)) {

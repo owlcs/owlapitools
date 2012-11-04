@@ -113,7 +113,8 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 
 		public <T> T get(CacheKeys cachekey, Object key, Computable<Object> c) {
 			Computable<MemoizingCache<Object, Object>> cacheinit = new ComputableAllThrowables<MemoizingCache<Object, Object>>() {
-				public MemoizingCache<Object, Object> compute() {
+				@Override
+                public MemoizingCache<Object, Object> compute() {
 					try {
 						return new MemoizingCache<Object, Object>();
 					} catch (Throwable e) {
@@ -156,7 +157,8 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		for (int i = 0; i < concurrentNumber; i++) {
 			final int position = i * chunk;
 			exec.execute(new Runnable() {
-				public void run() {
+				@Override
+                public void run() {
 					for (int j = position; j < chunk + position; j++) {
 						/*
 						 * preload all named classes; it is safe to start
@@ -192,19 +194,23 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		isEntailed, subclasses, subclassesDirect, superclassesDirect, superclasses, equivclasses, disjointclasses, subobjectpropertiesDirect, subobjectproperties, superobjectpropertiesDirect, superobjectproperties, equivobjectproperties, disjointobjectproperties, inverseobjectproperties, objectpropertiesdomainsDirect, objectpropertiesdomains, objectpropertiesranges, objectpropertiesrangesDirect, diffindividual, datapropertiesdomains, datapropertiesdomainsDirect, datapropertiesvalues, disjointdataproperties, equivdataproperties, instances, instancesDirect, objectpropertiesvalues, sameindividual, subdataproperties, subdatapropertiesDirect, superdataproperties, superdatapropertiesDirect, types, typesDirect, issatisfiable
 	}
 
-	public String getReasonerName() {
+	@Override
+    public String getReasonerName() {
 		return next().getReasonerName();
 	}
 
-	public Version getReasonerVersion() {
+	@Override
+    public Version getReasonerVersion() {
 		return next().getReasonerVersion();
 	}
 
-	public BufferingMode getBufferingMode() {
+	@Override
+    public BufferingMode getBufferingMode() {
 		return next().getBufferingMode();
 	}
 
-	public void flush() {
+	@Override
+    public void flush() {
 		cache.clear();
 		for (int i = 0; i < concurrentNumber; i++) {
 			if (concurrentDelegates[i] != null) {
@@ -213,23 +219,28 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		}
 	}
 
-	public List<OWLOntologyChange> getPendingChanges() {
+	@Override
+    public List<OWLOntologyChange> getPendingChanges() {
 		return next().getPendingChanges();
 	}
 
-	public Set<OWLAxiom> getPendingAxiomAdditions() {
+	@Override
+    public Set<OWLAxiom> getPendingAxiomAdditions() {
 		return next().getPendingAxiomAdditions();
 	}
 
-	public Set<OWLAxiom> getPendingAxiomRemovals() {
+	@Override
+    public Set<OWLAxiom> getPendingAxiomRemovals() {
 		return next().getPendingAxiomRemovals();
 	}
 
-	public OWLOntology getRootOntology() {
+	@Override
+    public OWLOntology getRootOntology() {
 		return rootOntology;
 	}
 
-	public void interrupt() {
+	@Override
+    public void interrupt() {
 		cache.clear();
 		for (int i = 0; i < concurrentNumber; i++) {
 			if (concurrentDelegates[i] != null) {
@@ -238,14 +249,16 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		}
 	}
 
-	public void precomputeInferences(final InferenceType... inferenceTypes)
+	@Override
+    public void precomputeInferences(final InferenceType... inferenceTypes)
 			throws ReasonerInterruptedException, TimeOutException,
 			InconsistentOntologyException {
 		cache.clear();
 		for (int i = 0; i < concurrentNumber; i++) {
 			final OWLReasoner r = next();
 			Runnable starter = new Runnable() {
-				public void run() {
+				@Override
+                public void run() {
 					r.precomputeInferences(inferenceTypes);
 				}
 			};
@@ -254,24 +267,29 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		prefetch();
 	}
 
-	public boolean isPrecomputed(InferenceType inferenceType) {
+	@Override
+    public boolean isPrecomputed(InferenceType inferenceType) {
 		return next().isPrecomputed(inferenceType);
 	}
 
-	public Set<InferenceType> getPrecomputableInferenceTypes() {
+	@Override
+    public Set<InferenceType> getPrecomputableInferenceTypes() {
 		return next().getPrecomputableInferenceTypes();
 	}
 
-	public boolean isConsistent() throws ReasonerInterruptedException, TimeOutException {
+	@Override
+    public boolean isConsistent() throws ReasonerInterruptedException, TimeOutException {
 		return next().isConsistent();
 	}
 
-	public boolean isSatisfiable(final OWLClassExpression classExpression)
+	@Override
+    public boolean isSatisfiable(final OWLClassExpression classExpression)
 			throws ReasonerInterruptedException, TimeOutException,
 			ClassExpressionNotInProfileException, FreshEntitiesException,
 			InconsistentOntologyException {
 		ComputableAllThrowables<Object> entailer = new ComputableAllThrowables<Object>() {
-			@SuppressWarnings("boxing")
+			@Override
+            @SuppressWarnings("boxing")
 			public Object compute() {
 				try {
 					return next().isSatisfiable(classExpression);
@@ -314,17 +332,20 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//		return this.next().isSatisfiable(classExpression);
 	}
 
-	public Node<OWLClass> getUnsatisfiableClasses() throws ReasonerInterruptedException,
+	@Override
+    public Node<OWLClass> getUnsatisfiableClasses() throws ReasonerInterruptedException,
 			TimeOutException, InconsistentOntologyException {
 		return next().getUnsatisfiableClasses();
 	}
 
-	public boolean isEntailed(final OWLAxiom axiom) throws ReasonerInterruptedException,
+	@Override
+    public boolean isEntailed(final OWLAxiom axiom) throws ReasonerInterruptedException,
 			UnsupportedEntailmentTypeException, TimeOutException,
 			AxiomNotInProfileException, FreshEntitiesException,
 			InconsistentOntologyException {
 		ComputableAllThrowables<Object> entailer = new ComputableAllThrowables<Object>() {
-			@SuppressWarnings("boxing")
+			@Override
+            @SuppressWarnings("boxing")
 			public Object compute() {
 				try {
 					return next().isEntailed(axiom);
@@ -367,7 +388,8 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//return this.next().isEntailed(axiom);
 	}
 
-	public boolean isEntailed(Set<? extends OWLAxiom> axioms)
+	@Override
+    public boolean isEntailed(Set<? extends OWLAxiom> axioms)
 			throws ReasonerInterruptedException, UnsupportedEntailmentTypeException,
 			TimeOutException, AxiomNotInProfileException, FreshEntitiesException,
 			InconsistentOntologyException {
@@ -380,25 +402,30 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//		return this.next().isEntailed(axioms);
 	}
 
-	public boolean isEntailmentCheckingSupported(AxiomType<?> axiomType) {
+	@Override
+    public boolean isEntailmentCheckingSupported(AxiomType<?> axiomType) {
 		return next().isEntailmentCheckingSupported(axiomType);
 	}
 
-	public Node<OWLClass> getTopClassNode() {
+	@Override
+    public Node<OWLClass> getTopClassNode() {
 		return next().getTopClassNode();
 	}
 
-	public Node<OWLClass> getBottomClassNode() {
+	@Override
+    public Node<OWLClass> getBottomClassNode() {
 		return next().getBottomClassNode();
 	}
 
-	public NodeSet<OWLClass> getSubClasses(final OWLClassExpression ce,
+	@Override
+    public NodeSet<OWLClass> getSubClasses(final OWLClassExpression ce,
 			final boolean direct) throws ReasonerInterruptedException, TimeOutException,
 			FreshEntitiesException, InconsistentOntologyException,
 			ClassExpressionNotInProfileException {
 		final CacheKeys key = direct ? CacheKeys.subclassesDirect : CacheKeys.subclasses;
 		Computable<Object> checker = new ComputableAllThrowables<Object>() {
-			public Object compute() {
+			@Override
+            public Object compute() {
 				try {
 					return next().getSubClasses(ce, direct);
 				} catch (Throwable e) {
@@ -444,14 +471,16 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//		return this.next().getSubClasses(ce, direct);
 	}
 
-	public NodeSet<OWLClass> getSuperClasses(final OWLClassExpression ce,
+	@Override
+    public NodeSet<OWLClass> getSuperClasses(final OWLClassExpression ce,
 			final boolean direct) throws InconsistentOntologyException,
 			ClassExpressionNotInProfileException, FreshEntitiesException,
 			ReasonerInterruptedException, TimeOutException {
 		final CacheKeys key = direct ? CacheKeys.superclassesDirect
 				: CacheKeys.superclasses;
 		Computable<Object> checker = new ComputableAllThrowables<Object>() {
-			public Object compute() {
+			@Override
+            public Object compute() {
 				try {
 					return next().getSuperClasses(ce, direct);
 				} catch (Throwable e) {
@@ -492,12 +521,14 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//return this.next().getSuperClasses(ce, direct);
 	}
 
-	public Node<OWLClass> getEquivalentClasses(final OWLClassExpression ce)
+	@Override
+    public Node<OWLClass> getEquivalentClasses(final OWLClassExpression ce)
 			throws InconsistentOntologyException, ClassExpressionNotInProfileException,
 			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
 		final CacheKeys key = CacheKeys.equivclasses;
 		Computable<Object> checker = new ComputableAllThrowables<Object>() {
-			public Object compute() {
+			@Override
+            public Object compute() {
 				try {
 					return next().getEquivalentClasses(ce);
 				} catch (Throwable e) {
@@ -539,12 +570,14 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//return this.next().getEquivalentClasses(ce);
 	}
 
-	public NodeSet<OWLClass> getDisjointClasses(final OWLClassExpression ce)
+	@Override
+    public NodeSet<OWLClass> getDisjointClasses(final OWLClassExpression ce)
 			throws ReasonerInterruptedException, TimeOutException,
 			FreshEntitiesException, InconsistentOntologyException {
 		final CacheKeys key = CacheKeys.disjointclasses;
 		Computable<Object> checker = new ComputableAllThrowables<Object>() {
-			public Object compute() {
+			@Override
+            public Object compute() {
 				try {
 					return next().getDisjointClasses(ce);
 				} catch (Throwable e) {
@@ -586,22 +619,26 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//		return this.next().getDisjointClasses(ce);
 	}
 
-	public Node<OWLObjectPropertyExpression> getTopObjectPropertyNode() {
+	@Override
+    public Node<OWLObjectPropertyExpression> getTopObjectPropertyNode() {
 		return next().getTopObjectPropertyNode();
 	}
 
-	public Node<OWLObjectPropertyExpression> getBottomObjectPropertyNode() {
+	@Override
+    public Node<OWLObjectPropertyExpression> getBottomObjectPropertyNode() {
 		return next().getBottomObjectPropertyNode();
 	}
 
-	public NodeSet<OWLObjectPropertyExpression> getSubObjectProperties(
+	@Override
+    public NodeSet<OWLObjectPropertyExpression> getSubObjectProperties(
 			final OWLObjectPropertyExpression pe, final boolean direct)
 			throws InconsistentOntologyException, FreshEntitiesException,
 			ReasonerInterruptedException, TimeOutException {
 		final CacheKeys key = direct ? CacheKeys.subobjectpropertiesDirect
 				: CacheKeys.subobjectproperties;
 		Computable<Object> checker = new ComputableAllThrowables<Object>() {
-			public Object compute() {
+			@Override
+            public Object compute() {
 				try {
 					return next().getSubObjectProperties(pe, direct);
 				} catch (Throwable e) {
@@ -644,14 +681,16 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//return this.next().getSubObjectProperties(pe, direct);
 	}
 
-	public NodeSet<OWLObjectPropertyExpression> getSuperObjectProperties(
+	@Override
+    public NodeSet<OWLObjectPropertyExpression> getSuperObjectProperties(
 			final OWLObjectPropertyExpression pe, final boolean direct)
 			throws InconsistentOntologyException, FreshEntitiesException,
 			ReasonerInterruptedException, TimeOutException {
 		final CacheKeys key = direct ? CacheKeys.superobjectpropertiesDirect
 				: CacheKeys.superobjectproperties;
 		Computable<Object> checker = new ComputableAllThrowables<Object>() {
-			public Object compute() {
+			@Override
+            public Object compute() {
 				try {
 					return next().getSuperObjectProperties(pe, direct);
 				} catch (Throwable e) {
@@ -694,12 +733,14 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//		return this.next().getSuperObjectProperties(pe, direct);
 	}
 
-	public Node<OWLObjectPropertyExpression> getEquivalentObjectProperties(
+	@Override
+    public Node<OWLObjectPropertyExpression> getEquivalentObjectProperties(
 			final OWLObjectPropertyExpression pe) throws InconsistentOntologyException,
 			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
 		final CacheKeys key = CacheKeys.equivobjectproperties;
 		Computable<Object> checker = new ComputableAllThrowables<Object>() {
-			public Object compute() {
+			@Override
+            public Object compute() {
 				try {
 					return next().getEquivalentObjectProperties(pe);
 				} catch (Throwable e) {
@@ -742,12 +783,14 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//		return this.next().getEquivalentObjectProperties(pe);
 	}
 
-	public NodeSet<OWLObjectPropertyExpression> getDisjointObjectProperties(
+	@Override
+    public NodeSet<OWLObjectPropertyExpression> getDisjointObjectProperties(
 			final OWLObjectPropertyExpression pe) throws InconsistentOntologyException,
 			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
 		final CacheKeys key = CacheKeys.disjointobjectproperties;
 		Computable<Object> checker = new ComputableAllThrowables<Object>() {
-			public Object compute() {
+			@Override
+            public Object compute() {
 				try {
 					return next().getDisjointObjectProperties(pe);
 				} catch (Throwable e) {
@@ -790,12 +833,14 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//return this.next().getDisjointObjectProperties(pe);
 	}
 
-	public Node<OWLObjectPropertyExpression> getInverseObjectProperties(
+	@Override
+    public Node<OWLObjectPropertyExpression> getInverseObjectProperties(
 			final OWLObjectPropertyExpression pe) throws InconsistentOntologyException,
 			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
 		final CacheKeys key = CacheKeys.inverseobjectproperties;
 		Computable<Object> checker = new ComputableAllThrowables<Object>() {
-			public Object compute() {
+			@Override
+            public Object compute() {
 				try {
 					return next().getInverseObjectProperties(pe);
 				} catch (Throwable e) {
@@ -838,14 +883,16 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//return this.next().getInverseObjectProperties(pe);
 	}
 
-	public NodeSet<OWLClass> getObjectPropertyDomains(
+	@Override
+    public NodeSet<OWLClass> getObjectPropertyDomains(
 			final OWLObjectPropertyExpression pe, final boolean direct)
 			throws InconsistentOntologyException, FreshEntitiesException,
 			ReasonerInterruptedException, TimeOutException {
 		final CacheKeys key = direct ? CacheKeys.objectpropertiesdomainsDirect
 				: CacheKeys.objectpropertiesdomains;
 		Computable<Object> checker = new ComputableAllThrowables<Object>() {
-			public Object compute() {
+			@Override
+            public Object compute() {
 				try {
 					return next().getObjectPropertyDomains(pe, direct);
 				} catch (Throwable e) {
@@ -888,14 +935,16 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//return this.next().getObjectPropertyDomains(pe, direct);
 	}
 
-	public NodeSet<OWLClass> getObjectPropertyRanges(
+	@Override
+    public NodeSet<OWLClass> getObjectPropertyRanges(
 			final OWLObjectPropertyExpression pe, final boolean direct)
 			throws InconsistentOntologyException, FreshEntitiesException,
 			ReasonerInterruptedException, TimeOutException {
 		final CacheKeys key = direct ? CacheKeys.objectpropertiesrangesDirect
 				: CacheKeys.objectpropertiesranges;
 		Computable<Object> checker = new ComputableAllThrowables<Object>() {
-			public Object compute() {
+			@Override
+            public Object compute() {
 				try {
 					return next().getObjectPropertyRanges(pe, direct);
 				} catch (Throwable e) {
@@ -938,21 +987,25 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//return this.next().getObjectPropertyRanges(pe, direct);
 	}
 
-	public Node<OWLDataProperty> getTopDataPropertyNode() {
+	@Override
+    public Node<OWLDataProperty> getTopDataPropertyNode() {
 		return next().getTopDataPropertyNode();
 	}
 
-	public Node<OWLDataProperty> getBottomDataPropertyNode() {
+	@Override
+    public Node<OWLDataProperty> getBottomDataPropertyNode() {
 		return next().getBottomDataPropertyNode();
 	}
 
-	public NodeSet<OWLDataProperty> getSubDataProperties(final OWLDataProperty pe,
+	@Override
+    public NodeSet<OWLDataProperty> getSubDataProperties(final OWLDataProperty pe,
 			final boolean direct) throws InconsistentOntologyException,
 			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
 		final CacheKeys key = direct ? CacheKeys.subdatapropertiesDirect
 				: CacheKeys.subdataproperties;
 		Computable<Object> checker = new ComputableAllThrowables<Object>() {
-			public Object compute() {
+			@Override
+            public Object compute() {
 				try {
 					return next().getSubDataProperties(pe, direct);
 				} catch (Throwable e) {
@@ -995,13 +1048,15 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//		return this.next().getSubDataProperties(pe, direct);
 	}
 
-	public NodeSet<OWLDataProperty> getSuperDataProperties(final OWLDataProperty pe,
+	@Override
+    public NodeSet<OWLDataProperty> getSuperDataProperties(final OWLDataProperty pe,
 			final boolean direct) throws InconsistentOntologyException,
 			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
 		final CacheKeys key = direct ? CacheKeys.superdatapropertiesDirect
 				: CacheKeys.superdataproperties;
 		Computable<Object> checker = new ComputableAllThrowables<Object>() {
-			public Object compute() {
+			@Override
+            public Object compute() {
 				try {
 					return next().getSuperDataProperties(pe, direct);
 				} catch (Throwable e) {
@@ -1044,12 +1099,14 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//		return this.next().getSuperDataProperties(pe, direct);
 	}
 
-	public Node<OWLDataProperty> getEquivalentDataProperties(final OWLDataProperty pe)
+	@Override
+    public Node<OWLDataProperty> getEquivalentDataProperties(final OWLDataProperty pe)
 			throws InconsistentOntologyException, FreshEntitiesException,
 			ReasonerInterruptedException, TimeOutException {
 		final CacheKeys key = CacheKeys.equivdataproperties;
 		Computable<Object> checker = new ComputableAllThrowables<Object>() {
-			public Object compute() {
+			@Override
+            public Object compute() {
 				try {
 					return next().getEquivalentDataProperties(pe);
 				} catch (Throwable e) {
@@ -1092,12 +1149,14 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//		return this.next().getEquivalentDataProperties(pe);
 	}
 
-	public NodeSet<OWLDataProperty> getDisjointDataProperties(
+	@Override
+    public NodeSet<OWLDataProperty> getDisjointDataProperties(
 			final OWLDataPropertyExpression pe) throws InconsistentOntologyException,
 			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
 		final CacheKeys key = CacheKeys.disjointdataproperties;
 		Computable<Object> checker = new ComputableAllThrowables<Object>() {
-			public Object compute() {
+			@Override
+            public Object compute() {
 				try {
 					return next().getDisjointDataProperties(pe);
 				} catch (Throwable e) {
@@ -1140,13 +1199,15 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//		return this.next().getDisjointDataProperties(pe);
 	}
 
-	public NodeSet<OWLClass> getDataPropertyDomains(final OWLDataProperty pe,
+	@Override
+    public NodeSet<OWLClass> getDataPropertyDomains(final OWLDataProperty pe,
 			final boolean direct) throws InconsistentOntologyException,
 			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
 		final CacheKeys key = direct ? CacheKeys.datapropertiesdomainsDirect
 				: CacheKeys.datapropertiesdomains;
 		Computable<Object> checker = new ComputableAllThrowables<Object>() {
-			public Object compute() {
+			@Override
+            public Object compute() {
 				try {
 					return next().getDataPropertyDomains(pe, direct);
 				} catch (Throwable e) {
@@ -1189,12 +1250,14 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//		return this.next().getDataPropertyDomains(pe, direct);
 	}
 
-	public NodeSet<OWLClass> getTypes(final OWLNamedIndividual ind, final boolean direct)
+	@Override
+    public NodeSet<OWLClass> getTypes(final OWLNamedIndividual ind, final boolean direct)
 			throws InconsistentOntologyException, FreshEntitiesException,
 			ReasonerInterruptedException, TimeOutException {
 		final CacheKeys key = direct ? CacheKeys.typesDirect : CacheKeys.types;
 		Computable<Object> checker = new ComputableAllThrowables<Object>() {
-			public Object compute() {
+			@Override
+            public Object compute() {
 				try {
 					return next().getTypes(ind, direct);
 				} catch (Throwable e) {
@@ -1237,13 +1300,15 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//		return this.next().getTypes(ind, direct);
 	}
 
-	public NodeSet<OWLNamedIndividual> getInstances(final OWLClassExpression ce,
+	@Override
+    public NodeSet<OWLNamedIndividual> getInstances(final OWLClassExpression ce,
 			final boolean direct) throws InconsistentOntologyException,
 			ClassExpressionNotInProfileException, FreshEntitiesException,
 			ReasonerInterruptedException, TimeOutException {
 		final CacheKeys key = direct ? CacheKeys.instancesDirect : CacheKeys.instances;
 		Computable<Object> checker = new ComputableAllThrowables<Object>() {
-			public Object compute() {
+			@Override
+            public Object compute() {
 				try {
 					return next().getInstances(ce, direct);
 				} catch (Throwable e) {
@@ -1286,13 +1351,15 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//	return this.next().getInstances(ce, direct);
 	}
 
-	public NodeSet<OWLNamedIndividual> getObjectPropertyValues(
+	@Override
+    public NodeSet<OWLNamedIndividual> getObjectPropertyValues(
 			final OWLNamedIndividual ind, final OWLObjectPropertyExpression pe)
 			throws InconsistentOntologyException, FreshEntitiesException,
 			ReasonerInterruptedException, TimeOutException {
 		final CacheKeys key = CacheKeys.objectpropertiesvalues;
 		Computable<Object> checker = new ComputableAllThrowables<Object>() {
-			public Object compute() {
+			@Override
+            public Object compute() {
 				try {
 					return next().getObjectPropertyValues(ind, pe);
 				} catch (Throwable e) {
@@ -1335,12 +1402,14 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//return this.next().getObjectPropertyValues(ind, pe);
 	}
 
-	public Set<OWLLiteral> getDataPropertyValues(final OWLNamedIndividual ind,
+	@Override
+    public Set<OWLLiteral> getDataPropertyValues(final OWLNamedIndividual ind,
 			final OWLDataProperty pe) throws InconsistentOntologyException,
 			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
 		final CacheKeys key = CacheKeys.datapropertiesvalues;
 		Computable<Object> checker = new ComputableAllThrowables<Object>() {
-			public Object compute() {
+			@Override
+            public Object compute() {
 				try {
 					return next().getDataPropertyValues(ind, pe);
 				} catch (Throwable e) {
@@ -1383,12 +1452,14 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//	return this.next().getDataPropertyValues(ind, pe);
 	}
 
-	public Node<OWLNamedIndividual> getSameIndividuals(final OWLNamedIndividual ind)
+	@Override
+    public Node<OWLNamedIndividual> getSameIndividuals(final OWLNamedIndividual ind)
 			throws InconsistentOntologyException, FreshEntitiesException,
 			ReasonerInterruptedException, TimeOutException {
 		final CacheKeys key = CacheKeys.sameindividual;
 		Computable<Object> checker = new ComputableAllThrowables<Object>() {
-			public Object compute() {
+			@Override
+            public Object compute() {
 				try {
 					return next().getSameIndividuals(ind);
 				} catch (Throwable e) {
@@ -1431,12 +1502,14 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//		return this.next().getSameIndividuals(ind);
 	}
 
-	public NodeSet<OWLNamedIndividual> getDifferentIndividuals(
+	@Override
+    public NodeSet<OWLNamedIndividual> getDifferentIndividuals(
 			final OWLNamedIndividual ind) throws InconsistentOntologyException,
 			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
 		final CacheKeys key = CacheKeys.diffindividual;
 		Computable<Object> checker = new ComputableAllThrowables<Object>() {
-			public Object compute() {
+			@Override
+            public Object compute() {
 				try {
 					return next().getDifferentIndividuals(ind);
 				} catch (Throwable e) {
@@ -1479,19 +1552,23 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		//	return this.next().getDifferentIndividuals(ind);
 	}
 
-	public long getTimeOut() {
+	@Override
+    public long getTimeOut() {
 		return next().getTimeOut();
 	}
 
-	public FreshEntityPolicy getFreshEntityPolicy() {
+	@Override
+    public FreshEntityPolicy getFreshEntityPolicy() {
 		return next().getFreshEntityPolicy();
 	}
 
-	public IndividualNodeSetPolicy getIndividualNodeSetPolicy() {
+	@Override
+    public IndividualNodeSetPolicy getIndividualNodeSetPolicy() {
 		return next().getIndividualNodeSetPolicy();
 	}
 
-	public void dispose() {
+	@Override
+    public void dispose() {
 		cache.clear();
 		for (int i = 0; i < concurrentNumber; i++) {
 			if (concurrentDelegates[i] != null) {
@@ -1500,7 +1577,7 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		}
 	}
 
-	@SuppressWarnings("unused")
+	@Override
 	public void ontologiesChanged(List<? extends OWLOntologyChange> changes)
 			throws OWLException {
 		//only invalidate the caches, the changes are supposed to go to the reasoner via its own listener

@@ -41,11 +41,13 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 public class CheckSubsStructureSanctionRule implements PropertySanctionRule {
 	private OWLReasoner r;
 
-	public void setSuggestor(PropertySuggestor ps) {
+	@Override
+    public void setSuggestor(PropertySuggestor ps) {
 		this.r = ps.getReasoner();
 	}
 
-	public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p) {
+	@Override
+    public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p) {
 		for (Node<OWLClass> sub : r.getSubClasses(c, true)) {
 			RestrictionAccumulator acc = new RestrictionAccumulator(r);
 			for (OWLClass s : sub.getEntities()) {
@@ -60,7 +62,8 @@ public class CheckSubsStructureSanctionRule implements PropertySanctionRule {
 		return false;
 	}
 
-	public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p) {
+	@Override
+    public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p) {
 		for (Node<OWLClass> sub : r.getSubClasses(c, true)) {
 			RestrictionAccumulator acc = new RestrictionAccumulator(r);
 			for (OWLClass s : sub.getEntities()) {

@@ -28,7 +28,8 @@ public class MemoryTest {
 		List<File> filesToUse = new ArrayList<File>();
 
 				for (File onto : base.listFiles(new FilenameFilter() {
-					public boolean accept(File dir, String name) {
+					@Override
+                    public boolean accept(File dir, String name) {
 						return name.endsWith(".zip") ;
 					}
 				})) {
@@ -50,14 +51,17 @@ public class MemoryTest {
 				final AtomicLong annotationsCount = new AtomicLong();
 				final AtomicLong annotationsSize = new AtomicLong();
 				final OWLAnnotationValueVisitor visitor = new OWLAnnotationValueVisitor() {
-					public void visit(OWLLiteral literal) {
+					@Override
+                    public void visit(OWLLiteral literal) {
 						annotationsCount.incrementAndGet();
 						annotationsSize.addAndGet(literal.getLiteral().length());
 					}
 
-					public void visit(OWLAnonymousIndividual individual) {}
+					@Override
+                    public void visit(OWLAnonymousIndividual individual) {}
 
-					public void visit(IRI iri) {}
+					@Override
+                    public void visit(IRI iri) {}
 				};
 				System.out.println("MemoryTest.main() "+onto.getName());
 				long start = System.currentTimeMillis();

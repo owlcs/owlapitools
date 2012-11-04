@@ -24,10 +24,12 @@ import decomposition.IdentityMultiMap;
 import decomposition.OntologyAtom;
 import decomposition.SyntacticLocalityChecker;
 
+@SuppressWarnings("javadoc")
 public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
     Set<OWLAxiom> globalAxioms;
     Set<OWLAxiom> tautologies;
     final MultiMap<OWLEntity, Atom> termBasedIndex = new MultiMap<OWLEntity, Atom>() {
+        @Override
         protected Collection<Atom> createCollection() {
             return Collections.newSetFromMap(new IdentityHashMap<Atom, Boolean>());
         }
@@ -77,19 +79,23 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
         }
     }
 
+    @Override
     public int getModuleType() {
         return type.ordinal();
     }
 
+    @Override
     public DirectedGraph<Atom, Object> getGraph() {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public Set<Atom> getAtoms() {
         return new HashSet<Atom>(atoms);
     }
 
+    @Override
     public Atom getAtomForAxiom(OWLAxiom axiom) {
         for (int i = 0; i < atoms.size(); i++) {
             if (atoms.get(i).contains(axiom)) {
@@ -99,54 +105,66 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
         return null;
     }
 
+    @Override
     public Atom addAtom(Set<OWLAxiom> axioms) {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public Set<Atom> getTopAtoms(Atom atom) {
         Set<Atom> toReturn = getDependencies(atom);
         toReturn.retainAll(getTopAtoms());
         return toReturn;
     }
 
+    @Override
     public boolean isTopAtom(Atom atom) {
         return !dependencies.containsKey(atom);
     }
 
+    @Override
     public boolean isBottomAtom(Atom atom) {
         return !dependents.containsKey(atom);
     }
 
+    @Override
     public void addAxiomToAtom(OWLAxiom axiom, Atom atom) {
         // TODO Auto-generated method stub
     }
 
+    @Override
     public void addDependency(Atom dependentAtom, Atom dependentUponAtom) {
         // TODO Auto-generated method stub
     }
 
+    @Override
     public Set<OWLAxiom> getPrincipalIdeal(Atom atom) {
         return null;
     }
 
+    @Override
     public Set<OWLEntity> getPrincipalIdealSignature(Atom atom) {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public Set<Atom> getDependencies(Atom atom) {
         return getDependencies(atom, false);
     }
 
+    @Override
     public Set<Atom> getDependencies(Atom atom, boolean direct) {
         return explore(atom, direct, dependencies);
     }
 
+    @Override
     public Set<Atom> getDependents(Atom atom) {
         return getDependents(atom, false);
     }
 
+    @Override
     public Set<Atom> getDependents(Atom atom, boolean direct) {
         return explore(atom, direct, dependents);
     }
@@ -178,12 +196,14 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
         return toReturn.keySet();
     }
 
+    @Override
     public Set<Atom> getRelatedAtoms(Atom atom) {
         Set<Atom> s = getDependencies(atom);
         s.addAll(getDependents(atom));
         return s;
     }
 
+    @Override
     public Set<Atom> getTopAtoms() {
         Set<Atom> keys = new HashSet<Atom>(dependents.keySet());
         keys.removeAll(dependents.getAllValues());
@@ -206,32 +226,39 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
         return s;
     }
 
+    @Override
     public Set<Atom> getBottomAtoms() {
         Set<Atom> keys = new HashSet<Atom>(dependents.getAllValues());
         keys.removeAll(dependents.keySet());
         return keys;
     }
 
+    @Override
     public Atom getAtomByID(Object id) {
         return atoms.get((Integer) id);
     }
 
+    @Override
     public Set<OWLAxiom> getGlobalAxioms() {
         return globalAxioms;
     }
 
+    @Override
     public void setGlobalAxioms(Set<OWLAxiom> globalAxioms) {
         this.globalAxioms = globalAxioms;
     }
 
+    @Override
     public Set<OWLAxiom> getTautologies() {
         return asSet(decomposer.getTautologies());
     }
 
+    @Override
     public void setTautologies(Set<OWLAxiom> tautologies) {
         this.tautologies = tautologies;
     }
 
+    @Override
     public Map<OWLEntity, Set<Atom>> getTermBasedIndex() {
         Map<OWLEntity, Set<Atom>> toReturn = new HashMap<OWLEntity, Set<Atom>>();
         for (OWLEntity e : termBasedIndex.keySet()) {
@@ -240,6 +267,7 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
         return toReturn;
     }
 
+    @Override
     public void setTermBasedIndex(Map<OWLEntity, Set<Atom>> termBasedIndex) {
         // this.termBasedIndex = termBasedIndex;
     }

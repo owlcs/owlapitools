@@ -6,6 +6,7 @@ import java.util.Set;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+@SuppressWarnings("javadoc")
 public interface AtomicDecomposer extends BaseAtomicDecomposer {
     public void setGlobalAxioms(Set<OWLAxiom> axioms);
 
@@ -13,6 +14,7 @@ public interface AtomicDecomposer extends BaseAtomicDecomposer {
 
     public void setTautologies(Set<OWLAxiom> axioms);
 
+    @Override
     public Set<OWLAxiom> getTautologies();
 
     public int getModuleType();

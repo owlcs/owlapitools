@@ -72,6 +72,7 @@ public class OwlOntologyMultipleThreadsTest {
             this.o2 = o2;
         }
 
+        @Override
         public void execute() throws Exception {
             for (int index = 0; index < 100; index++) {
                 o1.isEmpty();
@@ -245,6 +246,7 @@ public class OwlOntologyMultipleThreadsTest {
             }
         }
 
+        @Override
         public String getId() {
             return "test for " + o1.getClass().getSimpleName();
         }

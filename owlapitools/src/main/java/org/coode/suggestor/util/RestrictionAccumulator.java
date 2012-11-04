@@ -33,7 +33,8 @@ public class RestrictionAccumulator {
 		this.r = r;
 	}
 
-	public Set<OWLRestriction<?,?,?>> getRestrictions(OWLClassExpression cls,
+    @SuppressWarnings("javadoc")
+    public Set<OWLRestriction<?, ?, ?>> getRestrictions(OWLClassExpression cls,
 			OWLPropertyExpression<?,?> prop) {
 		return accummulateRestrictions(cls, prop, null);
 	}

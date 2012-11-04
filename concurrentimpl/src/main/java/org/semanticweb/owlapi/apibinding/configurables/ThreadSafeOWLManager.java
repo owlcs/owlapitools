@@ -133,15 +133,18 @@ public class ThreadSafeOWLManager implements OWLOntologyManagerFactory {
 		registry.registerParserFactory(new RDFXMLParserFactory());
 	}
 
-	public OWLOntologyManager buildOWLOntologyManager() {
+	@Override
+    public OWLOntologyManager buildOWLOntologyManager() {
 
     	return createOWLOntologyManager();
     }
+    @Override
     public OWLOntologyManager buildOWLOntologyManager(OWLDataFactory f) {
 
     	return createOWLOntologyManager(f);
     }
 
+    @Override
     public OWLDataFactory getFactory() {
 
     	return getOWLDataFactory();

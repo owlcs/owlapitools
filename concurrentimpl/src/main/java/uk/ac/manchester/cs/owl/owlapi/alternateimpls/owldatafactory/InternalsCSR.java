@@ -61,7 +61,8 @@ public class InternalsCSR extends  OWLDataFactoryInternalsImpl {
 
 				return super.cache(s, v);
 			}
-			public synchronized V cache(IRI s, V v) {return super.cache(s, v);}
+			@Override
+            public synchronized V cache(IRI s, V v) {return super.cache(s, v);}
 			@Override
 			public synchronized void clear() {
 

@@ -7,7 +7,6 @@ import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.io.StringDocumentSource;
 import org.semanticweb.owlapi.io.StringDocumentTarget;
 import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLDatatypeRestriction;

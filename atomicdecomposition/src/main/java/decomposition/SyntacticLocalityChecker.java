@@ -50,7 +50,6 @@ import org.semanticweb.owlapi.model.OWLTransitiveObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.SWRLRule;
 
 /** syntactic locality checker for DL axioms */
-@SuppressWarnings("unused")
 public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecker {
     private Signature sig;
     /** top evaluator */
@@ -61,18 +60,21 @@ public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecke
     boolean isLocal;
 
     /** @return true iff EXPR is top equivalent */
+    @Override
     public boolean isTopEquivalent(OWLObject expr) {
         final boolean topEquivalent = TopEval.isTopEquivalent(expr);
         return topEquivalent;
     }
 
     /** @return true iff EXPR is bottom equivalent */
+    @Override
     public boolean isBotEquivalent(OWLObject expr) {
         final boolean botEquivalent = BotEval.isBotEquivalent(expr);
         return botEquivalent;
     }
 
     /** @return true iff role expression in equivalent to const wrt locality */
+    @Override
     public boolean isREquivalent(OWLObject expr) {
         return sig.topRLocal() ? isTopEquivalent(expr) : isBotEquivalent(expr);
     }
@@ -83,27 +85,32 @@ public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecke
         BotEval = new BotEquivalenceEvaluator(this);
     }
 
+    @Override
     public Signature getSignature() {
         return sig;
     }
 
     /** set a new value of a signature (without changing a locality parameters) */
+    @Override
     public void setSignatureValue(Signature Sig) {
         sig = Sig;
     }
 
     // set fields
     /** @return true iff an AXIOM is local wrt defined policy */
+    @Override
     public boolean local(OWLAxiom axiom) {
         axiom.accept(this);
         return isLocal;
     }
 
     // TODO check
+    @Override
     public void visit(OWLDeclarationAxiom axiom) {
         isLocal = !axiom.getEntity().isOWLAnnotationProperty();
     }
 
+    @Override
     public void visit(OWLEquivalentClassesAxiom axiom) {
         // 1 element => local
         if (axiom.getClassExpressions().size() == 1) {
@@ -134,6 +141,7 @@ public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecke
         isLocal = true;
     }
 
+    @Override
     public void visit(OWLDisjointClassesAxiom axiom) {
         // local iff at most 1 concept is not bot-equiv
         boolean hasNBE = false;
@@ -150,6 +158,7 @@ public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecke
         }
     }
 
+    @Override
     public void visit(OWLDisjointUnionAxiom axiom) {
         isLocal = false;
         boolean topLoc = sig.topCLocal();
@@ -177,6 +186,7 @@ public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecke
         isLocal = true;
     }
 
+    @Override
     public void visit(OWLEquivalentObjectPropertiesAxiom axiom) {
         isLocal = true;
         if (axiom.getProperties().size() <= 1) {
@@ -190,6 +200,7 @@ public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecke
         }
     }
 
+    @Override
     public void visit(OWLEquivalentDataPropertiesAxiom axiom) {
         isLocal = true;
         if (axiom.getProperties().size() <= 1) {
@@ -203,6 +214,7 @@ public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecke
         }
     }
 
+    @Override
     public void visit(OWLDisjointObjectPropertiesAxiom axiom) {
         isLocal = false;
         if (sig.topRLocal()) {
@@ -221,6 +233,7 @@ public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecke
         isLocal = true;
     }
 
+    @Override
     public void visit(OWLDisjointDataPropertiesAxiom axiom) {
         isLocal = false;
         if (sig.topRLocal()) {
@@ -239,29 +252,35 @@ public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecke
         isLocal = true;
     }
 
+    @Override
     public void visit(OWLSameIndividualAxiom axiom) {
         isLocal = false;
     }
 
+    @Override
     public void visit(OWLDifferentIndividualsAxiom axiom) {
         isLocal = false;
     }
 
+    @Override
     public void visit(OWLInverseObjectPropertiesAxiom axiom) {
         isLocal = isREquivalent(axiom.getFirstProperty())
                 && isREquivalent(axiom.getSecondProperty());
     }
 
+    @Override
     public void visit(OWLSubObjectPropertyOfAxiom axiom) {
         isLocal = isREquivalent(sig.topRLocal() ? axiom.getSuperProperty() : axiom
                 .getSubProperty());
     }
 
+    @Override
     public void visit(OWLSubDataPropertyOfAxiom axiom) {
         isLocal = isREquivalent(sig.topRLocal() ? axiom.getSuperProperty() : axiom
                 .getSubProperty());
     }
 
+    @Override
     public void visit(OWLObjectPropertyDomainAxiom axiom) {
         isLocal = isTopEquivalent(axiom.getDomain());
         if (!sig.topRLocal()) {
@@ -269,6 +288,7 @@ public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecke
         }
     }
 
+    @Override
     public void visit(OWLDataPropertyDomainAxiom axiom) {
         isLocal = isTopEquivalent(axiom.getDomain());
         if (!sig.topRLocal()) {
@@ -276,6 +296,7 @@ public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecke
         }
     }
 
+    @Override
     public void visit(OWLObjectPropertyRangeAxiom axiom) {
         isLocal = isTopEquivalent(axiom.getRange());
         if (!sig.topRLocal()) {
@@ -283,6 +304,7 @@ public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecke
         }
     }
 
+    @Override
     public void visit(OWLDataPropertyRangeAxiom axiom) {
         isLocal = axiom.getRange().isTopDatatype();
         if (!sig.topRLocal()) {
@@ -290,64 +312,79 @@ public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecke
         }
     }
 
+    @Override
     public void visit(OWLTransitiveObjectPropertyAxiom axiom) {
         isLocal = isREquivalent(axiom.getProperty());
     }
 
     /** as BotRole is irreflexive, the only local axiom is topEquivalent(R) */
+    @Override
     public void visit(OWLReflexiveObjectPropertyAxiom axiom) {
         isLocal = isTopEquivalent(axiom.getProperty());
     }
 
+    @Override
     public void visit(OWLIrreflexiveObjectPropertyAxiom axiom) {
         isLocal = !sig.topRLocal();
     }
 
+    @Override
     public void visit(OWLSymmetricObjectPropertyAxiom axiom) {
         isLocal = isREquivalent(axiom.getProperty());
     }
 
+    @Override
     public void visit(OWLAsymmetricObjectPropertyAxiom axiom) {
         isLocal = !sig.topRLocal();
     }
 
+    @Override
     public void visit(OWLFunctionalObjectPropertyAxiom axiom) {
         isLocal = !sig.topRLocal() && isBotEquivalent(axiom.getProperty());
     }
 
+    @Override
     public void visit(OWLFunctionalDataPropertyAxiom axiom) {
         isLocal = !sig.topRLocal() && isBotEquivalent(axiom.getProperty());
     }
 
+    @Override
     public void visit(OWLInverseFunctionalObjectPropertyAxiom axiom) {
         isLocal = !sig.topRLocal() && isBotEquivalent(axiom.getProperty());
     }
 
+    @Override
     public void visit(OWLSubClassOfAxiom axiom) {
         isLocal = isBotEquivalent(axiom.getSubClass())
                 || isTopEquivalent(axiom.getSuperClass());
     }
 
+    @Override
     public void visit(OWLClassAssertionAxiom axiom) {
         isLocal = isTopEquivalent(axiom.getClassExpression());
     }
 
+    @Override
     public void visit(OWLObjectPropertyAssertionAxiom axiom) {
         isLocal = sig.topRLocal() && isTopEquivalent(axiom.getProperty());
     }
 
+    @Override
     public void visit(OWLNegativeObjectPropertyAssertionAxiom axiom) {
         isLocal = !sig.topRLocal() && isBotEquivalent(axiom.getProperty());
     }
 
+    @Override
     public void visit(OWLDataPropertyAssertionAxiom axiom) {
         isLocal = sig.topRLocal() && isTopEquivalent(axiom.getProperty());
     }
 
+    @Override
     public void visit(OWLNegativeDataPropertyAssertionAxiom axiom) {
         isLocal = !sig.topRLocal() && isBotEquivalent(axiom.getProperty());
     }
 
+    @Override
     public void preprocessOntology(Collection<AxiomWrapper> s) {
         sig = new Signature();
         for (AxiomWrapper ax : s) {

@@ -28,16 +28,19 @@ import org.semanticweb.owlapi.reasoner.knowledgeexploration.OWLKnowledgeExplorer
 public class UniversalRestrictionsSanctionRule implements PropertySanctionRule {
 	private OWLKnowledgeExplorerReasoner r;
 
-	public void setSuggestor(PropertySuggestor ps) {
+	@Override
+    public void setSuggestor(PropertySuggestor ps) {
 		this.r = (OWLKnowledgeExplorerReasoner) ps.getReasoner();
 	}
 
-	public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p) {
+	@Override
+    public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p) {
 		RestrictionAccumulator acc = new RestrictionAccumulator(r);
 		return !acc.getRestrictions(c, p, OWLObjectAllValuesFrom.class).isEmpty();
 	}
 
-	public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p) {
+	@Override
+    public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p) {
 		RestrictionAccumulator acc = new RestrictionAccumulator(r);
 		return !acc.getRestrictions(c, p, OWLDataAllValuesFrom.class).isEmpty();
 	}

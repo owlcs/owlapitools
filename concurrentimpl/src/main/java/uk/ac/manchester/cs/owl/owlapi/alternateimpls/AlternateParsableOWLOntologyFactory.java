@@ -119,17 +119,12 @@ public class AlternateParsableOWLOntologyFactory extends AlternateAbstractInMemO
     }
 
 
-    /**
-     * Overriden - We don't create new empty ontologies - this isn't our responsibility
-     * @param documentIRI ignored
-     * @return always false
-     */
     @Override
-    @SuppressWarnings("unused")
 	public boolean canCreateFromDocumentIRI(IRI documentIRI) {
         return false;
     }
 
+    @Override
     public boolean canLoad(OWLOntologyDocumentSource documentSource) {
         if (documentSource.isReaderAvailable()) {
             return true;
@@ -162,6 +157,7 @@ public class AlternateParsableOWLOntologyFactory extends AlternateAbstractInMemO
         return false;
     }
 
+    @Override
     public OWLOntology loadOWLOntology(OWLOntologyDocumentSource documentSource, OWLOntologyCreationHandler mediator, OWLOntologyLoaderConfiguration configuration) throws OWLOntologyCreationException {
         // Attempt to parse the ontology by looping through the parsers.  If the
         // ontology is parsed successfully then we break out and return the ontology.
@@ -222,6 +218,7 @@ public class AlternateParsableOWLOntologyFactory extends AlternateAbstractInMemO
         throw new UnparsableOntologyException(documentSource.getDocumentIRI(), exceptions);
     }
 
+    @Override
     public OWLOntology loadOWLOntology(OWLOntologyDocumentSource documentSource, final OWLOntologyCreationHandler mediator) throws OWLOntologyCreationException {
         return loadOWLOntology(documentSource, mediator, new OWLOntologyLoaderConfiguration());
     }

@@ -13,7 +13,8 @@ abstract class AbstractMatcher<R extends OWLPropertyRange, F extends R, P extend
 		implements Matcher<R, F, P> {
 	public AbstractMatcher() {}
 
-	public final boolean isMatch(OWLClassExpression c, P p, R f, boolean direct) {
+	@Override
+    public final boolean isMatch(OWLClassExpression c, P p, R f, boolean direct) {
 		if (!direct) {
 			return isMatch(c, p, f);
 		}
@@ -33,7 +34,8 @@ abstract class AbstractMatcher<R extends OWLPropertyRange, F extends R, P extend
 		return true;
 	}
 
-	public final NodeSet<F> getLeaves(OWLClassExpression c, P p, R start, boolean direct) {
+	@Override
+    public final NodeSet<F> getLeaves(OWLClassExpression c, P p, R start, boolean direct) {
 		Set<Node<F>> nodes = new HashSet<Node<F>>();
 		if (isMatch(c, p, start)) {
 			for (Node<F> sub : getDirectSubs(start)) {
@@ -47,7 +49,8 @@ abstract class AbstractMatcher<R extends OWLPropertyRange, F extends R, P extend
 		return createNodeSet(nodes);
 	}
 
-	public final NodeSet<F> getRoots(OWLClassExpression c, P p, R start, boolean direct) {
+	@Override
+    public final NodeSet<F> getRoots(OWLClassExpression c, P p, R start, boolean direct) {
 		Set<Node<F>> nodes = new HashSet<Node<F>>();
 		for (Node<F> sub : getDirectSubs(start)) {
 			if (isMatch(c, p, sub.getRepresentativeElement())) {

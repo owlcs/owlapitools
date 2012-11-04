@@ -40,12 +40,14 @@ public class CheckSubsSanctionRule implements PropertySanctionRule {
 	private OWLReasoner r;
 	private PropertySuggestor ps;
 
-	public void setSuggestor(PropertySuggestor ps) {
+    @Override
+    public void setSuggestor(PropertySuggestor ps) {
 		this.ps = ps;
-		this.r = ps.getReasoner();
+		r = ps.getReasoner();
 	}
 
-	public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p) {
+    @Override
+    public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p) {
 		for (Node<OWLClass> sub : r.getSubClasses(c, true)) {
 			if (ps.isCurrent(sub.getRepresentativeElement(), p, true)) {
 				return true;
@@ -54,7 +56,8 @@ public class CheckSubsSanctionRule implements PropertySanctionRule {
 		return false;
 	}
 
-	public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p) {
+    @Override
+    public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p) {
 		for (Node<OWLClass> sub : r.getSubClasses(c, true)) {
 			if (ps.isCurrent(sub.getRepresentativeElement(), p, true)) {
 				return true;

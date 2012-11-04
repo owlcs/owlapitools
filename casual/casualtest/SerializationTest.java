@@ -71,7 +71,7 @@ public class SerializationTest extends TestCase {
 	Set<OWLFacetRestriction> setowlfacetrestriction = new HashSet<OWLFacetRestriction>();
 	OWLPropertyExpression[] owlpropertyexpression = new OWLPropertyExpression[] {};
 
-	public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 		new SerializationTest().run();
 	}
 

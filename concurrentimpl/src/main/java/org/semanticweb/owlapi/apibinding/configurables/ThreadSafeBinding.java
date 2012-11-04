@@ -53,15 +53,18 @@ import uk.ac.manchester.cs.owl.owlapi.alternateimpls.owldatafactory.DataFactoryC
  * binding for threadsafe implementations
  */
 public final class ThreadSafeBinding implements OWLImplementationBinding {
-	public OWLOntologyManager getOWLOntologyManager(OWLDataFactory d) {
+	@Override
+    public OWLOntologyManager getOWLOntologyManager(OWLDataFactory d) {
 		return new LockingOWLOntologyManagerImpl(d);
 	}
 
-	public OWLOntology getOWLOntology(OWLOntologyManager oom, OWLOntologyID id) {
+	@Override
+    public OWLOntology getOWLOntology(OWLOntologyManager oom, OWLOntologyID id) {
 		return new LockingOWLOntologyImpl(oom, id);
 	}
 
-	public OWLDataFactory getOWLDataFactory() {
+	@Override
+    public OWLDataFactory getOWLDataFactory() {
 		return DataFactoryCSR.getInstance();
 	}
 }

@@ -76,7 +76,8 @@ public class MultiThreadChecker {
 		ExecutorService service = Executors.newFixedThreadPool(rep);
 		for (int i = 0; i < rep; i++) {
 			service.execute(new Runnable() {
-				public void run() {
+				@Override
+                public void run() {
 					for (int j = 0; j < rep; j++) {
 						try {
 							cb.execute();
@@ -106,7 +107,8 @@ public class MultiThreadChecker {
 		List<Object> list = new ArrayList<Object>();
 		list.addAll(Arrays.asList(results.toArray()));
 		Collections.sort(list, new Comparator<Object>() {
-			public int compare(Object o1, Object o2) {
+			@Override
+            public int compare(Object o1, Object o2) {
 				return ((Long) o1).compareTo((Long) o2);
 			}
 		});

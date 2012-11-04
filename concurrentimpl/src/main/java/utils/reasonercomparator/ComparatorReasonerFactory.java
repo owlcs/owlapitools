@@ -27,27 +27,32 @@ public class ComparatorReasonerFactory implements OWLReasonerFactory {
 		}
 	}
 
-	public String getReasonerName() {
+	@Override
+    public String getReasonerName() {
 		return "ComparatorReasoner";
 	}
 
-	public OWLReasoner createNonBufferingReasoner(OWLOntology ontology) {
+	@Override
+    public OWLReasoner createNonBufferingReasoner(OWLOntology ontology) {
 		return new ComparisonReasoner(ontology, null, getFactory(HERMIT),
 				getFactory(JFACT), getFactory(FACT));
 	}
 
-	public OWLReasoner createReasoner(OWLOntology ontology) {
+	@Override
+    public OWLReasoner createReasoner(OWLOntology ontology) {
 		return new ComparisonReasoner(ontology, null, getFactory(HERMIT),
 				getFactory(JFACT), getFactory(FACT));
 	}
 
-	public OWLReasoner createNonBufferingReasoner(OWLOntology ontology,
+	@Override
+    public OWLReasoner createNonBufferingReasoner(OWLOntology ontology,
 			OWLReasonerConfiguration config) throws IllegalConfigurationException {
 		return new ComparisonReasoner(ontology, config, getFactory(HERMIT),
 				getFactory(JFACT), getFactory(FACT));
 	}
 
-	public OWLReasoner createReasoner(OWLOntology ontology,
+	@Override
+    public OWLReasoner createReasoner(OWLOntology ontology,
 			OWLReasonerConfiguration config) throws IllegalConfigurationException {
 		return new ComparisonReasoner(ontology, config, getFactory(HERMIT),
 				getFactory(JFACT), getFactory(FACT));

@@ -8,31 +8,35 @@ import org.semanticweb.owlapi.model.OWLAnnotationValueVisitorEx;
 import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
+@SuppressWarnings("javadoc")
 public class IRIMatcher implements OWLAnnotationValueVisitorEx<Boolean> {
-		private final IRI propertyIRI;
+    private final IRI propertyIRI;
 
-		public IRIMatcher(IRI propertyIRI) {
-			this.propertyIRI = propertyIRI;
-		}
-		@SuppressWarnings("boxing")
-		public Boolean visit(IRI iri) {
-			return iri.equals(propertyIRI);
-		}
+    public IRIMatcher(IRI propertyIRI) {
+        this.propertyIRI = propertyIRI;
+    }
 
-		@SuppressWarnings("unused")
-		public Boolean visit(OWLAnonymousIndividual owlAnonymousIndividual) {
-			return Boolean.FALSE;
-		}
+    @Override
+    @SuppressWarnings("boxing")
+    public Boolean visit(IRI iri) {
+        return iri.equals(propertyIRI);
+    }
 
-		public Boolean visit(OWLLiteral owlLiteral) {
-			try {
-				IRI vIRI = IRI.create(new URI(owlLiteral.getLiteral()));
-				if (vIRI.equals(propertyIRI)) {
-					return Boolean.TRUE;
-				}
-			} catch (URISyntaxException e) {
-				// do nothing - not a URI
-			}
-			return Boolean.FALSE;
-		}
-	}
+    @Override
+    public Boolean visit(OWLAnonymousIndividual owlAnonymousIndividual) {
+        return Boolean.FALSE;
+    }
+
+    @Override
+    public Boolean visit(OWLLiteral owlLiteral) {
+        try {
+            IRI vIRI = IRI.create(new URI(owlLiteral.getLiteral()));
+            if (vIRI.equals(propertyIRI)) {
+                return Boolean.TRUE;
+            }
+        } catch (URISyntaxException e) {
+            // do nothing - not a URI
+        }
+        return Boolean.FALSE;
+    }
+}

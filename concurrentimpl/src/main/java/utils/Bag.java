@@ -42,6 +42,7 @@ public class Bag<Type> {
     public List<Type> sortedList(final boolean increasing) {
         List<Type> toReturn = new ArrayList<Type>(map.keySet());
         Collections.sort(toReturn, new Comparator<Type>() {
+            @Override
             public int compare(Type o1, Type o2) {
                 if (increasing) {
                     return Long.signum(check(o1) - check(o2));

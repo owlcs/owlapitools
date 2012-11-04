@@ -9,6 +9,7 @@ import java.util.Set;
 
 public class OntologyAtom {
     static Comparator<OntologyAtom> comparator = new Comparator<OntologyAtom>() {
+        @Override
         public int compare(OntologyAtom arg0, OntologyAtom arg1) {
             return arg0.getId() - arg1.getId();
         }

@@ -74,7 +74,8 @@ public class MemoizingCache<A, V> implements Map<A, V> {
 			FutureTask<V> f = cache.get(key);
 			if (f == null) {
 				Callable<V> eval = new Callable<V>() {
-					public V call() {
+					@Override
+                    public V call() {
 						V compute = computant.compute();
 						return compute;
 					}
@@ -109,7 +110,8 @@ public class MemoizingCache<A, V> implements Map<A, V> {
 			FutureTask<V> f = cache.get(key);
 			if (f == null) {
 				Callable<V> eval = new Callable<V>() {
-					public V call() {
+					@Override
+                    public V call() {
 						return computed;
 					}
 				};
@@ -133,15 +135,18 @@ public class MemoizingCache<A, V> implements Map<A, V> {
 		}
 	}
 
-	public void clear() {
+	@Override
+    public void clear() {
 		this.cache.clear();
 	}
 
-	public boolean containsKey(Object key) {
+	@Override
+    public boolean containsKey(Object key) {
 		return this.cache.containsKey(key);
 	}
 
-	public boolean containsValue(Object value) {
+	@Override
+    public boolean containsValue(Object value) {
 		for (Future<V> f : cache.values()) {
 			try {
 				if (f.get().equals(value)) {
@@ -156,11 +161,13 @@ public class MemoizingCache<A, V> implements Map<A, V> {
 		return false;
 	}
 
-	public Set<java.util.Map.Entry<A, V>> entrySet() {
+	@Override
+    public Set<java.util.Map.Entry<A, V>> entrySet() {
 		throw new UnsupportedOperationException("EntrySet not available");
 	}
 
-	public V get(Object key) {
+	@Override
+    public V get(Object key) {
 		if (!cache.containsKey(key)) {
 			return null;
 		}
@@ -181,11 +188,13 @@ public class MemoizingCache<A, V> implements Map<A, V> {
 		}
 	}
 
-	public boolean isEmpty() {
+	@Override
+    public boolean isEmpty() {
 		return cache.isEmpty();
 	}
 
-	public Set<A> keySet() {
+	@Override
+    public Set<A> keySet() {
 		return cache.keySet();
 	}
 
@@ -195,29 +204,33 @@ public class MemoizingCache<A, V> implements Map<A, V> {
 	 * the returned value might not be the last previous stored value but one of
 	 * the values stored before the new value
 	 */
-	public V put(A key, final V value) {
+	@Override
+    public V put(A key, final V value) {
 		V toReturn = this.get(key);
 		this.get(value, key);
 		return toReturn;
 	}
 
-	@SuppressWarnings("unused")
+	@Override
 	public void putAll(Map<? extends A, ? extends V> t) {
 		throw new UnsupportedOperationException(
 				"Adding values must be done through the get(Computable<A,V>, A) method");
 	}
 
-	public V remove(Object key) {
+	@Override
+    public V remove(Object key) {
 		V f = get(key);
 		cache.remove(key);
 		return f;
 	}
 
-	public int size() {
+	@Override
+    public int size() {
 		return cache.size();
 	}
 
-	public Collection<V> values() {
+	@Override
+    public Collection<V> values() {
 		List<V> toReturn = new ArrayList<V>();
 		for (A key : cache.keySet()) {
 			toReturn.add(get(key));

@@ -54,17 +54,20 @@ import uk.ac.manchester.cs.owl.owlapi.OWLOntologyManagerImpl;
  */
 public final class DefaultBinding implements
 			OWLImplementationBinding {
-		public OWLOntologyManager getOWLOntologyManager(OWLDataFactory d) {
+		@Override
+        public OWLOntologyManager getOWLOntologyManager(OWLDataFactory d) {
 			return new OWLOntologyManagerImpl(d);
 		}
 
-		public OWLOntology getOWLOntology(OWLOntologyManager oom,
+		@Override
+        public OWLOntology getOWLOntology(OWLOntologyManager oom,
 				OWLOntologyID id) {
 
 			return new OWLOntologyImpl(oom, id);
 		}
 
-		public OWLDataFactory getOWLDataFactory() {
+		@Override
+        public OWLDataFactory getOWLDataFactory() {
 			return new OWLDataFactoryImpl();
 		}
 	}

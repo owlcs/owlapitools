@@ -38,7 +38,8 @@ class PropertySuggestorImpl implements PropertySuggestor {
 	protected final ReasonerHelper helper;
 	private final Set<PropertySanctionRule> sanctionRules = new HashSet<PropertySanctionRule>();
 	private final Matcher<OWLObjectPropertyExpression> currentOPMatcher = new AbstractOPMatcher() {
-		public boolean isMatch(OWLClassExpression c, OWLObjectPropertyExpression p) {
+        @Override
+        public boolean isMatch(OWLClassExpression c, OWLObjectPropertyExpression p) {
 			if (p.isTopEntity()) {
 				return true;
 			}
@@ -47,7 +48,8 @@ class PropertySuggestorImpl implements PropertySuggestor {
 		}
 	};
 	private final Matcher<OWLDataProperty> currentDPMatcher = new AbstractDPMatcher() {
-		public boolean isMatch(OWLClassExpression c, OWLDataProperty p) {
+        @Override
+        public boolean isMatch(OWLClassExpression c, OWLDataProperty p) {
 			if (p.isTopEntity()) {
 				return true;
 			}
@@ -56,7 +58,8 @@ class PropertySuggestorImpl implements PropertySuggestor {
 		}
 	};
 	private Matcher<OWLObjectPropertyExpression> possibleOPMatcher = new AbstractOPMatcher() {
-		public boolean isMatch(OWLClassExpression c, OWLObjectPropertyExpression p) {
+        @Override
+        public boolean isMatch(OWLClassExpression c, OWLObjectPropertyExpression p) {
 			// Hermit and JFact are very slightly faster using the entailment check
 			//            return r.isSatisfiable(df.getOWLObjectIntersectionOf(c, df.getOWLObjectSomeValuesFrom(p, df.getOWLThing())));
 			return !r.isEntailed(df.getOWLSubClassOfAxiom(c,
@@ -64,7 +67,8 @@ class PropertySuggestorImpl implements PropertySuggestor {
 		}
 	};
 	private Matcher<OWLDataProperty> possibleDPMatcher = new AbstractDPMatcher() {
-		public boolean isMatch(OWLClassExpression c, OWLDataProperty p) {
+        @Override
+        public boolean isMatch(OWLClassExpression c, OWLDataProperty p) {
 			return r.isSatisfiable(df.getOWLObjectIntersectionOf(c,
 					df.getOWLDataSomeValuesFrom(p, df.getTopDatatype())));
 		}
@@ -72,84 +76,100 @@ class PropertySuggestorImpl implements PropertySuggestor {
 
 	public PropertySuggestorImpl(OWLKnowledgeExplorerReasoner r) {
 		this.r = r;
-		this.df = r.getRootOntology().getOWLOntologyManager().getOWLDataFactory();
-		this.helper = new ReasonerHelper(r);
+		df = r.getRootOntology().getOWLOntologyManager().getOWLDataFactory();
+		helper = new ReasonerHelper(r);
 	}
 
-	public void addSanctionRule(PropertySanctionRule rule) {
+    @Override
+    public void addSanctionRule(PropertySanctionRule rule) {
 		sanctionRules.add(rule);
 		rule.setSuggestor(this);
 	}
 
-	public void removeSanctionRule(PropertySanctionRule rule) {
+    @Override
+    public void removeSanctionRule(PropertySanctionRule rule) {
 		sanctionRules.remove(rule);
 		rule.setSuggestor(null);
 	}
 
-	public OWLKnowledgeExplorerReasoner getReasoner() {
+    @Override
+    public OWLKnowledgeExplorerReasoner getReasoner() {
 		return r;
 	}
 
 	// BOOLEAN TESTS
-	public boolean isCurrent(OWLClassExpression c, OWLObjectPropertyExpression p) {
+    @Override
+    public boolean isCurrent(OWLClassExpression c, OWLObjectPropertyExpression p) {
 		return currentOPMatcher.isMatch(c, p);
 	}
 
-	public boolean isCurrent(OWLClassExpression c, OWLObjectPropertyExpression p,
+    @Override
+    public boolean isCurrent(OWLClassExpression c, OWLObjectPropertyExpression p,
 			boolean direct) {
 		return currentOPMatcher.isMatch(c, p, direct);
 	}
 
-	public boolean isCurrent(OWLClassExpression c, OWLDataProperty p) {
+    @Override
+    public boolean isCurrent(OWLClassExpression c, OWLDataProperty p) {
 		return currentDPMatcher.isMatch(c, p);
 	}
 
-	public boolean isCurrent(OWLClassExpression c, OWLDataProperty p, boolean direct) {
+    @Override
+    public boolean isCurrent(OWLClassExpression c, OWLDataProperty p, boolean direct) {
 		return currentDPMatcher.isMatch(c, p, direct);
 	}
 
-	public boolean isPossible(OWLClassExpression c, OWLObjectPropertyExpression p) {
+    @Override
+    public boolean isPossible(OWLClassExpression c, OWLObjectPropertyExpression p) {
 		return possibleOPMatcher.isMatch(c, p);
 	}
 
-	public boolean isPossible(OWLClassExpression c, OWLDataProperty p) {
+    @Override
+    public boolean isPossible(OWLClassExpression c, OWLDataProperty p) {
 		return possibleDPMatcher.isMatch(c, p);
 	}
 
-	public boolean isSanctioned(OWLClassExpression c, OWLObjectPropertyExpression p) {
+    @Override
+    public boolean isSanctioned(OWLClassExpression c, OWLObjectPropertyExpression p) {
 		return isPossible(c, p) && meetsOPSanctions(c, p);
 	}
 
-	public boolean isSanctioned(OWLClassExpression c, OWLDataProperty p) {
+    @Override
+    public boolean isSanctioned(OWLClassExpression c, OWLDataProperty p) {
 		return isPossible(c, p) && meetsDPSanctions(c, p);
 	}
 
 	// GETTERS
-	public NodeSet<OWLObjectPropertyExpression> getCurrentObjectProperties(
+    @Override
+    public NodeSet<OWLObjectPropertyExpression> getCurrentObjectProperties(
 			OWLClassExpression c, boolean direct) {
 		return currentOPMatcher.getLeaves(c, r.getTopObjectPropertyNode(), direct);
 	}
 
-	public NodeSet<OWLDataProperty> getCurrentDataProperties(OWLClassExpression c,
+    @Override
+    public NodeSet<OWLDataProperty> getCurrentDataProperties(OWLClassExpression c,
 			boolean direct) {
 		return currentDPMatcher.getLeaves(c, r.getTopDataPropertyNode(), direct);
 	}
 
-	public NodeSet<OWLObjectPropertyExpression> getPossibleObjectProperties(
+    @Override
+    public NodeSet<OWLObjectPropertyExpression> getPossibleObjectProperties(
 			OWLClassExpression c, OWLObjectPropertyExpression root, boolean direct) {
-		Node<OWLObjectPropertyExpression> rootNode = (root == null) ? r
+		Node<OWLObjectPropertyExpression> rootNode = root == null ? r
 				.getTopObjectPropertyNode() : r.getEquivalentObjectProperties(root);
 		return possibleOPMatcher.getRoots(c, rootNode, direct);
 	}
 
-	public NodeSet<OWLDataProperty> getPossibleDataProperties(OWLClassExpression c,
+    @Override
+    public NodeSet<OWLDataProperty> getPossibleDataProperties(OWLClassExpression c,
 			OWLDataProperty root, boolean direct) {
-		Node<OWLDataProperty> rootNode = (root == null) ? r.getTopDataPropertyNode() : r
+		Node<OWLDataProperty> rootNode = root == null ? r.getTopDataPropertyNode() : r
 				.getEquivalentDataProperties(root);
 		return possibleDPMatcher.getRoots(c, rootNode, direct);
 	}
 
-	public Set<OWLObjectPropertyExpression> getSanctionedObjectProperties(
+    @Override
+    public Set<OWLObjectPropertyExpression> getSanctionedObjectProperties(
 			OWLClassExpression c, OWLObjectPropertyExpression root, boolean direct) {
 		Set<OWLObjectPropertyExpression> props = new HashSet<OWLObjectPropertyExpression>();
 		for (OWLObjectPropertyExpression pNode : getPossibleObjectProperties(c, root,
@@ -161,7 +181,8 @@ class PropertySuggestorImpl implements PropertySuggestor {
 		return props;
 	}
 
-	public Set<OWLDataProperty> getSanctionedDataProperties(OWLClassExpression c,
+    @Override
+    public Set<OWLDataProperty> getSanctionedDataProperties(OWLClassExpression c,
 			OWLDataProperty root, boolean direct) {
 		Set<OWLDataProperty> props = new HashSet<OWLDataProperty>();
 		for (OWLDataProperty pNode : getPossibleDataProperties(c, root, direct)
@@ -216,7 +237,9 @@ class PropertySuggestorImpl implements PropertySuggestor {
 		public AbstractMatcher() {
 
 		}
-		public final boolean isMatch(OWLClassExpression c, P p, boolean direct) {
+
+        @Override
+        public final boolean isMatch(OWLClassExpression c, P p, boolean direct) {
 			if (!direct) {
 				return isMatch(c, p);
 			}
@@ -231,7 +254,8 @@ class PropertySuggestorImpl implements PropertySuggestor {
 			return true;
 		}
 
-		public final NodeSet<P> getLeaves(OWLClassExpression c, Node<P> root,
+        @Override
+        public final NodeSet<P> getLeaves(OWLClassExpression c, Node<P> root,
 				boolean direct) {
 			Set<Node<P>> nodes = new HashSet<Node<P>>();
 			final P p = root.getRepresentativeElement();
@@ -239,14 +263,15 @@ class PropertySuggestorImpl implements PropertySuggestor {
 				for (Node<P> sub : getDirectSubs(p)) {
 					nodes.addAll(getLeaves(c, sub, direct).getNodes());
 				}
-				if (!direct || (nodes.isEmpty() && !root.isTopNode())) {
+				if (!direct || nodes.isEmpty() && !root.isTopNode()) {
 					nodes.add(root);
 				}
 			}
 			return createNodeSet(nodes);
 		}
 
-		public final NodeSet<P> getRoots(OWLClassExpression c, Node<P> root,
+        @Override
+        public final NodeSet<P> getRoots(OWLClassExpression c, Node<P> root,
 				boolean direct) {
 			Set<Node<P>> nodes = new HashSet<Node<P>>();
 			for (Node<P> sub : getDirectSubs(root.getRepresentativeElement())) {

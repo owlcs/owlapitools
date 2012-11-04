@@ -72,7 +72,7 @@ public class OWLDataFactoryInternalsPerformanceTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         System.gc();
     }
 

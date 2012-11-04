@@ -26,17 +26,20 @@ import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 public class InRangeFillerSanctionRule implements FillerSanctionRule {
 	private ReasonerHelper reasonerHelper;
 
-	public void setSuggestor(FillerSuggestor fs) {
+    @Override
+    public void setSuggestor(FillerSuggestor fs) {
 		reasonerHelper= new ReasonerHelper(fs.getReasoner());
 	}
 
-	public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p,
+    @Override
+    public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p,
 			OWLClassExpression f) {
 
 		return reasonerHelper.isInAssertedRange(p, f);
 	}
 
-	public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p, OWLDataRange f) {
+    @Override
+    public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p, OWLDataRange f) {
 		return reasonerHelper.isInAssertedRange(p, f);
 	}
 }

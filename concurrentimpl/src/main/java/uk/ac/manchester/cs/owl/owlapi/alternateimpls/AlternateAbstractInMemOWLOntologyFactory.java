@@ -54,32 +54,26 @@ public abstract class AlternateAbstractInMemOWLOntologyFactory implements OWLOnt
 	private static final long serialVersionUID = -1468847412445711881L;
     private OWLOntologyManager ontologyManager;
 
+    @Override
     public void setOWLOntologyManager(OWLOntologyManager owlOntologyManager) {
     	 if (owlOntologyManager == null) {
              throw new IllegalArgumentException("ontologyManager cannot be null");
          }
-        this.ontologyManager = owlOntologyManager;
+        ontologyManager = owlOntologyManager;
     }
 
 
-    /**
-     * @return the ontology manager
-     */
+    @Override
     public OWLOntologyManager getOWLOntologyManager() {
         return ontologyManager;
     }
 
-    @SuppressWarnings("unused")
+    @Override
     public boolean canCreateFromDocumentIRI(IRI documentIRI) {
         return true;
     }
 
-    /**
-     * Creates an empty ontology that a concrete representation can be
-     * parsed into.  Subclasses can override this method to change the implementation
-     * of the ontology.
-     * @param documentIRI the document IRI
-     */  @SuppressWarnings("unused")
+    @Override
     public OWLOntology createOWLOntology(OWLOntologyID ontologyID, IRI documentIRI, OWLOntologyCreationHandler handler) throws OWLOntologyCreationException {
 
         OWLOntology ont = ThreadSafeOWLManager.getOWLImplementationBinding().getOWLOntology(ontologyManager, ontologyID);

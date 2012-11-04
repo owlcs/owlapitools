@@ -155,14 +155,17 @@ public class ComparisonReasoner implements OWLReasoner {
         return b.toString();
     }
 
+    @Override
     public String getReasonerName() {
         return "FederatedReasoner";
     }
 
+    @Override
     public Version getReasonerVersion() {
         return new Version(0, 0, 0, 0);
     }
 
+    @Override
     public BufferingMode getBufferingMode() {
         return BufferingMode.BUFFERING;
     }
@@ -194,10 +197,12 @@ public class ComparisonReasoner implements OWLReasoner {
         return o1.equals(o2);
     }
 
+    @Override
     public OWLOntology getRootOntology() {
         return root;
     }
 
+    @Override
     public void interrupt() {
         if (log) {
             System.out.println("r. interrupt("
@@ -221,6 +226,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public void flush() {
         if (log) {
             System.out.println("r. flush(" + Arrays.toString(Arrays.asList().toArray())
@@ -244,6 +250,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public List<OWLOntologyChange> getPendingChanges() {
         if (log) {
             System.out.println("r. getPendingChanges("
@@ -272,6 +279,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public Set<OWLAxiom> getPendingAxiomAdditions() {
         if (log) {
             System.out.println("r. getPendingAxiomAdditions("
@@ -301,6 +309,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public Set<OWLAxiom> getPendingAxiomRemovals() {
         if (log) {
             System.out.println("r. getPendingAxiomRemovals("
@@ -330,6 +339,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public void precomputeInferences(InferenceType... arg0) {
         if (log) {
             System.out.println("r. precomputeInferences("
@@ -354,6 +364,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public boolean isPrecomputed(InferenceType arg0) {
         if (log) {
             System.out.println("r. isPrecomputed("
@@ -383,6 +394,7 @@ public class ComparisonReasoner implements OWLReasoner {
         // }
     }
 
+    @Override
     public Set<InferenceType> getPrecomputableInferenceTypes() {
         if (log) {
             System.out.println("r. getPrecomputableInferenceTypes("
@@ -412,6 +424,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public boolean isConsistent() {
         if (log) {
             System.out.println("r. isConsistent("
@@ -440,6 +453,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public boolean isSatisfiable(OWLClassExpression arg0) {
         if (log) {
             System.out.println("r. isSatisfiable("
@@ -468,6 +482,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public Node<OWLClass> getUnsatisfiableClasses() {
         if (log) {
             System.out.println("r. getUnsatisfiableClasses("
@@ -497,6 +512,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public boolean isEntailed(OWLAxiom arg0) {
         if (log) {
             System.out.println("r. isEntailed("
@@ -525,6 +541,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public boolean isEntailed(Set<? extends OWLAxiom> arg0) {
         if (log) {
             System.out.println("r. isEntailed(" + Arrays.toString(new Object[] { arg0 })
@@ -553,6 +570,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public boolean isEntailmentCheckingSupported(AxiomType<?> arg0) {
         if (log) {
             System.out.println("r. isEntailmentCheckingSupported("
@@ -582,6 +600,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public Node<OWLClass> getTopClassNode() {
         if (log) {
             System.out.println("r. getTopClassNode("
@@ -610,6 +629,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public Node<OWLClass> getBottomClassNode() {
         if (log) {
             System.out.println("r. getBottomClassNode("
@@ -638,6 +658,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public NodeSet<OWLClass> getSubClasses(OWLClassExpression arg0, boolean arg1) {
         if (log) {
             System.out.println("r. getSubClasses("
@@ -666,6 +687,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public NodeSet<OWLClass> getSuperClasses(OWLClassExpression arg0, boolean arg1) {
         if (log) {
             System.out.println("r. getSuperClasses("
@@ -694,6 +716,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public Node<OWLClass> getEquivalentClasses(OWLClassExpression arg0) {
         if (log) {
             System.out.println("r. getEquivalentClasses("
@@ -722,6 +745,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public NodeSet<OWLClass> getDisjointClasses(OWLClassExpression arg0) {
         if (log) {
             System.out.println("r. getDisjointClasses("
@@ -750,6 +774,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public Node<OWLObjectPropertyExpression> getTopObjectPropertyNode() {
         if (log) {
             System.out.println("r. getTopObjectPropertyNode("
@@ -780,6 +805,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public Node<OWLObjectPropertyExpression> getBottomObjectPropertyNode() {
         if (log) {
             System.out.println("r. getBottomObjectPropertyNode("
@@ -810,6 +836,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public NodeSet<OWLObjectPropertyExpression> getSubObjectProperties(
             OWLObjectPropertyExpression arg0, boolean arg1) {
         if (log) {
@@ -841,6 +868,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public NodeSet<OWLObjectPropertyExpression> getSuperObjectProperties(
             OWLObjectPropertyExpression arg0, boolean arg1) {
         if (log) {
@@ -872,6 +900,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public Node<OWLObjectPropertyExpression> getEquivalentObjectProperties(
             OWLObjectPropertyExpression arg0) {
         if (log) {
@@ -903,6 +932,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public NodeSet<OWLObjectPropertyExpression> getDisjointObjectProperties(
             OWLObjectPropertyExpression arg0) {
         if (log) {
@@ -934,6 +964,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public Node<OWLObjectPropertyExpression> getInverseObjectProperties(
             OWLObjectPropertyExpression arg0) {
         if (log) {
@@ -965,6 +996,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public NodeSet<OWLClass> getObjectPropertyDomains(OWLObjectPropertyExpression arg0,
             boolean arg1) {
         if (log) {
@@ -996,6 +1028,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public NodeSet<OWLClass> getObjectPropertyRanges(OWLObjectPropertyExpression arg0,
             boolean arg1) {
         if (log) {
@@ -1027,6 +1060,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public Node<OWLDataProperty> getTopDataPropertyNode() {
         if (log) {
             System.out.println("r. getTopDataPropertyNode("
@@ -1056,6 +1090,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public Node<OWLDataProperty> getBottomDataPropertyNode() {
         if (log) {
             System.out.println("r. getBottomDataPropertyNode("
@@ -1085,6 +1120,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public NodeSet<OWLDataProperty> getSubDataProperties(OWLDataProperty arg0,
             boolean arg1) {
         if (log) {
@@ -1115,6 +1151,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public NodeSet<OWLDataProperty> getSuperDataProperties(OWLDataProperty arg0,
             boolean arg1) {
         if (log) {
@@ -1146,6 +1183,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public Node<OWLDataProperty> getEquivalentDataProperties(OWLDataProperty arg0) {
         if (log) {
             System.out.println("r. getEquivalentDataProperties("
@@ -1176,6 +1214,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public NodeSet<OWLDataProperty> getDisjointDataProperties(
             OWLDataPropertyExpression arg0) {
         if (log) {
@@ -1207,6 +1246,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public NodeSet<OWLClass> getDataPropertyDomains(OWLDataProperty arg0, boolean arg1) {
         if (log) {
             System.out.println("r. getDataPropertyDomains("
@@ -1236,6 +1276,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public NodeSet<OWLClass> getTypes(OWLNamedIndividual arg0, boolean arg1) {
         if (log) {
             System.out.println("r. getTypes("
@@ -1264,6 +1305,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public NodeSet<OWLNamedIndividual>
             getInstances(OWLClassExpression arg0, boolean arg1) {
         if (log) {
@@ -1293,6 +1335,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public NodeSet<OWLNamedIndividual> getObjectPropertyValues(OWLNamedIndividual arg0,
             OWLObjectPropertyExpression arg1) {
         if (log) {
@@ -1324,6 +1367,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public Set<OWLLiteral> getDataPropertyValues(OWLNamedIndividual arg0,
             OWLDataProperty arg1) {
         if (log) {
@@ -1354,6 +1398,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public Node<OWLNamedIndividual> getSameIndividuals(OWLNamedIndividual arg0) {
         if (log) {
             System.out.println("r. getSameIndividuals("
@@ -1382,6 +1427,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public NodeSet<OWLNamedIndividual> getDifferentIndividuals(OWLNamedIndividual arg0) {
         if (log) {
             System.out.println("r. getDifferentIndividuals("
@@ -1412,6 +1458,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public long getTimeOut() {
         if (log) {
             System.out.println("r. getTimeOut("
@@ -1440,6 +1487,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public FreshEntityPolicy getFreshEntityPolicy() {
         if (log) {
             System.out.println("r. getFreshEntityPolicy("
@@ -1468,6 +1516,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public IndividualNodeSetPolicy getIndividualNodeSetPolicy() {
         if (log) {
             System.out.println("r. getIndividualNodeSetPolicy("
@@ -1497,6 +1546,7 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    @Override
     public void dispose() {
         if (log) {
             System.out.println("r. dispose(" + Arrays.toString(Arrays.asList().toArray())

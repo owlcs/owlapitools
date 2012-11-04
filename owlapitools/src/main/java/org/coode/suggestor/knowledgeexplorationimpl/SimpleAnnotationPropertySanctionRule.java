@@ -42,15 +42,18 @@ public class SimpleAnnotationPropertySanctionRule implements PropertySanctionRul
 		this.recursive = recursive;
 	}
 
-	public void setSuggestor(PropertySuggestor ps) {
+	@Override
+    public void setSuggestor(PropertySuggestor ps) {
 		r = ps.getReasoner();
 	}
 
-	public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p) {
+	@Override
+    public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p) {
 		return hasAnnotation(c, p);
 	}
 
-	public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p) {
+	@Override
+    public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p) {
 		return hasAnnotation(c, p);
 	}
 

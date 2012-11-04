@@ -47,26 +47,30 @@ class FillerSuggestorImpl implements FillerSuggestor {
 	protected final ReasonerHelper helper;
 	private final Set<FillerSanctionRule> sanctioningRules = new HashSet<FillerSanctionRule>();
 	private final AbstractOPMatcher currentOPMatcher = new AbstractOPMatcher() {
-		public boolean isMatch(OWLClassExpression c, OWLObjectPropertyExpression p,
+        @Override
+        public boolean isMatch(OWLClassExpression c, OWLObjectPropertyExpression p,
 				OWLClassExpression f) {
 			return helper.isDescendantOf(c, df.getOWLObjectSomeValuesFrom(p, f));
 		}
 	};
 	private final AbstractDPMatcher currentDPMatcher = new AbstractDPMatcher() {
-		public boolean isMatch(OWLClassExpression c, OWLDataPropertyExpression p,
+        @Override
+        public boolean isMatch(OWLClassExpression c, OWLDataPropertyExpression p,
 				OWLDataRange f) {
 			return helper.isDescendantOf(c, df.getOWLDataSomeValuesFrom(p, f));
 		}
 	};
 	private final AbstractOPMatcher possibleOPMatcher = new AbstractOPMatcher() {
-		public boolean isMatch(OWLClassExpression c, OWLObjectPropertyExpression p,
+        @Override
+        public boolean isMatch(OWLClassExpression c, OWLObjectPropertyExpression p,
 				OWLClassExpression f) {
 			return !r.isSatisfiable(df.getOWLObjectIntersectionOf(c,
 					df.getOWLObjectAllValuesFrom(p, df.getOWLObjectComplementOf(f))));//SomeValuesFrom(p, f)));
 		}
 	};
 	private final AbstractDPMatcher possibleDPMatcher = new AbstractDPMatcher() {
-		public boolean isMatch(OWLClassExpression c, OWLDataPropertyExpression p,
+        @Override
+        public boolean isMatch(OWLClassExpression c, OWLDataPropertyExpression p,
 				OWLDataRange f) {
 			return !r.isSatisfiable(df.getOWLObjectIntersectionOf(c,
 					df.getOWLDataAllValuesFrom(p, df.getOWLDataComplementOf(f))));//SomeValuesFrom(p, f)));
@@ -89,63 +93,75 @@ class FillerSuggestorImpl implements FillerSuggestor {
 	//	};
 	public FillerSuggestorImpl(OWLKnowledgeExplorerReasoner r) {
 		this.r = r;
-		this.df = r.getRootOntology().getOWLOntologyManager().getOWLDataFactory();
-		this.helper = new ReasonerHelper(r);
+		df = r.getRootOntology().getOWLOntologyManager().getOWLDataFactory();
+		helper = new ReasonerHelper(r);
 	}
 
-	public void addSanctionRule(FillerSanctionRule rule) {
+    @Override
+    public void addSanctionRule(FillerSanctionRule rule) {
 		sanctioningRules.add(rule);
 		rule.setSuggestor(this);
 	}
 
-	public void removeSanctionRule(FillerSanctionRule rule) {
+    @Override
+    public void removeSanctionRule(FillerSanctionRule rule) {
 		sanctioningRules.remove(rule);
 		rule.setSuggestor(null);
 	}
 
-	public OWLKnowledgeExplorerReasoner getReasoner() {
+    @Override
+    public OWLKnowledgeExplorerReasoner getReasoner() {
 		return r;
 	}
 
 	// BOOLEAN TESTS
-	public boolean isCurrent(OWLClassExpression c, OWLObjectPropertyExpression p,
+    @Override
+    public boolean isCurrent(OWLClassExpression c, OWLObjectPropertyExpression p,
 			OWLClassExpression f) {
 		return currentOPMatcher.isMatch(c, p, f);
 	}
 
-	public boolean isCurrent(OWLClassExpression c, OWLObjectPropertyExpression p,
+    @Override
+    public boolean isCurrent(OWLClassExpression c, OWLObjectPropertyExpression p,
 			OWLClassExpression f, boolean direct) {
 		return currentOPMatcher.isMatch(c, p, f, direct);
 	}
 
-	public boolean isCurrent(OWLClassExpression c, OWLDataProperty p, OWLDataRange f) {
+    @Override
+    public boolean isCurrent(OWLClassExpression c, OWLDataProperty p, OWLDataRange f) {
 		return currentDPMatcher.isMatch(c, p, f);
 	}
 
-	public boolean isCurrent(OWLClassExpression c, OWLDataProperty p, OWLDataRange f,
+    @Override
+    public boolean isCurrent(OWLClassExpression c, OWLDataProperty p, OWLDataRange f,
 			boolean direct) {
 		return currentDPMatcher.isMatch(c, p, f, direct);
 	}
 
-	public boolean isPossible(OWLClassExpression c, OWLObjectPropertyExpression p,
+    @Override
+    public boolean isPossible(OWLClassExpression c, OWLObjectPropertyExpression p,
 			OWLClassExpression f) {
 		return possibleOPMatcher.isMatch(c, p, f);
 	}
 
-	public boolean isPossible(OWLClassExpression c, OWLDataProperty p, OWLDataRange f) {
+    @Override
+    public boolean isPossible(OWLClassExpression c, OWLDataProperty p, OWLDataRange f) {
 		return possibleDPMatcher.isMatch(c, p, f);
 	}
 
-	public boolean isSanctioned(OWLClassExpression c, OWLObjectPropertyExpression p,
+    @Override
+    public boolean isSanctioned(OWLClassExpression c, OWLObjectPropertyExpression p,
 			OWLClassExpression f) {
 		return isPossible(c, p, f) && meetsSanctions(c, p, f);
 	}
 
-	public boolean isSanctioned(OWLClassExpression c, OWLDataProperty p, OWLDataRange f) {
+    @Override
+    public boolean isSanctioned(OWLClassExpression c, OWLDataProperty p, OWLDataRange f) {
 		return isPossible(c, p, f) && meetsSanctions(c, p, f);
 	}
 
-	public boolean isRedundant(OWLClassExpression c, OWLObjectPropertyExpression p,
+    @Override
+    public boolean isRedundant(OWLClassExpression c, OWLObjectPropertyExpression p,
 			OWLClassExpression f) {
 		if (isCurrent(c, p, f)) {
 			return true;
@@ -161,12 +177,14 @@ class FillerSuggestorImpl implements FillerSuggestor {
 	}
 
 	// GETTERS
-	public NodeSet<OWLClass> getCurrentNamedFillers(OWLClassExpression c,
+    @Override
+    public NodeSet<OWLClass> getCurrentNamedFillers(OWLClassExpression c,
 			OWLObjectPropertyExpression p, boolean direct) {
 		return currentOPMatcher.getLeaves(c, p, helper.getGlobalAssertedRange(p), direct);
 	}
 
-	public NodeSet<OWLClass> getPossibleNamedFillers(OWLClassExpression c,
+    @Override
+    public NodeSet<OWLClass> getPossibleNamedFillers(OWLClassExpression c,
 			OWLObjectPropertyExpression p, OWLClassExpression root, boolean direct) {
 		if (root == null) {
 			root = helper.getGlobalAssertedRange(p);
@@ -174,7 +192,8 @@ class FillerSuggestorImpl implements FillerSuggestor {
 		return possibleOPMatcher.getRoots(c, p, root, direct);
 	}
 
-	public Set<OWLClass> getSanctionedFillers(OWLClassExpression c,
+    @Override
+    public Set<OWLClass> getSanctionedFillers(OWLClassExpression c,
 			OWLObjectPropertyExpression p, OWLClassExpression root, boolean direct) {
 		Set<OWLClass> fillers = new HashSet<OWLClass>();
 		for (OWLClass f : getPossibleNamedFillers(c, p, root, direct).getFlattened()) {
@@ -232,7 +251,9 @@ class FillerSuggestorImpl implements FillerSuggestor {
 		public AbstractMatcher() {
 
 		}
-		public final boolean isMatch(OWLClassExpression c, P p, R f, boolean direct) {
+
+        @Override
+        public final boolean isMatch(OWLClassExpression c, P p, R f, boolean direct) {
 			if (!direct) {
 				return isMatch(c, p, f);
 			}
@@ -253,7 +274,8 @@ class FillerSuggestorImpl implements FillerSuggestor {
 			return true;
 		}
 
-		public final NodeSet<F> getRoots(OWLClassExpression c, P p, R start,
+        @Override
+        public final NodeSet<F> getRoots(OWLClassExpression c, P p, R start,
 				boolean direct) {
 			Set<Node<F>> nodes = new HashSet<Node<F>>();
 			for (Node<F> sub : getDirectSubs(start)) {
@@ -295,7 +317,8 @@ class FillerSuggestorImpl implements FillerSuggestor {
 			return new OWLClassNodeSet(nodes);
 		}
 
-		public final NodeSet<OWLClass> getLeaves(OWLClassExpression c,
+        @Override
+        public final NodeSet<OWLClass> getLeaves(OWLClassExpression c,
 				OWLObjectPropertyExpression p, OWLClassExpression start, boolean direct) {
 			Set<Node<OWLClass>> toReturn = new HashSet<Node<OWLClass>>();
 			RootNode root = r.getRoot(c);
@@ -350,7 +373,8 @@ class FillerSuggestorImpl implements FillerSuggestor {
 			return new OWLDatatypeNodeSet(nodes);
 		}
 
-		public final NodeSet<OWLDatatype> getLeaves(OWLClassExpression c,
+        @Override
+        public final NodeSet<OWLDatatype> getLeaves(OWLClassExpression c,
 				OWLDataPropertyExpression p, OWLDataRange start, boolean direct) {
 			Set<Node<OWLDatatype>> toReturn = new HashSet<Node<OWLDatatype>>();
 			RootNode root = r.getRoot(c);

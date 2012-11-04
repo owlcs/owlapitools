@@ -67,6 +67,7 @@ public class RaceTestCase {
     public static final String NS = "http://www.race.org#";
     protected RaceCallback callback;
     private Runnable writer = new Runnable() {
+        @Override
         public void run() {
             while (!done.get()) {
                 callback.add();
@@ -133,6 +134,7 @@ public class RaceTestCase {
             y = factory.getOWLClass(IRI.create(NS + "Y"));
         }
 
+        @Override
         public void add() {
             OWLClass middle = createMiddleClass(counter);
             Set<OWLAxiom> axioms = computeChanges(middle);
@@ -140,6 +142,7 @@ public class RaceTestCase {
             counter++;
         }
 
+        @Override
         public boolean failed() {
             int size = computeSize();
             return size != counter;
@@ -158,6 +161,7 @@ public class RaceTestCase {
             return axioms;
         }
 
+        @Override
         public void diagnose() {
             Set<OWLSubClassOfAxiom> axiomsFound = ontology
                     .getSubClassAxiomsForSubClass(x);
@@ -174,6 +178,7 @@ public class RaceTestCase {
             }
         }
 
+        @Override
         public void race() {
             ontology.getSubClassAxiomsForSubClass(factory.getOWLClass(IRI.create(A_CLASS)));
         }
