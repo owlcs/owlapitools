@@ -20,14 +20,11 @@
 	<name>OWLAPI_TOOLS</name>
 	<description>OWLAPI_TOOLS is a collection of add-ons for OWL API</description>
 	<url>http://owlapitools.sourceforge.net/</url>
-
 	<modules>
-		<module>owlapitools</module>
-		<module>concurrentimpl</module>
-		<module>atomicdecomposition</module>
-		<module>distribution</module>
-	</modules>
-
+	    <module>owlapitools</module>
+	    <module>atomicdecomposition</module>
+	    <module>concurrentimpl</module>
+    </modules>
 
 	<issueManagement>
 		<system>sourceforge</system>
@@ -53,12 +50,12 @@
 		<dependency>
 			<groupId>net.sourceforge.owlapi</groupId>
 			<artifactId>owlapi-distribution</artifactId>
-			<version>3.4.2-SNAPSHOT</version>
+			<version>3.4.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.10</version>
+			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -118,12 +115,18 @@
 
 	<build>
 		<plugins>
+		    <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+        </plugins>
 
-			<!-- In the Compiler Plugin we specify the encoding and the compiler version. -->
+        <pluginManagement>
+            <plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>2.5.1</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
@@ -144,10 +147,25 @@
 							<goal>jar</goal>
 						</goals>
 					</execution>
+                        <execution>
+                            <id>attach-test-sources</id>
+                            <goals>
+                                <goal>test-jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>test-jar</goal>
+                            </goals>
+                        </execution>
 				</executions>
 			</plugin>
-
-			<!-- We need to configure the Javadoc Plugin for deploying the Javadocs -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
@@ -161,28 +179,19 @@
 					</execution>
 				</executions>
 			</plugin>
+                         <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.12.3</version>
+                    <configuration>
+                        <includes>
+                            <include>**/*.java</include>
+                        </includes>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
 
-			<!-- The Assembly Plugin allows providing an additional single-jar build. -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.2</version>
-				<configuration>
-					<descriptors>
-						<!-- <descriptor>owlapi-bin.xml</descriptor> -->
-						<descriptor>distribution/src/assembly/bin.xml</descriptor>
-					</descriptors>
-				</configuration>
-			</plugin>
-
-			<!-- The Surefire Plugin is for error reporting. -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.7.1</version>
-			</plugin>
-
-		</plugins>
 	</build>
 
 	<!-- Specify the encoding of the source files. -->
@@ -190,11 +199,5 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
-	<!-- Parameters for the Source Code Management system. -->
-	<!--  scm>
-		<connection>scm:svn:https://owlapi.svn.sourceforge.net/svnroot/owlapi/v3/trunk/</connection>
-		<developerConnection>scm:svn:https://owlapi.svn.sourceforge.net/svnroot/owlapi/v3/trunk/</developerConnection>
-		<url>https://owlapi.svn.sourceforge.net/svnroot/owlapi/v3/trunk/</url>
-	</scm-->
 
 </project>

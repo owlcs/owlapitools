@@ -15,6 +15,8 @@ import org.semanticweb.owlapi.model.OWLOntologyManager;
 public class AlanTest extends TestCase{
     @Test
 	public void testUndeclaredClasses() throws Exception{
+        System.out.println("TestOWLKnowledgeExplorerReasoner.main() "
+                + System.getProperty("java.class.path"));
 		String input="<?xml version=\"1.0\"?>\n"+
 "<rdf:RDF xmlns=\"http://purl.obolibrary.org/obo/obi/example/proplose.owl#\"\n"+
 "xml:base=\"http://purl.obolibrary.org/obo/obi/example/proplose.owl\"\n"+
@@ -25,7 +27,8 @@ public class AlanTest extends TestCase{
 
 "<owl:Class rdf:about=\"http://purl.obolibrary.org/obo/obi/proplose/a\">\n"+
 "<rdfs:subClassOf>\n"+
-"<owl:Restriction>\n"+
+ "<owl:Restriction>\n"
+                +
 "<owl:onProperty rdf:resource=\"http://purl.obolibrary.org/obo/obi/proplose/p\"/>\n"+
 "<owl:someValuesFrom rdf:resource=\"http://purl.obolibrary.org/obo/obi/proplose/b\"/>\n"+
 "</owl:Restriction>\n"+

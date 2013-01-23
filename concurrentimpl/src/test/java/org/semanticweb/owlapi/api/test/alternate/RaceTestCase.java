@@ -48,7 +48,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
-import org.semanticweb.owlapi.api.test.Factory;
 import org.semanticweb.owlapi.apibinding.configurables.ThreadSafeOWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAxiom;
@@ -63,6 +62,26 @@ import uk.ac.manchester.cs.owl.owlapi.alternateimpls.test.RaceCallback;
 
 @SuppressWarnings("javadoc")
 public class RaceTestCase {
+    @Test
+    public void testSubClassLHS() throws Exception {
+        final int totalRepetitions = 10000;
+        int repetitions = 0;
+        RaceTestCaseRunner r;
+        do {
+            repetitions++;
+            r = new RaceTestCaseRunner();
+            r.racing();
+        } while (!r.callback.failed() && repetitions < totalRepetitions);
+        if (r.callback.failed()) {
+            r.callback.diagnose();
+            fail("Failed after " + repetitions + " repetition(s).");
+        } else {
+            System.out.println("No race condition found in " + totalRepetitions
+                    + " repetitiions");
+        }
+    }
+
+    static class RaceTestCaseRunner {
     private static final String A_CLASS = "http://www.race.org#testclass";
     public static final String NS = "http://www.race.org#";
     protected RaceCallback callback;
@@ -78,17 +97,9 @@ public class RaceTestCase {
     final AtomicBoolean done = new AtomicBoolean(false);
     ExecutorService exec = Executors.newFixedThreadPool(5);
 
-    public RaceTestCase(RaceCallback c) throws OWLOntologyCreationException {
-        callback = c;
-    }
-
-    public RaceTestCase() {
-        try {
+        RaceTestCaseRunner() throws OWLOntologyCreationException {
             callback = new SubClassLHSCallback();
-        } catch (OWLOntologyCreationException e) {
-            e.printStackTrace();
         }
-    }
 
     public void racing() throws InterruptedException {
         exec.submit(writer);
@@ -98,24 +109,6 @@ public class RaceTestCase {
         exec.awaitTermination(5, TimeUnit.SECONDS);
     }
 
-    @Test
-    public void testSubClassLHS() throws Exception {
-        final int totalRepetitions = 10000;
-        int repetitions = 0;
-        RaceTestCase r;
-        do {
-            repetitions++;
-            r = new RaceTestCase(new SubClassLHSCallback());
-            r.racing();
-        } while (!r.callback.failed() && repetitions < totalRepetitions);
-        if (r.callback.failed()) {
-            r.callback.diagnose();
-            fail("Failed after " + repetitions + " repetition(s).");
-        } else {
-            System.out.println("No race condition found in " + totalRepetitions
-                    + " repetitiions");
-        }
-    }
 
     public static class SubClassLHSCallback implements RaceCallback {
         private volatile int counter = 0;
@@ -126,8 +119,7 @@ public class RaceTestCase {
         OWLClass y;
 
         public SubClassLHSCallback() throws OWLOntologyCreationException {
-            Factory.setFactory(new ThreadSafeOWLManager());
-            manager = Factory.getManager();
+            manager = new ThreadSafeOWLManager().buildOWLOntologyManager();
             factory = manager.getOWLDataFactory();
             ontology = manager.createOntology();
             x = factory.getOWLClass(IRI.create(NS + "X"));
@@ -187,4 +179,5 @@ public class RaceTestCase {
             return factory.getOWLClass(IRI.create(NS + "P" + i));
         }
     }
+}
 }

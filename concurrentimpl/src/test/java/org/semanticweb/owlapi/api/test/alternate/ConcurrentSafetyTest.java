@@ -71,9 +71,7 @@ public class ConcurrentSafetyTest {
     }
 
     private Tester tester = new Tester();
-    private OWLDataFactory[] factories = new OWLDataFactory[] { new DataFactoryCSR() };// ,new
-                                                                                       // OWLDataFactoryImpl()
-                                                                                       // };
+    private OWLDataFactory[] factories = new OWLDataFactory[] { new DataFactoryCSR() };
 
     @Test
     public void testSafeImplementation() {

@@ -113,7 +113,7 @@ public class TopEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
 
     @Override
     public void visit(OWLObjectMinCardinality expr) {
-        isTopEq = expr.getCardinality() == 0 || getSignature().topRLocal()
+        isTopEq = expr.getCardinality() == 0 || expr.getCardinality()==1&& getSignature().topRLocal()
                 && isTopEquivalent(expr.getProperty())
                 && isTopEquivalent(expr.getFiller());
     }
