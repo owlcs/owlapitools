@@ -209,9 +209,27 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker
         isLocal = true;
     }
 
-    /** FIXME!! fornow */
     @Override
     public void visit(OWLDisjointUnionAxiom axiom) {
+        isLocal = false;
+        // check A = (or C1... Cn)
+        if (!Kernel.isEntailed(df.getOWLEquivalentClassesAxiom(axiom.getOWLClass(),
+                df.getOWLObjectIntersectionOf(axiom.getClassExpressions())))) {
+            return;
+
+        }
+        // check disjoint(C1...Cn)
+        List<OWLClassExpression> arguments = new ArrayList<OWLClassExpression>(
+                axiom.getClassExpressions());
+        int size = arguments.size();
+        for (int i = 0; i < size; i++) {
+            for (int j = i + 1; j < size; j++) {
+                if (!Kernel.isEntailed(df.getOWLDisjointClassesAxiom(arguments.get(i),
+                        arguments.get(j)))) {
+                    return;
+                }
+            }
+        }
         isLocal = true;
     }
 
@@ -293,6 +311,20 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker
 
     @Override
     public void visit(OWLSubObjectPropertyOfAxiom axiom) {
+        // XXX not sure if this applies
+        // check whether the LHS is a role chain
+        // if (axiom.getSubProperty() instanceof owlObjectRoleChain) {
+        // isLocal = Kernel.isSubChain(axiom.getRole(),
+        // ((ObjectRoleChain) axiom.getSubRole()).getArguments());
+        // return;
+        // }
+        // // check whether the LHS is a plain rle or inverse
+        // if (axiom.getSubRole() instanceof ObjectRoleExpression) {
+        // isLocal = Kernel.isSubRoles(axiom.getSubRole(), axiom.getRole());
+        // return;
+        // }
+        // // here we have a projection expression. FIXME!! for now
+        // isLocal = true;
         isLocal = Kernel.isEntailed(axiom);
     }
 
