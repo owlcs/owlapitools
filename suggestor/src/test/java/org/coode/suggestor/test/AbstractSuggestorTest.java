@@ -25,6 +25,7 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
+@SuppressWarnings("javadoc")
 public abstract class AbstractSuggestorTest {
     protected static final String HERMIT_FACTORY = "org.semanticweb.HermiT.Reasoner$ReasonerFactory";
     protected static final String FACTPLUSPLUS_FACTORY = "uk.ac.manchester.cs.factplusplus.owlapiv3.FaCTPlusPlusReasonerFactory";
@@ -36,7 +37,7 @@ public abstract class AbstractSuggestorTest {
     protected OWLDataFactory df;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         mngr = OWLManager.createOWLOntologyManager();
         df = mngr.getOWLDataFactory();
     }

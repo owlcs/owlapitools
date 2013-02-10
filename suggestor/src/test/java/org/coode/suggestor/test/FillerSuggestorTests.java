@@ -31,6 +31,7 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.vocab.OWLFacet;
 
+@SuppressWarnings("javadoc")
 public class FillerSuggestorTests extends AbstractSuggestorTest {
     private OWLClass ca, cb, cc, cd, ce, ca1, cb1, cc1;
     private OWLObjectProperty oa, ob, ob1;

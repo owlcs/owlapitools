@@ -14,10 +14,13 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
+/** A reasoner factory for comparing reasoners
+ * 
+ * @author ignazio */
 public class ComparatorReasonerFactory implements OWLReasonerFactory {
-	public static final String HERMIT = "org.semanticweb.HermiT.Reasoner.ReasonerFactory";
-	public static final String FACT = "uk.ac.manchester.cs.factplusplus.owlapiv3.FaCTPlusPlusReasonerFactory";
-	public static final String JFACT = "uk.ac.manchester.cs.jfact.JFactFactory";
+    private static final String HERMIT = "org.semanticweb.HermiT.Reasoner.ReasonerFactory";
+    private static final String FACT = "uk.ac.manchester.cs.factplusplus.owlapiv3.FaCTPlusPlusReasonerFactory";
+    private static final String JFACT = "uk.ac.manchester.cs.jfact.JFactFactory";
 
 	private static OWLReasonerFactory getFactory(String s) {
 		try {

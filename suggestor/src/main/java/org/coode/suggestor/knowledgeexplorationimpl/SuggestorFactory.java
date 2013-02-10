@@ -22,6 +22,8 @@ import org.semanticweb.owlapi.reasoner.knowledgeexploration.OWLKnowledgeExplorer
 public class SuggestorFactory {
 	private final OWLKnowledgeExplorerReasoner r;
 
+    /** @param r
+     *            reasoner to use */
 	public SuggestorFactory(OWLKnowledgeExplorerReasoner r) {
 		if (r == null) {
 			throw new IllegalArgumentException("Reasoner cannot be null");
@@ -29,10 +31,12 @@ public class SuggestorFactory {
 		this.r = r;
 	}
 
+    /** @return new property suggestor */
 	public final PropertySuggestor getPropertySuggestor() {
 		return new PropertySuggestorImpl(r);
 	}
 
+    /** @return new filler suggestor */
 	public final FillerSuggestor getFillerSuggestor() {
 		return new FillerSuggestorImpl(r);
 	}

@@ -9,7 +9,13 @@ import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 
+/** A filter for axioms
+ * 
+ * @author ignazio */
 public class AxiomSelector {
+    /** @param o
+     *            the ontology to filter
+     * @return list of declarations and logical axioms */
     public static List<OWLAxiom> selectAxioms(OWLOntology o) {
         List<OWLAxiom> axioms = new ArrayList<OWLAxiom>();
         for (OWLOntology ont : o.getImportsClosure()) {
@@ -24,6 +30,9 @@ public class AxiomSelector {
         return axioms;
     }
 
+    /** @param o
+     *            axioms to wrap
+     * @return axioms wrapped as AxiomWrapper */
     public static List<AxiomWrapper> wrap(List<OWLAxiom> o) {
         List<AxiomWrapper> axioms = new ArrayList<AxiomWrapper>();
         for (OWLAxiom ax : o) {

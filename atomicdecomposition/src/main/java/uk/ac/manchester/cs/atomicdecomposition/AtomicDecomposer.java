@@ -19,7 +19,6 @@ public interface AtomicDecomposer extends BaseAtomicDecomposer {
 
     public int getModuleType();
 
-    public DirectedGraph<Atom, Object> getGraph();
 
     public Atom getAtomForAxiom(OWLAxiom axiom);
 

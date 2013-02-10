@@ -29,6 +29,8 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
     Set<OWLAxiom> globalAxioms;
     Set<OWLAxiom> tautologies;
     final MultiMap<OWLEntity, Atom> termBasedIndex = new MultiMap<OWLEntity, Atom>() {
+        private static final long serialVersionUID = 1L;
+
         @Override
         protected Collection<Atom> createCollection() {
             return Collections.newSetFromMap(new IdentityHashMap<Atom, Boolean>());
@@ -84,11 +86,6 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposer {
         return type.ordinal();
     }
 
-    @Override
-    public DirectedGraph<Atom, Object> getGraph() {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
     @Override
     public Set<Atom> getAtoms() {

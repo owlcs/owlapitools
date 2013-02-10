@@ -33,6 +33,7 @@ import org.semanticweb.owlapi.reasoner.BufferingMode;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
+@SuppressWarnings("javadoc")
 public class RedundancyTests extends AbstractSuggestorTest {
     public void testFilterClasses() throws Exception {
         OWLOntology ont = createOntology();

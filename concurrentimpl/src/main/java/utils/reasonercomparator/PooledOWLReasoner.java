@@ -50,6 +50,9 @@ import org.semanticweb.owlapi.reasoner.TimeOutException;
 import org.semanticweb.owlapi.reasoner.UnsupportedEntailmentTypeException;
 import org.semanticweb.owlapi.util.Version;
 
+/** multiple reasoners pooled together to handle queries on separate threads
+ * 
+ * @author ignazio */
 @SuppressWarnings("unchecked")
 public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeListener {
 	private static final class BoolKey {
@@ -141,6 +144,9 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 	protected int index = 0;
 	private ExecutorService exec = Executors.newCachedThreadPool();
 
+    /** @param factory
+     * @param ontology
+     * @param manager */
 	public PooledOWLReasoner(OWLReasonerFactory factory, OWLOntology ontology,
 			OWLOntologyManager manager) {
 		for (int i = 0; i < concurrentNumber; i++) {
@@ -150,7 +156,7 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
 		rootOntology = ontology;
 	}
 
-	public void prefetch() {
+    private void prefetch() {
 		final List<OWLClass> classes = new ArrayList<OWLClass>(
 				rootOntology.getClassesInSignature());
 		final int chunk = classes.size() / concurrentNumber;

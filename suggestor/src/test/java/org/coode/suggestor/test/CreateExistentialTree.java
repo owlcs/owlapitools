@@ -31,6 +31,7 @@ import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
+@SuppressWarnings("javadoc")
 public class CreateExistentialTree extends AbstractSuggestorTest {
 	private final Set<Node<OWLClass>> visited = new HashSet<Node<OWLClass>>();
 

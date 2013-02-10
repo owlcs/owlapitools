@@ -29,6 +29,8 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 public class RestrictionAccumulator {
 	protected final OWLReasoner r;
 
+    /** @param r
+     *            reasoner to use */
 	public RestrictionAccumulator(OWLReasoner r) {
 		this.r = r;
 	}
@@ -39,6 +41,10 @@ public class RestrictionAccumulator {
 		return accummulateRestrictions(cls, prop, null);
 	}
 
+    /** @param cls
+     * @param prop
+     * @param type
+     * @return set of restrictions */
 	public <T extends OWLRestriction<?,?,?>> Set<T> getRestrictions(OWLClassExpression cls,
 			OWLPropertyExpression<?,?> prop, Class<T> type) {
 		Set<T> results = new HashSet<T>();

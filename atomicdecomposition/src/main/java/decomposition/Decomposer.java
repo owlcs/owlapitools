@@ -25,12 +25,17 @@ public class Decomposer {
     private ModuleType type;
     private List<AxiomWrapper> axioms;
 
+    /** @param axioms
+     *            axiom wrappers to decompose
+     * @param c
+     *            locality checker to use */
     public Decomposer(List<AxiomWrapper> axioms, LocalityChecker c) {
         this.axioms = axioms;
         modularizer = new Modularizer(c);
         modularizer.preprocessOntology(axioms);
     }
 
+    /** @return the modularizer for this decomposer */
     public Modularizer getModularizer() {
         return modularizer;
     }
@@ -59,6 +64,7 @@ public class Decomposer {
         }
     }
 
+    /** @return all tautologies wrapped */
     public List<AxiomWrapper> getTautologies() {
         return tautologies;
     }
@@ -114,11 +120,14 @@ public class Decomposer {
         return atom;
     }
 
+    /** @return atom list class */
     public AtomList getAOS() {
         return atomList;
     }
 
-    /** get the atomic structure for given module type T */
+    /** @param t
+     *            module type
+     * @return the atomic structure for given module type T */
     public AtomList getAOS(ModuleType t) {
         // remember the type of the module
         type = t;
@@ -150,7 +159,11 @@ public class Decomposer {
         return atomList;
     }
 
-    /** get a set of axioms that corresponds to the atom with the id INDEX */
+    /** @param signature
+     *            the signature to use
+     * @param moduletype
+     *            the module type
+     * @return a set of axioms that corresponds to the atom with the id INDEX */
     public Set<OWLAxiom> getNonLocal(Set<OWLEntity> signature, ModuleType moduletype) {
         // init signature
         Signature sig = new Signature(signature);
@@ -166,7 +179,13 @@ public class Decomposer {
         return result;
     }
 
-    /** get a set of axioms that corresponds to the atom with the id INDEX */
+    /** @param signature
+     *            the signature to use
+     * @param moduletype
+     *            module type
+     * @param useSemantics
+     *            true if semantic locality should be used
+     * @return a set of axioms that corresponds to the atom with the id INDEX */
     public Collection<AxiomWrapper> getModule(Set<OWLEntity> signature,
             boolean useSemantics, ModuleType moduletype) {
         // init signature

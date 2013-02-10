@@ -10,7 +10,7 @@ public class AtomList {
     /** all the atoms */
     private List<OntologyAtom> atoms = new ArrayList<OntologyAtom>();
 
-    /** create a new atom and get a pointer to it */
+    /** @return a new atom */
     public OntologyAtom newAtom() {
         OntologyAtom ret = new OntologyAtom();
         ret.setId(atoms.size());
@@ -26,12 +26,14 @@ public class AtomList {
         }
     }
 
-    /** get RW atom by its index */
+    /** @param index
+     *            index of the atom to retrieve
+     * @return atom with index */
     public OntologyAtom get(int index) {
         return atoms.get(index);
     }
 
-    /** size of the structure */
+    /** @return size of the structure */
     public int size() {
         return atoms.size();
     }

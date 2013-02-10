@@ -27,6 +27,7 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.vocab.OWLFacet;
 
+@SuppressWarnings("javadoc")
 public class UtilTests extends AbstractSuggestorTest {
     public void testGetSubDatatypes() throws Exception {
         OWLOntology ont = createOntology();

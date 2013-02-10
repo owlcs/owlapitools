@@ -106,15 +106,20 @@ public class Modularizer {
         sigIndex = new SigIndex(checker);
     }
 
-    /** allow the checker to preprocess an ontology if necessary */
-    public void preprocessOntology(Collection<AxiomWrapper> vec) {
-        checker.preprocessOntology(vec);
+    /** allow the checker to preprocess an ontology if necessary
+     * 
+     * @param axioms
+     *            list of wrapped axioms */
+    public void preprocessOntology(Collection<AxiomWrapper> axioms) {
+        checker.preprocessOntology(axioms);
         sigIndex.clear();
-        sigIndex.preprocessOntology(vec);
-        workQueue = new ArrayDeque<OWLEntity>(vec.size());
+        sigIndex.preprocessOntology(axioms);
+        workQueue = new ArrayDeque<OWLEntity>(axioms.size());
     }
 
-    /** @return true iff the axiom AX is a tautology wrt given type */
+    /** @param ax
+     * @param type
+     * @return true iff the axiom AX is a tautology wrt given type */
     public boolean isTautology(OWLAxiom ax, ModuleType type) {
         boolean topLocality = type == ModuleType.TOP;
         sig = new Signature(ax.getSignature());
@@ -129,23 +134,29 @@ public class Modularizer {
         return checker.local(ax);
     }
 
-    /** get access to the Locality checker */
+    /** @return the Locality checker */
     public LocalityChecker getLocalityChecker() {
         return checker;
     }
 
-    public void extract(AxiomWrapper begin, Signature signature, ModuleType type) {
-        this.extract(Collections.singletonList(begin), signature, type);
+    /** @param axiom
+     * @param signature
+     * @param type */
+    public void extract(AxiomWrapper axiom, Signature signature, ModuleType type) {
+        this.extract(Collections.singletonList(axiom), signature, type);
     }
 
-    /** extract module wrt SIGNATURE and TYPE from the set of axioms */
-    // [BEGIN,END)
-    public void extract(List<AxiomWrapper> begin, Signature signature, ModuleType type) {
+    /** extract module wrt SIGNATURE and TYPE from the set of axioms
+     * 
+     * @param axioms
+     * @param signature
+     * @param type */
+    public void extract(List<AxiomWrapper> axioms, Signature signature, ModuleType type) {
         boolean topLocality = type == ModuleType.TOP;
         sig = signature;
         checker.setSignatureValue(sig);
         sig.setLocality(topLocality);
-        extractModule(begin);
+        extractModule(axioms);
         if (type != ModuleType.STAR) {
             return;
         }
@@ -163,7 +174,7 @@ public class Modularizer {
         } while (size != module.size());
     }
 
-    /** get the last computed module */
+    /** @return the last computed module */
     public List<AxiomWrapper> getModule() {
         return module;
     }

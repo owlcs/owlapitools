@@ -17,33 +17,43 @@ public class Signature {
     /** true if role TOP-locality; false if role BOTTOM-locality */
     private boolean topRLocality = false;
 
+    /** empty signature */
     public Signature() {}
 
+    /** @param sig
+     *            signature elements */
     public Signature(Collection<OWLEntity> sig) {
         addAll(sig);
     }
 
-    /** add names to signature */
+    /** @param p
+     *            entity to add to signature
+     * @return true if p was not in the signature already */
     public boolean add(OWLEntity p) {
         return set.add(p);
     }
 
+    /** @param p
+     *            all entities to add */
     public void addAll(Collection<OWLEntity> p) {
         set.addAll(p);
     }
 
-    /** set new locality polarity */
+    /** @param top
+     *            set new locality polarity */
     public void setLocality(boolean top) {
         this.setLocality(top, top);
     }
 
-    /** set new locality polarity */
+    /** @param topC
+     *            new concept locality polarity
+     * @param topR
+     *            new role locality polarity */
     public void setLocality(boolean topC, boolean topR) {
         topCLocality = topC;
         topRLocality = topR;
     }
 
-    // comparison
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -63,21 +73,14 @@ public class Signature {
         return set.hashCode();
     }
 
-    /** @return true iff signature contains given element */
+    /** @param p
+     *            entity to find
+     * @return true iff signature contains p */
     public boolean contains(OWLEntity p) {
-        // bag.add(p);
-        // if (bag.size() % 100 == 0) {
-        // final List<OWLEntity> subList = bag.sortedList(false).subList(0, 10);
-        // for (OWLEntity e : subList) {
-        // System.out.println("Signature.contains() " + bag.check(e) + "\t" +
-        // e);
-        // }
-        // System.out
-        // .println("===========================================================");
-        // }
         return set.contains(p);
     }
 
+    /** @return the set of entities */
     public Set<OWLEntity> getSignature() {
         return set;
     }
@@ -92,6 +95,9 @@ public class Signature {
         return topRLocality;
     }
 
+    /** @param s2
+     *            signature to intersect
+     * @return intersection */
     public List<OWLEntity> intersect(Signature s2) {
         List<OWLEntity> ret = new ArrayList<OWLEntity>();
         Set<OWLEntity> s = new HashSet<OWLEntity>(set);

@@ -53,8 +53,8 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("javadoc")
 public class MultiThreadChecker {
 	public static final int defaultRep=10;
-	private int rep = defaultRep;
-	private final PrintStream p;
+    protected int rep = defaultRep;
+    protected final PrintStream p;
 	private final ByteArrayOutputStream out = new ByteArrayOutputStream();
 	private boolean successful = false;
 
@@ -102,7 +102,7 @@ public class MultiThreadChecker {
 		printout(cb, start, results);
 	}
 
-	private void printout(final TestMultithreadCallBack cb, long start,
+    protected void printout(final TestMultithreadCallBack cb, long start,
 			ConcurrentLinkedQueue<Long> results) {
 		List<Object> list = new ArrayList<Object>();
 		list.addAll(Arrays.asList(results.toArray()));

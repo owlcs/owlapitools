@@ -44,7 +44,7 @@ import org.semanticweb.owlapi.reasoner.TimeOutException;
 import org.semanticweb.owlapi.reasoner.UnsupportedEntailmentTypeException;
 import org.semanticweb.owlapi.util.Version;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({ "unchecked", "javadoc" })
 public final class CachedOWLReasoner implements OWLReasoner, OWLOntologyChangeListener {
 	protected final OWLReasoner delegate;
 

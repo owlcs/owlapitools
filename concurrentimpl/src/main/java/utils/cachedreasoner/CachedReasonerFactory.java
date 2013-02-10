@@ -6,9 +6,14 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
+/** A Reasoner factory that wraps reasoners in a caching layer
+ * 
+ * @author ignazio */
 public class CachedReasonerFactory implements OWLReasonerFactory {
 	private final OWLReasonerFactory f;
 
+    /** @param f
+     *            reasoner factory to use to build actual reasoners */
 	public CachedReasonerFactory(OWLReasonerFactory f) {
 		this.f=f;
 	}

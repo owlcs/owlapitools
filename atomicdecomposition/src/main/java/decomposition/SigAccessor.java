@@ -7,11 +7,15 @@ import org.semanticweb.owlapi.util.OWLObjectVisitorAdapter;
 public class SigAccessor extends OWLObjectVisitorAdapter {
     LocalityChecker localityChecker;
 
+    /** @param c
+     *            locality checker */
     public SigAccessor(LocalityChecker c) {
         localityChecker = c;
     }
 
-    /** @return true iff EXPR is a top datatype or a built-in datatype; */
+    /** @param expr
+     *            data range to check
+     * @return true iff EXPR is a top datatype or a built-in datatype; */
     public boolean isTopOrBuiltInDataType(OWLDataRange expr) {
         return expr.isTopDatatype() || expr.isDatatype()
                 && expr.asOWLDatatype().isBuiltIn();

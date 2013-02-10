@@ -7,7 +7,26 @@ package uk.ac.manchester.cs.chainsaw;
  You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA*/
 import java.util.Arrays;
 
-public class FastSetSimple extends AbstractFastSet {
+/** @author ignazio */
+public class FastSetSimple implements FastSet {
+    private static final int limit = 5;
+
+    @Override
+    public String toString() {
+        StringBuilder b = new StringBuilder();
+        b.append('[');
+        if (size() > 0) {
+            b.append(get(0));
+        }
+        for (int i = 1; i < size(); i++) {
+            b.append(',');
+            b.append(' ');
+            b.append(get(i));
+        }
+        b.append(']');
+        return b.toString();
+    }
+
     protected int[] values;
     protected int size = 0;
     protected static final int defaultSize = 16;
@@ -20,7 +39,7 @@ public class FastSetSimple extends AbstractFastSet {
             return -size - 1;
         }
         int lowerbound = 0;
-        if (size < AbstractFastSet.limit) {
+        if (size < limit) {
             for (; lowerbound < size; lowerbound++) {
                 if (values[lowerbound] > key) {
                     return -lowerbound - 1;
@@ -47,8 +66,10 @@ public class FastSetSimple extends AbstractFastSet {
         return -lowerbound - 1;
     }
 
+    @SuppressWarnings("javadoc")
     public FastSetSimple() {}
 
+    @SuppressWarnings("javadoc")
     public FastSetSimple(FastSetSimple c1, FastSetSimple c2) {
         values = new int[(c1.size + c2.size) / defaultSize * defaultSize + defaultSize];
         int i = 0;
@@ -398,13 +419,5 @@ public class FastSetSimple extends AbstractFastSet {
         } else {
             Arrays.sort(values, 0, originalsize);
         }
-    }
-
-    @Override
-    public void completeSet(int value) {
-        for (int i = 0; i <= value; i++) {
-            add(i);
-        }
-        // XXX notice: these sets go to negative numbers. Is this the best way?
     }
 }

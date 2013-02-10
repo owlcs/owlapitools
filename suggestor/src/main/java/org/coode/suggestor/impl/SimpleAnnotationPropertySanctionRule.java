@@ -35,6 +35,10 @@ public class SimpleAnnotationPropertySanctionRule implements PropertySanctionRul
 	private final OWLAnnotationProperty annotationProperty;
 	private final boolean recursive;
 
+    /** @param annotationProperty
+     *            property to use
+     * @param recursive
+     *            true if recursive */
 	public SimpleAnnotationPropertySanctionRule(OWLAnnotationProperty annotationProperty,
 			boolean recursive) {
 		this.annotationProperty = annotationProperty;

@@ -10,16 +10,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
+/** bag for counting occurrences of instances of a specified type
+ * 
+ * @author ignazio
+ * @param <Type> */
 public class Bag<Type> {
     Map<Type, AtomicLong> map = new LinkedHashMap<Type, AtomicLong>();
     int size = 0;
 
+    @SuppressWarnings("javadoc")
     public Bag() {}
 
+    /** @return size of the bag (all occurrences) */
     public int size() {
         return size;
     }
 
+    /** @param t
+     *            instance to add to the bag
+     * @return new number of occurrences */
     public long add(Type t) {
         size++;
         AtomicLong l = map.get(t);
@@ -31,6 +40,9 @@ public class Bag<Type> {
         }
     }
 
+    /** @param t
+     *            instance to check
+     * @return number of occurrences for t */
     public long check(Type t) {
         AtomicLong l = map.get(t);
         if (l != null) {
@@ -39,6 +51,9 @@ public class Bag<Type> {
         return 0;
     }
 
+    /** @param increasing
+     *            true for ascending sorting
+     * @return list of distinct instances */
     public List<Type> sortedList(final boolean increasing) {
         List<Type> toReturn = new ArrayList<Type>(map.keySet());
         Collections.sort(toReturn, new Comparator<Type>() {
@@ -54,10 +69,12 @@ public class Bag<Type> {
         return toReturn;
     }
 
+    /** @return list of distinct instances */
     public Collection<Type> list() {
         return map.keySet();
     }
 
+    /** @return all occurrences as an array */
     public long[] values() {
         long[] toReturn = new long[map.values().size()];
         int i = 0;

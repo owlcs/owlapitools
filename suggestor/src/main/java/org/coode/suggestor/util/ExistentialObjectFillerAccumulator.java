@@ -26,6 +26,8 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
  */
 public class ExistentialObjectFillerAccumulator extends
 		FillerAccumulator<OWLClassExpression> {
+    /** @param r
+     *            reasoner to use */
 	public ExistentialObjectFillerAccumulator(OWLReasoner r) {
 		super(r);
 	}

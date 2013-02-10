@@ -7,6 +7,9 @@ import java.util.List;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.util.MultiMap;
 
+/** signature index
+ * 
+ * @author ignazio */
 public class SigIndex {
     /** map between entities and axioms that contains them in their signature */
     private MultiMap<OWLEntity, AxiomWrapper> Base = new MultiMap<OWLEntity, AxiomWrapper>();
@@ -39,7 +42,8 @@ public class SigIndex {
         }
     }
 
-    /** empty c'tor */
+    /** @param c
+     *            locality checker */
     public SigIndex(LocalityChecker c) {
         checker = c;
     }
@@ -66,7 +70,10 @@ public class SigIndex {
         NonLocalTrue.remove(ax);
     }
 
-    /** process an axiom wrt its Used status */
+    /** process an axiom wrt its Used status
+     * 
+     * @param ax
+     *            the axiom to process */
     public void processAx(AxiomWrapper ax) {
         if (ax.isUsed()) {
             registerAx(ax);
@@ -75,14 +82,17 @@ public class SigIndex {
         }
     }
 
-    // / preprocess given set of axioms
+    /** preprocess given set of axioms
+     * 
+     * @param axioms
+     *            the axioms to process */
     public void preprocessOntology(Collection<AxiomWrapper> axioms) {
         for (AxiomWrapper ax : axioms) {
             processAx(ax);
         }
     }
 
-    // / clear internal structures
+    /** clear internal structures */
     public void clear() {
         Base.clear();
         NonLocalFalse.clear();
@@ -90,13 +100,21 @@ public class SigIndex {
     }
 
     // get the set by the index
-    /** given an entity, return a set of all axioms that tontain this entity in */
-    // a signature
+    /** given an entity, return a set of all axioms that contain this entity in a
+     * signature
+     * 
+     * @param entity
+     *            the entity
+     * @return collection of axioms referring the entity */
     public Collection<AxiomWrapper> getAxioms(OWLEntity entity) {
         return Base.get(entity);
     }
 
-    /** get the non-local axioms with top-locality value TOP */
+    /** get the non-local axioms with top-locality value TOP
+     * 
+     * @param top
+     *            true if top locality should be used
+     * @return collection of non local axioms */
     public Collection<AxiomWrapper> getNonLocal(boolean top) {
         return top ? NonLocalFalse : NonLocalTrue;
     }

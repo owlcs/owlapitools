@@ -168,10 +168,8 @@ class FillerSuggestorImpl implements FillerSuggestor {
     @Override
     public NodeSet<OWLClass> getPossibleNamedFillers(OWLClassExpression c,
 			OWLObjectPropertyExpression p, OWLClassExpression root, boolean direct) {
-		if (root == null) {
-			root = helper.getGlobalAssertedRange(p);
-		}
-		return possibleOPMatcher.getRoots(c, p, root, direct);
+        return possibleOPMatcher.getRoots(c, p,
+                root == null ? helper.getGlobalAssertedRange(p) : root, direct);
 	}
 
     @Override
@@ -215,10 +213,14 @@ class FillerSuggestorImpl implements FillerSuggestor {
 
 		boolean isMatch(OWLClassExpression c, P p, R f, boolean direct);
 
-		/**
-		 * Perform a recursive search, adding nodes that match. If direct is
-		 * true only add nodes if they have no subs that match
-		 */
+		        /** Perform a recursive search, adding nodes that match. If direct is
+         * true only add nodes if they have no subs that match
+         * 
+         * @param c
+         * @param p
+         * @param start
+         * @param direct
+         * @return set of leaf nodes */
 		NodeSet<F> getLeaves(OWLClassExpression c, P p, R start, boolean direct);
 
 		/*

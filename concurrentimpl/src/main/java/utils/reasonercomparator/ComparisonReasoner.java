@@ -41,9 +41,10 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.util.Version;
 
+/** an OWLReasoner which compares the results from different reasoners. */
 @SuppressWarnings("boxing")
 public class ComparisonReasoner implements OWLReasoner {
-    public static final String[] methodNames = new String[] { "precomputeInferences",
+    private static final String[] methodNames = new String[] { "precomputeInferences",
             "isConsistent", "isSatisfiable", "getUnsatisfiableClasses", "isEntailed",
             "getSubClasses", "getSuperClasses", "getEquivalentClasses",
             "getDisjointClasses", "getTopObjectPropertyNode",
@@ -62,7 +63,7 @@ public class ComparisonReasoner implements OWLReasoner {
             "isPrecomputed", "getPrecomputableInferenceTypes", "getPendingChanges",
             "getPendingAxiomAdditions", "getPendingAxiomRemovals" };
 
-    public static class Column {
+    static class Column {
         public String header;
         public List<Long> values = new ArrayList<Long>();
 
@@ -83,30 +84,26 @@ public class ComparisonReasoner implements OWLReasoner {
     boolean log = false;
     private final ThreadMXBean bean = ManagementFactory.getThreadMXBean();
 
+    /** @return the timings */
     public Map<OWLReasoner, Map<String, Column>> getTimings() {
         return timings;
     }
 
+    /** @param o
+     *            the ontology to reason on
+     * @param config
+     *            the configuration for the reasoners; optional, can be null
+     * @param delegateFactories
+     *            the factories to be used to build the reasoners */
     public ComparisonReasoner(OWLOntology o, OWLReasonerConfiguration config,
             OWLReasonerFactory... delegateFactories) {
         root = o;
-        // try {
-        // PrintStream out=new
-        // PrintStream("testOntology."+bean.getCurrentThreadCpuTime()+".owl");
-        // root.getOWLOntologyManager().saveOntology(root, out);
-        // out.close();
-        // }catch (Exception e) {
-        // e.printStackTrace();
-        // }
         for (int i = 0; i < delegateFactories.length; i++) {
             long l = bean.getCurrentThreadCpuTime();
             OWLReasoner r = config == null ? delegateFactories[i].createReasoner(o)
-                    : delegateFactories[i].createReasoner(o, config);// , new
-                                                                     // SimpleConfiguration(new
-                                                                     // ConsoleProgressMonitor()));
+                    : delegateFactories[i].createReasoner(o, config);
             long elapsed = bean.getCurrentThreadCpuTime();
             elapsed = elapsed - l;
-            // System.out.println("OWLReasoner r = new "+delegateFactories[i].getClass().getName()+"().createReasoner(o);");
             delegates.add(r);
             timings.put(r, new HashMap<String, Column>());
             for (String s : methodNames) {
@@ -116,6 +113,14 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
+    /** @param tolerant
+     *            false if any difference should stop the reasoning
+     * @param o
+     *            the ontology to reason on
+     * @param config
+     *            the configuration for the reasoners; optional, can be null
+     * @param delegateFactories
+     *            the factories to be used to build the reasoners */
     public ComparisonReasoner(boolean tolerant, OWLOntology o,
             OWLReasonerConfiguration config, OWLReasonerFactory... delegateFactories) {
         this(o, config, delegateFactories);
@@ -184,11 +189,10 @@ public class ComparisonReasoner implements OWLReasoner {
         return objects.get(0);
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     // never mind the warnings, this needs to be generic enough to accept
     // anything
-            private static
-            boolean delegateEquals(Object o1, Object o2) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private static boolean delegateEquals(Object o1, Object o2) {
         if (o1 instanceof List) {
             Set s1 = new HashSet((List) o1);
             Set s2 = new HashSet((List) o2);
@@ -219,7 +223,6 @@ public class ComparisonReasoner implements OWLReasoner {
                 System.out.println(Arrays.toString(Arrays.asList().toArray()));
                 e.printStackTrace(System.out);
                 if (!tolerateDifferences) {
-                    // System.exit(0);
                     throw e;
                 }
             }
@@ -243,7 +246,6 @@ public class ComparisonReasoner implements OWLReasoner {
                 System.out.println(Arrays.toString(Arrays.asList().toArray()));
                 e.printStackTrace(System.out);
                 if (!tolerateDifferences) {
-                    // System.exit(0);
                     throw e;
                 }
             }
@@ -273,7 +275,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -303,7 +304,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -333,7 +333,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -357,7 +356,6 @@ public class ComparisonReasoner implements OWLReasoner {
                 System.out.println(Arrays.toString(Arrays.asList(arg0).toArray()));
                 e.printStackTrace(System.out);
                 if (!tolerateDifferences) {
-                    // System.exit(0);
                     throw e;
                 }
             }
@@ -418,7 +416,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -447,7 +444,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -476,7 +472,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -506,7 +501,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -535,7 +529,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -564,7 +557,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -594,7 +586,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -623,7 +614,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -652,7 +642,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -681,7 +670,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -710,7 +698,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -739,7 +726,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -768,7 +754,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -799,7 +784,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -830,7 +814,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -862,7 +845,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -894,7 +876,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -926,7 +907,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -958,7 +938,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -990,7 +969,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -1022,7 +1000,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -1054,7 +1031,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -1084,7 +1060,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -1114,7 +1089,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -1145,7 +1119,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -1177,7 +1150,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -1208,7 +1180,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -1240,7 +1211,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -1270,7 +1240,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -1299,7 +1268,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -1329,7 +1297,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -1361,7 +1328,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -1392,7 +1358,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -1421,7 +1386,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -1452,7 +1416,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -1481,7 +1444,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -1510,7 +1472,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -1540,7 +1501,6 @@ public class ComparisonReasoner implements OWLReasoner {
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
-                // System.exit(0);
                 throw e;
             }
         }
@@ -1563,7 +1523,6 @@ public class ComparisonReasoner implements OWLReasoner {
                 System.out.println(Arrays.toString(Arrays.asList().toArray()));
                 e.printStackTrace(System.out);
                 if (!tolerateDifferences) {
-                    // System.exit(0);
                     throw e;
                 }
             }

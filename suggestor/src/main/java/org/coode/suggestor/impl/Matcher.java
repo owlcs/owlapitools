@@ -14,15 +14,23 @@ interface Matcher<R extends OWLPropertyRange, F extends R, P extends OWLProperty
 
 	boolean isMatch(OWLClassExpression c, P p, R f, boolean direct);
 
-	/**
-	 * Perform a recursive search, adding nodes that match. If direct is true
-	 * only add nodes if they have no subs that match
-	 */
+	    /** Perform a recursive search, adding nodes that match. If direct is true
+     * only add nodes if they have no subs that match
+     * 
+     * @param c
+     * @param p
+     * @param start
+     * @param direct
+     * @return set of leave nodes */
 	NodeSet<F> getLeaves(OWLClassExpression c, P p, R start, boolean direct);
 
-	/*
-	 * Perform a search on the direct subs of start, adding nodes that match. If
-	 * direct is false then recurse into descendants of start
-	 */
+    /** Perform a search on the direct subs of start, adding nodes that match. If
+     * direct is false then recurse into descendants of start
+     * 
+     * @param c
+     * @param p
+     * @param start
+     * @param direct
+     * @return set of root nodes */
 	NodeSet<F> getRoots(OWLClassExpression c, P p, R start, boolean direct);
 }

@@ -4,16 +4,19 @@ import java.util.Set;
 
 import org.semanticweb.owlapi.model.OWLAxiom;
 
+/** base for all atomic decomposers */
 public interface BaseAtomicDecomposer {
+    /** @param atom
+     * @return dependencies for atom, including atom */
     public Set<Atom> getDependencies(Atom atom);
 
-    /*
-     * Returns the set of atoms that depend on the given atom depends on. The
-     * set contains the given atom.
-     */
+    /** @param atom
+     * @return dependents for atom, including atom */
     public Set<Atom> getDependents(Atom atom);
 
+    /** @return all atoms */
     public Set<Atom> getAtoms();
 
+    /** @return all tautologies */
     public Set<OWLAxiom> getTautologies();
 }

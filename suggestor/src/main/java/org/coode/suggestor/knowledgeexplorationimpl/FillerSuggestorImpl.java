@@ -186,10 +186,8 @@ class FillerSuggestorImpl implements FillerSuggestor {
     @Override
     public NodeSet<OWLClass> getPossibleNamedFillers(OWLClassExpression c,
 			OWLObjectPropertyExpression p, OWLClassExpression root, boolean direct) {
-		if (root == null) {
-			root = helper.getGlobalAssertedRange(p);
-		}
-		return possibleOPMatcher.getRoots(c, p, root, direct);
+        return possibleOPMatcher.getRoots(c, p,
+                root == null ? helper.getGlobalAssertedRange(p) : root, direct);
 	}
 
     @Override

@@ -17,6 +17,7 @@ import uk.ac.manchester.cs.atomicdecomposition.Atom;
 import uk.ac.manchester.cs.atomicdecomposition.AtomicDecomposer;
 import uk.ac.manchester.cs.atomicdecomposition.AtomicDecomposerOWLAPITOOLS;
 
+@SuppressWarnings("javadoc")
 public class AtomicDecomposerDepedenciesTest {
     @Test
     public void atomicDecomposerDepedenciesTest() throws OWLOntologyCreationException {

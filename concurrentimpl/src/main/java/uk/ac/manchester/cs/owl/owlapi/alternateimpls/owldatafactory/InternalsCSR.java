@@ -51,11 +51,15 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImpl;
  */
 public class InternalsCSR extends  OWLDataFactoryInternalsImpl {
 
-	@Override
+    private static final long serialVersionUID = 1L;
+
+    @Override
 	protected <V extends OWLEntity> BuildableWeakIndexCache<V> buildCache(OWLDataFactory f) {
 
 		return new BuildableWeakIndexCache<V>(f) {
-			@Override
+            private static final long serialVersionUID = 1L;
+
+            @Override
 			public synchronized V cache(IRI s, Buildable v) {
 
 
@@ -77,9 +81,10 @@ public class InternalsCSR extends  OWLDataFactoryInternalsImpl {
 	}
 
 
-    /**
-     * @param f the factory to refer to
-     */
+    /** @param f
+     *            the factory to refer to
+     * @param b
+     *            use compression */
     public InternalsCSR(OWLDataFactory f, boolean b) {
     	super(f, b);
 

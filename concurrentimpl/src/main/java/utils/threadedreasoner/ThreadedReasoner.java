@@ -54,10 +54,13 @@ import org.semanticweb.owlapi.util.Version;
  *         on an Executor service and try hard to respect timeouts
  *
  */
+@SuppressWarnings("boxing")
 public class ThreadedReasoner implements OWLReasoner {
 	protected final OWLReasoner delegate;
 	private final ExecutorService exec = Executors.newFixedThreadPool(1);
 
+    /** @param r
+     *            reasoner to wrap */
 	public ThreadedReasoner(OWLReasoner r) {
 		delegate = r;
 	}
@@ -175,7 +178,7 @@ public class ThreadedReasoner implements OWLReasoner {
 		}
 	}
 
-	@Override
+    @Override
     public boolean isConsistent() throws ReasonerInterruptedException, TimeOutException {
 		return threadedRun(new Callable<Boolean>() {
 			@Override

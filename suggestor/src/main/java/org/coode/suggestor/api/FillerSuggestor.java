@@ -103,6 +103,11 @@ public interface FillerSuggestor {
 	boolean isCurrent(OWLClassExpression c, OWLDataProperty p, OWLDataRange f);
 
 	// TODO: how do we determine if there is a more specific range on c??
+    /** @param c
+     * @param p
+     * @param f
+     * @param direct
+     * @return true if current */
 	boolean isCurrent(OWLClassExpression c, OWLDataProperty p, OWLDataRange f,
 			boolean direct);
 

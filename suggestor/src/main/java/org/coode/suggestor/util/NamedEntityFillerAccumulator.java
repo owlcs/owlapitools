@@ -27,6 +27,8 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
  * Includes both named class fillers and individuals
  */
 public class NamedEntityFillerAccumulator extends FillerAccumulator<OWLEntity> {
+    /** @param r
+     *            reasoner to use */
 	public NamedEntityFillerAccumulator(OWLReasoner r) {
 		super(r);
 	}

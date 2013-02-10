@@ -28,6 +28,7 @@ import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
+@SuppressWarnings("javadoc")
 @Ignore
 public class ReasonerTests {
     public static final String JFACT_FACTORY = "uk.ac.manchester.cs.jfact.JFactFactory";

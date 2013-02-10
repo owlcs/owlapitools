@@ -26,6 +26,8 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
  * Get all fillers in restrictions using the given data property.
  */
 public class DataFillerAccumulator extends FillerAccumulator<OWLObject> {
+    /** @param r
+     *            reasoner to use */
 	public DataFillerAccumulator(OWLReasoner r) {
 		super(r);
 	}
