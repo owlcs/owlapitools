@@ -38,6 +38,9 @@
  */
 package org.semanticweb.owlapitools.profiles;
 
+import static org.semanticweb.owlapi.vocab.OWL2Datatype.*;
+
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -84,8 +87,6 @@ import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.semanticweb.owlapi.model.SWRLRule;
 import org.semanticweb.owlapi.util.OWLOntologyWalker;
 import org.semanticweb.owlapi.util.OWLOntologyWalkerVisitor;
-import org.semanticweb.owlapi.vocab.OWL2Datatype;
-import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.semanticweb.owlapitools.profiles.violations.UseOfIllegalAxiom;
 import org.semanticweb.owlapitools.profiles.violations.UseOfIllegalDataRange;
 import org.semanticweb.owlapitools.profiles.violations.UseOfNonEquivalentClassExpression;
@@ -98,40 +99,18 @@ import org.semanticweb.owlapitools.profiles.violations.UseOfNonSuperClassExpress
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
 public class OWL2RLProfile implements OWLProfile {
-    final Set<IRI> allowedDatatypes = new HashSet<IRI>();
-
-    public OWL2RLProfile() {
-        allowedDatatypes.add(OWLRDFVocabulary.RDF_PLAIN_LITERAL.getIRI());
-        allowedDatatypes.add(OWLRDFVocabulary.RDF_XML_LITERAL.getIRI());
-        allowedDatatypes.add(OWLRDFVocabulary.RDFS_LITERAL.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_DECIMAL.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_INTEGER.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_NON_NEGATIVE_INTEGER.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_NON_POSITIVE_INTEGER.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_POSITIVE_INTEGER.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_NEGATIVE_INTEGER.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_LONG.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_INT.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_SHORT.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_BYTE.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_UNSIGNED_LONG.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_UNSIGNED_BYTE.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_FLOAT.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_DOUBLE.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_STRING.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_NORMALIZED_STRING.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_TOKEN.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_LANGUAGE.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_NAME.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_NCNAME.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_NMTOKEN.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_BOOLEAN.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_HEX_BINARY.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_BASE_64_BINARY.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_ANY_URI.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_DATE_TIME.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_DATE_TIME_STAMP.getIRI());
-    }
+    private final static Set<IRI> allowedDatatypes = new HashSet<IRI>(Arrays.asList(
+            RDF_PLAIN_LITERAL.getIRI(), RDF_XML_LITERAL.getIRI(), RDFS_LITERAL.getIRI(),
+            XSD_DECIMAL.getIRI(), XSD_INTEGER.getIRI(),
+            XSD_NON_NEGATIVE_INTEGER.getIRI(), XSD_NON_POSITIVE_INTEGER.getIRI(),
+            XSD_POSITIVE_INTEGER.getIRI(), XSD_NEGATIVE_INTEGER.getIRI(),
+            XSD_LONG.getIRI(), XSD_INT.getIRI(), XSD_SHORT.getIRI(), XSD_BYTE.getIRI(),
+            XSD_UNSIGNED_LONG.getIRI(), XSD_UNSIGNED_BYTE.getIRI(), XSD_FLOAT.getIRI(),
+            XSD_DOUBLE.getIRI(), XSD_STRING.getIRI(), XSD_NORMALIZED_STRING.getIRI(),
+            XSD_TOKEN.getIRI(), XSD_LANGUAGE.getIRI(), XSD_NAME.getIRI(),
+            XSD_NCNAME.getIRI(), XSD_NMTOKEN.getIRI(), XSD_BOOLEAN.getIRI(),
+            XSD_HEX_BINARY.getIRI(), XSD_BASE_64_BINARY.getIRI(), XSD_ANY_URI.getIRI(),
+            XSD_DATE_TIME.getIRI(), XSD_DATE_TIME_STAMP.getIRI()));
 
     /** Gets the name of the profile.
      * 

@@ -38,6 +38,9 @@
  */
 package org.semanticweb.owlapitools.profiles;
 
+import static org.semanticweb.owlapi.vocab.OWL2Datatype.*;
+
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -90,8 +93,6 @@ import org.semanticweb.owlapi.model.OWLTransitiveObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.SWRLRule;
 import org.semanticweb.owlapi.util.OWLOntologyWalker;
 import org.semanticweb.owlapi.util.OWLOntologyWalkerVisitor;
-import org.semanticweb.owlapi.vocab.OWL2Datatype;
-import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.semanticweb.owlapitools.profiles.violations.UseOfAnonymousIndividual;
 import org.semanticweb.owlapitools.profiles.violations.UseOfIllegalAxiom;
 import org.semanticweb.owlapitools.profiles.violations.UseOfIllegalDataRange;
@@ -105,29 +106,15 @@ import org.semanticweb.owlapitools.profiles.violations.UseOfNonSuperClassExpress
  * Date: 18-Jul-2009 */
 @SuppressWarnings("javadoc")
 public class OWL2QLProfile implements OWLProfile {
-    final Set<IRI> allowedDatatypes = new HashSet<IRI>();
 
-    public OWL2QLProfile() {
-        allowedDatatypes.add(OWLRDFVocabulary.RDF_PLAIN_LITERAL.getIRI());
-        allowedDatatypes.add(OWLRDFVocabulary.RDF_XML_LITERAL.getIRI());
-        allowedDatatypes.add(OWLRDFVocabulary.RDFS_LITERAL.getIRI());
-        allowedDatatypes.add(OWL2Datatype.OWL_REAL.getIRI());
-        allowedDatatypes.add(OWL2Datatype.OWL_RATIONAL.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_DECIMAL.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_INTEGER.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_NON_NEGATIVE_INTEGER.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_STRING.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_NORMALIZED_STRING.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_TOKEN.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_NAME.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_NCNAME.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_NMTOKEN.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_HEX_BINARY.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_BASE_64_BINARY.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_ANY_URI.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_DATE_TIME.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_DATE_TIME_STAMP.getIRI());
-    }
+    private final static Set<IRI> allowedDatatypes = new HashSet<IRI>(Arrays.asList(
+            RDF_PLAIN_LITERAL.getIRI(), RDF_XML_LITERAL.getIRI(), RDFS_LITERAL.getIRI(),
+            OWL_REAL.getIRI(), OWL_RATIONAL.getIRI(), XSD_DECIMAL.getIRI(),
+            XSD_INTEGER.getIRI(), XSD_NON_NEGATIVE_INTEGER.getIRI(), XSD_STRING.getIRI(),
+            XSD_NORMALIZED_STRING.getIRI(), XSD_TOKEN.getIRI(), XSD_NAME.getIRI(),
+            XSD_NCNAME.getIRI(), XSD_NMTOKEN.getIRI(), XSD_HEX_BINARY.getIRI(),
+            XSD_BASE_64_BINARY.getIRI(), XSD_ANY_URI.getIRI(), XSD_DATE_TIME.getIRI(),
+            XSD_DATE_TIME_STAMP.getIRI()));
 
     /** Gets the name of the profile.
      * 

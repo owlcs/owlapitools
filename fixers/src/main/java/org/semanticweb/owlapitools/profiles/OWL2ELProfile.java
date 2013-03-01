@@ -38,6 +38,9 @@
  */
 package org.semanticweb.owlapitools.profiles;
 
+import static org.semanticweb.owlapi.vocab.OWL2Datatype.*;
+
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -82,8 +85,6 @@ import org.semanticweb.owlapi.model.SWRLRule;
 import org.semanticweb.owlapi.util.OWLObjectPropertyManager;
 import org.semanticweb.owlapi.util.OWLOntologyWalker;
 import org.semanticweb.owlapi.util.OWLOntologyWalkerVisitor;
-import org.semanticweb.owlapi.vocab.OWL2Datatype;
-import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.semanticweb.owlapitools.profiles.violations.LastPropertyInChainNotInImposedRange;
 import org.semanticweb.owlapitools.profiles.violations.UseOfAnonymousIndividual;
 import org.semanticweb.owlapitools.profiles.violations.UseOfDataOneOfWithMultipleLiterals;
@@ -92,39 +93,22 @@ import org.semanticweb.owlapitools.profiles.violations.UseOfIllegalClassExpressi
 import org.semanticweb.owlapitools.profiles.violations.UseOfIllegalDataRange;
 import org.semanticweb.owlapitools.profiles.violations.UseOfObjectOneOfWithMultipleIndividuals;
 import org.semanticweb.owlapitools.profiles.violations.UseOfObjectPropertyInverse;
-
 /** Author: Matthew Horridge<br>
  * The University Of Manchester<br>
  * Bio-Health Informatics Group<br>
  * Date: 16-Apr-2008<br>
  * <br> */
 public class OWL2ELProfile implements OWLProfile {
-    protected final Set<IRI> allowedDatatypes;
+    protected final static Set<IRI> allowedDatatypes = new HashSet<IRI>(Arrays.asList(
+            RDF_PLAIN_LITERAL.getIRI(), RDF_XML_LITERAL.getIRI(), RDFS_LITERAL.getIRI(),
+            OWL_RATIONAL.getIRI(), OWL_REAL.getIRI(), XSD_DECIMAL.getIRI(),
+            XSD_DECIMAL.getIRI(), XSD_INTEGER.getIRI(),
+            XSD_NON_NEGATIVE_INTEGER.getIRI(), XSD_STRING.getIRI(),
+            XSD_NORMALIZED_STRING.getIRI(), XSD_TOKEN.getIRI(), XSD_NAME.getIRI(),
+            XSD_NCNAME.getIRI(), XSD_NMTOKEN.getIRI(), XSD_HEX_BINARY.getIRI(),
+            XSD_BASE_64_BINARY.getIRI(), XSD_ANY_URI.getIRI(), XSD_DATE_TIME.getIRI(),
+            XSD_DATE_TIME_STAMP.getIRI()));
 
-    @SuppressWarnings("javadoc")
-    public OWL2ELProfile() {
-        allowedDatatypes = new HashSet<IRI>();
-        allowedDatatypes.add(OWL2Datatype.RDF_PLAIN_LITERAL.getIRI());
-        allowedDatatypes.add(OWLRDFVocabulary.RDF_XML_LITERAL.getIRI());
-        allowedDatatypes.add(OWLRDFVocabulary.RDFS_LITERAL.getIRI());
-        allowedDatatypes.add(OWL2Datatype.OWL_RATIONAL.getIRI());
-        allowedDatatypes.add(OWL2Datatype.OWL_REAL.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_DECIMAL.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_DECIMAL.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_INTEGER.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_NON_NEGATIVE_INTEGER.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_STRING.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_NORMALIZED_STRING.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_TOKEN.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_NAME.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_NCNAME.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_NMTOKEN.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_HEX_BINARY.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_BASE_64_BINARY.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_ANY_URI.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_DATE_TIME.getIRI());
-        allowedDatatypes.add(OWL2Datatype.XSD_DATE_TIME_STAMP.getIRI());
-    }
 
     @Override
     public String getName() {
