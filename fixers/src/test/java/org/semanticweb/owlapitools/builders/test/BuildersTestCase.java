@@ -1,4 +1,4 @@
-package builders.test;
+package org.semanticweb.owlapitools.builders.test;
 
 import static org.junit.Assert.assertEquals;
 
