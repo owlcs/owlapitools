@@ -5,5 +5,5 @@
     <artifactId>owlapitools-parent</artifactId>
     <version>1.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>fixers</artifactId>
+  <artifactId>owlapitools-fixers</artifactId>
 </project>
