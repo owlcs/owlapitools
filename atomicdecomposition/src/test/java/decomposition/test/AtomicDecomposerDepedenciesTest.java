@@ -14,8 +14,8 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 import uk.ac.manchester.cs.atomicdecomposition.Atom;
-import uk.ac.manchester.cs.atomicdecomposition.AtomicDecomposer;
 import uk.ac.manchester.cs.atomicdecomposition.AtomicDecomposerOWLAPITOOLS;
+import uk.ac.manchester.cs.atomicdecomposition.AtomicDecomposition;
 
 @SuppressWarnings("javadoc")
 public class AtomicDecomposerDepedenciesTest {
@@ -24,7 +24,7 @@ public class AtomicDecomposerDepedenciesTest {
         // given
         OWLOntology o = getOntology();
         assertEquals(3, o.getAxiomCount());
-        AtomicDecomposer ad = new AtomicDecomposerOWLAPITOOLS(o);
+        AtomicDecomposition ad = new AtomicDecomposerOWLAPITOOLS(o);
         assertEquals(3, ad.getAtoms().size());
         Atom atom = ad.getBottomAtoms().iterator().next();
         assertNotNull(atom);
