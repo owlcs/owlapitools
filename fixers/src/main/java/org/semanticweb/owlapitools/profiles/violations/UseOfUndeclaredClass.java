@@ -38,9 +38,12 @@
  */
 package org.semanticweb.owlapitools.profiles.violations;
 
+import java.util.List;
+
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
 
@@ -65,5 +68,10 @@ public class UseOfUndeclaredClass extends OWLProfileViolation {
     @Override
     public String toString() {
         return toString("Use of undeclared class: %s", cls);
+    }
+
+    @Override
+    public List<OWLOntologyChange> repair() {
+        return list(addDeclaration(cls));
     }
 }

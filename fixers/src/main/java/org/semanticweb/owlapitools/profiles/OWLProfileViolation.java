@@ -43,6 +43,7 @@ import java.util.List;
 
 import org.semanticweb.owlapi.model.AddAxiom;
 import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
@@ -56,6 +57,7 @@ import org.semanticweb.owlapi.model.RemoveAxiom;
  * than the complete axiom. */
 public abstract class OWLProfileViolation {
     protected final OWLOntology ontology;
+    protected final OWLDataFactory df;
     protected final OWLAxiom axiom;
 
     /** @param ontology
@@ -65,6 +67,7 @@ public abstract class OWLProfileViolation {
     public OWLProfileViolation(OWLOntology ontology, OWLAxiom axiom) {
         this.axiom = axiom;
         this.ontology = ontology;
+        df = ontology.getOWLOntologyManager().getOWLDataFactory();
     }
 
     /** @return the offending axiom */
@@ -81,8 +84,7 @@ public abstract class OWLProfileViolation {
     }
 
     protected AddAxiom addDeclaration(OWLEntity e) {
-        return new AddAxiom(ontology, ontology.getOWLOntologyManager()
-                .getOWLDataFactory().getOWLDeclarationAxiom(e));
+        return new AddAxiom(ontology, df.getOWLDeclarationAxiom(e));
     }
 
     /** visitor accept method

@@ -38,10 +38,14 @@
  */
 package org.semanticweb.owlapitools.profiles.violations;
 
+import java.util.List;
+
+import org.semanticweb.owlapi.model.AddAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
 
@@ -70,5 +74,10 @@ public class UseOfUndeclaredAnnotationProperty extends OWLProfileViolation {
     public String toString() {
         return toString("Use of undeclared annotation property: %s in annotation %s",
                 property, annotation);
+    }
+
+    @Override
+    public List<OWLOntologyChange> repair() {
+        return list(new AddAxiom(ontology, df.getOWLDeclarationAxiom(property)));
     }
 }

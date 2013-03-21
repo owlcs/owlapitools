@@ -63,6 +63,6 @@ public class UseOfDataOneOfWithMultipleLiterals extends UseOfIllegalDataRange {
     }
     @Override
     public String toString() {
-        return toString("Use of DataOneOf with multiple literals");
+        return toString("Use of DataOneOf with multiple literals %s", dataOneOf);
     }
 }

@@ -75,4 +75,5 @@ public class UseOfUndeclaredDatatype extends OWLProfileViolation {
     public String toString() {
         return toString("Use of undeclared datatype: %s", datatype);
     }
+
 }
