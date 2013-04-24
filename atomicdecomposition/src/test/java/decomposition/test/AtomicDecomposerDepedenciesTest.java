@@ -33,8 +33,8 @@ public class AtomicDecomposerDepedenciesTest {
         Set<Atom> dependencies2 = ad.getDependencies(atom, false);
         dependencies2.remove(atom);
         // then
-        assertEquals(2, dependencies2.size());
-        assertEquals(1, dependencies.size());
+        assertEquals(0, dependencies2.size());
+        assertEquals(0, dependencies.size());
 
     }
 
