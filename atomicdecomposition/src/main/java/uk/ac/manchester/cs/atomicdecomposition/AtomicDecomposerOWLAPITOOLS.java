@@ -43,7 +43,7 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
     Decomposer decomposer;
     private final ModuleType type;
 
-    protected Set<OWLAxiom> asSet(Collection<AxiomWrapper> c) {
+    Set<OWLAxiom> asSet(Collection<AxiomWrapper> c) {
         Set<OWLAxiom> toReturn = new HashSet<OWLAxiom>();
         for (AxiomWrapper p : c) {
             toReturn.add(p.getAxiom());
@@ -83,7 +83,7 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
         }
     }
 
-    public int getModuleType() {
+    int getModuleType() {
         return type.ordinal();
     }
 
@@ -144,7 +144,7 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
         return explore(atom, direct, dependents);
     }
 
-    public Set<Atom> explore(Atom atom, boolean direct,
+    Set<Atom> explore(Atom atom, boolean direct,
             IdentityMultiMap<Atom, Atom> multimap) {
         if (direct) {
             Set<Atom> hashSet = new HashSet<Atom>(multimap.get(atom));
@@ -185,7 +185,7 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
         return keys;
     }
 
-    public Set<Atom> asSet(Iterable<Integer> keys) {
+    Set<Atom> asSet(Iterable<Integer> keys) {
         Set<Atom> s = new HashSet<Atom>();
         for (int i : keys) {
             s.add(atoms.get(i));
@@ -193,7 +193,7 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
         return s;
     }
 
-    public Set<Atom> asSet(FastSet keys) {
+    Set<Atom> asSet(FastSet keys) {
         Set<Atom> s = new HashSet<Atom>();
         for (int i = 0; i < keys.size(); i++) {
             s.add(atoms.get(keys.get(i)));
@@ -208,15 +208,15 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
         return keys;
     }
 
-    public Atom getAtomByID(Object id) {
+    Atom getAtomByID(Object id) {
         return atoms.get((Integer) id);
     }
 
-    public Set<OWLAxiom> getGlobalAxioms() {
+    Set<OWLAxiom> getGlobalAxioms() {
         return globalAxioms;
     }
 
-    public void setGlobalAxioms(Set<OWLAxiom> globalAxioms) {
+    void setGlobalAxioms(Set<OWLAxiom> globalAxioms) {
         this.globalAxioms = globalAxioms;
     }
 
@@ -237,11 +237,11 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
 
     /** get a set of axioms that corresponds to the module of the atom with the
      * id INDEX */
-    public Collection<AxiomWrapper> getAtomModule(int index) {
+    Collection<AxiomWrapper> getAtomModule(int index) {
         return decomposer.getAOS().get(index).getModule();
     }
 
-    public Collection<AxiomWrapper> getModule(Set<OWLEntity> signature,
+    Collection<AxiomWrapper> getModule(Set<OWLEntity> signature,
             boolean useSemantics, ModuleType moduletype) {
         return decomposer.getModule(signature, useSemantics, moduletype);
     }
