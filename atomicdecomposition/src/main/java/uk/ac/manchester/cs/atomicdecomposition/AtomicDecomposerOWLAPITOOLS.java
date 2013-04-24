@@ -37,6 +37,7 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
         }
     };
     List<Atom> atoms;
+    Map<Atom, Integer> atomIndex = new HashMap<Atom, Integer>();
     IdentityMultiMap<Atom, Atom> dependents = new IdentityMultiMap<Atom, Atom>();
     IdentityMultiMap<Atom, Atom> dependencies = new IdentityMultiMap<Atom, Atom>();
     Decomposer decomposer;
@@ -67,6 +68,7 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
         for (int i = 0; i < size; i++) {
             final Atom atom = new Atom(asSet(decomposer.getAOS().get(i).getAtomAxioms()));
             atoms.add(atom);
+            atomIndex.put(atom, i);
             for (OWLEntity e : atom.getSignature()) {
                 termBasedIndex.put(e, atom);
             }
@@ -103,17 +105,17 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
 
     @Override
     public boolean isTopAtom(Atom atom) {
-        return !dependencies.containsKey(atom);
-    }
-
-    @Override
-    public boolean isBottomAtom(Atom atom) {
         return !dependents.containsKey(atom);
     }
 
     @Override
+    public boolean isBottomAtom(Atom atom) {
+        return !dependencies.containsKey(atom);
+    }
+
+    @Override
     public Set<OWLAxiom> getPrincipalIdeal(Atom atom) {
-        return null;
+        return asSet(getAtomModule(atomIndex.get(atom)));
     }
 
     @Override
@@ -178,8 +180,8 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
 
     @Override
     public Set<Atom> getTopAtoms() {
-        Set<Atom> keys = new HashSet<Atom>(dependents.keySet());
-        keys.removeAll(dependents.getAllValues());
+        Set<Atom> keys = getAtoms();
+        keys.removeAll(dependencies.getAllValues());
         return keys;
     }
 
@@ -201,8 +203,8 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
 
     @Override
     public Set<Atom> getBottomAtoms() {
-        Set<Atom> keys = new HashSet<Atom>(dependents.getAllValues());
-        keys.removeAll(dependents.keySet());
+        Set<Atom> keys = getAtoms();
+        keys.removeAll(dependents.getAllValues());
         return keys;
     }
 
