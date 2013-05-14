@@ -82,12 +82,6 @@ public class TopEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
         super(l);
     }
 
-    /** @return true iff role expression in equivalent to const wrt locality */
-    boolean isREquivalent(OWLObject expr) {
-        return topRLocal() ? isTopEquivalent(expr) : localityChecker
-                .isBotEquivalent(expr);
-    }
-
     // ported from: boolean isTopEquivalent(Expression expr) {
     /** @param expr
      *            expression to check
