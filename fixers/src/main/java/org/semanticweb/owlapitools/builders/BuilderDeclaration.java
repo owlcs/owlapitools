@@ -8,6 +8,17 @@ public class BuilderDeclaration extends
         BaseBuilder<OWLDeclarationAxiom, BuilderDeclaration> {
     private OWLEntity entity = null;
 
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderDeclaration(OWLDeclarationAxiom expected) {
+        withEntity(expected.getEntity()).withAnnotations(expected.getAnnotations());
+    }
+
+    /** uninitialized builder */
+    public BuilderDeclaration() {}
+
     /** @param arg
      *            entity
      * @return builder */

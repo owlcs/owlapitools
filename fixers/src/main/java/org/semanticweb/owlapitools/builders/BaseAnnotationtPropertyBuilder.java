@@ -21,6 +21,4 @@ public abstract class BaseAnnotationtPropertyBuilder<T extends OWLObject, Type> 
         property = arg;
         return (Type) this;
     }
-
-
 }

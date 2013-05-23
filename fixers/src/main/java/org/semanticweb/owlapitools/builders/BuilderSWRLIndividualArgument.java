@@ -8,6 +8,17 @@ public class BuilderSWRLIndividualArgument extends
         BaseBuilder<SWRLIndividualArgument, BuilderSWRLIndividualArgument> {
     private OWLIndividual individual;
 
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderSWRLIndividualArgument(SWRLIndividualArgument expected) {
+        with(expected.getIndividual());
+    }
+
+    /** uninitialized builder */
+    public BuilderSWRLIndividualArgument() {}
+
     /** @param arg
      *            individual
      * @return builder */

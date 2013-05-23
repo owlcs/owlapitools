@@ -21,6 +21,4 @@ public abstract class BaseObjectPropertyBuilder<T extends OWLObject, Type> exten
         property = arg;
         return (Type) this;
     }
-
-
 }

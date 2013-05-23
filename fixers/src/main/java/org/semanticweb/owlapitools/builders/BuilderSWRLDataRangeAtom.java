@@ -10,6 +10,17 @@ public class BuilderSWRLDataRangeAtom extends
     private SWRLDArgument argument;
     private OWLDataRange predicate;
 
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderSWRLDataRangeAtom(SWRLDataRangeAtom expected) {
+        with(expected.getArgument()).with(expected.getPredicate());
+    }
+
+    /** uninitialized builder */
+    public BuilderSWRLDataRangeAtom() {}
+
     /** @param arg
      *            argument
      * @return builder */

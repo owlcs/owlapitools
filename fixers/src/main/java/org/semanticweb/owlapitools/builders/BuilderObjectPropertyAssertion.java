@@ -4,11 +4,24 @@ import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
 
 /** Builder class for OWLObjectPropertyAssertionAxiom */
-public class BuilderObjectPropertyAssertion extends
+public class BuilderObjectPropertyAssertion
+        extends
         BaseObjectPropertyBuilder<OWLObjectPropertyAssertionAxiom, BuilderObjectPropertyAssertion> {
     private OWLIndividual subject = null;
     private OWLIndividual value = null;
 
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderObjectPropertyAssertion(OWLObjectPropertyAssertionAxiom expected) {
+        withSubject(expected.getSubject()).withProperty(expected.getProperty())
+                .withValue(expected.getObject())
+                .withAnnotations(expected.getAnnotations());
+    }
+
+    /** uninitialized builder */
+    public BuilderObjectPropertyAssertion() {}
 
     /** @param arg
      *            subject

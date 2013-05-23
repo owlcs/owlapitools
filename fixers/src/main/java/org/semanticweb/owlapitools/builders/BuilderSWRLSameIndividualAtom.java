@@ -9,6 +9,17 @@ public class BuilderSWRLSameIndividualAtom extends
     private SWRLIArgument arg1;
     private SWRLIArgument arg0;
 
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderSWRLSameIndividualAtom(SWRLSameIndividualAtom expected) {
+        withArg0(expected.getFirstArgument()).withArg1(expected.getSecondArgument());
+    }
+
+    /** uninitialized builder */
+    public BuilderSWRLSameIndividualAtom() {}
+
     /** @param arg
      *            individual
      * @return builder */
