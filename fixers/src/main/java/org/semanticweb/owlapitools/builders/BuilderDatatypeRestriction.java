@@ -10,6 +10,17 @@ public class BuilderDatatypeRestriction
         BaseSetBuilder<OWLDatatypeRestriction, BuilderDatatypeRestriction, OWLFacetRestriction> {
     private OWLDatatype type = null;
 
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderDatatypeRestriction(OWLDatatypeRestriction expected) {
+        withDatatype(expected.getDatatype()).withItems(expected.getFacetRestrictions());
+    }
+
+    /** uninitialized builder */
+    public BuilderDatatypeRestriction() {}
+
     /** @param arg
      *            range
      * @return builder */

@@ -7,9 +7,19 @@ import org.semanticweb.owlapi.vocab.OWLFacet;
 /** Builder class for OWLFacetRestriction */
 public class BuilderFacetRestriction extends
         BaseBuilder<OWLFacetRestriction, BuilderFacetRestriction> {
-
     private OWLLiteral literal = null;
     private OWLFacet facet = null;
+
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderFacetRestriction(OWLFacetRestriction expected) {
+        withFacet(expected.getFacet()).withLiteral(expected.getFacetValue());
+    }
+
+    /** uninitialized builder */
+    public BuilderFacetRestriction() {}
 
     /** @param arg
      *            int value
@@ -46,7 +56,7 @@ public class BuilderFacetRestriction extends
     /** @param arg
      *            facet
      * @return builder */
-    public BuilderFacetRestriction withLiteral(OWLFacet arg) {
+    public BuilderFacetRestriction withFacet(OWLFacet arg) {
         facet = arg;
         return this;
     }

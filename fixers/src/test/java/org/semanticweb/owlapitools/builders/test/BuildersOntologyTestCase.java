@@ -459,7 +459,7 @@ public class BuildersOntologyTestCase {
         BuilderNegativeObjectPropertyAssertion builder = new BuilderNegativeObjectPropertyAssertion()
                 .withAnnotations(annotations).withProperty(op).withValue(i)
                 .withSubject(i);
-        ;
+
         OWLAxiom expected = df.getOWLNegativeObjectPropertyAssertionAxiom(op, i, i,
                 annotations);
         OWLOntology o = m.createOntology();

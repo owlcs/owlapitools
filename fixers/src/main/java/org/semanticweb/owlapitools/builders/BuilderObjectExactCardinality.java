@@ -7,6 +7,18 @@ public class BuilderObjectExactCardinality extends
         BaseObjectBuilder<OWLObjectExactCardinality, BuilderObjectExactCardinality> {
     private int cardinality = -1;
 
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderObjectExactCardinality(OWLObjectExactCardinality expected) {
+        withCardinality(expected.getCardinality()).withProperty(expected.getProperty())
+                .withRange(expected.getFiller());
+    }
+
+    /** uninitialized builder */
+    public BuilderObjectExactCardinality() {}
+
     /** @param arg
      *            cardinality
      * @return builder */

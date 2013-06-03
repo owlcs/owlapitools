@@ -9,6 +9,20 @@ public class BuilderHasKey extends
         BaseSetBuilder<OWLHasKeyAxiom, BuilderHasKey, OWLPropertyExpression<?, ?>> {
     private OWLClassExpression ce;
 
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderHasKey(OWLHasKeyAxiom expected) {
+        withClass(expected.getClassExpression())
+                .withAnnotations(expected.getAnnotations())
+                .withItems(expected.getDataPropertyExpressions())
+                .withItems(expected.getObjectPropertyExpressions());
+    }
+
+    /** uninitialized builder */
+    public BuilderHasKey() {}
+
     /** @param arg
      *            class expression
      * @return builder */

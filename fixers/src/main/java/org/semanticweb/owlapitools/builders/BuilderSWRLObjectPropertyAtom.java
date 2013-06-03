@@ -9,7 +9,17 @@ public class BuilderSWRLObjectPropertyAtom extends
     private SWRLIArgument arg1;
     private SWRLIArgument arg0;
 
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderSWRLObjectPropertyAtom(SWRLObjectPropertyAtom expected) {
+        withArg0(expected.getFirstArgument()).withArg1(expected.getSecondArgument())
+                .withProperty(expected.getPredicate());
+    }
 
+    /** uninitialized builder */
+    public BuilderSWRLObjectPropertyAtom() {}
 
     /** @param arg
      *            individual

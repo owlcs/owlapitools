@@ -11,7 +11,17 @@ public class BuilderAnnotationAssertion
     private OWLAnnotationSubject subject = null;
     private OWLAnnotationValue value;
 
+    /** uninitialized builder */
+    public BuilderAnnotationAssertion() {}
 
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderAnnotationAssertion(OWLAnnotationAssertionAxiom expected) {
+        withAnnotations(expected.getAnnotations()).withSubject(expected.getSubject())
+                .withProperty(expected.getProperty()).withValue(expected.getValue());
+    }
 
     /** @param arg
      *            subject

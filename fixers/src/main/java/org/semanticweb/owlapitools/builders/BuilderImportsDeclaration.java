@@ -17,6 +17,17 @@ public class BuilderImportsDeclaration implements Builder<OWLImportsDeclaration>
     private static final OWLDataFactory df = new OWLDataFactoryImpl();
     private IRI iri;
 
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderImportsDeclaration(OWLImportsDeclaration expected) {
+        withImportedOntology(expected.getIRI());
+    }
+
+    /** uninitialized builder */
+    public BuilderImportsDeclaration() {}
+
     /** @param arg
      *            IRI of imported ontology
      * @return builder */

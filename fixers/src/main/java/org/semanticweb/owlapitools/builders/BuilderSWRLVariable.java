@@ -7,6 +7,17 @@ import org.semanticweb.owlapi.model.SWRLVariable;
 public class BuilderSWRLVariable extends BaseBuilder<SWRLVariable, BuilderSWRLVariable> {
     private IRI iri;
 
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderSWRLVariable(SWRLVariable expected) {
+        with(expected.getIRI());
+    }
+
+    /** uninitialized builder */
+    public BuilderSWRLVariable() {}
+
     /** @param arg
      *            iri
      * @return builder */

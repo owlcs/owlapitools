@@ -10,6 +10,18 @@ public class BuilderClassAssertion extends
     private OWLIndividual i = null;
     private OWLClassExpression ce = null;
 
+    /** uninitialized builder */
+    public BuilderClassAssertion() {}
+
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderClassAssertion(OWLClassAssertionAxiom expected) {
+        withClass(expected.getClassExpression()).withIndividual(expected.getIndividual())
+                .withAnnotations(expected.getAnnotations());
+    }
+
     /** @param arg
      *            individual
      * @return builder */

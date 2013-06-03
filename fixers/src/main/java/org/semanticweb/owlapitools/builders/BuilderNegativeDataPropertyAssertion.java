@@ -5,11 +5,25 @@ import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLNegativeDataPropertyAssertionAxiom;
 
 /** Builder class for OWLNegativeDataPropertyAssertionAxiom */
-public class BuilderNegativeDataPropertyAssertion extends
+public class BuilderNegativeDataPropertyAssertion
+        extends
         BaseDataPropertyBuilder<OWLNegativeDataPropertyAssertionAxiom, BuilderNegativeDataPropertyAssertion> {
     private OWLIndividual subject = null;
     private OWLLiteral value = null;
 
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderNegativeDataPropertyAssertion(
+            OWLNegativeDataPropertyAssertionAxiom expected) {
+        withProperty(expected.getProperty()).withSubject(expected.getSubject())
+                .withValue(expected.getObject())
+                .withAnnotations(expected.getAnnotations());
+    }
+
+    /** uninitialized builder */
+    public BuilderNegativeDataPropertyAssertion() {}
 
     /** @param arg
      *            value

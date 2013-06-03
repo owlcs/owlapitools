@@ -8,6 +8,17 @@ public class BuilderDataComplementOf extends
         BaseBuilder<OWLDataComplementOf, BuilderDataComplementOf> {
     private OWLDataRange dataRange = null;
 
+    /** uninitialized builder */
+    public BuilderDataComplementOf() {}
+
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderDataComplementOf(OWLDataComplementOf expected) {
+        withRange(expected.getDataRange());
+    }
+
     /** @param arg
      *            range
      * @return builder */

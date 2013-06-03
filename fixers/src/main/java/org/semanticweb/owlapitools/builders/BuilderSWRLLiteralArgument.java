@@ -8,6 +8,17 @@ public class BuilderSWRLLiteralArgument extends
         BaseBuilder<SWRLLiteralArgument, BuilderSWRLLiteralArgument> {
     private OWLLiteral literal;
 
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderSWRLLiteralArgument(SWRLLiteralArgument expected) {
+        with(expected.getLiteral());
+    }
+
+    /** uninitialized builder */
+    public BuilderSWRLLiteralArgument() {}
+
     /** @param arg
      *            literal
      * @return builder */

@@ -8,6 +8,16 @@ public class BuilderDataHasValue extends
         BaseDataPropertyBuilder<OWLDataHasValue, BuilderDataHasValue> {
     private OWLLiteral literal = null;
 
+    /** uninitialized builder */
+    public BuilderDataHasValue() {}
+
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderDataHasValue(OWLDataHasValue expected) {
+        withProperty(expected.getProperty()).withLiteral(expected.getValue());
+    }
 
     /** @param arg
      *            literal

@@ -7,6 +7,18 @@ public class BuilderObjectMinCardinality extends
         BaseObjectBuilder<OWLObjectMinCardinality, BuilderObjectMinCardinality> {
     private int cardinality = -1;
 
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderObjectMinCardinality(OWLObjectMinCardinality expected) {
+        withCardinality(expected.getCardinality()).withProperty(expected.getProperty())
+                .withRange(expected.getFiller());
+    }
+
+    /** uninitialized builder */
+    public BuilderObjectMinCardinality() {}
+
     /** @param arg
      *            cardinality
      * @return builder */

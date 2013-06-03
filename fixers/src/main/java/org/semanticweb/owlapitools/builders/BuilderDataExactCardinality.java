@@ -7,6 +7,18 @@ public class BuilderDataExactCardinality extends
         BaseDataBuilder<OWLDataExactCardinality, BuilderDataExactCardinality> {
     private int cardinality = -1;
 
+    /** uninitialized builder */
+    public BuilderDataExactCardinality() {}
+
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderDataExactCardinality(OWLDataExactCardinality expected) {
+        withCardinality(expected.getCardinality()).withProperty(expected.getProperty())
+                .withRange(expected.getFiller());
+    }
+
     /** @param arg
      *            cardinality
      * @return builder */

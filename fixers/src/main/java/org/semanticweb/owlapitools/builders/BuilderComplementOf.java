@@ -8,6 +8,17 @@ public class BuilderComplementOf extends
         BaseBuilder<OWLObjectComplementOf, BuilderComplementOf> {
     private OWLClassExpression c = null;
 
+    /** uninitialized builder */
+    public BuilderComplementOf() {}
+
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderComplementOf(OWLObjectComplementOf expected) {
+        withClass(expected.getOperand());
+    }
+
     /** @param arg
      *            class expression
      * @return builder */

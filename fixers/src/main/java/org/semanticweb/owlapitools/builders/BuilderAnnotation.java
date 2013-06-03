@@ -8,6 +8,16 @@ public class BuilderAnnotation extends
         BaseAnnotationtPropertyBuilder<OWLAnnotation, BuilderAnnotation> {
     private OWLAnnotationValue value = null;
 
+    /** uninitialized builder */
+    public BuilderAnnotation() {}
+
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderAnnotation(OWLAnnotation expected) {
+        withProperty(expected.getProperty()).withValue(expected.getValue());
+    }
 
     /** @param arg
      *            the annotation value

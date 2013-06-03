@@ -14,6 +14,28 @@ public class BuilderLiteral extends BaseBuilder<OWLLiteral, BuilderLiteral> {
     private Boolean booleanValue = null;
     private OWLDatatype datatype;
 
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderLiteral(OWLLiteral expected) {
+        withDatatype(expected.getDatatype()).withLanguage(expected.getLang());
+        if (expected.isBoolean()) {
+            withValue(expected.parseBoolean());
+        } else if (expected.isDouble()) {
+            withValue(expected.parseDouble());
+        } else if (expected.isFloat()) {
+            withValue(expected.parseFloat());
+        } else if (expected.isInteger()) {
+            withValue(expected.parseInteger());
+        } else {
+            withLiteralForm(expected.getLiteral());
+        }
+    }
+
+    /** uninitialized builder */
+    public BuilderLiteral() {}
+
     protected void clear() {
         literalForm = null;
         intValue = null;

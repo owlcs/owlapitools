@@ -10,6 +10,18 @@ public class BuilderDatatypeDefinition extends
     private OWLDataRange range = null;
     private OWLDatatype type = null;
 
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderDatatypeDefinition(OWLDatatypeDefinitionAxiom expected) {
+        with(expected.getDatatype()).withType(expected.getDataRange()).withAnnotations(
+                expected.getAnnotations());
+    }
+
+    /** uninitialized builder */
+    public BuilderDatatypeDefinition() {}
+
     /** @param arg
      *            range
      * @return builder */

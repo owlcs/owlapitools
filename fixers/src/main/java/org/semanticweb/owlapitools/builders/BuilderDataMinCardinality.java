@@ -7,6 +7,18 @@ public class BuilderDataMinCardinality extends
         BaseDataBuilder<OWLDataMinCardinality, BuilderDataMinCardinality> {
     private int cardinality = -1;
 
+    /** uninitialized builder */
+    public BuilderDataMinCardinality() {}
+
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderDataMinCardinality(OWLDataMinCardinality expected) {
+        withCardinality(expected.getCardinality()).withProperty(expected.getProperty())
+                .withRange(expected.getFiller());
+    }
+
     /** @param arg
      *            cardinality
      * @return builder */

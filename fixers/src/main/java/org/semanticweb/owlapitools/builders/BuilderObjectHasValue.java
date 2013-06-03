@@ -8,6 +8,16 @@ public class BuilderObjectHasValue extends
         BaseObjectPropertyBuilder<OWLObjectHasValue, BuilderObjectHasValue> {
     private OWLIndividual value = null;
 
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderObjectHasValue(OWLObjectHasValue expected) {
+        withProperty(expected.getProperty()).withValue(expected.getValue());
+    }
+
+    /** uninitialized builder */
+    public BuilderObjectHasValue() {}
 
     /** @param arg
      * @return builder */

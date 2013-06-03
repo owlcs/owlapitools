@@ -7,6 +7,18 @@ public class BuilderObjectMaxCardinality extends
         BaseObjectBuilder<OWLObjectMaxCardinality, BuilderObjectMaxCardinality> {
     private int cardinality = -1;
 
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderObjectMaxCardinality(OWLObjectMaxCardinality expected) {
+        withCardinality(expected.getCardinality()).withProperty(expected.getProperty())
+                .withRange(expected.getFiller());
+    }
+
+    /** uninitialized builder */
+    public BuilderObjectMaxCardinality() {}
+
     /** @param arg
      *            cardinality
      * @return builder */

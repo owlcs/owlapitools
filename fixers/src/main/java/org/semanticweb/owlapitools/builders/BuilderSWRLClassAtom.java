@@ -10,6 +10,17 @@ public class BuilderSWRLClassAtom extends
     private SWRLIArgument argument = null;
     private OWLClassExpression predicate = null;
 
+    /** builder initialized from an existing object
+     * 
+     * @param expected
+     *            the existing object */
+    public BuilderSWRLClassAtom(SWRLClassAtom expected) {
+        with(expected.getPredicate()).with(expected.getArgument());
+    }
+
+    /** uninitialized builder */
+    public BuilderSWRLClassAtom() {}
+
     /** @param arg
      *            argument
      * @return builder */
