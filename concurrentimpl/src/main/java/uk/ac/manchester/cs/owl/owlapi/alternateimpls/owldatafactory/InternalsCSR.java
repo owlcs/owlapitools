@@ -54,9 +54,9 @@ public class InternalsCSR extends  OWLDataFactoryInternalsImpl {
     private static final long serialVersionUID = 1L;
 
     @Override
-	protected <V extends OWLEntity> BuildableWeakIndexCache<V> buildCache(OWLDataFactory f) {
+	protected <V extends OWLEntity> BuildableWeakIndexCache<V> buildCache() {
 
-		return new BuildableWeakIndexCache<V>(f) {
+		return new BuildableWeakIndexCache<V>() {
             private static final long serialVersionUID = 1L;
 
             @Override
