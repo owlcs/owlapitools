@@ -8,11 +8,12 @@
  */
 package utils.reasonercomparator;
 
+import static utils.reasonercomparator.MethodNames.*;
+
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -44,48 +45,15 @@ import org.semanticweb.owlapi.util.Version;
 /** an OWLReasoner which compares the results from different reasoners. */
 @SuppressWarnings("boxing")
 public class ComparisonReasoner implements OWLReasoner {
-    private static final String[] methodNames = new String[] { "precomputeInferences",
-            "isConsistent", "isSatisfiable", "getUnsatisfiableClasses", "isEntailed",
-            "getSubClasses", "getSuperClasses", "getEquivalentClasses",
-            "getDisjointClasses", "getTopObjectPropertyNode",
-            "getBottomObjectPropertyNode", "getSubObjectProperties",
-            "getSuperObjectProperties", "getEquivalentObjectProperties",
-            "getDisjointObjectProperties", "getInverseObjectProperties",
-            "getObjectPropertyDomains", "getObjectPropertyRanges",
-            "getTopDataPropertyNode", "getBottomDataPropertyNode",
-            "getSubDataProperties", "getSuperDataProperties",
-            "getEquivalentDataProperties", "getDisjointDataProperties",
-            "getDataPropertyDomains", "getTypes", "getInstances",
-            "getObjectPropertyValues", "getDataPropertyValues", "getSameIndividuals",
-            "getDifferentIndividuals", "getTopClassNode", "getBottomClassNode", "init",
-            "isEntailmentCheckingSupported", "getTimeOut", "getFreshEntityPolicy",
-            "getIndividualNodeSetPolicy", "interrupt", "dispose", "flush",
-            "isPrecomputed", "getPrecomputableInferenceTypes", "getPendingChanges",
-            "getPendingAxiomAdditions", "getPendingAxiomRemovals" };
-
-    static class Column {
-        public String header;
-        public List<Long> values = new ArrayList<Long>();
-
-        Column(String s) {
-            header = s;
-        }
-
-        @Override
-        public String toString() {
-            return header + "\t" + values;
-        }
-    }
-
     List<OWLReasoner> delegates = new ArrayList<OWLReasoner>();
     private OWLOntology root;
-    IdentityHashMap<OWLReasoner, Map<String, Column>> timings = new IdentityHashMap<OWLReasoner, Map<String, Column>>();
-    boolean tolerateDifferences = false;
+    IdentityHashMap<OWLReasoner, ReasonerPerformanceResult> timings = new IdentityHashMap<OWLReasoner, ReasonerPerformanceResult>();
+    boolean tolerateDifferences = true;
     boolean log = false;
     private final ThreadMXBean bean = ManagementFactory.getThreadMXBean();
 
     /** @return the timings */
-    public Map<OWLReasoner, Map<String, Column>> getTimings() {
+    public Map<OWLReasoner, ReasonerPerformanceResult> getTimings() {
         return timings;
     }
 
@@ -105,11 +73,11 @@ public class ComparisonReasoner implements OWLReasoner {
             long elapsed = bean.getCurrentThreadCpuTime();
             elapsed = elapsed - l;
             delegates.add(r);
-            timings.put(r, new HashMap<String, Column>());
-            for (String s : methodNames) {
+            timings.put(r, new ReasonerPerformanceResult(r));
+            for (MethodNames s : MethodNames.values()) {
                 timings.get(r).put(s, new Column(s));
             }
-            timings.get(r).get("init").values.add(elapsed);
+            timings.get(r).add(MethodNames.init, elapsed);
         }
     }
 
@@ -136,22 +104,14 @@ public class ComparisonReasoner implements OWLReasoner {
             b.append(',');
         }
         b.append('\n');
-        for (String s : methodNames) {
-            int calls = timings.entrySet().iterator().next().getValue().get(s).values
-                    .size();
+        for (MethodNames s : MethodNames.values()) {
+            int calls = timings.get(delegates.get(0)).calls(s);
             b.append(s);
             b.append(',');
             b.append(calls);
             b.append(',');
             for (OWLReasoner r : delegates) {
-                Column c = timings.get(r).get(s);
-                long sum = 0;
-                for (Long l : c.values) {
-                    sum += l.longValue();
-                }
-                double average = sum > 0 ? (double) sum / calls : 0;
-                // skip the decimals, they are subnanosecond times - irrelevant
-                long avg = Math.round(average);
+                long avg = timings.get(r).average(s);
                 b.append(avg);
                 b.append(',');
             }
@@ -217,7 +177,7 @@ public class ComparisonReasoner implements OWLReasoner {
                 long start = bean.getCurrentThreadCpuTime();
                 delegates.get(i).interrupt();
                 long elapsed = bean.getCurrentThreadCpuTime() - start;
-                timings.get(delegates.get(i)).get("interrupt").values.add(elapsed);
+                timings.get(delegates.get(i)).add(interrupt, elapsed);
             } catch (RuntimeException e) {
                 System.out.println("Method: interrupt");
                 System.out.println(Arrays.toString(Arrays.asList().toArray()));
@@ -240,7 +200,7 @@ public class ComparisonReasoner implements OWLReasoner {
                 long start = bean.getCurrentThreadCpuTime();
                 delegates.get(i).flush();
                 long elapsed = bean.getCurrentThreadCpuTime() - start;
-                timings.get(delegates.get(i)).get("flush").values.add(elapsed);
+                timings.get(delegates.get(i)).add(flush, elapsed);
             } catch (RuntimeException e) {
                 System.out.println("Method: flush");
                 System.out.println(Arrays.toString(Arrays.asList().toArray()));
@@ -263,7 +223,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             List<OWLOntologyChange> value = delegates.get(i).getPendingChanges();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getPendingChanges").values.add(elapsed);
+            timings.get(delegates.get(i)).add(getPendingChanges, elapsed);
             objects.add(value);
         }
         try {
@@ -291,8 +251,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             Set<OWLAxiom> value = delegates.get(i).getPendingAxiomAdditions();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getPendingAxiomAdditions").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getPendingAxiomAdditions, elapsed);
             objects.add(value);
         }
         try {
@@ -320,8 +279,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             Set<OWLAxiom> value = delegates.get(i).getPendingAxiomRemovals();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getPendingAxiomRemovals").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getPendingAxiomRemovals, elapsed);
             objects.add(value);
         }
         try {
@@ -349,8 +307,7 @@ public class ComparisonReasoner implements OWLReasoner {
                 long start = bean.getCurrentThreadCpuTime();
                 delegates.get(i).precomputeInferences(arg0);
                 long elapsed = bean.getCurrentThreadCpuTime() - start;
-                timings.get(delegates.get(i)).get("precomputeInferences").values
-                        .add(elapsed);
+                timings.get(delegates.get(i)).add(precomputeInferences, elapsed);
             } catch (RuntimeException e) {
                 System.out.println("Method: precomputeInferences");
                 System.out.println(Arrays.toString(Arrays.asList(arg0).toArray()));
@@ -373,7 +330,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             boolean value = delegates.get(i).isPrecomputed(arg0);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("isPrecomputed").values.add(elapsed);
+            timings.get(delegates.get(i)).add(isPrecomputed, elapsed);
             objects.add(value);
         }
         // try {
@@ -403,8 +360,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             Set<InferenceType> value = delegates.get(i).getPrecomputableInferenceTypes();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getPrecomputableInferenceTypes").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getPrecomputableInferenceTypes, elapsed);
             objects.add(value);
         }
         try {
@@ -432,7 +388,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             boolean value = delegates.get(i).isConsistent();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("isConsistent").values.add(elapsed);
+            timings.get(delegates.get(i)).add(isConsistent, elapsed);
             objects.add(value);
         }
         try {
@@ -460,7 +416,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             boolean value = delegates.get(i).isSatisfiable(arg0);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("isSatisfiable").values.add(elapsed);
+            timings.get(delegates.get(i)).add(isSatisfiable, elapsed);
             objects.add(value);
         }
         try {
@@ -488,8 +444,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             Node<OWLClass> value = delegates.get(i).getUnsatisfiableClasses();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getUnsatisfiableClasses").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getUnsatisfiableClasses, elapsed);
             objects.add(value);
         }
         try {
@@ -517,7 +472,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             boolean value = delegates.get(i).isEntailed(arg0);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("isEntailed").values.add(elapsed);
+            timings.get(delegates.get(i)).add(isEntailed, elapsed);
             objects.add(value);
         }
         try {
@@ -545,7 +500,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             boolean value = delegates.get(i).isEntailed(arg0);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("isEntailed").values.add(elapsed);
+            timings.get(delegates.get(i)).add(isEntailed, elapsed);
             objects.add(value);
         }
         try {
@@ -573,8 +528,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             boolean value = delegates.get(i).isEntailmentCheckingSupported(arg0);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("isEntailmentCheckingSupported").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(isEntailmentCheckingSupported, elapsed);
             objects.add(value);
         }
         try {
@@ -602,7 +556,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             Node<OWLClass> value = delegates.get(i).getTopClassNode();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getTopClassNode").values.add(elapsed);
+            timings.get(delegates.get(i)).add(getTopClassNode, elapsed);
             objects.add(value);
         }
         try {
@@ -630,7 +584,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             Node<OWLClass> value = delegates.get(i).getBottomClassNode();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getBottomClassNode").values.add(elapsed);
+            timings.get(delegates.get(i)).add(getBottomClassNode, elapsed);
             objects.add(value);
         }
         try {
@@ -658,7 +612,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             NodeSet<OWLClass> value = delegates.get(i).getSubClasses(arg0, arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getSubClasses").values.add(elapsed);
+            timings.get(delegates.get(i)).add(getSubClasses, elapsed);
             objects.add(value);
         }
         try {
@@ -686,7 +640,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             NodeSet<OWLClass> value = delegates.get(i).getSuperClasses(arg0, arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getSuperClasses").values.add(elapsed);
+            timings.get(delegates.get(i)).add(getSuperClasses, elapsed);
             objects.add(value);
         }
         try {
@@ -714,7 +668,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             Node<OWLClass> value = delegates.get(i).getEquivalentClasses(arg0);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getEquivalentClasses").values.add(elapsed);
+            timings.get(delegates.get(i)).add(getEquivalentClasses, elapsed);
             objects.add(value);
         }
         try {
@@ -742,7 +696,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             NodeSet<OWLClass> value = delegates.get(i).getDisjointClasses(arg0);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getDisjointClasses").values.add(elapsed);
+            timings.get(delegates.get(i)).add(getDisjointClasses, elapsed);
             objects.add(value);
         }
         try {
@@ -771,8 +725,7 @@ public class ComparisonReasoner implements OWLReasoner {
             Node<OWLObjectPropertyExpression> value = delegates.get(i)
                     .getTopObjectPropertyNode();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getTopObjectPropertyNode").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getTopObjectPropertyNode, elapsed);
             objects.add(value);
         }
         try {
@@ -801,8 +754,7 @@ public class ComparisonReasoner implements OWLReasoner {
             Node<OWLObjectPropertyExpression> value = delegates.get(i)
                     .getBottomObjectPropertyNode();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getBottomObjectPropertyNode").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getBottomObjectPropertyNode, elapsed);
             objects.add(value);
         }
         try {
@@ -832,8 +784,7 @@ public class ComparisonReasoner implements OWLReasoner {
             NodeSet<OWLObjectPropertyExpression> value = delegates.get(i)
                     .getSubObjectProperties(arg0, arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getSubObjectProperties").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getSubObjectProperties, elapsed);
             objects.add(value);
         }
         try {
@@ -863,8 +814,7 @@ public class ComparisonReasoner implements OWLReasoner {
             NodeSet<OWLObjectPropertyExpression> value = delegates.get(i)
                     .getSuperObjectProperties(arg0, arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getSuperObjectProperties").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getSuperObjectProperties, elapsed);
             objects.add(value);
         }
         try {
@@ -894,8 +844,7 @@ public class ComparisonReasoner implements OWLReasoner {
             Node<OWLObjectPropertyExpression> value = delegates.get(i)
                     .getEquivalentObjectProperties(arg0);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getEquivalentObjectProperties").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getEquivalentObjectProperties, elapsed);
             objects.add(value);
         }
         try {
@@ -925,8 +874,7 @@ public class ComparisonReasoner implements OWLReasoner {
             NodeSet<OWLObjectPropertyExpression> value = delegates.get(i)
                     .getDisjointObjectProperties(arg0);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getDisjointObjectProperties").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getDisjointObjectProperties, elapsed);
             objects.add(value);
         }
         try {
@@ -956,8 +904,7 @@ public class ComparisonReasoner implements OWLReasoner {
             Node<OWLObjectPropertyExpression> value = delegates.get(i)
                     .getInverseObjectProperties(arg0);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getInverseObjectProperties").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getInverseObjectProperties, elapsed);
             objects.add(value);
         }
         try {
@@ -987,8 +934,7 @@ public class ComparisonReasoner implements OWLReasoner {
             NodeSet<OWLClass> value = delegates.get(i).getObjectPropertyDomains(arg0,
                     arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getObjectPropertyDomains").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getObjectPropertyDomains, elapsed);
             objects.add(value);
         }
         try {
@@ -1018,8 +964,7 @@ public class ComparisonReasoner implements OWLReasoner {
             NodeSet<OWLClass> value = delegates.get(i)
                     .getObjectPropertyRanges(arg0, arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getObjectPropertyRanges").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getObjectPropertyRanges, elapsed);
             objects.add(value);
         }
         try {
@@ -1047,8 +992,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             Node<OWLDataProperty> value = delegates.get(i).getTopDataPropertyNode();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getTopDataPropertyNode").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getTopDataPropertyNode, elapsed);
             objects.add(value);
         }
         try {
@@ -1076,8 +1020,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             Node<OWLDataProperty> value = delegates.get(i).getBottomDataPropertyNode();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getBottomDataPropertyNode").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getBottomDataPropertyNode, elapsed);
             objects.add(value);
         }
         try {
@@ -1107,7 +1050,7 @@ public class ComparisonReasoner implements OWLReasoner {
             NodeSet<OWLDataProperty> value = delegates.get(i).getSubDataProperties(arg0,
                     arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getSubDataProperties").values.add(elapsed);
+            timings.get(delegates.get(i)).add(getSubDataProperties, elapsed);
             objects.add(value);
         }
         try {
@@ -1137,8 +1080,7 @@ public class ComparisonReasoner implements OWLReasoner {
             NodeSet<OWLDataProperty> value = delegates.get(i).getSuperDataProperties(
                     arg0, arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getSuperDataProperties").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getSuperDataProperties, elapsed);
             objects.add(value);
         }
         try {
@@ -1167,8 +1109,7 @@ public class ComparisonReasoner implements OWLReasoner {
             Node<OWLDataProperty> value = delegates.get(i).getEquivalentDataProperties(
                     arg0);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getEquivalentDataProperties").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getEquivalentDataProperties, elapsed);
             objects.add(value);
         }
         try {
@@ -1198,8 +1139,7 @@ public class ComparisonReasoner implements OWLReasoner {
             NodeSet<OWLDataProperty> value = delegates.get(i).getDisjointDataProperties(
                     arg0);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getDisjointDataProperties").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getDisjointDataProperties, elapsed);
             objects.add(value);
         }
         try {
@@ -1227,8 +1167,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             NodeSet<OWLClass> value = delegates.get(i).getDataPropertyDomains(arg0, arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getDataPropertyDomains").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getDataPropertyDomains, elapsed);
             objects.add(value);
         }
         try {
@@ -1256,7 +1195,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             NodeSet<OWLClass> value = delegates.get(i).getTypes(arg0, arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getTypes").values.add(elapsed);
+            timings.get(delegates.get(i)).add(getTypes, elapsed);
             objects.add(value);
         }
         try {
@@ -1285,7 +1224,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             NodeSet<OWLNamedIndividual> value = delegates.get(i).getInstances(arg0, arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getInstances").values.add(elapsed);
+            timings.get(delegates.get(i)).add(getInstances, elapsed);
             objects.add(value);
         }
         try {
@@ -1315,8 +1254,7 @@ public class ComparisonReasoner implements OWLReasoner {
             NodeSet<OWLNamedIndividual> value = delegates.get(i).getObjectPropertyValues(
                     arg0, arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getObjectPropertyValues").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getObjectPropertyValues, elapsed);
             objects.add(value);
         }
         try {
@@ -1345,8 +1283,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             Set<OWLLiteral> value = delegates.get(i).getDataPropertyValues(arg0, arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getDataPropertyValues").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getDataPropertyValues, elapsed);
             objects.add(value);
         }
         try {
@@ -1374,7 +1311,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             Node<OWLNamedIndividual> value = delegates.get(i).getSameIndividuals(arg0);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getSameIndividuals").values.add(elapsed);
+            timings.get(delegates.get(i)).add(getSameIndividuals, elapsed);
             objects.add(value);
         }
         try {
@@ -1403,8 +1340,7 @@ public class ComparisonReasoner implements OWLReasoner {
             NodeSet<OWLNamedIndividual> value = delegates.get(i).getDifferentIndividuals(
                     arg0);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getDifferentIndividuals").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getDifferentIndividuals, elapsed);
             objects.add(value);
         }
         try {
@@ -1432,7 +1368,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             long value = delegates.get(i).getTimeOut();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getTimeOut").values.add(elapsed);
+            timings.get(delegates.get(i)).add(getTimeOut, elapsed);
             objects.add(value);
         }
         try {
@@ -1460,7 +1396,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             FreshEntityPolicy value = delegates.get(i).getFreshEntityPolicy();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getFreshEntityPolicy").values.add(elapsed);
+            timings.get(delegates.get(i)).add(getFreshEntityPolicy, elapsed);
             objects.add(value);
         }
         try {
@@ -1488,8 +1424,7 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             IndividualNodeSetPolicy value = delegates.get(i).getIndividualNodeSetPolicy();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).get("getIndividualNodeSetPolicy").values
-                    .add(elapsed);
+            timings.get(delegates.get(i)).add(getIndividualNodeSetPolicy, elapsed);
             objects.add(value);
         }
         try {
@@ -1517,7 +1452,7 @@ public class ComparisonReasoner implements OWLReasoner {
                 long start = bean.getCurrentThreadCpuTime();
                 delegates.get(i).dispose();
                 long elapsed = bean.getCurrentThreadCpuTime() - start;
-                timings.get(delegates.get(i)).get("dispose").values.add(elapsed);
+                timings.get(delegates.get(i)).add(dispose, elapsed);
             } catch (RuntimeException e) {
                 System.out.println("Method: dispose");
                 System.out.println(Arrays.toString(Arrays.asList().toArray()));

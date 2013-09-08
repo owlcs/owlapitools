@@ -18,46 +18,46 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
  * 
  * @author ignazio */
 public class ComparatorReasonerFactory implements OWLReasonerFactory {
-    private static final String HERMIT = "org.semanticweb.HermiT.Reasoner.ReasonerFactory";
-    private static final String FACT = "uk.ac.manchester.cs.factplusplus.owlapiv3.FaCTPlusPlusReasonerFactory";
-    private static final String JFACT = "uk.ac.manchester.cs.jfact.JFactFactory";
+    public static final String HERMIT = "org.semanticweb.HermiT.Reasoner.ReasonerFactory";
+    public static final String FACT = "uk.ac.manchester.cs.factplusplus.owlapiv3.FaCTPlusPlusReasonerFactory";
+    public static final String JFACT = "uk.ac.manchester.cs.jfact.JFactFactory";
 
-	private static OWLReasonerFactory getFactory(String s) {
-		try {
-			return (OWLReasonerFactory) Class.forName(s).newInstance();
-		} catch (Exception e) {
-			throw new RuntimeException("Problem instantiating factory: " + s, e);
-		}
-	}
+    private static OWLReasonerFactory getFactory(String s) {
+        try {
+            return (OWLReasonerFactory) Class.forName(s).newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("Problem instantiating factory: " + s, e);
+        }
+    }
 
-	@Override
+    @Override
     public String getReasonerName() {
-		return "ComparatorReasoner";
-	}
+        return "ComparatorReasoner";
+    }
 
-	@Override
+    @Override
     public OWLReasoner createNonBufferingReasoner(OWLOntology ontology) {
-		return new ComparisonReasoner(ontology, null, getFactory(HERMIT),
-				getFactory(JFACT), getFactory(FACT));
-	}
+        return new ComparisonReasoner(ontology, null, getFactory(HERMIT),
+                getFactory(JFACT), getFactory(FACT));
+    }
 
-	@Override
+    @Override
     public OWLReasoner createReasoner(OWLOntology ontology) {
-		return new ComparisonReasoner(ontology, null, getFactory(HERMIT),
-				getFactory(JFACT), getFactory(FACT));
-	}
+        return new ComparisonReasoner(ontology, null, getFactory(HERMIT),
+                getFactory(JFACT), getFactory(FACT));
+    }
 
-	@Override
+    @Override
     public OWLReasoner createNonBufferingReasoner(OWLOntology ontology,
-			OWLReasonerConfiguration config) throws IllegalConfigurationException {
-		return new ComparisonReasoner(ontology, config, getFactory(HERMIT),
-				getFactory(JFACT), getFactory(FACT));
-	}
+            OWLReasonerConfiguration config) throws IllegalConfigurationException {
+        return new ComparisonReasoner(ontology, config, getFactory(HERMIT),
+                getFactory(JFACT), getFactory(FACT));
+    }
 
-	@Override
+    @Override
     public OWLReasoner createReasoner(OWLOntology ontology,
-			OWLReasonerConfiguration config) throws IllegalConfigurationException {
-		return new ComparisonReasoner(ontology, config, getFactory(HERMIT),
-				getFactory(JFACT), getFactory(FACT));
-	}
+            OWLReasonerConfiguration config) throws IllegalConfigurationException {
+        return new ComparisonReasoner(ontology, config, getFactory(HERMIT),
+                getFactory(JFACT), getFactory(FACT));
+    }
 }
