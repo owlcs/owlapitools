@@ -41,24 +41,34 @@ package org.semanticweb.owlapitools.profiles.violations;
 import java.util.List;
 
 import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
-public class UseOfUndeclaredObjectProperty extends OWLProfileViolation {
-    private final OWLObjectProperty property;
+public class UseOfUndeclaredObjectProperty extends OWLProfileViolation<OWLObjectProperty>
+        implements UndeclaredEntityViolation {
+    @Override
+    public OWLEntity getEntity() {
+        return getExpression();
+    }
+
+    @Override
+    public OWLOntology getOntology() {
+        return ontology;
+    }
 
     public UseOfUndeclaredObjectProperty(OWLOntology ontology, OWLAxiom axiom,
             OWLObjectProperty prop) {
-        super(ontology, axiom);
-        property = prop;
+        super(ontology, axiom, prop);
     }
 
     @Override
@@ -67,12 +77,18 @@ public class UseOfUndeclaredObjectProperty extends OWLProfileViolation {
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public String toString() {
-        return toString("Use of undeclared object property: %s", property);
+        return toString("Use of undeclared object property: %s", getExpression());
     }
 
     @Override
     public List<OWLOntologyChange> repair() {
-        return list(addDeclaration(property));
+        return list(addDeclaration(getExpression()));
     }
 }

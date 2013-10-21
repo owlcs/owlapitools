@@ -215,7 +215,8 @@ public class AlternateParsableOWLOntologyFactory extends AlternateAbstractInMemO
         // We haven't found a parser that could parse the ontology properly.  Throw an
         // exception whose message contains the stack traces from all of the parsers
         // that we have tried.
-        throw new UnparsableOntologyException(documentSource.getDocumentIRI(), exceptions);
+        throw new UnparsableOntologyException(documentSource.getDocumentIRI(),
+                exceptions, configuration);
     }
 
     @Override

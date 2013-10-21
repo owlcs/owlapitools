@@ -43,19 +43,17 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
-public class UseOfAnonymousIndividual extends OWLProfileViolation {
-    private final OWLAnonymousIndividual individual;
-
+public class UseOfAnonymousIndividual extends OWLProfileViolation<OWLAnonymousIndividual> {
     public UseOfAnonymousIndividual(OWLOntology ontology, OWLAxiom axiom,
             OWLAnonymousIndividual individual) {
-        super(ontology, axiom);
-        this.individual = individual;
+        super(ontology, axiom, individual);
     }
 
     @Override
@@ -64,7 +62,13 @@ public class UseOfAnonymousIndividual extends OWLProfileViolation {
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public String toString() {
-        return toString("Use of anonymous individual: %s", individual);
+        return toString("Use of anonymous individual: %s", getExpression());
     }
 }

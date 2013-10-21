@@ -43,19 +43,19 @@ import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
-public class UseOfNonSimplePropertyInDisjointPropertiesAxiom extends OWLProfileViolation {
-    private final OWLObjectPropertyExpression prop;
+public class UseOfNonSimplePropertyInDisjointPropertiesAxiom extends
+        OWLProfileViolation<OWLObjectPropertyExpression> {
 
     public UseOfNonSimplePropertyInDisjointPropertiesAxiom(OWLOntology ontology,
             OWLDisjointObjectPropertiesAxiom axiom, OWLObjectPropertyExpression prop) {
-        super(ontology, axiom);
-        this.prop = prop;
+        super(ontology, axiom, prop);
     }
 
     @Override
@@ -64,8 +64,13 @@ public class UseOfNonSimplePropertyInDisjointPropertiesAxiom extends OWLProfileV
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public String toString() {
-        return toString("Use of non-simple property %s in %s axiom", prop, getAxiom()
-                .getAxiomType().getName());
+        return toString("Use of non-simple property in an axiom %s", getExpression());
     }
 }

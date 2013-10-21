@@ -42,6 +42,7 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLObjectOneOf;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
@@ -49,12 +50,10 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
 public class UseOfObjectOneOfWithMultipleIndividuals extends UseOfIllegalClassExpression {
-    private final OWLObjectOneOf oneOf;
 
     public UseOfObjectOneOfWithMultipleIndividuals(OWLOntology ontology, OWLAxiom axiom,
             OWLObjectOneOf oneOf) {
         super(ontology, axiom, oneOf);
-        this.oneOf = oneOf;
     }
 
     @Override
@@ -63,7 +62,14 @@ public class UseOfObjectOneOfWithMultipleIndividuals extends UseOfIllegalClassEx
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public String toString() {
-        return toString("Use of ObjectOneOf with multiple individuals %s", oneOf);
+        return toString("Use of ObjectOneOf with multiple individuals %s",
+                getExpression());
     }
 }

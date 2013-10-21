@@ -43,19 +43,17 @@ import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
-public class UseOfIllegalDataRange extends OWLProfileViolation {
-    private final OWLDataRange dataRange;
-
+public class UseOfIllegalDataRange extends OWLProfileViolation<OWLDataRange> {
     public UseOfIllegalDataRange(OWLOntology ontology, OWLAxiom axiom,
             OWLDataRange dataRange) {
-        super(ontology, axiom);
-        this.dataRange = dataRange;
+        super(ontology, axiom, dataRange);
     }
 
     @Override
@@ -64,7 +62,13 @@ public class UseOfIllegalDataRange extends OWLProfileViolation {
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public String toString() {
-        return toString("Use of data range not in profile: %s", dataRange);
+        return toString("Use of data range not in profile: %s", getExpression());
     }
 }

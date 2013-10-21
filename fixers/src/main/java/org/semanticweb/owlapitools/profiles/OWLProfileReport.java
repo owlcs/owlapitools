@@ -49,15 +49,15 @@ import java.util.Set;
  * <br> */
 public class OWLProfileReport {
     private final OWLProfile profile;
-    private final List<OWLProfileViolation> violations;
+    private final List<OWLProfileViolation<?>> violations;
 
     /** @param profile
      *            the profile used
      * @param violations
      *            the set of violations */
-    public OWLProfileReport(OWLProfile profile, Set<OWLProfileViolation> violations) {
+    public OWLProfileReport(OWLProfile profile, Set<OWLProfileViolation<?>> violations) {
         this.profile = profile;
-        this.violations = new ArrayList<OWLProfileViolation>(violations);
+        this.violations = new ArrayList<OWLProfileViolation<?>>(violations);
     }
 
     /** @return the profile used */
@@ -71,7 +71,7 @@ public class OWLProfileReport {
     }
 
     /** @return the violations found */
-    public List<OWLProfileViolation> getViolations() {
+    public List<OWLProfileViolation<?>> getViolations() {
         return violations;
     }
 
@@ -85,7 +85,7 @@ public class OWLProfileReport {
         } else {
             sb.append("Ontology and imports closure NOT in profile. The following violations are present:\n");
         }
-        for (OWLProfileViolation na : violations) {
+        for (OWLProfileViolation<?> na : violations) {
             sb.append(na);
             sb.append("\n");
         }

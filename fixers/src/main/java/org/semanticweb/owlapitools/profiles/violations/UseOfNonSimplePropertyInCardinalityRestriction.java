@@ -43,19 +43,19 @@ import org.semanticweb.owlapi.model.OWLObjectCardinalityRestriction;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
-public class UseOfNonSimplePropertyInCardinalityRestriction extends OWLProfileViolation {
-    private final OWLObjectCardinalityRestriction restriction;
+public class UseOfNonSimplePropertyInCardinalityRestriction extends
+        OWLProfileViolation<OWLObjectCardinalityRestriction> {
 
     public UseOfNonSimplePropertyInCardinalityRestriction(OWLOntology ontology,
             OWLAxiom axiom, OWLObjectCardinalityRestriction restriction) {
-        super(ontology, axiom);
-        this.restriction = restriction;
+        super(ontology, axiom, restriction);
     }
 
     @Override
@@ -64,8 +64,14 @@ public class UseOfNonSimplePropertyInCardinalityRestriction extends OWLProfileVi
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public String toString() {
-        return toString("Use of non-simple property in %s restriction: %s", restriction
-                .getClassExpressionType().getName(), restriction);
+        return toString("Use of non-simple property in a restriction: %s",
+                getExpression());
     }
 }

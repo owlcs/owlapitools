@@ -42,20 +42,26 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
-public class CycleInDatatypeDefinition extends OWLProfileViolation {
+public class CycleInDatatypeDefinition extends OWLProfileViolation<Object> {
     public CycleInDatatypeDefinition(OWLOntology ontology, OWLAxiom axiom) {
-        super(ontology, axiom);
+        super(ontology, axiom, null);
     }
 
     @Override
     public void accept(OWLProfileViolationVisitor visitor) {
         visitor.visit(this);
+    }
+
+    @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
     }
 
     @Override

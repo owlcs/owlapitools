@@ -47,6 +47,7 @@ import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.model.RemoveAxiom;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
@@ -54,12 +55,10 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
  * Date: 03-Aug-2009 Specifies that an IRI that is used for a datatype is also
  * used for a class IRI */
 @SuppressWarnings("javadoc")
-public class DatatypeIRIAlsoUsedAsClassIRI extends OWLProfileViolation {
-    private final IRI iri;
+public class DatatypeIRIAlsoUsedAsClassIRI extends OWLProfileViolation<IRI> {
 
     public DatatypeIRIAlsoUsedAsClassIRI(OWLOntology ontology, OWLAxiom axiom, IRI iri) {
-        super(ontology, axiom);
-        this.iri = iri;
+        super(ontology, axiom, iri);
     }
 
     @Override
@@ -68,8 +67,14 @@ public class DatatypeIRIAlsoUsedAsClassIRI extends OWLProfileViolation {
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public String toString() {
-        return toString("Datatype IRI also used as Class IRI: %s", iri);
+        return toString("Datatype IRI also used as Class IRI: %s", getExpression());
     }
 
     @Override

@@ -143,7 +143,7 @@ public class OWL2DLProfile implements OWLProfile {
     public OWLProfileReport checkOntology(OWLOntology ontology) {
         OWL2Profile owl2Profile = new OWL2Profile();
         OWLProfileReport report = owl2Profile.checkOntology(ontology);
-        Set<OWLProfileViolation> violations = new LinkedHashSet<OWLProfileViolation>();
+        Set<OWLProfileViolation<?>> violations = new LinkedHashSet<OWLProfileViolation<?>>();
         if (!report.isInProfile()) {
             // We won't be in the OWL 2 DL Profile then!
             violations.addAll(report.getViolations());
@@ -160,15 +160,15 @@ public class OWL2DLProfile implements OWLProfile {
             OWLOntologyWalkerVisitor<Object> {
         private OWLObjectPropertyManager objectPropertyManager = null;
         private final OWLOntologyManager manager;
-        private final Set<OWLProfileViolation> profileViolations = new HashSet<OWLProfileViolation>();
+        private final Set<OWLProfileViolation<?>> profileViolations = new HashSet<OWLProfileViolation<?>>();
 
         OWL2DLProfileObjectVisitor(OWLOntologyWalker walker, OWLOntologyManager manager) {
             super(walker);
             this.manager = manager;
         }
 
-        public Set<OWLProfileViolation> getProfileViolations() {
-            return new HashSet<OWLProfileViolation>(profileViolations);
+        public Set<OWLProfileViolation<?>> getProfileViolations() {
+            return new HashSet<OWLProfileViolation<?>>(profileViolations);
         }
 
         private OWLObjectPropertyManager getPropertyManager() {

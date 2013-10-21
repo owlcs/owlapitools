@@ -39,9 +39,11 @@
 package org.semanticweb.owlapitools.profiles.violations;
 
 import org.semanticweb.owlapi.model.OWLAsymmetricObjectPropertyAxiom;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
@@ -49,10 +51,10 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
 public class UseOfNonSimplePropertyInAsymmetricObjectPropertyAxiom extends
-        OWLProfileViolation {
+        OWLProfileViolation<OWLObjectPropertyExpression> {
     public UseOfNonSimplePropertyInAsymmetricObjectPropertyAxiom(OWLOntology ontology,
             OWLAsymmetricObjectPropertyAxiom axiom) {
-        super(ontology, axiom);
+        super(ontology, axiom, axiom.getProperty());
     }
 
     @Override
@@ -61,8 +63,13 @@ public class UseOfNonSimplePropertyInAsymmetricObjectPropertyAxiom extends
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public String toString() {
-        return toString("Use of non-simple property in %s axiom:", getAxiom()
-                .getAxiomType().getName());
+        return toString("Use of non-simple property in asymmetric object property axiom");
     }
 }

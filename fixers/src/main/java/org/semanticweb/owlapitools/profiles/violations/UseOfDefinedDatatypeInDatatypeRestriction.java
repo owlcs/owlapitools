@@ -43,19 +43,18 @@ import org.semanticweb.owlapi.model.OWLDatatypeRestriction;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
-public class UseOfDefinedDatatypeInDatatypeRestriction extends OWLProfileViolation {
-    private final OWLDatatypeRestriction restriction;
-
+public class UseOfDefinedDatatypeInDatatypeRestriction extends
+        OWLProfileViolation<OWLDatatypeRestriction> {
     public UseOfDefinedDatatypeInDatatypeRestriction(OWLOntology ontology,
             OWLAxiom axiom, OWLDatatypeRestriction restriction) {
-        super(ontology, axiom);
-        this.restriction = restriction;
+        super(ontology, axiom, restriction);
     }
 
     @Override
@@ -64,7 +63,14 @@ public class UseOfDefinedDatatypeInDatatypeRestriction extends OWLProfileViolati
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public String toString() {
-        return toString("Use of defined datatype in datatype restriction %s", restriction);
+        return toString("Use of defined datatype in datatype restriction %s",
+                getExpression());
     }
 }

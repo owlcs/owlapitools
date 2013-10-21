@@ -40,7 +40,6 @@
 package uk.ac.manchester.cs.owl.owlapi.alternateimpls.owldatafactory;
 
 import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImpl;
@@ -85,8 +84,8 @@ public class InternalsCSR extends  OWLDataFactoryInternalsImpl {
      *            the factory to refer to
      * @param b
      *            use compression */
-    public InternalsCSR(OWLDataFactory f, boolean b) {
-    	super(f, b);
+    public InternalsCSR(boolean b) {
+        super(b);
 
     }
 

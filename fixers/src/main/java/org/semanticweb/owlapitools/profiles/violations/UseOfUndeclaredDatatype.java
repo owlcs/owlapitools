@@ -42,23 +42,33 @@ import java.util.List;
 
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDatatype;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 Specifies that a datatype is not declared */
 @SuppressWarnings("javadoc")
-public class UseOfUndeclaredDatatype extends OWLProfileViolation {
-    private final OWLDatatype datatype;
+public class UseOfUndeclaredDatatype extends OWLProfileViolation<OWLDatatype> implements
+        UndeclaredEntityViolation {
+    @Override
+    public OWLEntity getEntity() {
+        return getExpression();
+    }
+
+    @Override
+    public OWLOntology getOntology() {
+        return ontology;
+    }
 
     public UseOfUndeclaredDatatype(OWLOntology ontology, OWLAxiom axiom,
             OWLDatatype datatype) {
-        super(ontology, axiom);
-        this.datatype = datatype;
+        super(ontology, axiom, datatype);
     }
 
     @Override
@@ -67,13 +77,19 @@ public class UseOfUndeclaredDatatype extends OWLProfileViolation {
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public List<OWLOntologyChange> repair() {
-        return list(addDeclaration(datatype));
+        return list(addDeclaration(getExpression()));
     }
 
     @Override
     public String toString() {
-        return toString("Use of undeclared datatype: %s", datatype);
+        return toString("Use of undeclared datatype: %s", getExpression());
     }
 
 }

@@ -44,24 +44,35 @@ import org.semanticweb.owlapi.model.AddAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
-public class UseOfUndeclaredAnnotationProperty extends OWLProfileViolation {
-    private final OWLAnnotationProperty property;
+public class UseOfUndeclaredAnnotationProperty extends
+        OWLProfileViolation<OWLAnnotationProperty> implements UndeclaredEntityViolation {
+    @Override
+    public OWLEntity getEntity() {
+        return getExpression();
+    }
+
+    @Override
+    public OWLOntology getOntology() {
+        return ontology;
+    }
+
     private final OWLAnnotation annotation;
 
     public UseOfUndeclaredAnnotationProperty(OWLOntology ontology, OWLAxiom axiom,
             OWLAnnotation annotation, OWLAnnotationProperty prop) {
-        super(ontology, axiom);
-        property = prop;
+        super(ontology, axiom, prop);
         this.annotation = annotation;
     }
 
@@ -71,13 +82,19 @@ public class UseOfUndeclaredAnnotationProperty extends OWLProfileViolation {
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public String toString() {
-        return toString("Use of undeclared annotation property: %s in annotation %s",
-                property, annotation);
+        return toString("Use of undeclared annotation property: %s in annotation",
+                getExpression(), annotation);
     }
 
     @Override
     public List<OWLOntologyChange> repair() {
-        return list(new AddAxiom(ontology, df.getOWLDeclarationAxiom(property)));
+        return list(new AddAxiom(ontology, df.getOWLDeclarationAxiom(getExpression())));
     }
 }

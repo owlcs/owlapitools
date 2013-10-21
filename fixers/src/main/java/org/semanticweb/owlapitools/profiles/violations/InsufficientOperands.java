@@ -5,14 +5,13 @@ import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 @SuppressWarnings("javadoc")
-public class InsufficientOperands extends OWLProfileViolation {
-    private final OWLObject expression;
+public class InsufficientOperands extends OWLProfileViolation<OWLObject> {
 
     public InsufficientOperands(OWLOntology currentOntology, OWLAxiom node, OWLObject c) {
-        super(currentOntology, node);
-        expression = c;
+        super(currentOntology, node, c);
     }
 
     @Override
@@ -24,4 +23,10 @@ public class InsufficientOperands extends OWLProfileViolation {
     public String toString() {
         return toString("Not enough operands; at least two needed: %s", expression);
     }
+
+    @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
 }

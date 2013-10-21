@@ -88,21 +88,21 @@ public class OWL2Profile implements OWLProfile {
         OWL2ProfileObjectWalker visitor = new OWL2ProfileObjectWalker(walker,
                 ontology.getOWLOntologyManager());
         walker.walkStructure(visitor);
-        Set<OWLProfileViolation> pv = visitor.getProfileViolations();
+        Set<OWLProfileViolation<?>> pv = visitor.getProfileViolations();
         return new OWLProfileReport(this, pv);
     }
 
     private static class OWL2ProfileObjectWalker extends OWLOntologyWalkerVisitor<Object> {
         private final OWLOntologyManager man;
-        private final Set<OWLProfileViolation> profileViolations = new HashSet<OWLProfileViolation>();
+        private final Set<OWLProfileViolation<?>> profileViolations = new HashSet<OWLProfileViolation<?>>();
 
         public OWL2ProfileObjectWalker(OWLOntologyWalker walker, OWLOntologyManager man) {
             super(walker);
             this.man = man;
         }
 
-        public Set<OWLProfileViolation> getProfileViolations() {
-            return new HashSet<OWLProfileViolation>(profileViolations);
+        public Set<OWLProfileViolation<?>> getProfileViolations() {
+            return new HashSet<OWLProfileViolation<?>>(profileViolations);
         }
 
         @Override

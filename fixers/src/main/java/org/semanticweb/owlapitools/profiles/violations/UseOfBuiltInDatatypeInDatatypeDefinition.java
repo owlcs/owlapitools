@@ -42,22 +42,29 @@ import org.semanticweb.owlapi.model.OWLDatatypeDefinitionAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
-public class UseOfBuiltInDatatypeInDatatypeDefinition extends OWLProfileViolation {
+public class UseOfBuiltInDatatypeInDatatypeDefinition extends OWLProfileViolation<Object> {
     public UseOfBuiltInDatatypeInDatatypeDefinition(OWLOntology ontology,
             OWLDatatypeDefinitionAxiom axiom) {
-        super(ontology, axiom);
+        super(ontology, axiom, null);
     }
 
     @Override
     public void accept(OWLProfileViolationVisitor visitor) {
         visitor.visit(this);
     }
+
+    @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
 
     @Override
     public String toString() {

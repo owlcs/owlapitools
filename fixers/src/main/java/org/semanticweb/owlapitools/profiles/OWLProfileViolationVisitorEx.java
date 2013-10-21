@@ -90,96 +90,96 @@ import org.semanticweb.owlapitools.profiles.violations.UseOfUnknownDatatype;
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
-public interface OWLProfileViolationVisitor {
-    void visit(IllegalPunning v);
+public interface OWLProfileViolationVisitorEx<T> {
+    T visit(IllegalPunning v);
 
-    void visit(CycleInDatatypeDefinition v);
+    T visit(CycleInDatatypeDefinition v);
 
-    void visit(UseOfBuiltInDatatypeInDatatypeDefinition v);
+    T visit(UseOfBuiltInDatatypeInDatatypeDefinition v);
 
-    void visit(DatatypeIRIAlsoUsedAsClassIRI v);
+    T visit(DatatypeIRIAlsoUsedAsClassIRI v);
 
-    void visit(UseOfNonSimplePropertyInAsymmetricObjectPropertyAxiom v);
+    T visit(UseOfNonSimplePropertyInAsymmetricObjectPropertyAxiom v);
 
-    void visit(UseOfNonSimplePropertyInCardinalityRestriction v);
+    T visit(UseOfNonSimplePropertyInCardinalityRestriction v);
 
-    void visit(UseOfNonSimplePropertyInDisjointPropertiesAxiom v);
+    T visit(UseOfNonSimplePropertyInDisjointPropertiesAxiom v);
 
-    void visit(UseOfNonSimplePropertyInFunctionalPropertyAxiom v);
+    T visit(UseOfNonSimplePropertyInFunctionalPropertyAxiom v);
 
-    void visit(UseOfNonSimplePropertyInInverseFunctionalObjectPropertyAxiom v);
+    T visit(UseOfNonSimplePropertyInInverseFunctionalObjectPropertyAxiom v);
 
-    void visit(UseOfNonSimplePropertyInIrreflexivePropertyAxiom v);
+    T visit(UseOfNonSimplePropertyInIrreflexivePropertyAxiom v);
 
-    void visit(UseOfNonSimplePropertyInObjectHasSelf v);
+    T visit(UseOfNonSimplePropertyInObjectHasSelf v);
 
-    void visit(UseOfPropertyInChainCausesCycle v);
+    T visit(UseOfPropertyInChainCausesCycle v);
 
-    void visit(UseOfReservedVocabularyForAnnotationPropertyIRI v);
+    T visit(UseOfReservedVocabularyForAnnotationPropertyIRI v);
 
-    void visit(UseOfReservedVocabularyForClassIRI v);
+    T visit(UseOfReservedVocabularyForClassIRI v);
 
-    void visit(UseOfReservedVocabularyForDataPropertyIRI v);
+    T visit(UseOfReservedVocabularyForDataPropertyIRI v);
 
-    void visit(UseOfReservedVocabularyForIndividualIRI v);
+    T visit(UseOfReservedVocabularyForIndividualIRI v);
 
-    void visit(UseOfReservedVocabularyForObjectPropertyIRI v);
+    T visit(UseOfReservedVocabularyForObjectPropertyIRI v);
 
-    void visit(UseOfReservedVocabularyForOntologyIRI v);
+    T visit(UseOfReservedVocabularyForOntologyIRI v);
 
-    void visit(UseOfReservedVocabularyForVersionIRI v);
+    T visit(UseOfReservedVocabularyForVersionIRI v);
 
-    void visit(UseOfTopDataPropertyAsSubPropertyInSubPropertyAxiom v);
+    T visit(UseOfTopDataPropertyAsSubPropertyInSubPropertyAxiom v);
 
-    void visit(UseOfUndeclaredAnnotationProperty v);
+    T visit(UseOfUndeclaredAnnotationProperty v);
 
-    void visit(UseOfUndeclaredClass v);
+    T visit(UseOfUndeclaredClass v);
 
-    void visit(UseOfUndeclaredDataProperty v);
+    T visit(UseOfUndeclaredDataProperty v);
 
-    void visit(UseOfUndeclaredDatatype v);
+    T visit(UseOfUndeclaredDatatype v);
 
-    void visit(UseOfUndeclaredObjectProperty v);
+    T visit(UseOfUndeclaredObjectProperty v);
 
-    void visit(InsufficientPropertyExpressions v);
+    T visit(InsufficientPropertyExpressions v);
 
-    void visit(InsufficientIndividuals v);
+    T visit(InsufficientIndividuals v);
 
-    void visit(InsufficientOperands v);
+    T visit(InsufficientOperands v);
 
-    void visit(EmptyOneOfAxiom v);
+    T visit(EmptyOneOfAxiom v);
 
-    void visit(LastPropertyInChainNotInImposedRange v);
+    T visit(LastPropertyInChainNotInImposedRange v);
 
-    void visit(OntologyIRINotAbsolute v);
+    T visit(OntologyIRINotAbsolute v);
 
-    void visit(UseOfDefinedDatatypeInDatatypeRestriction v);
+    T visit(UseOfDefinedDatatypeInDatatypeRestriction v);
 
-    void visit(UseOfIllegalClassExpression v);
+    T visit(UseOfIllegalClassExpression v);
 
-    void visit(UseOfIllegalDataRange v);
+    T visit(UseOfIllegalDataRange v);
 
-    void visit(UseOfUnknownDatatype v);
+    T visit(UseOfUnknownDatatype v);
 
-    void visit(UseOfObjectPropertyInverse v);
+    T visit(UseOfObjectPropertyInverse v);
 
-    void visit(UseOfNonSuperClassExpression v);
+    T visit(UseOfNonSuperClassExpression v);
 
-    void visit(UseOfNonSubClassExpression v);
+    T visit(UseOfNonSubClassExpression v);
 
-    void visit(UseOfNonEquivalentClassExpression v);
+    T visit(UseOfNonEquivalentClassExpression v);
 
-    void visit(UseOfNonAtomicClassExpression v);
+    T visit(UseOfNonAtomicClassExpression v);
 
-    void visit(LexicalNotInLexicalSpace v);
+    T visit(LexicalNotInLexicalSpace v);
 
-    void visit(OntologyVersionIRINotAbsolute v);
+    T visit(OntologyVersionIRINotAbsolute v);
 
-    void visit(UseOfAnonymousIndividual v);
+    T visit(UseOfAnonymousIndividual v);
 
-    void visit(UseOfIllegalAxiom v);
+    T visit(UseOfIllegalAxiom v);
 
-    void visit(UseOfIllegalFacetRestriction v);
+    T visit(UseOfIllegalFacetRestriction v);
 
-    void visit(UseOfNonAbsoluteIRI v);
+    T visit(UseOfNonAbsoluteIRI v);
 }

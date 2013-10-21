@@ -47,6 +47,7 @@ import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
+import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.RemoveAxiom;
 
 /** Author: Matthew Horridge<br>
@@ -55,19 +56,32 @@ import org.semanticweb.owlapi.model.RemoveAxiom;
  * Date: 03-Aug-2009 Describes a violation of an OWLProfile by an axiom.
  * Ultimately, there may be part of the axiom that violates the profile rather
  * than the complete axiom. */
-public abstract class OWLProfileViolation {
+public abstract class OWLProfileViolation<T> {
     protected final OWLOntology ontology;
     protected final OWLDataFactory df;
     protected final OWLAxiom axiom;
+    protected final T expression;
 
     /** @param ontology
      *            the ontology with the violation
      * @param axiom
-     *            the axiom with the violation */
-    public OWLProfileViolation(OWLOntology ontology, OWLAxiom axiom) {
+     *            the axiom with the violation
+     * @param o
+     *            violation expression */
+    public OWLProfileViolation(OWLOntology ontology, OWLAxiom axiom, T o) {
         this.axiom = axiom;
         this.ontology = ontology;
         df = ontology.getOWLOntologyManager().getOWLDataFactory();
+        expression = o;
+    }
+
+    public OWLOntologyID getOntologyID() {
+        return ontology.getOntologyID();
+    }
+
+    /** @return the expression object of this violation */
+    public T getExpression() {
+        return expression;
     }
 
     /** @return the offending axiom */
@@ -91,6 +105,10 @@ public abstract class OWLProfileViolation {
      * 
      * @param visitor */
     public abstract void accept(OWLProfileViolationVisitor visitor);
+
+    /** @param visitor
+     * @return visitor return value */
+    public abstract <O> O accept(OWLProfileViolationVisitorEx<O> visitor);
 
     protected String toString(String template) {
         return String.format(template + " [%s in %s]", axiom, ontology.getOntologyID());

@@ -43,19 +43,18 @@ import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
-public class UseOfNonSuperClassExpression extends OWLProfileViolation {
-    private final OWLClassExpression classExpression;
+public class UseOfNonSuperClassExpression extends OWLProfileViolation<OWLClassExpression> {
 
     public UseOfNonSuperClassExpression(OWLOntology ontology, OWLAxiom axiom,
             OWLClassExpression classExpression) {
-        super(ontology, axiom);
-        this.classExpression = classExpression;
+        super(ontology, axiom, classExpression);
     }
 
     @Override
@@ -64,9 +63,15 @@ public class UseOfNonSuperClassExpression extends OWLProfileViolation {
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public String toString() {
         return toString(
                 "Use of non-superclass expression in position that requires a superclass expression: %s",
-                classExpression);
+                getExpression());
     }
 }

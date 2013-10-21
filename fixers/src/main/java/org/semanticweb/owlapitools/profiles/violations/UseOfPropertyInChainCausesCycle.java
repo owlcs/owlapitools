@@ -43,19 +43,19 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLSubPropertyChainOfAxiom;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
-public class UseOfPropertyInChainCausesCycle extends OWLProfileViolation {
-    private final OWLObjectPropertyExpression property;
+public class UseOfPropertyInChainCausesCycle extends
+        OWLProfileViolation<OWLObjectPropertyExpression> {
 
     public UseOfPropertyInChainCausesCycle(OWLOntology ontology,
             OWLSubPropertyChainOfAxiom axiom, OWLObjectPropertyExpression property) {
-        super(ontology, axiom);
-        this.property = property;
+        super(ontology, axiom, property);
     }
 
     @Override
@@ -64,7 +64,13 @@ public class UseOfPropertyInChainCausesCycle extends OWLProfileViolation {
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public String toString() {
-        return toString("Use of property in chain causes cycle: %s", property);
+        return toString("Use of property in chain causes cycle: %s", getExpression());
     }
 }

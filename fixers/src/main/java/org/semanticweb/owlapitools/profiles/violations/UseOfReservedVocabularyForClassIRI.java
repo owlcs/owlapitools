@@ -43,19 +43,18 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
-public class UseOfReservedVocabularyForClassIRI extends OWLProfileViolation {
-    private final OWLClass cls;
+public class UseOfReservedVocabularyForClassIRI extends OWLProfileViolation<OWLClass> {
 
     public UseOfReservedVocabularyForClassIRI(OWLOntology ontology, OWLAxiom axiom,
             OWLClass cls) {
-        super(ontology, axiom);
-        this.cls = cls;
+        super(ontology, axiom, cls);
     }
 
     @Override
@@ -64,7 +63,13 @@ public class UseOfReservedVocabularyForClassIRI extends OWLProfileViolation {
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public String toString() {
-        return toString("Use of reserved vocabulary for class IRI: %s", cls);
+        return toString("Use of reserved vocabulary for class IRI: %s", getExpression());
     }
 }

@@ -44,21 +44,20 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.vocab.OWLFacet;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
-public class UseOfIllegalFacetRestriction extends OWLProfileViolation {
+public class UseOfIllegalFacetRestriction extends OWLProfileViolation<OWLFacet> {
     private final OWLDatatypeRestriction datatypeRestriction;
-    private final OWLFacet facet;
 
     public UseOfIllegalFacetRestriction(OWLOntology ontology, OWLAxiom axiom,
             OWLDatatypeRestriction dtr, OWLFacet facet) {
-        super(ontology, axiom);
+        super(ontology, axiom, facet);
         datatypeRestriction = dtr;
-        this.facet = facet;
     }
 
     @Override
@@ -67,9 +66,15 @@ public class UseOfIllegalFacetRestriction extends OWLProfileViolation {
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public String toString() {
         return toString(
                 "Facet in datatype restriction does not belong to restricted datatype: %s in %s",
-                facet, datatypeRestriction);
+                getExpression(), datatypeRestriction);
     }
 }

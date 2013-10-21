@@ -123,7 +123,7 @@ public class OWLProfileJUnitTest {
         }
     };
 
-    public void checkInCollection(List<OWLProfileViolation> violations, Class[] _list) {
+    public void checkInCollection(List<OWLProfileViolation<?>> violations, Class[] _list) {
         List<Class> list = new ArrayList<Class>(Arrays.asList(_list));
         List<Class> list1 = new ArrayList<Class>();
         for (OWLProfileViolation v : violations) {
@@ -136,7 +136,8 @@ public class OWLProfileJUnitTest {
 
     public void runAssert(OWLOntology o, OWLProfile profile, int expected,
             Class[] expectedViolations) {
-        List<OWLProfileViolation> violations = profile.checkOntology(o).getViolations();
+        List<OWLProfileViolation<?>> violations = profile.checkOntology(o)
+                .getViolations();
         assertEquals(expected, violations.size());
         checkInCollection(violations, expectedViolations);
         for (OWLProfileViolation violation : violations) {

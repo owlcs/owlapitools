@@ -40,34 +40,31 @@ package uk.ac.manchester.cs.owl.owlapi.alternateimpls.test;
 
 import org.junit.After;
 import org.junit.Test;
-import org.semanticweb.owlapi.model.OWLDataFactory;
 
 import uk.ac.manchester.cs.owl.owlapi.InternalsNoCache;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternals;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImpl;
-import uk.ac.manchester.cs.owl.owlapi.alternateimpls.owldatafactory.DataFactoryNoCache;
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.owldatafactory.InternalsCSR;
 
 @SuppressWarnings("javadoc")
 public class OWLDataFactoryInternalsPerformanceTest {
-    private final static OWLDataFactory factory = new DataFactoryNoCache();
     private final InternalsTester tester = new InternalsTester();
 
     @Test
     public void testBaseline() {
-        OWLDataFactoryInternals i = new InternalsNoCache(factory, false);
+        OWLDataFactoryInternals i = new InternalsNoCache(false);
         tester.run(i);
     }
 
     @Test
     public void testDefault() {
-        OWLDataFactoryInternals i = new OWLDataFactoryInternalsImpl(factory, false);
+        OWLDataFactoryInternals i = new OWLDataFactoryInternalsImpl(false);
         tester.run(i);
     }
 
     @Test
     public void testConcurrentHashMapsStrongRefs() {
-        OWLDataFactoryInternals i = new InternalsCSR(factory, false);
+        OWLDataFactoryInternals i = new InternalsCSR(false);
         tester.run(i);
     }
 

@@ -43,6 +43,7 @@ import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
@@ -52,12 +53,10 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
  * the datatype isn't rdfs:Literal, and the datatype isn't defined with a
  * DatatypeDefinition axiom */
 @SuppressWarnings("javadoc")
-public class UseOfUnknownDatatype extends OWLProfileViolation {
-    private final OWLDatatype datatype;
+public class UseOfUnknownDatatype extends OWLProfileViolation<OWLDatatype> {
 
     public UseOfUnknownDatatype(OWLOntology ontology, OWLAxiom axiom, OWLDatatype datatype) {
-        super(ontology, axiom);
-        this.datatype = datatype;
+        super(ontology, axiom, datatype);
     }
 
     @Override
@@ -66,7 +65,13 @@ public class UseOfUnknownDatatype extends OWLProfileViolation {
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public String toString() {
-        return toString("Use of unknown datatype: %s", datatype);
+        return toString("Use of unknown datatype: %s", getExpression());
     }
 }

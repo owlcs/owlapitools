@@ -42,22 +42,32 @@ import java.util.List;
 
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
-public class UseOfUndeclaredClass extends OWLProfileViolation {
-    private final OWLClass cls;
+public class UseOfUndeclaredClass extends OWLProfileViolation<OWLClass> implements
+        UndeclaredEntityViolation {
+    @Override
+    public OWLEntity getEntity() {
+        return getExpression();
+    }
+
+    @Override
+    public OWLOntology getOntology() {
+        return ontology;
+    }
 
     public UseOfUndeclaredClass(OWLOntology ontology, OWLAxiom axiom, OWLClass cls) {
-        super(ontology, axiom);
-        this.cls = cls;
+        super(ontology, axiom, cls);
     }
 
     @Override
@@ -66,12 +76,19 @@ public class UseOfUndeclaredClass extends OWLProfileViolation {
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public String toString() {
-        return toString("Use of undeclared class: %s", cls);
+        return toString("Use of undeclared class: %s", getExpression());
     }
 
     @Override
     public List<OWLOntologyChange> repair() {
-        return list(addDeclaration(cls));
+        return list(addDeclaration(getExpression()));
     }
+
 }

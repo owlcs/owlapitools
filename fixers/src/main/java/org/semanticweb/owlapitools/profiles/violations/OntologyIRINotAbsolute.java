@@ -43,18 +43,20 @@ import java.util.List;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
+import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.SetOntologyID;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
-public class OntologyIRINotAbsolute extends OWLProfileViolation {
+public class OntologyIRINotAbsolute extends OWLProfileViolation<OWLOntologyID> {
     public OntologyIRINotAbsolute(OWLOntology ontology) {
-        super(ontology, null);
+        super(ontology, null, ontology.getOntologyID());
     }
 
     @Override
@@ -63,8 +65,14 @@ public class OntologyIRINotAbsolute extends OWLProfileViolation {
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public String toString() {
-        return toString("Ontology IRI not absolute: %s", ontology.getOntologyID());
+        return toString("Ontology IRI not absolute: %s", getExpression());
     }
 
     @Override

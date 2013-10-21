@@ -43,19 +43,19 @@ import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
-public class UseOfNonEquivalentClassExpression extends OWLProfileViolation {
-    private final OWLClassExpression classExpression;
+public class UseOfNonEquivalentClassExpression extends
+        OWLProfileViolation<OWLClassExpression> {
 
     public UseOfNonEquivalentClassExpression(OWLOntology ontology, OWLAxiom axiom,
             OWLClassExpression classExpression) {
-        super(ontology, axiom);
-        this.classExpression = classExpression;
+        super(ontology, axiom, classExpression);
     }
 
     @Override
@@ -64,9 +64,15 @@ public class UseOfNonEquivalentClassExpression extends OWLProfileViolation {
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public String toString() {
         return toString(
                 "Use of non-equivalent class expression in position that requires an equivalent class expression: %s",
-                classExpression);
+                getExpression());
     }
 }

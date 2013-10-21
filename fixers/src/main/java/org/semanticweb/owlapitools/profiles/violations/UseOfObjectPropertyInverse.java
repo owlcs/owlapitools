@@ -43,19 +43,19 @@ import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
-public class UseOfObjectPropertyInverse extends OWLProfileViolation {
-    private final OWLObjectPropertyExpression propertyExpression;
+public class UseOfObjectPropertyInverse extends
+        OWLProfileViolation<OWLObjectPropertyExpression> {
 
     public UseOfObjectPropertyInverse(OWLOntology ontology, OWLAxiom axiom,
             OWLObjectPropertyExpression propertyExpression) {
-        super(ontology, axiom);
-        this.propertyExpression = propertyExpression;
+        super(ontology, axiom, propertyExpression);
     }
 
     @Override
@@ -64,7 +64,13 @@ public class UseOfObjectPropertyInverse extends OWLProfileViolation {
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public String toString() {
-        return toString("Use of inverse property: %s", propertyExpression);
+        return toString("Use of inverse property: %s", getExpression());
     }
 }

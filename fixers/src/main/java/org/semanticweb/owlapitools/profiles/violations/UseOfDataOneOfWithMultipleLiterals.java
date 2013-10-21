@@ -42,6 +42,7 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataOneOf;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
@@ -49,20 +50,24 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
 public class UseOfDataOneOfWithMultipleLiterals extends UseOfIllegalDataRange {
-    private final OWLDataOneOf dataOneOf;
 
     public UseOfDataOneOfWithMultipleLiterals(OWLOntology ontology, OWLAxiom axiom,
             OWLDataOneOf dataOneOf) {
         super(ontology, axiom, dataOneOf);
-        this.dataOneOf = dataOneOf;
     }
 
     @Override
     public void accept(OWLProfileViolationVisitor visitor) {
         visitor.visit(this);
     }
+
+    @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
     @Override
     public String toString() {
-        return toString("Use of DataOneOf with multiple literals %s", dataOneOf);
+        return toString("Use of DataOneOf with multiple literals %s", getExpression());
     }
 }

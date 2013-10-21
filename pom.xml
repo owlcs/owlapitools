@@ -51,7 +51,7 @@
 		<dependency>
 			<groupId>net.sourceforge.owlapi</groupId>
 			<artifactId>owlapi-distribution</artifactId>
-			<version>3.4.5</version>
+			<version>3.4.6-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -214,9 +214,9 @@
 
 	<!-- Parameters for the Source Code Management system. -->
 	<scm>
-	    <connection>scm:git:git://git.code.sf.net/p/owlapitools/master</connection>
-		<developerConnection>scm:git:ssh://ignazio1977@git.code.sf.net/p/owlapitools/master</developerConnection>
-		<url>git://git.code.sf.net/p/owlapitools/master</url>
+		<connection>scm:git:git://github.com/owlcs/owlapitools.git</connection>
+		<developerConnection>scm:git:git@github.com:owlcs/owlapitools.git</developerConnection>
+		<url>https://github.com/owlcs/owlapitools</url>
 	</scm>
 
 </project>

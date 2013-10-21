@@ -18,7 +18,7 @@ public class PerformanceComparator {
         Checker checker = new Checker(1);
         OWL2DLProfile profile = new OWL2DLProfile();
         OWLProfileReport report = profile.checkOntology(o1);
-        for (OWLProfileViolation v : report.getViolations()) {
+        for (OWLProfileViolation<?> v : report.getViolations()) {
             System.out.println(v);
         }
         List<ReasonerPerformanceResult> toReturn = new ArrayList<ReasonerPerformanceResult>();

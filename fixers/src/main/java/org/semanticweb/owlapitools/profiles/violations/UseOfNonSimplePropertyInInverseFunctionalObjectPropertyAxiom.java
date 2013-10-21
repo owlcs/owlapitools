@@ -39,9 +39,11 @@
 package org.semanticweb.owlapitools.profiles.violations;
 
 import org.semanticweb.owlapi.model.OWLInverseFunctionalObjectPropertyAxiom;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
@@ -49,10 +51,10 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
 public class UseOfNonSimplePropertyInInverseFunctionalObjectPropertyAxiom extends
-        OWLProfileViolation {
+        OWLProfileViolation<OWLObjectPropertyExpression> {
     public UseOfNonSimplePropertyInInverseFunctionalObjectPropertyAxiom(
             OWLOntology ontology, OWLInverseFunctionalObjectPropertyAxiom axiom) {
-        super(ontology, axiom);
+        super(ontology, axiom, axiom.getProperty());
     }
 
     @Override
@@ -61,8 +63,14 @@ public class UseOfNonSimplePropertyInInverseFunctionalObjectPropertyAxiom extend
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public String toString() {
-        return toString("Use of non-simple property in %s axiom", getAxiom()
-                .getAxiomType().getName());
+        return toString("Use of non-simple property in functional axiom %s",
+                getExpression());
     }
 }

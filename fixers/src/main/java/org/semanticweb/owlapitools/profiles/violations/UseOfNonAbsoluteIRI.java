@@ -43,18 +43,17 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
-public class UseOfNonAbsoluteIRI extends OWLProfileViolation {
-    private final IRI iri;
+public class UseOfNonAbsoluteIRI extends OWLProfileViolation<IRI> {
 
     public UseOfNonAbsoluteIRI(OWLOntology ontology, OWLAxiom axiom, IRI iri) {
-        super(ontology, axiom);
-        this.iri = iri;
+        super(ontology, axiom, iri);
     }
 
     @Override
@@ -63,7 +62,13 @@ public class UseOfNonAbsoluteIRI extends OWLProfileViolation {
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public String toString() {
-        return toString("IRI is relative: %s", iri);
+        return toString("IRI is relative: %s", getExpression());
     }
 }

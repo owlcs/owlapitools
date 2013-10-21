@@ -39,19 +39,22 @@
 package org.semanticweb.owlapitools.profiles.violations;
 
 import org.semanticweb.owlapi.model.OWLIrreflexiveObjectPropertyAxiom;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
+import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 /** Author: Matthew Horridge<br>
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
-public class UseOfNonSimplePropertyInIrreflexivePropertyAxiom extends OWLProfileViolation {
+public class UseOfNonSimplePropertyInIrreflexivePropertyAxiom extends
+        OWLProfileViolation<OWLObjectPropertyExpression> {
     public UseOfNonSimplePropertyInIrreflexivePropertyAxiom(OWLOntology ontology,
             OWLIrreflexiveObjectPropertyAxiom axiom) {
-        super(ontology, axiom);
+        super(ontology, axiom, axiom.getProperty());
     }
 
     @Override
@@ -60,8 +63,14 @@ public class UseOfNonSimplePropertyInIrreflexivePropertyAxiom extends OWLProfile
     }
 
     @Override
+    public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
+        return visitor.visit(this);
+    }
+
+
+    @Override
     public String toString() {
-        return toString("Use of non-simple property in %s axiom", getAxiom()
-                .getAxiomType().getName());
+        return toString("Use of non-simple property in irreflexive property axiom %s",
+                getExpression());
     }
 }
