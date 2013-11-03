@@ -51,7 +51,7 @@
 		<dependency>
 			<groupId>net.sourceforge.owlapi</groupId>
 			<artifactId>owlapi-distribution</artifactId>
-			<version>3.4.6-SNAPSHOT</version>
+			<version>3.4.8</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
