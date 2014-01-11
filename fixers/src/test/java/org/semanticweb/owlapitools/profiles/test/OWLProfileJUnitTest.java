@@ -89,7 +89,7 @@ import org.semanticweb.owlapitools.profiles.violations.UseOfUnknownDatatype;
 
 @SuppressWarnings({ "javadoc", "rawtypes" })
 public class OWLProfileJUnitTest {
-    private static final String START = OWLThing().getIRI().getStart();
+    private static final String START = OWLThing().getIRI().getNamespace();
     private static final OWLClass cl = Class(IRI("urn:test#fakeclass"));
     private static final OWLDataProperty datap = DataProperty(IRI("urn:datatype#fakedatatypeproperty"));
     private static final OWLDataPropertyRangeAxiom DATA_PROPERTY_RANGE2 = DataPropertyRange(
@@ -740,9 +740,7 @@ public class OWLProfileJUnitTest {
         // UseOfReservedVocabularyForIndividualIRI(individual));
         OWLOntology o = createOnto();
         OWLOntologyManager m = o.getOWLOntologyManager();
-        m.addAxiom(
-                o,
- ClassAssertion(OWLThing(), NamedIndividual(IRI(START + "i"))));
+        m.addAxiom(o, ClassAssertion(OWLThing(), NamedIndividual(IRI(START + "i"))));
         OWL2DLProfile profile = new OWL2DLProfile();
         int expected = 1;
         Class[] expectedViolations = new Class[] { UseOfReservedVocabularyForIndividualIRI.class };
