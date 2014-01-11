@@ -18,8 +18,11 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
  * 
  * @author ignazio */
 public class ComparatorReasonerFactory implements OWLReasonerFactory {
+    /** HermiT class name */
     public static final String HERMIT = "org.semanticweb.HermiT.Reasoner.ReasonerFactory";
+    /** FaCT++ class name */
     public static final String FACT = "uk.ac.manchester.cs.factplusplus.owlapiv3.FaCTPlusPlusReasonerFactory";
+    /** JFact class name */
     public static final String JFACT = "uk.ac.manchester.cs.jfact.JFactFactory";
 
     private static OWLReasonerFactory getFactory(String s) {

@@ -11,10 +11,12 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * 
  * @author ignazio */
 public class IllegalPunning extends OWLProfileViolation<IRI> {
-
     /** @param currentOntology
+     *            ontology
      * @param node
-     * @param iri */
+     *            axiom
+     * @param iri
+     *            iri */
     public IllegalPunning(OWLOntology currentOntology, OWLAxiom node, IRI iri) {
         super(currentOntology, node, iri);
     }
@@ -34,5 +36,4 @@ public class IllegalPunning extends OWLProfileViolation<IRI> {
     public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
         return visitor.visit(this);
     }
-
 }

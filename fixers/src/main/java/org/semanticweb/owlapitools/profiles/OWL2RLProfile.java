@@ -99,7 +99,7 @@ import org.semanticweb.owlapitools.profiles.violations.UseOfNonSuperClassExpress
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
 public class OWL2RLProfile implements OWLProfile {
-    private final static Set<IRI> allowedDatatypes = new HashSet<IRI>(Arrays.asList(
+    protected final static Set<IRI> allowedDatatypes = new HashSet<IRI>(Arrays.asList(
             RDF_PLAIN_LITERAL.getIRI(), RDF_XML_LITERAL.getIRI(), RDFS_LITERAL.getIRI(),
             XSD_DECIMAL.getIRI(), XSD_INTEGER.getIRI(),
             XSD_NON_NEGATIVE_INTEGER.getIRI(), XSD_NON_POSITIVE_INTEGER.getIRI(),

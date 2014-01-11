@@ -78,14 +78,16 @@ public class BotEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
         return isBotEquivalent(R) && isCardLargerThan(C, n);
     }
 
-    /** @return true iff an EXPRession is equivalent to bottom wrt defined */
+    /** @param expr
+     *            expression
+     * @return true iff an EXPRession is equivalent to bottom wrt defined */
     // policy
     boolean isBotEquivalent(OWLObject expr) {
         if (expr.isBottomEntity()) {
             return true;
         }
         if (expr.isTopEntity()) {
-        	return false;
+            return false;
         }
         expr.accept(this);
         return isBotEq;
@@ -109,7 +111,7 @@ public class BotEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
     public void visit(OWLObjectIntersectionOf expr) {
         for (OWLClassExpression p : expr.getOperands()) {
             if (isBotEquivalent(p)) {
-            	isBotEq = true;
+                isBotEq = true;
                 return;
             }
         }
@@ -162,13 +164,15 @@ public class BotEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
     // ported from: public void visit(ConceptObjectMinCardinality expr) {
     @Override
     public void visit(OWLObjectMinCardinality expr) {
-        isBotEq = isMinBotEquivalent( expr.getCardinality(), expr.getProperty(), expr.getFiller());
+        isBotEq = isMinBotEquivalent(expr.getCardinality(), expr.getProperty(),
+                expr.getFiller());
     }
 
     // ported from: public void visit(ConceptObjectMaxCardinality expr) {
     @Override
     public void visit(OWLObjectMaxCardinality expr) {
-        isBotEq = isMaxBotEquivalent( expr.getCardinality() ,expr.getProperty(),expr.getFiller());
+        isBotEq = isMaxBotEquivalent(expr.getCardinality(), expr.getProperty(),
+                expr.getFiller());
     }
 
     // ported from: public void visit(ConceptObjectExactCardinality expr) {
@@ -201,13 +205,15 @@ public class BotEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
     // ported from: public void visit(ConceptDataMinCardinality expr) {
     @Override
     public void visit(OWLDataMinCardinality expr) {
-        isBotEq = isMinBotEquivalent( expr.getCardinality(), expr.getProperty(), expr.getFiller());
+        isBotEq = isMinBotEquivalent(expr.getCardinality(), expr.getProperty(),
+                expr.getFiller());
     }
 
     // ported from: public void visit(ConceptDataMaxCardinality expr) {
     @Override
     public void visit(OWLDataMaxCardinality expr) {
-        isBotEq = isMaxBotEquivalent( expr.getCardinality() ,expr.getProperty(),expr.getFiller());
+        isBotEq = isMaxBotEquivalent(expr.getCardinality(), expr.getProperty(),
+                expr.getFiller());
     }
 
     // ported from: public void visit(ConceptDataExactCardinality expr) {
@@ -241,13 +247,13 @@ public class BotEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
     // ported from: public void visit(Datatype<?> arg)
     @Override
     public void visit(OWLDatatype node) {
-        isBotEq=node.isBottomEntity();
+        isBotEq = node.isBottomEntity();
     }
 
     // ported from: public void visit(Literal<?> arg) {
     @Override
     public void visit(OWLLiteral node) {
-        isBotEq=false;
+        isBotEq = false;
     }
 
     // ported from: public void visit(DataNot expr) {
@@ -261,6 +267,4 @@ public class BotEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
     public void visit(OWLDataOneOf node) {
         isBotEq = node.getValues().isEmpty();
     }
-
-
 }

@@ -15,6 +15,7 @@ public class Atom {
     private int hashcode;
 
     /** @param ax
+     *            axiom
      * @return true if ax is in this atom */
     public boolean contains(OWLAxiom ax) {
         return axioms.contains(ax);

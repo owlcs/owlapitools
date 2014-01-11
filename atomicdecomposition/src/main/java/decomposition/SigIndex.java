@@ -29,7 +29,12 @@ public class SigIndex {
         return nRegistered;
     }
 
-    /** add axiom AX to the non-local set with top-locality value TOP */
+    /** add axiom AX to the non-local set with top-locality value TOP
+     * 
+     * @param ax
+     *            axiom
+     * @param top
+     *            top or bottom */
     private void checkNonLocal(AxiomWrapper ax, boolean top) {
         emptySig.setLocality(top);
         checker.setSignatureValue(emptySig);
@@ -49,7 +54,10 @@ public class SigIndex {
     }
 
     // work with axioms
-    /** register an axiom */
+    /** register an axiom
+     * 
+     * @param ax
+     *            axiom */
     private void registerAx(AxiomWrapper ax) {
         for (OWLEntity p : ax.getAxiom().getSignature()) {
             Base.put(p, ax);
@@ -60,7 +68,10 @@ public class SigIndex {
         ++nRegistered;
     }
 
-    /** unregister an axiom AX */
+    /** unregister an axiom AX
+     * 
+     * @param ax
+     *            axiom */
     private void unregisterAx(AxiomWrapper ax) {
         for (OWLEntity p : ax.getAxiom().getSignature()) {
             Base.remove(p, ax);

@@ -12,7 +12,17 @@ import org.semanticweb.owlapitools.profiles.OWL2DLProfile;
 import org.semanticweb.owlapitools.profiles.OWLProfileReport;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 
+/** The Class PerformanceComparator. */
 public class PerformanceComparator {
+    /** Run test.
+     * 
+     * @param o1
+     *            the o1
+     * @param factories
+     *            the factories
+     * @return the list
+     * @throws Exception
+     *             the exception */
     public static List<ReasonerPerformanceResult> runTest(OWLOntology o1,
             OWLReasonerFactory... factories) throws Exception {
         Checker checker = new Checker(1);
@@ -33,6 +43,15 @@ public class PerformanceComparator {
         return toReturn;
     }
 
+    /** Run.
+     * 
+     * @param ontologies
+     *            the ontologies
+     * @param factories
+     *            the factories
+     * @return the string
+     * @throws Exception
+     *             the exception */
     public static String run(Collection<OWLOntology> ontologies,
             OWLReasonerFactory... factories) throws Exception {
         Map<String, List<ReasonerPerformanceResult>> list = new HashMap<String, List<ReasonerPerformanceResult>>();
@@ -42,6 +61,11 @@ public class PerformanceComparator {
         return toString(list);
     }
 
+    /** To string.
+     * 
+     * @param timingsList
+     *            the timings list
+     * @return the string */
     public static String
             toString(Map<String, List<ReasonerPerformanceResult>> timingsList) {
         StringBuilder b = new StringBuilder("method,");

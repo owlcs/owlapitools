@@ -9,10 +9,14 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.util.AutoIRIMapper;
 
+/** utility to lad a number of ontologies */
 public class OntologyLoader {
     AutoIRIMapper mapper;
     OWLOntologyManager m;
 
+    /** @param fileName
+     *            name
+     * @return ontology */
     public OWLOntology getOntology(String fileName) {
         try {
             return m.loadOntologyFromOntologyDocument(new File(fileName));
@@ -21,6 +25,7 @@ public class OntologyLoader {
         }
     }
 
+    /** @return all files */
     public File[] listFiles() {
         return folders;
     }
@@ -28,17 +33,23 @@ public class OntologyLoader {
     private File baseFile;
     private File[] folders;
     final FilenameFilter filenameFilter = new FilenameFilter() {
+        @Override
         public boolean accept(File arg0, String arg1) {
             return arg1.endsWith("_main.owl") || arg1.endsWith("_main.owl.zip");
         }
     };
 
+    /** @param baseFolder
+     *            base folder to list */
     public OntologyLoader(String baseFolder) {
         baseFile = new File(baseFolder);
         mapper = new AutoIRIMapper(baseFile, true);
         folders = baseFile.listFiles();
     }
 
+    /** @param folder
+     *            base folder
+     * @return ontology */
     public OWLOntology getOntology(File folder) {
         if (folder.isDirectory()) {
             File[] files = folder.listFiles(filenameFilter);
@@ -52,9 +63,9 @@ public class OntologyLoader {
             }
             File f = files[0];
             try {
-                OWLOntologyManager m = OWLManager.createOWLOntologyManager();
-                m.addIRIMapper(mapper);
-                OWLOntology o = m.loadOntologyFromOntologyDocument(f);
+                OWLOntologyManager man = OWLManager.createOWLOntologyManager();
+                man.addIRIMapper(mapper);
+                OWLOntology o = man.loadOntologyFromOntologyDocument(f);
                 return o;
             } catch (Throwable e) {
                 System.out.println("Atomize.main() " + f.getName());

@@ -17,6 +17,9 @@ import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
+/** Executes a set of reasoner calls
+ * 
+ * @author ignazio */
 public class ComparisonExecutor {
     private OWLReasonerFactory[] reasonerFactories;
     private OWLOntologyManager m;
@@ -24,10 +27,15 @@ public class ComparisonExecutor {
     protected OWLReasoner r;
     protected String name;
 
+    /** @return id for the executor */
     public String getId() {
         return "stress test for " + name;
     }
 
+    /** run execution
+     * 
+     * @throws Exception
+     *             exception */
     public void execute() throws Exception {
         r.getBottomClassNode();
         r.getBottomDataPropertyNode();
@@ -113,6 +121,10 @@ public class ComparisonExecutor {
         // r.dispose();
     }
 
+    /** check tautology
+     * 
+     * @param index
+     *            repetition index */
     public void checkTautology(int index) {
         for (OWLAxiom ax : o1.getLogicalAxioms()) {
             if (!r.isEntailed(ax)) {
@@ -176,6 +188,12 @@ public class ComparisonExecutor {
         r.getInverseObjectProperties(o);
     }
 
+    /** @param o
+     *            ontology
+     * @param f
+     *            reasoner factories
+     * @throws Exception
+     *             exception */
     public ComparisonExecutor(OWLOntology o, OWLReasonerFactory... f) throws Exception {
         o1 = o;
         name = "Comparing";
@@ -184,6 +202,7 @@ public class ComparisonExecutor {
         r.precomputeInferences(InferenceType.values());
     }
 
+    /** @return comparison reasoner */
     public ComparisonReasoner getReasoner() {
         return (ComparisonReasoner) r;
     }

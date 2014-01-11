@@ -106,15 +106,29 @@ import org.semanticweb.owlapitools.profiles.violations.UseOfNonSuperClassExpress
  * Date: 18-Jul-2009 */
 @SuppressWarnings("javadoc")
 public class OWL2QLProfile implements OWLProfile {
-
-    private final static Set<IRI> allowedDatatypes = new HashSet<IRI>(Arrays.asList(
-            RDF_PLAIN_LITERAL.getIRI(), RDF_XML_LITERAL.getIRI(), RDFS_LITERAL.getIRI(),
-            OWL_REAL.getIRI(), OWL_RATIONAL.getIRI(), XSD_DECIMAL.getIRI(),
-            XSD_INTEGER.getIRI(), XSD_NON_NEGATIVE_INTEGER.getIRI(), XSD_STRING.getIRI(),
-            XSD_NORMALIZED_STRING.getIRI(), XSD_TOKEN.getIRI(), XSD_NAME.getIRI(),
-            XSD_NCNAME.getIRI(), XSD_NMTOKEN.getIRI(), XSD_HEX_BINARY.getIRI(),
-            XSD_BASE_64_BINARY.getIRI(), XSD_ANY_URI.getIRI(), XSD_DATE_TIME.getIRI(),
-            XSD_DATE_TIME_STAMP.getIRI()));
+    protected final static Set<IRI> allowedDatatypes = new HashSet<IRI>(Arrays.asList(
+            //@formatter:off
+            RDF_PLAIN_LITERAL.getIRI(), 
+            RDF_XML_LITERAL.getIRI(), 
+            RDFS_LITERAL.getIRI(),
+            OWL_REAL.getIRI(), 
+            OWL_RATIONAL.getIRI(), 
+            XSD_DECIMAL.getIRI(),
+            XSD_INTEGER.getIRI(), 
+            XSD_NON_NEGATIVE_INTEGER.getIRI(), 
+            XSD_STRING.getIRI(),
+            XSD_NORMALIZED_STRING.getIRI(), 
+            XSD_TOKEN.getIRI(), 
+            XSD_NAME.getIRI(),
+            XSD_NCNAME.getIRI(), 
+            XSD_NMTOKEN.getIRI(), 
+            XSD_HEX_BINARY.getIRI(),
+            XSD_BASE_64_BINARY.getIRI(), 
+            XSD_ANY_URI.getIRI(), 
+            XSD_DATE_TIME.getIRI(),
+            XSD_DATE_TIME_STAMP.getIRI()
+            //@formatter:on
+            ));
 
     /** Gets the name of the profile.
      * 

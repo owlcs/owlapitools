@@ -8,7 +8,9 @@ import org.semanticweb.owlapi.model.PrefixManager;
  * 
  * @author ignazio
  * @param <T>
- * @param <Type> */
+ *            OWL type
+ * @param <Type>
+ *            buolder type */
 public abstract class BaseEntityBuilder<T extends OWLEntity, Type> extends
         BaseBuilder<T, Type> {
     protected IRI iri = null;

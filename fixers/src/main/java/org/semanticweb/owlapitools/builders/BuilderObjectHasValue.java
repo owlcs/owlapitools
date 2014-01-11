@@ -20,6 +20,7 @@ public class BuilderObjectHasValue extends
     public BuilderObjectHasValue() {}
 
     /** @param arg
+     *            argument
      * @return builder */
     public BuilderObjectHasValue withValue(OWLIndividual arg) {
         value = arg;

@@ -145,8 +145,11 @@ public final class PooledOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
     private ExecutorService exec = Executors.newCachedThreadPool();
 
     /** @param factory
+     *            reasoner factory
      * @param ontology
-     * @param manager */
+     *            ontology
+     * @param manager
+     *            manager */
     public PooledOWLReasoner(OWLReasonerFactory factory, OWLOntology ontology,
             OWLOntologyManager manager) {
         for (int i = 0; i < concurrentNumber; i++) {
