@@ -47,12 +47,10 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
 import org.semanticweb.owlapi.model.OWLRuntimeException;
 
-@SuppressWarnings("javadoc")
+/** @author ignazio */
 public class AlternateEmptyInMemOWLOntologyFactory extends
         AlternateAbstractInMemOWLOntologyFactory {
     private static final long serialVersionUID = 1575345654893555681L;
-
-    public AlternateEmptyInMemOWLOntologyFactory() {}
 
     @Override
     public OWLOntology loadOWLOntology(OWLOntologyDocumentSource documentSource,

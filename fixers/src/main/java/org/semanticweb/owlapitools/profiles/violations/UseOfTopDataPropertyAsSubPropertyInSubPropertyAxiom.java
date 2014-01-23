@@ -48,9 +48,12 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
 public class UseOfTopDataPropertyAsSubPropertyInSubPropertyAxiom extends
         OWLProfileViolation<OWLSubDataPropertyOfAxiom> {
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom */
     public UseOfTopDataPropertyAsSubPropertyInSubPropertyAxiom(OWLOntology ontology,
             OWLSubDataPropertyOfAxiom axiom) {
         super(ontology, axiom, axiom);

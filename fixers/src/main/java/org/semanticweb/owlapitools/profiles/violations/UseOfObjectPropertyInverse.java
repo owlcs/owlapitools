@@ -49,9 +49,14 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
 public class UseOfObjectPropertyInverse extends
         OWLProfileViolation<OWLObjectPropertyExpression> {
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param propertyExpression
+     *            propertyExpression */
     public UseOfObjectPropertyInverse(OWLOntology ontology, OWLAxiom axiom,
             OWLObjectPropertyExpression propertyExpression) {
         super(ontology, axiom, propertyExpression);

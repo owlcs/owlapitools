@@ -49,7 +49,7 @@ public class DataFactoryCSR extends OWLDataFactoryImpl {
         return instance;
     }
 
-    @SuppressWarnings("javadoc")
+    /** default constructor */
     public DataFactoryCSR() {
         data = new InternalsCSR(false);
     }

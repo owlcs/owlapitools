@@ -53,7 +53,6 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 Specifies that a datatype is not declared */
-@SuppressWarnings("javadoc")
 public class UseOfUndeclaredDatatype extends OWLProfileViolation<OWLDatatype> implements
         UndeclaredEntityViolation {
     @Override
@@ -61,6 +60,12 @@ public class UseOfUndeclaredDatatype extends OWLProfileViolation<OWLDatatype> im
         return getExpression();
     }
 
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param datatype
+     *            datatype */
     public UseOfUndeclaredDatatype(OWLOntology ontology, OWLAxiom axiom,
             OWLDatatype datatype) {
         super(ontology, axiom, datatype);

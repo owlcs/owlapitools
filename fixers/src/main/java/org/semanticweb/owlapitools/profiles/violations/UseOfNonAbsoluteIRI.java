@@ -49,8 +49,13 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
 public class UseOfNonAbsoluteIRI extends OWLProfileViolation<IRI> {
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param iri
+     *            iri */
     public UseOfNonAbsoluteIRI(OWLOntology ontology, OWLAxiom axiom, IRI iri) {
         super(ontology, axiom, iri);
     }

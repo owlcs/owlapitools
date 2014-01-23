@@ -156,6 +156,8 @@ public class LockingOWLOntologyInternals extends InternalsImpl {
         };
     }
 
-    @SuppressWarnings("javadoc")
+    /**
+     * 
+     */
     public LockingOWLOntologyInternals() {}
 }

@@ -33,7 +33,11 @@ public class RestrictionAccumulator {
         this.r = r;
     }
 
-    @SuppressWarnings("javadoc")
+    /** @param cls
+     *            cls
+     * @param prop
+     *            prop
+     * @return restrictions */
     public Set<OWLRestriction<?, ?, ?>> getRestrictions(OWLClassExpression cls,
             OWLPropertyExpression<?, ?> prop) {
         return accummulateRestrictions(cls, prop, null);
@@ -48,6 +52,7 @@ public class RestrictionAccumulator {
      * @param <T>
      *            type
      * @return set of restrictions */
+    @SuppressWarnings("unchecked")
     public <T extends OWLRestriction<?, ?, ?>> Set<T> getRestrictions(
             OWLClassExpression cls, OWLPropertyExpression<?, ?> prop, Class<T> type) {
         Set<T> results = new HashSet<T>();

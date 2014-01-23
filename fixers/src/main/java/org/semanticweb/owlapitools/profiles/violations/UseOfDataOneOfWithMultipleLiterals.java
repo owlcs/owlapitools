@@ -48,8 +48,13 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
 public class UseOfDataOneOfWithMultipleLiterals extends UseOfIllegalDataRange {
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param dataOneOf
+     *            dataOneOf */
     public UseOfDataOneOfWithMultipleLiterals(OWLOntology ontology, OWLAxiom axiom,
             OWLDataOneOf dataOneOf) {
         super(ontology, axiom, dataOneOf);

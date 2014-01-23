@@ -49,9 +49,14 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
 public class LastPropertyInChainNotInImposedRange extends
         OWLProfileViolation<OWLObjectPropertyRangeAxiom> {
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param rangeAxiom
+     *            rangeAxiom */
     public LastPropertyInChainNotInImposedRange(OWLOntology ontology,
             OWLSubPropertyChainOfAxiom axiom, OWLObjectPropertyRangeAxiom rangeAxiom) {
         super(ontology, axiom, rangeAxiom);

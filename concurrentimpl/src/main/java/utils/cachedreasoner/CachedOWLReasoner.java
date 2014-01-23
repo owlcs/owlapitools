@@ -44,7 +44,8 @@ import org.semanticweb.owlapi.reasoner.TimeOutException;
 import org.semanticweb.owlapi.reasoner.UnsupportedEntailmentTypeException;
 import org.semanticweb.owlapi.util.Version;
 
-@SuppressWarnings({ "unchecked", "javadoc" })
+/** @author ignazio */
+@SuppressWarnings("unchecked")
 public final class CachedOWLReasoner implements OWLReasoner, OWLOntologyChangeListener {
     protected final OWLReasoner delegate;
 
@@ -148,6 +149,10 @@ public final class CachedOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
     private final CachedReasoner cache = new CachedReasoner();
     private final OWLOntology rootOntology;
 
+    /** @param reasoner
+     *            reasoner
+     * @param manager
+     *            manager */
     public CachedOWLReasoner(OWLReasoner reasoner, OWLOntologyManager manager) {
         if (reasoner == null) {
             throw new IllegalArgumentException("The input reasoner cannot be null");

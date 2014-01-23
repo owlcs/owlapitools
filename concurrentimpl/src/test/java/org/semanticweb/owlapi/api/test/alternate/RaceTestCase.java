@@ -46,6 +46,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 import org.semanticweb.owlapi.apibinding.configurables.ThreadSafeOWLManager;
@@ -110,7 +111,7 @@ public class RaceTestCase {
         }
 
         public static class SubClassLHSCallback implements RaceCallback {
-            private volatile int counter = 0;
+            private AtomicInteger counter = new AtomicInteger();
             OWLDataFactory factory;
             OWLOntologyManager manager;
             OWLOntology ontology;
@@ -127,16 +128,16 @@ public class RaceTestCase {
 
             @Override
             public void add() {
-                OWLClass middle = createMiddleClass(counter);
+                OWLClass middle = createMiddleClass(counter.get());
                 Set<OWLAxiom> axioms = computeChanges(middle);
                 manager.addAxioms(ontology, axioms);
-                counter++;
+                counter.incrementAndGet();
             }
 
             @Override
             public boolean failed() {
                 int size = computeSize();
-                return size != counter;
+                return size != counter.get();
             }
 
             public int computeSize() {
@@ -158,7 +159,7 @@ public class RaceTestCase {
                         .getSubClassAxiomsForSubClass(x);
                 System.out.println("Expected getSubClassAxiomsForSubClass to return "
                         + counter + " axioms but it only found " + axiomsFound.size());
-                for (int i = 0; i < counter; i++) {
+                for (int i = 0; i < counter.get(); i++) {
                     OWLAxiom checkMe = factory.getOWLSubClassOfAxiom(x,
                             createMiddleClass(i));
                     if (!axiomsFound.contains(checkMe) && ontology.containsAxiom(checkMe)) {

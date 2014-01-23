@@ -49,9 +49,14 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
 public class UseOfPropertyInChainCausesCycle extends
         OWLProfileViolation<OWLObjectPropertyExpression> {
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param property
+     *            property */
     public UseOfPropertyInChainCausesCycle(OWLOntology ontology,
             OWLSubPropertyChainOfAxiom axiom, OWLObjectPropertyExpression property) {
         super(ontology, axiom, property);

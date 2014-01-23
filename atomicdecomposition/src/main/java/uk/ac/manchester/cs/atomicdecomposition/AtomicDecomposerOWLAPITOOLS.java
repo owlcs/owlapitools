@@ -24,7 +24,7 @@ import decomposition.IdentityMultiMap;
 import decomposition.OntologyAtom;
 import decomposition.SyntacticLocalityChecker;
 
-@SuppressWarnings("javadoc")
+/** atomc decomposition implementation */
 public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
     Set<OWLAxiom> globalAxioms;
     Set<OWLAxiom> tautologies;
@@ -51,14 +51,24 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
         return toReturn;
     }
 
+    /** @param o
+     *            o */
     public AtomicDecomposerOWLAPITOOLS(OWLOntology o) {
         this(AxiomSelector.selectAxioms(o), ModuleType.BOT);
     }
 
+    /** @param o
+     *            o
+     * @param type
+     *            type */
     public AtomicDecomposerOWLAPITOOLS(OWLOntology o, ModuleType type) {
         this(AxiomSelector.selectAxioms(o), type);
     }
 
+    /** @param axioms
+     *            axioms
+     * @param type
+     *            type */
     public AtomicDecomposerOWLAPITOOLS(List<OWLAxiom> axioms, ModuleType type) {
         this.type = type;
         decomposer = new Decomposer(AxiomSelector.wrap(axioms),
@@ -233,7 +243,11 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
     }
 
     /** get a set of axioms that corresponds to the module of the atom with the
-     * id INDEX */
+     * id INDEX
+     * 
+     * @param index
+     *            index
+     * @return module at index */
     Collection<AxiomWrapper> getAtomModule(int index) {
         return decomposer.getAOS().get(index).getModule();
     }

@@ -50,9 +50,14 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
 public class UseOfNonSimplePropertyInObjectHasSelf extends
         OWLProfileViolation<OWLObjectHasSelf> {
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param hasSelf
+     *            hasSelf */
     public UseOfNonSimplePropertyInObjectHasSelf(OWLOntology ontology, OWLAxiom axiom,
             OWLObjectHasSelf hasSelf) {
         super(ontology, axiom, hasSelf);

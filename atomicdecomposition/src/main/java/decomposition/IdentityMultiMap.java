@@ -10,19 +10,23 @@ import java.util.Set;
 
 import org.semanticweb.owlapi.util.CollectionFactory;
 
-/** @param <Key>
- * @param <Value>
+/** @param <K>
+ *            key
+ * @param <V>
+ *            value
  * @author ignazio palmisano */
-@SuppressWarnings("javadoc")
-public class IdentityMultiMap<Key, Value> implements Serializable {
+public class IdentityMultiMap<K, V> implements Serializable {
     private static final long serialVersionUID = 30402L;
-    private final IdentityHashMap<Key, Collection<Value>> map = new IdentityHashMap<Key, Collection<Value>>();
+    private final IdentityHashMap<K, Collection<V>> map = new IdentityHashMap<K, Collection<V>>();
     private int size = 0;
 
     /** @param key
-     * @param value */
-    public boolean put(Key key, Value value) {
-        Collection<Value> set = this.map.get(key);
+     *            key
+     * @param value
+     *            value
+     * @return true if changes happen */
+    public boolean put(K key, V value) {
+        Collection<V> set = this.map.get(key);
         if (set == null) {
             set = createCollection();
             this.map.put(key, set);
@@ -34,15 +38,17 @@ public class IdentityMultiMap<Key, Value> implements Serializable {
         return toReturn;
     }
 
-    private Collection<Value> createCollection() {
-        Collection<Value> toReturn = Collections
-                .newSetFromMap(new IdentityHashMap<Value, Boolean>());
+    private Collection<V> createCollection() {
+        Collection<V> toReturn = Collections
+                .newSetFromMap(new IdentityHashMap<V, Boolean>());
         return toReturn;
     }
 
     /** @param key
-     * @param values */
-    public void setEntry(Key key, Collection<Value> values) {
+     *            key
+     * @param values
+     *            values */
+    public void setEntry(K key, Collection<V> values) {
         this.map.put(key, values);
         this.size = -1;
     }
@@ -51,9 +57,10 @@ public class IdentityMultiMap<Key, Value> implements Serializable {
      * connected, returns an immutable empty set
      * 
      * @param key
+     *            key
      * @return the set of values connected with the key */
-    public Collection<Value> get(Key key) {
-        final Collection<Value> collection = this.map.get(key);
+    public Collection<V> get(K key) {
+        final Collection<V> collection = this.map.get(key);
         if (collection != null) {
             return collection;
         }
@@ -61,14 +68,14 @@ public class IdentityMultiMap<Key, Value> implements Serializable {
     }
 
     /** @return the set of keys */
-    public Set<Key> keySet() {
+    public Set<K> keySet() {
         return this.map.keySet();
     }
 
     /** @return all values in the map */
-    public Set<Value> getAllValues() {
-        Set<Value> toReturn = CollectionFactory.createSet();
-        for (Collection<Value> s : this.map.values()) {
+    public Set<V> getAllValues() {
+        Set<V> toReturn = CollectionFactory.createSet();
+        for (Collection<V> s : this.map.values()) {
             toReturn.addAll(s);
         }
         return toReturn;
@@ -76,8 +83,10 @@ public class IdentityMultiMap<Key, Value> implements Serializable {
 
     /** removes the set of values connected to the key
      * 
-     * @param key */
-    public boolean remove(Key key) {
+     * @param key
+     *            key
+     * @return true if changes made */
+    public boolean remove(K key) {
         if (this.map.remove(key) != null) {
             size = -1;
             return true;
@@ -89,9 +98,12 @@ public class IdentityMultiMap<Key, Value> implements Serializable {
      * connected to the key, only one is removed
      * 
      * @param key
-     * @param value */
-    public boolean remove(Key key, Value value) {
-        Collection<Value> c = this.map.get(key);
+     *            key
+     * @param value
+     *            value
+     * @return true if changes made */
+    public boolean remove(K key, V value) {
+        Collection<V> c = this.map.get(key);
         if (c != null) {
             boolean toReturn = c.remove(value);
             // if false, no change was actually made - skip the rest
@@ -116,10 +128,12 @@ public class IdentityMultiMap<Key, Value> implements Serializable {
     }
 
     /** @param k
+     *            key
      * @param v
+     *            value
      * @return true if the pairing (k, v) is in the map (set equality for v) */
-    public boolean contains(Key k, Value v) {
-        final Collection<Value> collection = this.map.get(k);
+    public boolean contains(K k, V v) {
+        final Collection<V> collection = this.map.get(k);
         if (collection == null) {
             return false;
         }
@@ -127,15 +141,17 @@ public class IdentityMultiMap<Key, Value> implements Serializable {
     }
 
     /** @param k
+     *            key
      * @return true if k is a key for the map */
-    public boolean containsKey(Key k) {
+    public boolean containsKey(K k) {
         return this.map.containsKey(k);
     }
 
     /** @param v
+     *            value
      * @return true if v is a value for a key in the map */
-    public boolean containsValue(Value v) {
-        for (Collection<Value> c : map.values()) {
+    public boolean containsValue(V v) {
+        for (Collection<V> c : map.values()) {
             if (c.contains(v)) {
                 return true;
             }
@@ -143,6 +159,9 @@ public class IdentityMultiMap<Key, Value> implements Serializable {
         return false;
     }
 
+    /**
+     * 
+     */
     public void clear() {
         this.map.clear();
         this.size = 0;
@@ -153,14 +172,20 @@ public class IdentityMultiMap<Key, Value> implements Serializable {
         return "MultiMap " + size() + "\n" + map.toString();
     }
 
-    public void putAll(IdentityMultiMap<Key, Value> otherMap) {
-        for (Key k : otherMap.keySet()) {
+    /** @param otherMap
+     *            otherMap */
+    public void putAll(IdentityMultiMap<K, V> otherMap) {
+        for (K k : otherMap.keySet()) {
             putAll(k, otherMap.get(k));
         }
     }
 
-    public void putAll(Key k, Collection<Value> v) {
-        Collection<Value> set = map.get(k);
+    /** @param k
+     *            k
+     * @param v
+     *            v */
+    public void putAll(K k, Collection<V> v) {
+        Collection<V> set = map.get(k);
         if (set == null) {
             set = createCollection();
             setEntry(k, set);
@@ -169,11 +194,12 @@ public class IdentityMultiMap<Key, Value> implements Serializable {
         size = -1;
     }
 
+    /** @return true if duplicate value sets */
     public boolean isValueSetsEqual() {
         if (map.size() < 2) {
             return true;
         }
-        List<Collection<Value>> list = new ArrayList<Collection<Value>>(map.values());
+        List<Collection<V>> list = new ArrayList<Collection<V>>(map.values());
         for (int i = 1; i < list.size(); i++) {
             if (!list.get(0).equals(list.get(i))) {
                 return false;

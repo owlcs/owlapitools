@@ -48,8 +48,11 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
 public class UseOfBuiltInDatatypeInDatatypeDefinition extends OWLProfileViolation<Object> {
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom */
     public UseOfBuiltInDatatypeInDatatypeDefinition(OWLOntology ontology,
             OWLDatatypeDefinitionAxiom axiom) {
         super(ontology, axiom, null);

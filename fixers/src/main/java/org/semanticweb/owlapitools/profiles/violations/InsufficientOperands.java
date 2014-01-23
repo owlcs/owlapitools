@@ -7,8 +7,14 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
-@SuppressWarnings("javadoc")
+/** @author ignazio */
 public class InsufficientOperands extends OWLProfileViolation<OWLObject> {
+    /** @param currentOntology
+     *            currentOntology
+     * @param node
+     *            node
+     * @param c
+     *            c */
     public InsufficientOperands(OWLOntology currentOntology, OWLAxiom node, OWLObject c) {
         super(currentOntology, node, c);
     }

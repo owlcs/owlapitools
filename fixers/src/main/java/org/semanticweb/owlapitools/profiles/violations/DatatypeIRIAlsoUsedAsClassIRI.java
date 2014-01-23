@@ -54,8 +54,13 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * Information Management Group<br>
  * Date: 03-Aug-2009 Specifies that an IRI that is used for a datatype is also
  * used for a class IRI */
-@SuppressWarnings("javadoc")
 public class DatatypeIRIAlsoUsedAsClassIRI extends OWLProfileViolation<IRI> {
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param iri
+     *            iri */
     public DatatypeIRIAlsoUsedAsClassIRI(OWLOntology ontology, OWLAxiom axiom, IRI iri) {
         super(ontology, axiom, iri);
     }

@@ -49,9 +49,14 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
 public class UseOfDefinedDatatypeInDatatypeRestriction extends
         OWLProfileViolation<OWLDatatypeRestriction> {
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param restriction
+     *            restriction */
     public UseOfDefinedDatatypeInDatatypeRestriction(OWLOntology ontology,
             OWLAxiom axiom, OWLDatatypeRestriction restriction) {
         super(ontology, axiom, restriction);

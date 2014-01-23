@@ -36,7 +36,8 @@ public class BotEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
     /** keep the value here */
     boolean isBotEq = false;
 
-    @SuppressWarnings("javadoc")
+    /** @param l
+     *            l */
     public BotEquivalenceEvaluator(LocalityChecker l) {
         super(l);
     }

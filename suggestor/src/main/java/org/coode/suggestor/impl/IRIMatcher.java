@@ -8,16 +8,17 @@ import org.semanticweb.owlapi.model.OWLAnnotationValueVisitorEx;
 import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
-@SuppressWarnings("javadoc")
+/** @author ignazio */
 public class IRIMatcher implements OWLAnnotationValueVisitorEx<Boolean> {
     private final IRI propertyIRI;
 
+    /** @param propertyIRI
+     *            propertyIRI */
     public IRIMatcher(IRI propertyIRI) {
         this.propertyIRI = propertyIRI;
     }
 
     @Override
-    @SuppressWarnings("boxing")
     public Boolean visit(IRI iri) {
         return iri.equals(propertyIRI);
     }

@@ -50,8 +50,13 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * Information Management Group<br>
  * Date: 03-Aug-2009 Indicates that a class expression in an axiom is not in the
  * profile */
-@SuppressWarnings("javadoc")
 public class UseOfIllegalClassExpression extends OWLProfileViolation<OWLClassExpression> {
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param classExpression
+     *            classExpression */
     public UseOfIllegalClassExpression(OWLOntology ontology, OWLAxiom axiom,
             OWLClassExpression classExpression) {
         super(ontology, axiom, classExpression);

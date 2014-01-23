@@ -53,8 +53,9 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
 public class OntologyVersionIRINotAbsolute extends OWLProfileViolation<OWLOntologyID> {
+    /** @param ontology
+     *            ontology */
     public OntologyVersionIRINotAbsolute(OWLOntology ontology) {
         super(ontology, null, ontology.getOntologyID());
     }

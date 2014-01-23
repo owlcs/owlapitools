@@ -52,8 +52,9 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
 public class UseOfReservedVocabularyForOntologyIRI extends OWLProfileViolation<IRI> {
+    /** @param ontology
+     *            ontology */
     public UseOfReservedVocabularyForOntologyIRI(OWLOntology ontology) {
         super(ontology, null, ontology.getOntologyID().getOntologyIRI());
     }

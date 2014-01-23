@@ -49,9 +49,14 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
 public class UseOfNonSimplePropertyInCardinalityRestriction extends
         OWLProfileViolation<OWLObjectCardinalityRestriction> {
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param restriction
+     *            restriction */
     public UseOfNonSimplePropertyInCardinalityRestriction(OWLOntology ontology,
             OWLAxiom axiom, OWLObjectCardinalityRestriction restriction) {
         super(ontology, axiom, restriction);

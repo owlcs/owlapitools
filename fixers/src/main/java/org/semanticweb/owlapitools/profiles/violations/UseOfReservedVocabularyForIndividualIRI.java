@@ -49,9 +49,14 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
 public class UseOfReservedVocabularyForIndividualIRI extends
         OWLProfileViolation<OWLNamedIndividual> {
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param ind
+     *            ind */
     public UseOfReservedVocabularyForIndividualIRI(OWLOntology ontology, OWLAxiom axiom,
             OWLNamedIndividual ind) {
         super(ontology, axiom, ind);

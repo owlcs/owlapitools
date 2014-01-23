@@ -142,7 +142,7 @@ public class OWLProfileJUnitTest {
                 .getViolations();
         assertEquals(expected, violations.size());
         checkInCollection(violations, expectedViolations);
-        for (OWLProfileViolation violation : violations) {
+        for (OWLProfileViolation<?> violation : violations) {
             o.getOWLOntologyManager().applyChanges(violation.repair());
             violation.accept(new OWLProfileViolationVisitorAdapter());
             violation.accept(new OWLProfileViolationVisitorExAdapter<String>() {

@@ -49,9 +49,14 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
 public class UseOfNonSimplePropertyInDisjointPropertiesAxiom extends
         OWLProfileViolation<OWLObjectPropertyExpression> {
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param prop
+     *            prop */
     public UseOfNonSimplePropertyInDisjointPropertiesAxiom(OWLOntology ontology,
             OWLDisjointObjectPropertiesAxiom axiom, OWLObjectPropertyExpression prop) {
         super(ontology, axiom, prop);

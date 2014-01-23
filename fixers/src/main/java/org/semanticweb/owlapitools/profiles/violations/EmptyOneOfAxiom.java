@@ -6,10 +6,14 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
-@SuppressWarnings("javadoc")
+/** @author ignazio */
 public class EmptyOneOfAxiom extends OWLProfileViolation<Object> {
-    public EmptyOneOfAxiom(OWLOntology currentOntology, OWLAxiom currentAxiom) {
-        super(currentOntology, currentAxiom, null);
+    /** @param ontology
+     *            the ontology with the violation
+     * @param axiom
+     *            the axiom with the violation */
+    public EmptyOneOfAxiom(OWLOntology ontology, OWLAxiom axiom) {
+        super(ontology, axiom, null);
     }
 
     @Override

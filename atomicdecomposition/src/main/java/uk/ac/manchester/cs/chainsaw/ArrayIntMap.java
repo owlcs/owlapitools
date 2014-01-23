@@ -3,7 +3,7 @@ package uk.ac.manchester.cs.chainsaw;
 import java.util.ArrayList;
 import java.util.List;
 
-/** a multimap for int -> collection of int values. */
+/** a multimap for int to collection of int values. */
 public class ArrayIntMap {
     private final List<FastSet> map = new ArrayList<FastSet>();
 

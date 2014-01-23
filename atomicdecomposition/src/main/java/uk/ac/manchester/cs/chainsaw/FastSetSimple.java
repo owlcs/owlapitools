@@ -66,10 +66,13 @@ public class FastSetSimple implements FastSet {
         return -lowerbound - 1;
     }
 
-    @SuppressWarnings("javadoc")
+    /** default constructor */
     public FastSetSimple() {}
 
-    @SuppressWarnings("javadoc")
+    /** @param c1
+     *            c1
+     * @param c2
+     *            c2 */
     public FastSetSimple(FastSetSimple c1, FastSetSimple c2) {
         values = new int[(c1.size + c2.size) / defaultSize * defaultSize + defaultSize];
         int i = 0;

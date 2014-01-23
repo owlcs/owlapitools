@@ -49,8 +49,13 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
 public class UseOfAnonymousIndividual extends OWLProfileViolation<OWLAnonymousIndividual> {
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param individual
+     *            individual */
     public UseOfAnonymousIndividual(OWLOntology ontology, OWLAxiom axiom,
             OWLAnonymousIndividual individual) {
         super(ontology, axiom, individual);

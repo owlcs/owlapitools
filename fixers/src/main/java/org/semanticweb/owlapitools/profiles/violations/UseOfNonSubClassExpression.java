@@ -49,8 +49,13 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
 public class UseOfNonSubClassExpression extends OWLProfileViolation<OWLClassExpression> {
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param classExpression
+     *            classExpression */
     public UseOfNonSubClassExpression(OWLOntology ontology, OWLAxiom axiom,
             OWLClassExpression classExpression) {
         super(ontology, axiom, classExpression);

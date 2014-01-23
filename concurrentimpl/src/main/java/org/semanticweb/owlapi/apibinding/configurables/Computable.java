@@ -42,14 +42,14 @@ package org.semanticweb.owlapi.apibinding.configurables;
  * MemoizingCache; the results to be stored in the cache, i.e., the return value
  * of compute(), are expected to be non null, although it is not forbidden to
  * have a null value; if that case is expected to be frequent, then the use of a
- * cache is not sensible. The expected code pattern looks like this:<br/>
- * MemoizingCache&lt;A, B&gt; cache = new MemoizingCache&lt;A, B&gt;();<br/>
- * A key = ...;<br/>
- * Computable&lt;B&gt; c = new Computable&lt;B&gt;{...};<br/>
- * B toReturn = cache.get(c, key);<br/>
- * if(c.hasThrownException()){<br/>
- * throw c.thrownException();<br/>
- * }<br/>
+ * cache is not sensible. The expected code pattern looks like this:<br>
+ * MemoizingCache&lt;A, B&gt; cache = new MemoizingCache&lt;A, B&gt;();<br>
+ * A key = ...;<br>
+ * Computable&lt;B&gt; c = new Computable&lt;B&gt;{...};<br>
+ * B toReturn = cache.get(c, key);<br>
+ * if(c.hasThrownException()){<br>
+ * throw c.thrownException();<br>
+ * }<br>
  * When refactoring code where the computation of the toReturn value was
  * inlined, this reproduces the behaviour of the refactored code; casting of the
  * Throwable returned may be needed.

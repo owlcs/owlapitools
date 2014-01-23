@@ -49,8 +49,11 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
 public class UseOfIllegalAxiom extends OWLProfileViolation<AxiomType<?>> {
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom */
     public UseOfIllegalAxiom(OWLOntology ontology, OWLAxiom axiom) {
         super(ontology, axiom, axiom.getAxiomType());
     }

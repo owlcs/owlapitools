@@ -50,7 +50,9 @@ public class DataFactoryNoCache extends OWLDataFactoryImpl {
         return instance;
     }
 
-    @SuppressWarnings("javadoc")
+    /**
+     * 
+     */
     public DataFactoryNoCache() {
         data = new InternalsNoCache(false);
     }

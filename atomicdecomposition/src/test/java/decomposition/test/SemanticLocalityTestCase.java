@@ -473,10 +473,8 @@ public class SemanticLocalityTestCase {
 
     @Test
     public void shouldResetSignature() {
-        OWLSubClassOfAxiom axiom = df.getOWLSubClassOfAxiom(a, b);
-        testSubject.preprocessOntology(Arrays.asList(new AxiomWrapper(axiom)));
-        // assertEquals(axiom.getSignature(),
-        // testSubject.getSignature().getSignature());
+        OWLSubClassOfAxiom ax = df.getOWLSubClassOfAxiom(a, b);
+        testSubject.preprocessOntology(Arrays.asList(new AxiomWrapper(ax)));
     }
 
     private OWLDataFactory df;

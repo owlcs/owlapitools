@@ -62,7 +62,6 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.util.MultiMap;
 
 /** semantic locality checker for DL axioms */
-@SuppressWarnings("javadoc")
 public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker {
     /** Reasoner to detect the tautology */
     OWLReasoner Kernel;
@@ -71,7 +70,9 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker
     /** map between axioms and concept expressions */
     MultiMap<OWLAxiom, OWLClassExpression> ExprMap = new MultiMap<OWLAxiom, OWLClassExpression>();
 
-    /** @return expression necessary to build query for a given type of an axiom */
+    /** @param axiom
+     *            axiom
+     * @return expression necessary to build query for a given type of an axiom */
     protected Collection<OWLClassExpression> getExpr(OWLAxiom axiom) {
         return axiom.getNestedClassExpressions();
     }
@@ -94,7 +95,12 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker
     boolean isLocal;
     private OWLOntologyManager manager;
 
-    /** init c'tor */
+    /** init c'tor
+     * 
+     * @param f
+     *            reasoner factory
+     * @param m
+     *            manager */
     public SemanticLocalityChecker(OWLReasonerFactory f, OWLOntologyManager m) {
         factory = f;
         manager = m;

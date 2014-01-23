@@ -46,7 +46,7 @@ import org.semanticweb.owlapi.model.OWLOntologyFactory;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
-@SuppressWarnings("javadoc")
+/** @author ignazio */
 public abstract class AlternateAbstractInMemOWLOntologyFactory implements
         OWLOntologyFactory {
     private static final long serialVersionUID = -1468847412445711881L;

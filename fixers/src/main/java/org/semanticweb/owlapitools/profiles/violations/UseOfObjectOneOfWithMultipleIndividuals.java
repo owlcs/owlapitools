@@ -48,8 +48,13 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
 public class UseOfObjectOneOfWithMultipleIndividuals extends UseOfIllegalClassExpression {
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param oneOf
+     *            oneOf */
     public UseOfObjectOneOfWithMultipleIndividuals(OWLOntology ontology, OWLAxiom axiom,
             OWLObjectOneOf oneOf) {
         super(ontology, axiom, oneOf);

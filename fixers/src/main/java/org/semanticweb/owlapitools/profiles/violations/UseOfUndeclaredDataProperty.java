@@ -53,7 +53,6 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
 public class UseOfUndeclaredDataProperty extends OWLProfileViolation<OWLDataProperty>
         implements UndeclaredEntityViolation {
     @Override
@@ -61,6 +60,12 @@ public class UseOfUndeclaredDataProperty extends OWLProfileViolation<OWLDataProp
         return getExpression();
     }
 
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param prop
+     *            prop */
     public UseOfUndeclaredDataProperty(OWLOntology ontology, OWLAxiom axiom,
             OWLDataProperty prop) {
         super(ontology, axiom, prop);

@@ -49,8 +49,13 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
 public class LexicalNotInLexicalSpace extends OWLProfileViolation<OWLLiteral> {
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param literal
+     *            literal */
     public LexicalNotInLexicalSpace(OWLOntology ontology, OWLAxiom axiom,
             OWLLiteral literal) {
         super(ontology, axiom, literal);

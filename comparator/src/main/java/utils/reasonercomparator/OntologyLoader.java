@@ -12,14 +12,14 @@ import org.semanticweb.owlapi.util.AutoIRIMapper;
 /** utility to lad a number of ontologies */
 public class OntologyLoader {
     AutoIRIMapper mapper;
-    OWLOntologyManager m;
 
     /** @param fileName
      *            name
      * @return ontology */
     public OWLOntology getOntology(String fileName) {
         try {
-            return m.loadOntologyFromOntologyDocument(new File(fileName));
+            return OWLManager.createOWLOntologyManager()
+                    .loadOntologyFromOntologyDocument(new File(fileName));
         } catch (OWLOntologyCreationException e) {
             throw new RuntimeException(e);
         }

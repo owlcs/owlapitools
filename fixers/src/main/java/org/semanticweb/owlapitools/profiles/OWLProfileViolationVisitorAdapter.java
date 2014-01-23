@@ -47,6 +47,7 @@ import org.semanticweb.owlapitools.profiles.violations.UseOfUndeclaredDatatype;
 import org.semanticweb.owlapitools.profiles.violations.UseOfUndeclaredObjectProperty;
 import org.semanticweb.owlapitools.profiles.violations.UseOfUnknownDatatype;
 
+/** @author ignazio */
 public class OWLProfileViolationVisitorAdapter implements OWLProfileViolationVisitor {
     /** override this method in subclasses to change default behaviour
      * 

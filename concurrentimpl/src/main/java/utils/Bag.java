@@ -19,9 +19,6 @@ public class Bag<Type> {
     Map<Type, AtomicLong> map = new LinkedHashMap<Type, AtomicLong>();
     int size = 0;
 
-    @SuppressWarnings("javadoc")
-    public Bag() {}
-
     /** @return size of the bag (all occurrences) */
     public int size() {
         return size;

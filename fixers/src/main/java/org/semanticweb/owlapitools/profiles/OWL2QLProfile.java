@@ -104,7 +104,6 @@ import org.semanticweb.owlapitools.profiles.violations.UseOfNonSuperClassExpress
  * The University of Manchester<br>
  * Information Management Group<br>
  * Date: 18-Jul-2009 */
-@SuppressWarnings("javadoc")
 public class OWL2QLProfile implements OWLProfile {
     protected final static Set<IRI> allowedDatatypes = new HashSet<IRI>(Arrays.asList(
             //@formatter:off
@@ -560,6 +559,9 @@ public class OWL2QLProfile implements OWLProfile {
 
     private final OWL2QLSuperClassExpressionChecker superClassExpressionChecker = new OWL2QLSuperClassExpressionChecker();
 
+    /** @param ce
+     *            ce
+     * @return true if class expression */
     public boolean isOWL2QLSuperClassExpression(OWLClassExpression ce) {
         return ce.accept(superClassExpressionChecker).booleanValue();
     }

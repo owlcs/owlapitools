@@ -66,9 +66,6 @@ import uk.ac.manchester.cs.owl.owlapi.OWLOntologyManagerImpl;
 /** @author ignazio threadsafe implementation */
 public class LockingOWLOntologyManagerImpl extends OWLOntologyManagerImpl implements
         OWLOntologyManager, OWLOntologyFactory.OWLOntologyCreationHandler {
-    /**
-	 * 
-	 */
     private static final long serialVersionUID = -1920953069359718891L;
     private final Set<Object> broadcastChanges = CollectionFactory.createSyncSet();
     private final Lock listenerLock = new ReentrantLock();
@@ -78,7 +75,8 @@ public class LockingOWLOntologyManagerImpl extends OWLOntologyManagerImpl implem
         return new CopyOnWriteArrayList<V>();
     }
 
-    @SuppressWarnings("javadoc")
+    /** @param dataFactory
+     *            dataFactory */
     public LockingOWLOntologyManagerImpl(OWLDataFactory dataFactory) {
         super(dataFactory);
         ontologiesByID = CollectionFactory.createSyncMap();
