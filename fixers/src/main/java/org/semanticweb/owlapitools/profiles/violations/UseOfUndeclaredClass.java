@@ -61,11 +61,6 @@ public class UseOfUndeclaredClass extends OWLProfileViolation<OWLClass> implemen
         return getExpression();
     }
 
-    @Override
-    public OWLOntology getOntology() {
-        return ontology;
-    }
-
     public UseOfUndeclaredClass(OWLOntology ontology, OWLAxiom axiom, OWLClass cls) {
         super(ontology, axiom, cls);
     }
@@ -80,7 +75,6 @@ public class UseOfUndeclaredClass extends OWLProfileViolation<OWLClass> implemen
         return visitor.visit(this);
     }
 
-
     @Override
     public String toString() {
         return toString("Use of undeclared class: %s", getExpression());
@@ -90,5 +84,4 @@ public class UseOfUndeclaredClass extends OWLProfileViolation<OWLClass> implemen
     public List<OWLOntologyChange> repair() {
         return list(addDeclaration(getExpression()));
     }
-
 }

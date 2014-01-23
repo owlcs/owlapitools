@@ -61,11 +61,6 @@ public class UseOfUndeclaredDataProperty extends OWLProfileViolation<OWLDataProp
         return getExpression();
     }
 
-    @Override
-    public OWLOntology getOntology() {
-        return ontology;
-    }
-
     public UseOfUndeclaredDataProperty(OWLOntology ontology, OWLAxiom axiom,
             OWLDataProperty prop) {
         super(ontology, axiom, prop);
@@ -80,7 +75,6 @@ public class UseOfUndeclaredDataProperty extends OWLProfileViolation<OWLDataProp
     public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
         return visitor.visit(this);
     }
-
 
     @Override
     public String toString() {

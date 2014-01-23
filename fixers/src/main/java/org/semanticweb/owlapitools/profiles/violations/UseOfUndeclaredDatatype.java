@@ -61,11 +61,6 @@ public class UseOfUndeclaredDatatype extends OWLProfileViolation<OWLDatatype> im
         return getExpression();
     }
 
-    @Override
-    public OWLOntology getOntology() {
-        return ontology;
-    }
-
     public UseOfUndeclaredDatatype(OWLOntology ontology, OWLAxiom axiom,
             OWLDatatype datatype) {
         super(ontology, axiom, datatype);
@@ -81,7 +76,6 @@ public class UseOfUndeclaredDatatype extends OWLProfileViolation<OWLDatatype> im
         return visitor.visit(this);
     }
 
-
     @Override
     public List<OWLOntologyChange> repair() {
         return list(addDeclaration(getExpression()));
@@ -91,5 +85,4 @@ public class UseOfUndeclaredDatatype extends OWLProfileViolation<OWLDatatype> im
     public String toString() {
         return toString("Use of undeclared datatype: %s", getExpression());
     }
-
 }

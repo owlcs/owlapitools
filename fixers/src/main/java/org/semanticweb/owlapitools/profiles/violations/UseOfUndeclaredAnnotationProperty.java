@@ -63,11 +63,6 @@ public class UseOfUndeclaredAnnotationProperty extends
         return getExpression();
     }
 
-    @Override
-    public OWLOntology getOntology() {
-        return ontology;
-    }
-
     private final OWLAnnotation annotation;
 
     public UseOfUndeclaredAnnotationProperty(OWLOntology ontology, OWLAxiom axiom,
@@ -85,7 +80,6 @@ public class UseOfUndeclaredAnnotationProperty extends
     public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
         return visitor.visit(this);
     }
-
 
     @Override
     public String toString() {

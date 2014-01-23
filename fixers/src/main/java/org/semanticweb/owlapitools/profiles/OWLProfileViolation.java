@@ -81,6 +81,11 @@ public abstract class OWLProfileViolation<T> {
         return ontology.getOntologyID();
     }
 
+    /** @return ontology */
+    public final OWLOntology getOntology() {
+        return ontology;
+    }
+
     /** @return the expression object of this violation */
     public T getExpression() {
         return expression;
