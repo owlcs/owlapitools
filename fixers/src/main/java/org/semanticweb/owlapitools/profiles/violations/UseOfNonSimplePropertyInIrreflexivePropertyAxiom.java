@@ -67,7 +67,6 @@ public class UseOfNonSimplePropertyInIrreflexivePropertyAxiom extends
         return visitor.visit(this);
     }
 
-
     @Override
     public String toString() {
         return toString("Use of non-simple property in irreflexive property axiom %s",

@@ -198,10 +198,6 @@ public class ReasonerHelper {
             }
         }
         if (!assertedRanges.isEmpty()) {
-            //
-            // // filter to remove redundant ranges (supers of others) as
-            // getRanges() just returns all of them
-            // assertedRanges = filterClassExpressions(assertedRanges);
             if (assertedRanges.size() == 1) {
                 range = assertedRanges.iterator().next();
             } else {
@@ -361,84 +357,4 @@ public class ReasonerHelper {
     public boolean isInAssertedRange(OWLDataProperty p, OWLDataRange f) {
         return isSubtype(f, getGlobalAssertedRange(p));
     }
-    // /**
-    // * A recursive method for finding all current object properties checking a
-    // root property and its descendants for efficiency.
-    // * @param descr The class expression we wish to test
-    // * @param direct If true then only the most specific properties are
-    // returned (and not their ancestors)
-    // * @param p The root property we wish to check (start from Top if all
-    // properties are required)
-    // * @return A set of properties where for each property p, desc -> p some
-    // Thing holds.
-    // * If direct is true then the additional constraint is that there is no
-    // pair (p, p') in the set such that p -> p'
-    // */
-    // private Set<OWLObjectPropertyExpression>
-    // getCurrentObjectProperties(OWLClassExpression descr, boolean direct,
-    // OWLObjectPropertyExpression p) {
-    // Set<OWLObjectPropertyExpression> props = new
-    // HashSet<OWLObjectPropertyExpression>();
-    // if (ReasonerHelper.isDescendantOf(descr,
-    // getTopLevelMustHaveRestriction(p), r)) {
-    // for (Node<OWLObjectPropertyExpression> node : r.getSubObjectProperties(p,
-    // true)){
-    // OWLObjectPropertyExpression sub = node.getRepresentativeElement();
-    // props.addAll(getCurrentObjectProperties(descr, direct, sub));
-    // }
-    // if (!direct || props.isEmpty()){
-    // props.add(p);
-    // }
-    // }
-    // return props;
-    // }
-    //
-    // /**
-    // * A recursive method for finding all current data properties checking a
-    // root property and its descendants for efficiency.
-    // * @param descr The class expression we wish to test
-    // * @param direct If true then only the most specific properties are
-    // returned (and not their ancestors)
-    // * @param p The root property we wish to check (start from Top if all
-    // properties are required)
-    // * @return A set of properties where for each property p, desc -> p min 1
-    // holds.
-    // * If direct is true then the additional constraint is that there is no
-    // pair (p, p') in the set such that p -> p'
-    // */
-    // private Set<OWLDataProperty> getCurrentDataProperties(OWLClassExpression
-    // descr, boolean direct, OWLDataProperty p) {
-    // Set<OWLDataProperty> props = new HashSet<OWLDataProperty>();
-    // if (p.equals(df.getOWLTopDataProperty()) || isDescendantOf(descr,
-    // getTopLevelMustHaveRestriction(p))) {
-    // for (Node<OWLDataProperty> node : r.getSubDataProperties(p, true)){
-    // OWLDataProperty sub = node.getRepresentativeElement();
-    // props.addAll(getCurrentDataProperties(descr, direct, sub));
-    // }
-    // if (!direct || props.isEmpty()){
-    // props.add(p);
-    // }
-    // }
-    // return props;
-    // }
-    //
-    // private Set<OWLObjectPropertyExpression>
-    // getImpossibleObjectProperties(OWLClassExpression descr,
-    // OWLObjectPropertyExpression p){
-    // Set<OWLObjectPropertyExpression> props = new
-    // HashSet<OWLObjectPropertyExpression>();
-    //
-    // if (isImpossible(p, descr)) {
-    // props.add(p);
-    // props.addAll(r.getSubObjectProperties(p, false).getFlattened());
-    // }
-    // else{
-    // for (Node<OWLObjectPropertyExpression> node : r.getSubObjectProperties(p,
-    // true)){
-    // OWLObjectPropertyExpression sub = node.getRepresentativeElement();
-    // props.addAll(getImpossibleObjectProperties(descr, sub));
-    // }
-    // }
-    // return props;
-    // }
 }

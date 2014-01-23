@@ -52,7 +52,6 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 @SuppressWarnings("javadoc")
 public class UseOfNonSimplePropertyInDisjointPropertiesAxiom extends
         OWLProfileViolation<OWLObjectPropertyExpression> {
-
     public UseOfNonSimplePropertyInDisjointPropertiesAxiom(OWLOntology ontology,
             OWLDisjointObjectPropertiesAxiom axiom, OWLObjectPropertyExpression prop) {
         super(ontology, axiom, prop);
@@ -67,7 +66,6 @@ public class UseOfNonSimplePropertyInDisjointPropertiesAxiom extends
     public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
         return visitor.visit(this);
     }
-
 
     @Override
     public String toString() {

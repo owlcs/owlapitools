@@ -10,39 +10,42 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
  * 
  * @author ignazio */
 public class CachedReasonerFactory implements OWLReasonerFactory {
-	private final OWLReasonerFactory f;
+    private final OWLReasonerFactory f;
 
     /** @param f
      *            reasoner factory to use to build actual reasoners */
-	public CachedReasonerFactory(OWLReasonerFactory f) {
-		this.f=f;
-	}
-	@Override
+    public CachedReasonerFactory(OWLReasonerFactory f) {
+        this.f = f;
+    }
+
+    @Override
     public String getReasonerName() {
+        return "cached";
+    }
 
-		return "cached";
-	}
-
-	@Override
+    @Override
     public OWLReasoner createNonBufferingReasoner(OWLOntology ontology) {
+        return new CachedOWLReasoner(f.createNonBufferingReasoner(ontology),
+                ontology.getOWLOntologyManager());
+    }
 
-		return new CachedOWLReasoner( f.createNonBufferingReasoner(ontology), ontology.getOWLOntologyManager());
-	}
-
-	@Override
+    @Override
     public OWLReasoner createReasoner(OWLOntology ontology) {
-		return new CachedOWLReasoner( f.createReasoner(ontology), ontology.getOWLOntologyManager());
-	}
+        return new CachedOWLReasoner(f.createReasoner(ontology),
+                ontology.getOWLOntologyManager());
+    }
 
-	@Override
+    @Override
     public OWLReasoner createNonBufferingReasoner(OWLOntology ontology,
-			OWLReasonerConfiguration config) throws IllegalConfigurationException {
-		return new CachedOWLReasoner( f.createNonBufferingReasoner(ontology, config), ontology.getOWLOntologyManager());
-	}
+            OWLReasonerConfiguration config) throws IllegalConfigurationException {
+        return new CachedOWLReasoner(f.createNonBufferingReasoner(ontology, config),
+                ontology.getOWLOntologyManager());
+    }
 
-	@Override
+    @Override
     public OWLReasoner createReasoner(OWLOntology ontology,
-			OWLReasonerConfiguration config) throws IllegalConfigurationException {
-		return new CachedOWLReasoner( f.createReasoner(ontology, config), ontology.getOWLOntologyManager());
-	}
+            OWLReasonerConfiguration config) throws IllegalConfigurationException {
+        return new CachedOWLReasoner(f.createReasoner(ontology, config),
+                ontology.getOWLOntologyManager());
+    }
 }

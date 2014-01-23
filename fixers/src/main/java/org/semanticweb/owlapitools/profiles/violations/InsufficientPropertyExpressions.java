@@ -27,5 +27,4 @@ public class InsufficientPropertyExpressions extends OWLProfileViolation<OWLObje
     public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
         return visitor.visit(this);
     }
-
 }

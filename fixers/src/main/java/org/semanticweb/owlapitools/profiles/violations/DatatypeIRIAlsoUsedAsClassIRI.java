@@ -56,7 +56,6 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * used for a class IRI */
 @SuppressWarnings("javadoc")
 public class DatatypeIRIAlsoUsedAsClassIRI extends OWLProfileViolation<IRI> {
-
     public DatatypeIRIAlsoUsedAsClassIRI(OWLOntology ontology, OWLAxiom axiom, IRI iri) {
         super(ontology, axiom, iri);
     }
@@ -70,7 +69,6 @@ public class DatatypeIRIAlsoUsedAsClassIRI extends OWLProfileViolation<IRI> {
     public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
         return visitor.visit(this);
     }
-
 
     @Override
     public String toString() {

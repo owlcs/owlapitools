@@ -51,7 +51,6 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
 public class UseOfNonAbsoluteIRI extends OWLProfileViolation<IRI> {
-
     public UseOfNonAbsoluteIRI(OWLOntology ontology, OWLAxiom axiom, IRI iri) {
         super(ontology, axiom, iri);
     }
@@ -65,7 +64,6 @@ public class UseOfNonAbsoluteIRI extends OWLProfileViolation<IRI> {
     public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
         return visitor.visit(this);
     }
-
 
     @Override
     public String toString() {

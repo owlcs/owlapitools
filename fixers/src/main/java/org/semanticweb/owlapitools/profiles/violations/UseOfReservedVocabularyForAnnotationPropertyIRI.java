@@ -52,7 +52,6 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 @SuppressWarnings("javadoc")
 public class UseOfReservedVocabularyForAnnotationPropertyIRI extends
         OWLProfileViolation<OWLAnnotationProperty> {
-
     public UseOfReservedVocabularyForAnnotationPropertyIRI(OWLOntology ontology,
             OWLAxiom axiom, OWLAnnotationProperty property) {
         super(ontology, axiom, property);
@@ -67,7 +66,6 @@ public class UseOfReservedVocabularyForAnnotationPropertyIRI extends
     public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
         return visitor.visit(this);
     }
-
 
     @Override
     public String toString() {

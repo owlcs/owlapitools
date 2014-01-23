@@ -69,7 +69,6 @@ public class UseOfReservedVocabularyForVersionIRI extends OWLProfileViolation<IR
         return visitor.visit(this);
     }
 
-
     @Override
     public String toString() {
         return toString("Use of reserved vocabulary for ontology version IRI: %s",

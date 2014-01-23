@@ -36,7 +36,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package uk.ac.manchester.cs.owl.owlapi.alternateimpls;
 
 import org.semanticweb.owlapi.apibinding.configurables.ThreadSafeOWLManager;
@@ -48,20 +47,18 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 @SuppressWarnings("javadoc")
-public abstract class AlternateAbstractInMemOWLOntologyFactory implements OWLOntologyFactory {
-
-
-	private static final long serialVersionUID = -1468847412445711881L;
+public abstract class AlternateAbstractInMemOWLOntologyFactory implements
+        OWLOntologyFactory {
+    private static final long serialVersionUID = -1468847412445711881L;
     private OWLOntologyManager ontologyManager;
 
     @Override
     public void setOWLOntologyManager(OWLOntologyManager owlOntologyManager) {
-    	 if (owlOntologyManager == null) {
-             throw new IllegalArgumentException("ontologyManager cannot be null");
-         }
+        if (owlOntologyManager == null) {
+            throw new IllegalArgumentException("ontologyManager cannot be null");
+        }
         ontologyManager = owlOntologyManager;
     }
-
 
     @Override
     public OWLOntologyManager getOWLOntologyManager() {
@@ -74,9 +71,10 @@ public abstract class AlternateAbstractInMemOWLOntologyFactory implements OWLOnt
     }
 
     @Override
-    public OWLOntology createOWLOntology(OWLOntologyID ontologyID, IRI documentIRI, OWLOntologyCreationHandler handler) throws OWLOntologyCreationException {
-
-        OWLOntology ont = ThreadSafeOWLManager.getOWLImplementationBinding().getOWLOntology(ontologyManager, ontologyID);
+    public OWLOntology createOWLOntology(OWLOntologyID ontologyID, IRI documentIRI,
+            OWLOntologyCreationHandler handler) throws OWLOntologyCreationException {
+        OWLOntology ont = ThreadSafeOWLManager.getOWLImplementationBinding()
+                .getOWLOntology(ontologyManager, ontologyID);
         handler.ontologyCreated(ont);
         return ont;
     }

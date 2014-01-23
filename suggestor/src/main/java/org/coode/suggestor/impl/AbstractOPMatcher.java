@@ -11,25 +11,25 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.impl.OWLClassNodeSet;
 
 abstract class AbstractOPMatcher extends
-		AbstractMatcher<OWLClassExpression, OWLClass, OWLObjectPropertyExpression> {
-	private OWLReasoner r;
+        AbstractMatcher<OWLClassExpression, OWLClass, OWLObjectPropertyExpression> {
+    private OWLReasoner r;
 
-	public AbstractOPMatcher(OWLReasoner r) {
-		this.r = r;
-	}
+    public AbstractOPMatcher(OWLReasoner r) {
+        this.r = r;
+    }
 
-	@Override
-	protected final NodeSet<OWLClass> getDirectSubs(OWLClassExpression c) {
-		return r.getSubClasses(c, true);
-	}
+    @Override
+    protected final NodeSet<OWLClass> getDirectSubs(OWLClassExpression c) {
+        return r.getSubClasses(c, true);
+    }
 
-	@Override
-	protected Node<OWLClass> getEquivalents(OWLClassExpression f) {
-		return r.getEquivalentClasses(f);
-	}
+    @Override
+    protected Node<OWLClass> getEquivalents(OWLClassExpression f) {
+        return r.getEquivalentClasses(f);
+    }
 
-	@Override
-	protected final NodeSet<OWLClass> createNodeSet(Set<Node<OWLClass>> nodes) {
-		return new OWLClassNodeSet(nodes);
-	}
+    @Override
+    protected final NodeSet<OWLClass> createNodeSet(Set<Node<OWLClass>> nodes) {
+        return new OWLClassNodeSet(nodes);
+    }
 }

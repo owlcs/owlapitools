@@ -41,8 +41,11 @@ public class BotEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
         super(l);
     }
 
-    // non-empty Concept/Data expression
-    // / @return true iff C^I is non-empty
+    /** non-empty Concept/Data expression
+     * 
+     * @param C
+     *            class
+     * @return true iff C^I is non-empty */
     private boolean isBotDistinct(OWLObject C) {
         // TOP is non-empty
         if (localityChecker.isTopEquivalent(C)) {
@@ -53,8 +56,13 @@ public class BotEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
         return C instanceof OWLDatatype;
     }
 
-    // cardinality of a concept/data expression interpretation
-    // / @return true if #C^I > n
+    /** cardinality of a concept/data expression interpretation
+     * 
+     * @return true if #C^I > n
+     * @param C
+     *            class
+     * @param n
+     *            cardinality */
     private boolean isCardLargerThan(OWLObject C, int n) {
         if (n == 0) {
             return isBotDistinct(C);
@@ -67,21 +75,33 @@ public class BotEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
         return false;
     }
 
-    // QCRs
-    // / @return true iff (>= n R.C) is botEq
+    /** QCRs
+     * 
+     * @param n
+     *            cardinality
+     * @param R
+     *            property
+     * @param C
+     *            class
+     * @return true iff (>= n R.C) is botEq */
     private boolean isMinBotEquivalent(int n, OWLObject R, OWLObject C) {
         return n > 0 && (isBotEquivalent(R) || isBotEquivalent(C));
     }
 
-    // / @return true iff (<= n R.C) is botEq
+    /** @param n
+     *            cardinality
+     * @param R
+     *            property
+     * @param C
+     *            class
+     * @return true iff (<= n R.C) is botEq */
     private boolean isMaxBotEquivalent(int n, OWLObject R, OWLObject C) {
         return isBotEquivalent(R) && isCardLargerThan(C, n);
     }
 
     /** @param expr
      *            expression
-     * @return true iff an EXPRession is equivalent to bottom wrt defined */
-    // policy
+     * @return true iff an EXPRession is equivalent to bottom wrt defined policy */
     boolean isBotEquivalent(OWLObject expr) {
         if (expr.isBottomEntity()) {
             return true;

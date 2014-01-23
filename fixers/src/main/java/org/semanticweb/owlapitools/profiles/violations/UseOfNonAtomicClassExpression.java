@@ -52,7 +52,6 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 @SuppressWarnings("javadoc")
 public class UseOfNonAtomicClassExpression extends
         OWLProfileViolation<OWLClassExpression> {
-
     public UseOfNonAtomicClassExpression(OWLOntology ontology, OWLAxiom axiom,
             OWLClassExpression classExpression) {
         super(ontology, axiom, classExpression);
@@ -67,7 +66,6 @@ public class UseOfNonAtomicClassExpression extends
     public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
         return visitor.visit(this);
     }
-
 
     @Override
     public String toString() {

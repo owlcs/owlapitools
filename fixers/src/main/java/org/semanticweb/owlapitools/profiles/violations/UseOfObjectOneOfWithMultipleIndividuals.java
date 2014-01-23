@@ -50,7 +50,6 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
 public class UseOfObjectOneOfWithMultipleIndividuals extends UseOfIllegalClassExpression {
-
     public UseOfObjectOneOfWithMultipleIndividuals(OWLOntology ontology, OWLAxiom axiom,
             OWLObjectOneOf oneOf) {
         super(ontology, axiom, oneOf);
@@ -65,7 +64,6 @@ public class UseOfObjectOneOfWithMultipleIndividuals extends UseOfIllegalClassEx
     public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
         return visitor.visit(this);
     }
-
 
     @Override
     public String toString() {

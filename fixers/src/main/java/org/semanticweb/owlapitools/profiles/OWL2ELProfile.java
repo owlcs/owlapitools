@@ -93,6 +93,7 @@ import org.semanticweb.owlapitools.profiles.violations.UseOfIllegalClassExpressi
 import org.semanticweb.owlapitools.profiles.violations.UseOfIllegalDataRange;
 import org.semanticweb.owlapitools.profiles.violations.UseOfObjectOneOfWithMultipleIndividuals;
 import org.semanticweb.owlapitools.profiles.violations.UseOfObjectPropertyInverse;
+
 /** Author: Matthew Horridge<br>
  * The University Of Manchester<br>
  * Bio-Health Informatics Group<br>
@@ -108,7 +109,6 @@ public class OWL2ELProfile implements OWLProfile {
             XSD_NCNAME.getIRI(), XSD_NMTOKEN.getIRI(), XSD_HEX_BINARY.getIRI(),
             XSD_BASE_64_BINARY.getIRI(), XSD_ANY_URI.getIRI(), XSD_DATE_TIME.getIRI(),
             XSD_DATE_TIME_STAMP.getIRI()));
-
 
     @Override
     public String getName() {

@@ -69,7 +69,6 @@ public class OntologyVersionIRINotAbsolute extends OWLProfileViolation<OWLOntolo
         return visitor.visit(this);
     }
 
-
     @Override
     public String toString() {
         return toString("Ontology version IRI not absolute: %s", getExpression());

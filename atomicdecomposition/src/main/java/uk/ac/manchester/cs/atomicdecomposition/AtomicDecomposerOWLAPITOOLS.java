@@ -87,7 +87,6 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
         return type.ordinal();
     }
 
-
     @Override
     public Set<Atom> getAtoms() {
         return new HashSet<Atom>(atoms);
@@ -144,8 +143,7 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
         return explore(atom, direct, dependents);
     }
 
-    Set<Atom> explore(Atom atom, boolean direct,
-            IdentityMultiMap<Atom, Atom> multimap) {
+    Set<Atom> explore(Atom atom, boolean direct, IdentityMultiMap<Atom, Atom> multimap) {
         if (direct) {
             Set<Atom> hashSet = new HashSet<Atom>(multimap.get(atom));
             for (Atom a : multimap.get(atom)) {
@@ -234,15 +232,14 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
         return toReturn;
     }
 
-
     /** get a set of axioms that corresponds to the module of the atom with the
      * id INDEX */
     Collection<AxiomWrapper> getAtomModule(int index) {
         return decomposer.getAOS().get(index).getModule();
     }
 
-    Collection<AxiomWrapper> getModule(Set<OWLEntity> signature,
-            boolean useSemantics, ModuleType moduletype) {
+    Collection<AxiomWrapper> getModule(Set<OWLEntity> signature, boolean useSemantics,
+            ModuleType moduletype) {
         return decomposer.getModule(signature, useSemantics, moduletype);
     }
 }

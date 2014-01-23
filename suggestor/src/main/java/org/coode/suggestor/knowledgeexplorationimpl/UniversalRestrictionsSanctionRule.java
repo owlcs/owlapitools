@@ -22,26 +22,24 @@ import org.semanticweb.owlapi.model.OWLObjectAllValuesFrom;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.reasoner.knowledgeexploration.OWLKnowledgeExplorerReasoner;
 
-/**
- * Check the restrictions on the class for universals
- */
+/** Check the restrictions on the class for universals */
 public class UniversalRestrictionsSanctionRule implements PropertySanctionRule {
-	private OWLKnowledgeExplorerReasoner r;
+    private OWLKnowledgeExplorerReasoner r;
 
-	@Override
+    @Override
     public void setSuggestor(PropertySuggestor ps) {
-		this.r = (OWLKnowledgeExplorerReasoner) ps.getReasoner();
-	}
+        this.r = (OWLKnowledgeExplorerReasoner) ps.getReasoner();
+    }
 
-	@Override
+    @Override
     public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p) {
-		RestrictionAccumulator acc = new RestrictionAccumulator(r);
-		return !acc.getRestrictions(c, p, OWLObjectAllValuesFrom.class).isEmpty();
-	}
+        RestrictionAccumulator acc = new RestrictionAccumulator(r);
+        return !acc.getRestrictions(c, p, OWLObjectAllValuesFrom.class).isEmpty();
+    }
 
-	@Override
+    @Override
     public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p) {
-		RestrictionAccumulator acc = new RestrictionAccumulator(r);
-		return !acc.getRestrictions(c, p, OWLDataAllValuesFrom.class).isEmpty();
-	}
+        RestrictionAccumulator acc = new RestrictionAccumulator(r);
+        return !acc.getRestrictions(c, p, OWLDataAllValuesFrom.class).isEmpty();
+    }
 }

@@ -921,7 +921,6 @@ public class BuildersEqualTestCase {
         OWLObjectPropertyDomainAxiom expected = df.getOWLObjectPropertyDomainAxiom(op,
                 ce, annotations);
         BuilderObjectPropertyDomain builder = new BuilderObjectPropertyDomain(expected);
-
         // when
         OWLObject built = builder.buildObject();
         // then

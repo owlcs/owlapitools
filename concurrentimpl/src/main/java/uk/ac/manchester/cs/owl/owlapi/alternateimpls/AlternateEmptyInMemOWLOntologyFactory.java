@@ -36,7 +36,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package uk.ac.manchester.cs.owl.owlapi.alternateimpls;
 
 import org.semanticweb.owlapi.io.DefaultOntologyFormat;
@@ -49,27 +48,31 @@ import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
 import org.semanticweb.owlapi.model.OWLRuntimeException;
 
 @SuppressWarnings("javadoc")
-public class AlternateEmptyInMemOWLOntologyFactory extends AlternateAbstractInMemOWLOntologyFactory {
+public class AlternateEmptyInMemOWLOntologyFactory extends
+        AlternateAbstractInMemOWLOntologyFactory {
+    private static final long serialVersionUID = 1575345654893555681L;
 
+    public AlternateEmptyInMemOWLOntologyFactory() {}
 
-	private static final long serialVersionUID = 1575345654893555681L;
-
-    public AlternateEmptyInMemOWLOntologyFactory() {
-
+    @Override
+    public OWLOntology loadOWLOntology(OWLOntologyDocumentSource documentSource,
+            OWLOntologyCreationHandler mediator) throws OWLOntologyCreationException {
+        throw new OWLRuntimeException(new UnsupportedOperationException(
+                "Cannot load OWL ontologies."));
     }
 
     @Override
-    public OWLOntology loadOWLOntology(OWLOntologyDocumentSource documentSource, OWLOntologyCreationHandler mediator) throws OWLOntologyCreationException {
-        throw new OWLRuntimeException(new UnsupportedOperationException("Cannot load OWL ontologies."));
+    public OWLOntology loadOWLOntology(OWLOntologyDocumentSource documentSource,
+            OWLOntologyCreationHandler handler,
+            OWLOntologyLoaderConfiguration configuration)
+            throws OWLOntologyCreationException {
+        throw new OWLRuntimeException(new UnsupportedOperationException(
+                "Cannot load OWL ontologies."));
     }
 
     @Override
-    public OWLOntology loadOWLOntology(OWLOntologyDocumentSource documentSource, OWLOntologyCreationHandler handler, OWLOntologyLoaderConfiguration configuration) throws OWLOntologyCreationException {
-        throw new OWLRuntimeException(new UnsupportedOperationException("Cannot load OWL ontologies."));
-    }
-
-    @Override
-	public OWLOntology createOWLOntology(OWLOntologyID ontologyID, IRI documentIRI, OWLOntologyCreationHandler handler) throws OWLOntologyCreationException {
+    public OWLOntology createOWLOntology(OWLOntologyID ontologyID, IRI documentIRI,
+            OWLOntologyCreationHandler handler) throws OWLOntologyCreationException {
         OWLOntology ont = super.createOWLOntology(ontologyID, documentIRI, handler);
         handler.setOntologyFormat(ont, new DefaultOntologyFormat());
         return ont;

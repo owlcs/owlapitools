@@ -51,7 +51,6 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
 public class UseOfReservedVocabularyForClassIRI extends OWLProfileViolation<OWLClass> {
-
     public UseOfReservedVocabularyForClassIRI(OWLOntology ontology, OWLAxiom axiom,
             OWLClass cls) {
         super(ontology, axiom, cls);
@@ -66,7 +65,6 @@ public class UseOfReservedVocabularyForClassIRI extends OWLProfileViolation<OWLC
     public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
         return visitor.visit(this);
     }
-
 
     @Override
     public String toString() {

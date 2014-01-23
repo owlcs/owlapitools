@@ -26,5 +26,4 @@ public class InsufficientIndividuals extends OWLProfileViolation<Object> {
     public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
         return visitor.visit(this);
     }
-
 }

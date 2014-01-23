@@ -16,28 +16,26 @@ import org.coode.suggestor.api.FillerSuggestor;
 import org.coode.suggestor.api.PropertySuggestor;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
-/**
- * Implementation binding.
- */
+/** Implementation binding. */
 public class SuggestorFactory {
-	private final OWLReasoner r;
+    private final OWLReasoner r;
 
     /** @param r
      *            reasoner to use */
-	public SuggestorFactory(OWLReasoner r) {
-		if (r == null) {
-			throw new IllegalArgumentException("Reasoner cannot be null");
-		}
-		this.r = r;
-	}
+    public SuggestorFactory(OWLReasoner r) {
+        if (r == null) {
+            throw new IllegalArgumentException("Reasoner cannot be null");
+        }
+        this.r = r;
+    }
 
     /** @return new property suggestor */
-	public final PropertySuggestor getPropertySuggestor() {
-		return new PropertySuggestorImpl(r);
-	}
+    public final PropertySuggestor getPropertySuggestor() {
+        return new PropertySuggestorImpl(r);
+    }
 
     /** @return new filler suggestor */
-	public final FillerSuggestor getFillerSuggestor() {
-		return new FillerSuggestorImpl(r);
-	}
+    public final FillerSuggestor getFillerSuggestor() {
+        return new FillerSuggestorImpl(r);
+    }
 }

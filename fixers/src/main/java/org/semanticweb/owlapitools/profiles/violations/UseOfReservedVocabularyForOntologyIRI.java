@@ -74,7 +74,6 @@ public class UseOfReservedVocabularyForOntologyIRI extends OWLProfileViolation<I
         return visitor.visit(this);
     }
 
-
     @Override
     public List<OWLOntologyChange> repair() {
         // XXX arbitrary replacement

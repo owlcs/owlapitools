@@ -65,7 +65,6 @@ public class UseOfIllegalAxiom extends OWLProfileViolation<AxiomType<?>> {
         return visitor.visit(this);
     }
 
-
     @Override
     public String toString() {
         return toString("Axiom type not allowed in profile");

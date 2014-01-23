@@ -36,11 +36,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package uk.ac.manchester.cs.owl.owlapi.alternateimpls.test;
+
 @SuppressWarnings("javadoc")
 public interface TestMultithreadCallBack {
-	void execute() throws Exception;
+    void execute() throws Exception;
 
-	String getId();
+    String getId();
 }

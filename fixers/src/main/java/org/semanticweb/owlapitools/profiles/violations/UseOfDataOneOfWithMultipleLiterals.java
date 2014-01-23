@@ -50,7 +50,6 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * Date: 03-Aug-2009 */
 @SuppressWarnings("javadoc")
 public class UseOfDataOneOfWithMultipleLiterals extends UseOfIllegalDataRange {
-
     public UseOfDataOneOfWithMultipleLiterals(OWLOntology ontology, OWLAxiom axiom,
             OWLDataOneOf dataOneOf) {
         super(ontology, axiom, dataOneOf);

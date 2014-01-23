@@ -11,25 +11,25 @@ import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.impl.OWLDatatypeNodeSet;
 
 abstract class AbstractDPMatcher extends
-		AbstractMatcher<OWLDataRange, OWLDatatype, OWLDataPropertyExpression> {
-	private ReasonerHelper helper;
+        AbstractMatcher<OWLDataRange, OWLDatatype, OWLDataPropertyExpression> {
+    private ReasonerHelper helper;
 
-	public AbstractDPMatcher(ReasonerHelper h) {
-		this.helper = h;
-	}
+    public AbstractDPMatcher(ReasonerHelper h) {
+        this.helper = h;
+    }
 
-	@Override
-	protected final NodeSet<OWLDatatype> getDirectSubs(OWLDataRange r) {
-		return helper.getSubtypes(r);
-	}
+    @Override
+    protected final NodeSet<OWLDatatype> getDirectSubs(OWLDataRange r) {
+        return helper.getSubtypes(r);
+    }
 
-	@Override
-	protected Node<OWLDatatype> getEquivalents(OWLDataRange range) {
-		return helper.getEquivalentTypes(range);
-	}
+    @Override
+    protected Node<OWLDatatype> getEquivalents(OWLDataRange range) {
+        return helper.getEquivalentTypes(range);
+    }
 
-	@Override
-	protected NodeSet<OWLDatatype> createNodeSet(Set<Node<OWLDatatype>> nodes) {
-		return new OWLDatatypeNodeSet(nodes);
-	}
+    @Override
+    protected NodeSet<OWLDatatype> createNodeSet(Set<Node<OWLDatatype>> nodes) {
+        return new OWLDatatypeNodeSet(nodes);
+    }
 }

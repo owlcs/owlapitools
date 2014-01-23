@@ -54,7 +54,6 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * DatatypeDefinition axiom */
 @SuppressWarnings("javadoc")
 public class UseOfUnknownDatatype extends OWLProfileViolation<OWLDatatype> {
-
     public UseOfUnknownDatatype(OWLOntology ontology, OWLAxiom axiom, OWLDatatype datatype) {
         super(ontology, axiom, datatype);
     }
@@ -68,7 +67,6 @@ public class UseOfUnknownDatatype extends OWLProfileViolation<OWLDatatype> {
     public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
         return visitor.visit(this);
     }
-
 
     @Override
     public String toString() {

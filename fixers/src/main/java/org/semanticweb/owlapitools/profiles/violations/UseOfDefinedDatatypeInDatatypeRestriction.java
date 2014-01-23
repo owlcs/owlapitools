@@ -67,7 +67,6 @@ public class UseOfDefinedDatatypeInDatatypeRestriction extends
         return visitor.visit(this);
     }
 
-
     @Override
     public String toString() {
         return toString("Use of defined datatype in datatype restriction %s",

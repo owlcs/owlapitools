@@ -66,7 +66,6 @@ public class UseOfAnonymousIndividual extends OWLProfileViolation<OWLAnonymousIn
         return visitor.visit(this);
     }
 
-
     @Override
     public String toString() {
         return toString("Use of anonymous individual: %s", getExpression());

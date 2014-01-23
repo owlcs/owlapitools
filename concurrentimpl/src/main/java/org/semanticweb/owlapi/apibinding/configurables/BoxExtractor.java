@@ -36,7 +36,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.semanticweb.owlapi.apibinding.configurables;
 
 import java.util.ArrayList;
@@ -50,34 +49,42 @@ import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.util.OWLObjectVisitorExAdapter;
 
-/**
- * This class allows for the extraction of subsets of axioms based on their types; the purpose is to offer a flexible extraction mechanism to collect axioms belonging to, e.g., the ABox, the TBox or the RBox of an ontology. Sets of axiom types covering these cases are available in AxiomType::TBoxAxiomTypes, AxiomType::ABoxAxiomTypes, AxiomType::RBoxAxiomType, but the class can be configured through the constructor arguments to include different subsets.
- *
- * The idea for this construct was graciously provided by Thomas Scharrenbach, Swiss Federal Research Institute WSL (http://www.wsl.ch/info/mitarbeitende/scharren/owl-defaults/index_EN?redir=1)
- *
- * This class does not store any internal state referring to the ontology; it is safe for use in multithread environments, provided that the parameters to the constructor do not change while the constructor executes and the OWLOntology implementation is itself threadsafe.
- * A single instance can be reused for extracting the same Box from different ontologies without side effects.
- * */
-public class BoxExtractor extends OWLObjectVisitorExAdapter<Set<OWLAxiom>>
-		implements OWLObjectVisitorEx<Set<OWLAxiom>> {
-	private final Collection<AxiomType<?>> types;
-	private final boolean closure;
+/** This class allows for the extraction of subsets of axioms based on their
+ * types; the purpose is to offer a flexible extraction mechanism to collect
+ * axioms belonging to, e.g., the ABox, the TBox or the RBox of an ontology.
+ * Sets of axiom types covering these cases are available in
+ * AxiomType::TBoxAxiomTypes, AxiomType::ABoxAxiomTypes,
+ * AxiomType::RBoxAxiomType, but the class can be configured through the
+ * constructor arguments to include different subsets. The idea for this
+ * construct was graciously provided by Thomas Scharrenbach, Swiss Federal
+ * Research Institute WSL
+ * (http://www.wsl.ch/info/mitarbeitende/scharren/owl-defaults/index_EN?redir=1)
+ * This class does not store any internal state referring to the ontology; it is
+ * safe for use in multithread environments, provided that the parameters to the
+ * constructor do not change while the constructor executes and the OWLOntology
+ * implementation is itself threadsafe. A single instance can be reused for
+ * extracting the same Box from different ontologies without side effects. */
+public class BoxExtractor extends OWLObjectVisitorExAdapter<Set<OWLAxiom>> implements
+        OWLObjectVisitorEx<Set<OWLAxiom>> {
+    private final Collection<AxiomType<?>> types;
+    private final boolean closure;
 
-	/**@param types the set of AxiomType objects to use for selection
-	 * @param importsClosure if true, the imports closure is included in the search, otherwise only the visited ontology is included
-	 * */
-	public BoxExtractor(Collection<AxiomType<?>> types,
-			boolean importsClosure) {
-		this.types = new ArrayList<AxiomType<?>>(types);
-		this.closure = importsClosure;
-	}
+    /** @param types
+     *            the set of AxiomType objects to use for selection
+     * @param importsClosure
+     *            if true, the imports closure is included in the search,
+     *            otherwise only the visited ontology is included */
+    public BoxExtractor(Collection<AxiomType<?>> types, boolean importsClosure) {
+        this.types = new ArrayList<AxiomType<?>>(types);
+        this.closure = importsClosure;
+    }
 
-	@Override
-	public Set<OWLAxiom> visit(OWLOntology ontology) {
-		Set<OWLAxiom> toReturn = new HashSet<OWLAxiom>();
-		for (AxiomType<?> t : types) {
-			toReturn.addAll(ontology.getAxioms(t, closure));
-		}
-		return toReturn;
-	}
+    @Override
+    public Set<OWLAxiom> visit(OWLOntology ontology) {
+        Set<OWLAxiom> toReturn = new HashSet<OWLAxiom>();
+        for (AxiomType<?> t : types) {
+            toReturn.addAll(ontology.getAxioms(t, closure));
+        }
+        return toReturn;
+    }
 }

@@ -22,48 +22,44 @@ import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.knowledgeexploration.OWLKnowledgeExplorerReasoner;
 
-/**
- * <p>
+/** <p>
  * Looks at the direct subclasses to determine which properties are used as they
  * may be considered distinguishing features.
  * </p>
- * 
  * <p>
  * Sanction is met if for all d where DirectStrictSubClassOf(c, d) if
  * isCurrent(d, p, true) is entailed.
  * </p>
- * 
  * <p>
  * See {@link OWLReasoner} for definition of DirectStrictSubClassOf
- * </p>
- */
+ * </p> */
 public class CheckSubsSanctionRule implements PropertySanctionRule {
-	private OWLKnowledgeExplorerReasoner r;
-	private PropertySuggestor ps;
+    private OWLKnowledgeExplorerReasoner r;
+    private PropertySuggestor ps;
 
-	@Override
+    @Override
     public void setSuggestor(PropertySuggestor ps) {
-		this.ps = ps;
-		this.r = (OWLKnowledgeExplorerReasoner) ps.getReasoner();
-	}
+        this.ps = ps;
+        this.r = (OWLKnowledgeExplorerReasoner) ps.getReasoner();
+    }
 
-	@Override
+    @Override
     public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p) {
-		for (Node<OWLClass> sub : r.getSubClasses(c, true)) {
-			if (ps.isCurrent(sub.getRepresentativeElement(), p, true)) {
-				return true;
-			}
-		}
-		return false;
-	}
+        for (Node<OWLClass> sub : r.getSubClasses(c, true)) {
+            if (ps.isCurrent(sub.getRepresentativeElement(), p, true)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	@Override
+    @Override
     public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p) {
-		for (Node<OWLClass> sub : r.getSubClasses(c, true)) {
-			if (ps.isCurrent(sub.getRepresentativeElement(), p, true)) {
-				return true;
-			}
-		}
-		return false;
-	}
+        for (Node<OWLClass> sub : r.getSubClasses(c, true)) {
+            if (ps.isCurrent(sub.getRepresentativeElement(), p, true)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

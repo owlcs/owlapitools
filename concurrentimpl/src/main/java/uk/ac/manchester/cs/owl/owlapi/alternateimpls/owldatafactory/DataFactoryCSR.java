@@ -36,20 +36,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package uk.ac.manchester.cs.owl.owlapi.alternateimpls.owldatafactory;
 
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
-/**
- * @author ignazio
- *
- *Datafactory using concurrent hash maps with strong references
- */
+/** @author ignazio Datafactory using concurrent hash maps with strong references */
 public class DataFactoryCSR extends OWLDataFactoryImpl {
-
-
-	private static final long serialVersionUID = -4248990707345326124L;
+    private static final long serialVersionUID = -4248990707345326124L;
     private static final DataFactoryCSR instance = new DataFactoryCSR();
 
     public static DataFactoryCSR getInstance() {
@@ -57,8 +50,7 @@ public class DataFactoryCSR extends OWLDataFactoryImpl {
     }
 
     @SuppressWarnings("javadoc")
-	public DataFactoryCSR() {
+    public DataFactoryCSR() {
         data = new InternalsCSR(false);
-
     }
 }

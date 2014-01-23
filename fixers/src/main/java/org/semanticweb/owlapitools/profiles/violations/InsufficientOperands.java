@@ -9,7 +9,6 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
 @SuppressWarnings("javadoc")
 public class InsufficientOperands extends OWLProfileViolation<OWLObject> {
-
     public InsufficientOperands(OWLOntology currentOntology, OWLAxiom node, OWLObject c) {
         super(currentOntology, node, c);
     }
@@ -28,5 +27,4 @@ public class InsufficientOperands extends OWLProfileViolation<OWLObject> {
     public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
         return visitor.visit(this);
     }
-
 }

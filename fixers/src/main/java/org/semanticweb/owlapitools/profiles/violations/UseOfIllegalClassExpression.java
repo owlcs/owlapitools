@@ -52,7 +52,6 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
  * profile */
 @SuppressWarnings("javadoc")
 public class UseOfIllegalClassExpression extends OWLProfileViolation<OWLClassExpression> {
-
     public UseOfIllegalClassExpression(OWLOntology ontology, OWLAxiom axiom,
             OWLClassExpression classExpression) {
         super(ontology, axiom, classExpression);
@@ -67,7 +66,6 @@ public class UseOfIllegalClassExpression extends OWLProfileViolation<OWLClassExp
     public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
         return visitor.visit(this);
     }
-
 
     @Override
     public String toString() {

@@ -67,7 +67,6 @@ public class UseOfReservedVocabularyForDataPropertyIRI extends
         return visitor.visit(this);
     }
 
-
     @Override
     public String toString() {
         return toString("Use of reserved vocabulary for data property IRI: %s",

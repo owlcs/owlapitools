@@ -65,7 +65,6 @@ public class UseOfBuiltInDatatypeInDatatypeDefinition extends OWLProfileViolatio
         return visitor.visit(this);
     }
 
-
     @Override
     public String toString() {
         return toString("Use of OWL 2 builtin datatype in datatype definition");

@@ -68,10 +68,11 @@ public class TopEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
         return n == 0 || isTopEquivalent(R) && isCardLargerThan(C, n - 1);
     }
 
-     /// @return true iff (<= n R.C) is topEq
-     private boolean isMaxTopEquivalent(int n, OWLObject R, OWLObject C) {
-    	 return localityChecker.isBotEquivalent(R) || localityChecker.isBotEquivalent(C);
+    // / @return true iff (<= n R.C) is topEq
+    private boolean isMaxTopEquivalent(int n, OWLObject R, OWLObject C) {
+        return localityChecker.isBotEquivalent(R) || localityChecker.isBotEquivalent(C);
     }
+
     /** @param l
      *            locality checker */
     public TopEquivalenceEvaluator(LocalityChecker l) {
@@ -87,7 +88,7 @@ public class TopEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
             return true;
         }
         if (expr.isBottomEntity()) {
-        	return false;
+            return false;
         }
         expr.accept(this);
         return isTopEq;
@@ -111,7 +112,7 @@ public class TopEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
     public void visit(OWLObjectIntersectionOf expr) {
         for (OWLClassExpression p : expr.getOperands()) {
             if (!isTopEquivalent(p)) {
-            	isTopEq = false;
+                isTopEq = false;
                 return;
             }
         }
@@ -164,13 +165,15 @@ public class TopEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
     // ported from: public void visit(ConceptObjectMinCardinality expr) {
     @Override
     public void visit(OWLObjectMinCardinality expr) {
-        isTopEq = isMinTopEquivalent(expr.getCardinality(), expr.getProperty(), expr.getFiller());
+        isTopEq = isMinTopEquivalent(expr.getCardinality(), expr.getProperty(),
+                expr.getFiller());
     }
 
     // ported from: public void visit(ConceptObjectMaxCardinality expr) {
     @Override
     public void visit(OWLObjectMaxCardinality expr) {
-        isTopEq = isMaxTopEquivalent(expr.getCardinality(), expr.getProperty(), expr.getFiller());
+        isTopEq = isMaxTopEquivalent(expr.getCardinality(), expr.getProperty(),
+                expr.getFiller());
     }
 
     // ported from: public void visit(ConceptObjectExactCardinality expr) {
@@ -178,7 +181,7 @@ public class TopEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
     public void visit(OWLObjectExactCardinality expr) {
         int n = expr.getCardinality();
         isTopEq = isMinTopEquivalent(n, expr.getProperty(), expr.getFiller())
-        		&& isMaxTopEquivalent(n, expr.getProperty(), expr.getFiller());
+                && isMaxTopEquivalent(n, expr.getProperty(), expr.getFiller());
     }
 
     // ported from: public void visit(ConceptDataValue expr) {
@@ -203,13 +206,15 @@ public class TopEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
     // ported from: public void visit(ConceptDataMinCardinality expr) {
     @Override
     public void visit(OWLDataMinCardinality expr) {
-        isTopEq = isMinTopEquivalent(expr.getCardinality(), expr.getProperty(), expr.getFiller());
+        isTopEq = isMinTopEquivalent(expr.getCardinality(), expr.getProperty(),
+                expr.getFiller());
     }
 
     // ported from: public void visit(ConceptDataMaxCardinality expr) {
     @Override
     public void visit(OWLDataMaxCardinality expr) {
-        isTopEq = isMaxTopEquivalent(expr.getCardinality(), expr.getProperty(), expr.getFiller());
+        isTopEq = isMaxTopEquivalent(expr.getCardinality(), expr.getProperty(),
+                expr.getFiller());
     }
 
     // ported from: public void visit(ConceptDataExactCardinality expr) {
@@ -217,7 +222,7 @@ public class TopEquivalenceEvaluator extends SigAccessor implements OWLObjectVis
     public void visit(OWLDataExactCardinality expr) {
         int n = expr.getCardinality();
         isTopEq = isMinTopEquivalent(n, expr.getProperty(), expr.getFiller())
-        		&& isMaxTopEquivalent(n, expr.getProperty(), expr.getFiller());
+                && isMaxTopEquivalent(n, expr.getProperty(), expr.getFiller());
     }
 
     // ported from: public void visit(ObjectRoleName expr) {

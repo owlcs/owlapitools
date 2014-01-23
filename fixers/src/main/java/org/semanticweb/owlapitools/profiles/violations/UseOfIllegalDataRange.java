@@ -66,7 +66,6 @@ public class UseOfIllegalDataRange extends OWLProfileViolation<OWLDataRange> {
         return visitor.visit(this);
     }
 
-
     @Override
     public String toString() {
         return toString("Use of data range not in profile: %s", getExpression());

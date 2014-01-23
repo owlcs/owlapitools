@@ -82,18 +82,8 @@ public class RedundancyTests extends AbstractSuggestorTest {
         final OWLObjectSomeValuesFrom qSomeA = df.getOWLObjectSomeValuesFrom(q, a);
         final OWLObjectSomeValuesFrom pSomeB = df.getOWLObjectSomeValuesFrom(p, b);
         final OWLObjectSomeValuesFrom qSomeB = df.getOWLObjectSomeValuesFrom(q, b);
-        mngr.applyChange(new AddAxiom(ont, df.getOWLSubObjectPropertyOfAxiom(p, q))); // p
-                                                                                      // is
-                                                                                      // a
-                                                                                      // sub
-                                                                                      // of
-                                                                                      // q
-        mngr.applyChange(new AddAxiom(ont, df.getOWLSubClassOfAxiom(a, b))); // a
-                                                                             // is
-                                                                             // a
-                                                                             // sub
-                                                                             // of
-                                                                             // b
+        mngr.applyChange(new AddAxiom(ont, df.getOWLSubObjectPropertyOfAxiom(p, q)));
+        mngr.applyChange(new AddAxiom(ont, df.getOWLSubClassOfAxiom(a, b)));
         if (r.getBufferingMode().equals(BufferingMode.BUFFERING)) {
             r.flush();
         }

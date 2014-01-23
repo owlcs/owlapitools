@@ -52,7 +52,6 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 @SuppressWarnings("javadoc")
 public class UseOfObjectPropertyInverse extends
         OWLProfileViolation<OWLObjectPropertyExpression> {
-
     public UseOfObjectPropertyInverse(OWLOntology ontology, OWLAxiom axiom,
             OWLObjectPropertyExpression propertyExpression) {
         super(ontology, axiom, propertyExpression);
@@ -67,7 +66,6 @@ public class UseOfObjectPropertyInverse extends
     public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
         return visitor.visit(this);
     }
-
 
     @Override
     public String toString() {

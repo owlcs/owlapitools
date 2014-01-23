@@ -70,7 +70,6 @@ public class UseOfIllegalFacetRestriction extends OWLProfileViolation<OWLFacet> 
         return visitor.visit(this);
     }
 
-
     @Override
     public String toString() {
         return toString(

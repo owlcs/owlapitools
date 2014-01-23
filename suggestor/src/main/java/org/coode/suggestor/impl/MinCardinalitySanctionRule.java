@@ -22,38 +22,36 @@ import org.semanticweb.owlapi.model.OWLObjectMinCardinality;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
-/**
- * Check the restrictions on the class for min cardi zeros
- */
+/** Check the restrictions on the class for min cardi zeros */
 public class MinCardinalitySanctionRule implements PropertySanctionRule {
-	private OWLReasoner r;
+    private OWLReasoner r;
 
-	@Override
+    @Override
     public void setSuggestor(PropertySuggestor ps) {
-		this.r = ps.getReasoner();
-	}
+        this.r = ps.getReasoner();
+    }
 
-	@Override
+    @Override
     public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p) {
-		RestrictionAccumulator acc = new RestrictionAccumulator(r);
-		for (OWLObjectMinCardinality restr : acc.getRestrictions(c, p,
-				OWLObjectMinCardinality.class)) {
-			if (restr.getCardinality() == 0) {
-				return true;
-			}
-		}
-		return false;
-	}
+        RestrictionAccumulator acc = new RestrictionAccumulator(r);
+        for (OWLObjectMinCardinality restr : acc.getRestrictions(c, p,
+                OWLObjectMinCardinality.class)) {
+            if (restr.getCardinality() == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	@Override
+    @Override
     public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p) {
-		RestrictionAccumulator acc = new RestrictionAccumulator(r);
-		for (OWLDataMinCardinality restr : acc.getRestrictions(c, p,
-				OWLDataMinCardinality.class)) {
-			if (restr.getCardinality() == 0) {
-				return true;
-			}
-		}
-		return false;
-	}
+        RestrictionAccumulator acc = new RestrictionAccumulator(r);
+        for (OWLDataMinCardinality restr : acc.getRestrictions(c, p,
+                OWLDataMinCardinality.class)) {
+            if (restr.getCardinality() == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

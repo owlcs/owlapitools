@@ -51,114 +51,111 @@ import uk.ac.manchester.cs.owl.owlapi.ClassAxiomByClassPointer;
 import uk.ac.manchester.cs.owl.owlapi.InternalsImpl;
 import uk.ac.manchester.cs.owl.owlapi.MapPointer;
 
-/**
- * @author ignazio threadsafe implementation
- */
+/** @author ignazio threadsafe implementation */
 public class LockingOWLOntologyInternals extends InternalsImpl {
-	private static final long serialVersionUID = -6742647487412288043L;
+    private static final long serialVersionUID = -6742647487412288043L;
 
-	@Override
-	protected <K, V extends OWLAxiom> MapPointer<K, V> build(AxiomType<?> t,
-			OWLAxiomVisitorEx<?> v) {
-		return new SyncMapPointer<K, V>(t, v, true, this);
-	}
+    @Override
+    protected <K, V extends OWLAxiom> MapPointer<K, V> build(AxiomType<?> t,
+            OWLAxiomVisitorEx<?> v) {
+        return new SyncMapPointer<K, V>(t, v, true, this);
+    }
 
-	@Override
-	protected <K, V extends OWLAxiom> MapPointer<K, V> buildLazy(AxiomType<?> t,
-			OWLAxiomVisitorEx<?> v) {
-		return new SyncMapPointer<K, V>(t, v, false, this);
-	}
+    @Override
+    protected <K, V extends OWLAxiom> MapPointer<K, V> buildLazy(AxiomType<?> t,
+            OWLAxiomVisitorEx<?> v) {
+        return new SyncMapPointer<K, V>(t, v, false, this);
+    }
 
-	@Override
-	protected ClassAxiomByClassPointer buildClassAxiomByClass() {
-		return new ClassAxiomByClassPointer(null, null, false, this) {
+    @Override
+    protected ClassAxiomByClassPointer buildClassAxiomByClass() {
+        return new ClassAxiomByClassPointer(null, null, false, this) {
+            private static final long serialVersionUID = -7264777242566648150L;
 
-			private static final long serialVersionUID = -7264777242566648150L;
+            @Override
+            public synchronized boolean contains(OWLClass key, OWLClassAxiom value) {
+                return super.contains(key, value);
+            }
 
-			@Override
-			public synchronized boolean contains(OWLClass key, OWLClassAxiom value) {
-				return super.contains(key, value);
-			}
+            @Override
+            public synchronized boolean containsKey(OWLClass key) {
+                return super.containsKey(key);
+            }
 
-			@Override
-			public synchronized boolean containsKey(OWLClass key) {
-				return super.containsKey(key);
-			}
+            @Override
+            public synchronized Set<OWLClassAxiom> getAllValues() {
+                return super.getAllValues();
+            }
 
-			@Override
-			public synchronized Set<OWLClassAxiom> getAllValues() {
-				return super.getAllValues();
-			}
+            @Override
+            public synchronized Set<OWLClassAxiom> getValues(OWLClass key) {
+                return super.getValues(key);
+            }
 
-			@Override
-			public synchronized Set<OWLClassAxiom> getValues(OWLClass key) {
-				return super.getValues(key);
-			}
+            @Override
+            public synchronized void init() {
+                super.init();
+            }
 
-			@Override
-			public synchronized void init() {
-				super.init();
-			}
+            @Override
+            public synchronized boolean isInitialized() {
+                return super.isInitialized();
+            }
 
-			@Override
-			public synchronized boolean isInitialized() {
-				return super.isInitialized();
-			}
+            @Override
+            public synchronized Set<OWLClass> keySet() {
+                return super.keySet();
+            }
 
-			@Override
-			public synchronized Set<OWLClass> keySet() {
-				return super.keySet();
-			}
+            @Override
+            public synchronized boolean put(OWLClass key, OWLClassAxiom value) {
+                return super.put(key, value);
+            }
 
-			@Override
-			public synchronized boolean put(OWLClass key, OWLClassAxiom value) {
-				return super.put(key, value);
-			}
+            @Override
+            public synchronized boolean remove(OWLClass key, OWLClassAxiom value) {
+                return super.remove(key, value);
+            }
 
-			@Override
-			public synchronized boolean remove(OWLClass key, OWLClassAxiom value) {
-				return super.remove(key, value);
-			}
+            @Override
+            public synchronized int size() {
+                return super.size();
+            }
+        };
+    }
 
-			@Override
-			public synchronized int size() {
-				return super.size();
-			}
-		};
-	}
+    @Override
+    protected <K> SetPointer<K> buildSet() {
+        return new SetPointer<K>(CollectionFactory.<K> createSet()) {
+            private static final long serialVersionUID = 5035692713549943611L;
 
-	@Override
-	protected <K> SetPointer<K> buildSet() {
-		return new SetPointer<K>(CollectionFactory.<K> createSet()) {
-			private static final long serialVersionUID = 5035692713549943611L;
+            @Override
+            public synchronized boolean add(K k) {
+                return super.add(k);
+            }
 
-			@Override
-			public synchronized boolean add(K k) {
-				return super.add(k);
-			}
+            @Override
+            public synchronized boolean contains(K k) {
+                return super.contains(k);
+            }
 
-			@Override
-			public synchronized boolean contains(K k) {
-				return super.contains(k);
-			}
+            @Override
+            public synchronized Set<K> copy() {
+                return super.copy();
+            }
 
-			@Override
-			public synchronized Set<K> copy() {
-				return super.copy();
-			}
+            @Override
+            public synchronized boolean isEmpty() {
+                return super.isEmpty();
+            }
 
-			@Override
-			public synchronized boolean isEmpty() {
-				return super.isEmpty();
-			}
+            @Override
+            public synchronized boolean remove(K k) {
+                return super.remove(k);
+            }
+        };
+    }
 
-			@Override
-			public synchronized boolean remove(K k) {
-				return super.remove(k);
-			}
-		};
-	}
-
-	@SuppressWarnings("javadoc")
-	public LockingOWLOntologyInternals() {}
+    @SuppressWarnings("javadoc")
+    public LockingOWLOntologyInternals() {}
 }

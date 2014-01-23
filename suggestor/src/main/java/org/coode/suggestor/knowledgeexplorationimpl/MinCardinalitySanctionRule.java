@@ -22,38 +22,36 @@ import org.semanticweb.owlapi.model.OWLObjectMinCardinality;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.reasoner.knowledgeexploration.OWLKnowledgeExplorerReasoner;
 
-/**
- * Check the restrictions on the class for min cardi zeros
- */
+/** Check the restrictions on the class for min cardi zeros */
 public class MinCardinalitySanctionRule implements PropertySanctionRule {
-	private OWLKnowledgeExplorerReasoner r;
+    private OWLKnowledgeExplorerReasoner r;
 
-	@Override
+    @Override
     public void setSuggestor(PropertySuggestor ps) {
-		this.r = (OWLKnowledgeExplorerReasoner) ps.getReasoner();
-	}
+        this.r = (OWLKnowledgeExplorerReasoner) ps.getReasoner();
+    }
 
-	@Override
+    @Override
     public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p) {
-		RestrictionAccumulator acc = new RestrictionAccumulator(r);
-		for (OWLObjectMinCardinality restr : acc.getRestrictions(c, p,
-				OWLObjectMinCardinality.class)) {
-			if (restr.getCardinality() == 0) {
-				return true;
-			}
-		}
-		return false;
-	}
+        RestrictionAccumulator acc = new RestrictionAccumulator(r);
+        for (OWLObjectMinCardinality restr : acc.getRestrictions(c, p,
+                OWLObjectMinCardinality.class)) {
+            if (restr.getCardinality() == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	@Override
+    @Override
     public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p) {
-		RestrictionAccumulator acc = new RestrictionAccumulator(r);
-		for (OWLDataMinCardinality restr : acc.getRestrictions(c, p,
-				OWLDataMinCardinality.class)) {
-			if (restr.getCardinality() == 0) {
-				return true;
-			}
-		}
-		return false;
-	}
+        RestrictionAccumulator acc = new RestrictionAccumulator(r);
+        for (OWLDataMinCardinality restr : acc.getRestrictions(c, p,
+                OWLDataMinCardinality.class)) {
+            if (restr.getCardinality() == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

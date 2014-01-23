@@ -67,7 +67,6 @@ public class UseOfNonSimplePropertyInFunctionalPropertyAxiom extends
         return visitor.visit(this);
     }
 
-
     @Override
     public String toString() {
         return toString("Use of non-simple property in functional axiom %s",

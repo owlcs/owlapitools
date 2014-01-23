@@ -37,7 +37,6 @@ public class ReasonerTests {
     // "org.semanticweb.HermiT.Reasoner$ReasonerFactory";
     // public static final String PELLET_FACTORY =
     // "com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory";
-
     @Test
     public void testReasoner() throws Exception {
         OWLOntologyManager mngr = OWLManager.createOWLOntologyManager();

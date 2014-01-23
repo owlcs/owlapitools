@@ -52,7 +52,6 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 @SuppressWarnings("javadoc")
 public class UseOfNonSimplePropertyInCardinalityRestriction extends
         OWLProfileViolation<OWLObjectCardinalityRestriction> {
-
     public UseOfNonSimplePropertyInCardinalityRestriction(OWLOntology ontology,
             OWLAxiom axiom, OWLObjectCardinalityRestriction restriction) {
         super(ontology, axiom, restriction);
@@ -67,7 +66,6 @@ public class UseOfNonSimplePropertyInCardinalityRestriction extends
     public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
         return visitor.visit(this);
     }
-
 
     @Override
     public String toString() {
