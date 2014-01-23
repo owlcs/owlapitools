@@ -111,7 +111,7 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker
     }
 
     /** signature to keep */
-    Signature sig;
+    private Signature sig = new Signature();
 
     @Override
     public Signature getSignature() {
@@ -216,7 +216,6 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker
         if (!Kernel.isEntailed(df.getOWLEquivalentClassesAxiom(axiom.getOWLClass(),
                 df.getOWLObjectIntersectionOf(axiom.getClassExpressions())))) {
             return;
-
         }
         // check disjoint(C1...Cn)
         List<OWLClassExpression> arguments = new ArrayList<OWLClassExpression>(
