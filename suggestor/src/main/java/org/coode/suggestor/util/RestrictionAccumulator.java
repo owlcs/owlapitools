@@ -45,6 +45,8 @@ public class RestrictionAccumulator {
      *            property
      * @param type
      *            type
+     * @param <T>
+     *            type
      * @return set of restrictions */
     public <T extends OWLRestriction<?, ?, ?>> Set<T> getRestrictions(
             OWLClassExpression cls, OWLPropertyExpression<?, ?> prop, Class<T> type) {

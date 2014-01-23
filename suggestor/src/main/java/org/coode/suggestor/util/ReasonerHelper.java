@@ -128,7 +128,7 @@ public class ReasonerHelper {
      *            class
      * @param p
      *            property
-     * @return true if c is a subclass of <= 1 p */
+     * @return true if c is a subclass of max 1 p */
     public boolean
             isLocallyFunctional(OWLClassExpression c, OWLObjectPropertyExpression p) {
         return isDescendantOf(c, df.getOWLObjectMaxCardinality(1, p));
@@ -138,7 +138,7 @@ public class ReasonerHelper {
      *            class
      * @param p
      *            property
-     * @return true if c is a subclass of <= 1 p */
+     * @return true if c is a subclass of max 1 p */
     public boolean isLocallyFunctional(OWLClassExpression c, OWLDataProperty p) {
         return isDescendantOf(c, df.getOWLDataMaxCardinality(1, p));
     }

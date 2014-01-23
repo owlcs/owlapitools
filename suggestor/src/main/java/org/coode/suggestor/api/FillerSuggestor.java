@@ -37,8 +37,7 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
  * Filler level questions - Given a class description and an object property:
  * </p>
  * <ol>
- * <li>What are the named fillers on these properties? (ie on min cardi > 1,
- * exact cardi or existentials)</li>
+ * <li>What are the named fillers on these properties?</li>
  * <li>What are the possible named fillers for a new existential restriction?</li>
  * <li>What are the sanctioned named fillers for a new existential restriction?</li>
  * </ol>
