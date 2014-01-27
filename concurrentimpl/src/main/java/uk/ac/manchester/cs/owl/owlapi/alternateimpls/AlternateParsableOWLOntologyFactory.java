@@ -75,8 +75,8 @@ import org.semanticweb.owlapi.model.UnloadableImportException;
  * concrete representations of ontologies. This ontology factory will claim that
  * it is suitable for creating an ontology if the document IRI can be opened for
  * reading. This factory will not create empty ontologies. Parsers are
- * instantiated by using a list of <code>OWLParserFactory</code> objects that
- * are obtained from the <code>OWLParserFactoryRegistry</code>. */
+ * instantiated by using a list of {@code OWLParserFactory} objects that are
+ * obtained from the {@code OWLParserFactoryRegistry}. */
 public class AlternateParsableOWLOntologyFactory extends
         AlternateAbstractInMemOWLOntologyFactory {
     private static final long serialVersionUID = 723810240549014991L;

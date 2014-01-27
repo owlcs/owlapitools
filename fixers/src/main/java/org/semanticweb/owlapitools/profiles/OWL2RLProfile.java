@@ -124,8 +124,8 @@ public class OWL2RLProfile implements OWLProfile {
      * 
      * @param ontology
      *            The ontology to be checked.
-     * @return An <code>OWLProfileReport</code> that describes whether or not
-     *         the ontology is within this profile. */
+     * @return An {@code OWLProfileReport} that describes whether or not the
+     *         ontology is within this profile. */
     @Override
     public OWLProfileReport checkOntology(OWLOntology ontology) {
         OWL2DLProfile profile = new OWL2DLProfile();

@@ -80,8 +80,8 @@ public class OWL2Profile implements OWLProfile {
      * 
      * @param ontology
      *            The ontology to be checked.
-     * @return An <code>OWLProfileReport</code> that describes whether or not
-     *         the ontology is within this profile. */
+     * @return An {@code OWLProfileReport} that describes whether or not the
+     *         ontology is within this profile. */
     @Override
     public OWLProfileReport checkOntology(OWLOntology ontology) {
         OWLOntologyWalker walker = new OWLOntologyWalker(ontology.getImportsClosure());
