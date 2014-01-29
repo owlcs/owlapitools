@@ -1,6 +1,5 @@
 package casualtest;
 
-import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -9,7 +8,7 @@ import org.semanticweb.owlapi.io.StringDocumentTarget;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 @SuppressWarnings("javadoc")
-public class FunnycommentTest extends TestCase {
+public class FunnycommentTest  {
     @Test
 	public void testUndeclaredClasses() throws Exception {
 		String input = "<?xml version=\"1.0\"?>\n"

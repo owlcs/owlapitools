@@ -1,5 +1,5 @@
 package casualtest;
-import junit.framework.TestCase;
+
 
 import org.junit.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -8,7 +8,7 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 @SuppressWarnings("javadoc")
-public class OntologyHashCode extends TestCase{
+public class OntologyHashCode {
 	public static final String ONTOLOGY_LOC = "http://www.co-ode.org/ontologies/pizza/pizza.owl";
 
     @Test

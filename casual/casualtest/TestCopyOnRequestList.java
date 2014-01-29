@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.TestCase;
+
 
 import org.junit.Test;
 import org.semanticweb.owlapi.util.CollectionFactory;
 
-public class TestCopyOnRequestList extends TestCase {
+public class TestCopyOnRequestList  {
     @Test
 	public void testList() {
 		List<Integer> l = new ArrayList<Integer>();

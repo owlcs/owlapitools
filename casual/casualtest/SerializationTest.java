@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.TestCase;
+
 
 import org.junit.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -38,7 +38,7 @@ import org.semanticweb.owlapi.util.DefaultPrefixManager;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLFacet;
 
-public class SerializationTest extends TestCase {
+public class SerializationTest  {
 	private static final String MESSAGE = "Exception expected!";
 	private static final OWLDataFactory f = OWLManager.getOWLDataFactory();
 	OWL2Datatype owl2datatype = OWL2Datatype.XSD_INT;

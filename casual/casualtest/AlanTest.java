@@ -1,6 +1,6 @@
 package casualtest;
 
-import junit.framework.TestCase;
+
 
 import org.junit.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -12,7 +12,7 @@ import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 @SuppressWarnings("javadoc")
-public class AlanTest extends TestCase{
+public class AlanTest {
     @Test
 	public void testUndeclaredClasses() throws Exception{
         System.out.println("TestOWLKnowledgeExplorerReasoner.main() "

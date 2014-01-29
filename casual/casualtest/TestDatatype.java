@@ -1,6 +1,6 @@
 package casualtest;
 
-import junit.framework.TestCase;
+
 
 import org.junit.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -15,7 +15,7 @@ import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLFacet;
 @SuppressWarnings("javadoc")
-public class TestDatatype extends TestCase {
+public class TestDatatype  {
     @Test
 	public void testDatatype() throws Exception {
 		String premise = "<rdf:RDF\n"
