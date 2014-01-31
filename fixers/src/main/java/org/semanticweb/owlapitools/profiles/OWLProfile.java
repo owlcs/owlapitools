@@ -40,11 +40,8 @@ package org.semanticweb.owlapitools.profiles;
 
 import org.semanticweb.owlapi.model.OWLOntology;
 
-/** Author: Matthew Horridge<br>
- * The University Of Manchester<br>
- * Bio-Health Informatics Group<br>
- * Date: 16-Apr-2008<br>
- * <br> */
+/** @author Matthew Horridge, The University of Manchester, Information Management
+ *         Group */
 public interface OWLProfile {
     /** Gets the name of the profile.
      * 

@@ -61,14 +61,12 @@ import org.semanticweb.owlapitools.profiles.violations.UseOfIllegalFacetRestrict
 import org.semanticweb.owlapitools.profiles.violations.UseOfNonAbsoluteIRI;
 import org.semanticweb.owlapitools.profiles.violations.UseOfUndeclaredDatatype;
 
-/** Author: Matthew Horridge<br>
- * The University Of Manchester<br>
- * Information Management Group<br>
- * Date: 21-Jun-2008<br>
- * <br>
- * Checks to see if an ontology and its imports closure fall into the OWL 2 DL
+/** Checks to see if an ontology and its imports closure fall into the OWL 2 DL
  * profile. An ontology is OWL Full if any of the global structural restrictions
- * are violated, if there is punning between object and data properties */
+ * are violated, if there is punning between object and data properties
+ * 
+ * @author Matthew Horridge, The University of Manchester, Information
+ *         Management Group */
 public class OWL2Profile implements OWLProfile {
     @Override
     public String getName() {

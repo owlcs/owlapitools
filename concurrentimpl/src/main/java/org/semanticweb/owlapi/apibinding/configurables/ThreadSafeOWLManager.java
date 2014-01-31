@@ -106,11 +106,10 @@ import de.uulm.ecs.ai.owlapi.krssparser.KRSS2OWLParserFactory;
 import de.uulm.ecs.ai.owlapi.krssrenderer.KRSS2OWLSyntaxOntologyStorer;
 
 /** Provides a point of convenience for creating an {@code OWLOntologyManager}
- * with commonly required features (such as an RDF parser for example). Author:
- * Matthew Horridge<br>
- * The University Of Manchester<br>
- * Bio-Health Informatics Group<br>
- * Date: 06-Dec-2006<br> */
+ * with commonly required features (such as an RDF parser for example).
+ * 
+ * @author Matthew Horridge, The University Of Manchester, Bio-Health
+ *         Informatics Group, Date: 06-Dec-2006 */
 public class ThreadSafeOWLManager implements OWLOntologyManagerFactory {
     private static OWLImplementationBinding binding = new ThreadSafeBinding();
     static {

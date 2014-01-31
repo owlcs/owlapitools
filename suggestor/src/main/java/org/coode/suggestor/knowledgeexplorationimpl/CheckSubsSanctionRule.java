@@ -1,14 +1,11 @@
-/*
+/**
  * Date: Dec 17, 2007
  *
  * code made available under Mozilla Public License (http://www.mozilla.org/MPL/MPL-1.1.html)
  *
  * copyright 2007, The University of Manchester
  *
- * Author: Nick Drummond
- * http://www.cs.man.ac.uk/~drummond/
- * Bio Health Informatics Group
- * The University Of Manchester
+ * @author Nick Drummond, The University Of Manchester, Bio Health Informatics Groupversity Of Manchester
  */
 package org.coode.suggestor.knowledgeexplorationimpl;
 
@@ -40,7 +37,7 @@ public class CheckSubsSanctionRule implements PropertySanctionRule {
     @Override
     public void setSuggestor(PropertySuggestor ps) {
         this.ps = ps;
-        this.r = (OWLKnowledgeExplorerReasoner) ps.getReasoner();
+        r = (OWLKnowledgeExplorerReasoner) ps.getReasoner();
     }
 
     @Override

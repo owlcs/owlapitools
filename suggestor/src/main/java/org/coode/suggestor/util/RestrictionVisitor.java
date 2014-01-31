@@ -25,12 +25,8 @@ import org.semanticweb.owlapi.model.OWLRestriction;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.util.OWLClassExpressionVisitorAdapter;
 
-/** Author: drummond<br>
- * http://www.cs.man.ac.uk/~drummond/<br>
- * The University Of Manchester<br>
- * Bio Health Informatics Group<br>
- * Date: Jul 12, 2011<br>
- * <br> */
+/** @author Nick Drummond, The University Of Manchester, Bio Health Informatics
+ *         Group, Date: Jul 12, 2011 */
 class RestrictionVisitor extends OWLClassExpressionVisitorAdapter {
     protected final OWLReasoner r;
     protected final OWLPropertyExpression<?, ?> prop;

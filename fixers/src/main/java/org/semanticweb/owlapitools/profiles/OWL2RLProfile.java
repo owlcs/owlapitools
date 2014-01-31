@@ -93,10 +93,8 @@ import org.semanticweb.owlapitools.profiles.violations.UseOfNonEquivalentClassEx
 import org.semanticweb.owlapitools.profiles.violations.UseOfNonSubClassExpression;
 import org.semanticweb.owlapitools.profiles.violations.UseOfNonSuperClassExpression;
 
-/** Author: Matthew Horridge<br>
- * The University of Manchester<br>
- * Information Management Group<br>
- * Date: 03-Aug-2009 */
+/** @author Matthew Horridge, The University of Manchester, Information Management
+ *         Group */
 public class OWL2RLProfile implements OWLProfile {
     protected final static Set<IRI> allowedDatatypes = new HashSet<IRI>(Arrays.asList(
             RDF_PLAIN_LITERAL.getIRI(), RDF_XML_LITERAL.getIRI(), RDFS_LITERAL.getIRI(),

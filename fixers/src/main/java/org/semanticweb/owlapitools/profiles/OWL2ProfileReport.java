@@ -43,11 +43,8 @@ import java.util.TreeSet;
 
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 
-/** Author: Matthew Horridge<br>
- * The University Of Manchester<br>
- * Information Management Group<br>
- * Date: 30-Jul-2008<br>
- * <br> */
+/** @author Matthew Horridge, The University of Manchester, Information Management
+ *         Group */
 public class OWL2ProfileReport extends OWLProfileReport {
     private final Set<OWLObjectPropertyExpression> nonSimpleRoles;
     private final Set<OWLObjectPropertyExpression> simpleRoles;

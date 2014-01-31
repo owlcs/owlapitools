@@ -100,10 +100,8 @@ import org.semanticweb.owlapitools.profiles.violations.UseOfNonAtomicClassExpres
 import org.semanticweb.owlapitools.profiles.violations.UseOfNonSubClassExpression;
 import org.semanticweb.owlapitools.profiles.violations.UseOfNonSuperClassExpression;
 
-/** Author: Matthew Horridge<br>
- * The University of Manchester<br>
- * Information Management Group<br>
- * Date: 18-Jul-2009 */
+/** @author Matthew Horridge, The University of Manchester, Information Management
+ *         Group */
 public class OWL2QLProfile implements OWLProfile {
     protected final static Set<IRI> allowedDatatypes = new HashSet<IRI>(Arrays.asList(
             //@formatter:off
