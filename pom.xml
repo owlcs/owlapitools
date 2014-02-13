@@ -16,15 +16,15 @@
 	<groupId>net.sourceforge.owlapi</groupId>
 	<artifactId>owlapitools-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.1.2-SNAPSHOT</version>
+	<version>4.0.0-alpha-SNAPSHOT</version>
 	<name>OWLAPI_TOOLS</name>
 	<description>OWLAPI_TOOLS is a collection of add-ons for OWL API</description>
 	<url>http://owlapitools.sourceforge.net/</url>
+	
 	<modules>
 		<module>suggestor</module>
 		<module>atomicdecomposition</module>
 		<module>concurrentimpl</module>
-		<module>fixers</module>
 	</modules>
 
 	<issueManagement>
@@ -51,7 +51,7 @@
 		<dependency>
 			<groupId>net.sourceforge.owlapi</groupId>
 			<artifactId>owlapi-distribution</artifactId>
-			<version>3.4.10</version>
+			<version>4.0.0-alpha-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
