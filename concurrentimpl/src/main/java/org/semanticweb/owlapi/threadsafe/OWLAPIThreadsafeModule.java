@@ -1,9 +1,11 @@
+package org.semanticweb.owlapi.threadsafe;
+
 /*
  * This file is part of the OWL API.
  *
  * The contents of this file are subject to the LGPL License, Version 3.0.
  *
- * Copyright (C) 2011, The University of Manchester
+ * Copyright (C) 2014, The University of Manchester
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +24,7 @@
  * Alternatively, the contents of this file may be used under the terms of the Apache License, Version 2.0
  * in which case, the provisions of the Apache License Version 2.0 are applicable instead of those above.
  *
- * Copyright 2011, University of Manchester
+ * Copyright 2014, The University of Manchester
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,31 +38,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.semanticweb.owlapi.apibinding.configurables;
-
+import org.semanticweb.owlapi.OWLAPIModule;
+import org.semanticweb.owlapi.annotations.OwlapiModule;
 import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyID;
+import org.semanticweb.owlapi.model.OWLOntologyBuilder;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
-import uk.ac.manchester.cs.owl.owlapi.alternateimpls.LockingOWLOntologyImpl;
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.LockingOWLOntologyManagerImpl;
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.owldatafactory.DataFactoryCSR;
 
-/** @author ignazio binding for threadsafe implementations */
-public final class ThreadSafeBinding implements OWLImplementationBinding {
+/** threadsafe OWLAPI module. */
+@OwlapiModule
+public class OWLAPIThreadsafeModule extends OWLAPIModule {
     @Override
-    public OWLOntologyManager getOWLOntologyManager(OWLDataFactory d) {
-        return new LockingOWLOntologyManagerImpl(d);
+    protected OWLDataFactory provideOWLDataFactory() {
+        return new DataFactoryCSR();
     }
 
     @Override
-    public OWLOntology getOWLOntology(OWLOntologyManager oom, OWLOntologyID id) {
-        return new LockingOWLOntologyImpl(oom, id);
+    protected OWLOntologyManager provideOWLOntologyManager(OWLDataFactory df) {
+        return new LockingOWLOntologyManagerImpl(df);
     }
 
     @Override
-    public OWLDataFactory getOWLDataFactory() {
-        return DataFactoryCSR.getInstance();
+    protected OWLOntologyBuilder provideOWLOntologyBuilder() {
+        return new ThreadsafeOWLOntologyBuilderImpl();
     }
 }

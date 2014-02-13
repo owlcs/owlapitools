@@ -41,7 +41,6 @@ package org.semanticweb.owlapi.api.test.alternate;
 import java.util.Set;
 
 import org.junit.Test;
-import org.semanticweb.owlapi.apibinding.configurables.ThreadSafeOWLManager;
 import org.semanticweb.owlapi.io.StringDocumentSource;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
@@ -56,6 +55,7 @@ import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.threadsafe.ThreadSafeOWLManager;
 
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.test.MultiThreadChecker;
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.test.TestMultithreadCallBack;
@@ -500,7 +500,7 @@ public class OwlOntologyMultipleThreadsTest {
                 + "    <rdf:type rdf:resource=\"http://www.w3.org/2002/07/owl#DatatypeProperty\"/>\n"
                 + "  </owl:FunctionalProperty>\n" + "  <Degree rdf:ID=\"MA\"/>\n"
                 + "</rdf:RDF>";
-        OWLOntologyManager m = new ThreadSafeOWLManager().buildOWLOntologyManager();
+        OWLOntologyManager m = ThreadSafeOWLManager.createOWLOntologyManager();
         OWLOntology o = null;
         try {
             o = m.loadOntologyFromOntologyDocument(new StringDocumentSource(koala));

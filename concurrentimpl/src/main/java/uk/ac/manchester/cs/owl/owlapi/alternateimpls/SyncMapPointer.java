@@ -3,10 +3,10 @@ package uk.ac.manchester.cs.owl.owlapi.alternateimpls;
 import java.util.Set;
 
 import org.semanticweb.owlapi.model.AxiomType;
+import org.semanticweb.owlapi.model.Internals;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLAxiomVisitorEx;
 
-import uk.ac.manchester.cs.owl.owlapi.Internals;
 import uk.ac.manchester.cs.owl.owlapi.MapPointer;
 
 class SyncMapPointer<K, V extends OWLAxiom> extends MapPointer<K, V> {

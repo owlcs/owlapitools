@@ -1492,7 +1492,7 @@ public final class CachedOWLReasoner implements OWLReasoner, OWLOntologyChangeLi
     }
 
     @Override
-    public void ontologiesChanged(List<? extends OWLOntologyChange> changes)
+    public void ontologiesChanged(List<? extends OWLOntologyChange<?>> changes)
             throws OWLException {
         // only invalidate the caches, the changes are supposed to go to the
         // reasoner via its own listener

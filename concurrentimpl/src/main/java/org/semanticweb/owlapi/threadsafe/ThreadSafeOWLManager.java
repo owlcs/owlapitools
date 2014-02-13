@@ -1,9 +1,9 @@
 /*
- * This file is part of the OWL API.
+ * This file is part of the OWL API Tools.
  *
  * The contents of this file are subject to the LGPL License, Version 3.0.
  *
- * Copyright (C) 2011, The University of Manchester
+ * Copyright (C) 2014, The University of Manchester
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,31 +36,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.semanticweb.owlapi.apibinding.configurables;
+package org.semanticweb.owlapi.threadsafe;
 
+import org.semanticweb.owlapi.OWLAPIServiceLoaderModule;
 import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
-import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
-import uk.ac.manchester.cs.owl.owlapi.OWLOntologyImpl;
-import uk.ac.manchester.cs.owl.owlapi.OWLOntologyManagerImpl;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
-/** @author ignazio Binding for special implementations */
-public final class DefaultBinding implements OWLImplementationBinding {
-    @Override
-    public OWLOntologyManager getOWLOntologyManager(OWLDataFactory d) {
-        return new OWLOntologyManagerImpl(d);
+/** Provides a point of convenience for creating an {@code OWLOntologyManager}
+ * with commonly required features (such as an RDF parser for example).
+ * 
+ * @author Matthew Horridge, The University Of Manchester, Bio-Health
+ *         Informatics Group, Date: 06-Dec-2006 */
+public class ThreadSafeOWLManager {
+    private static Injector injector = Guice.createInjector(new OWLAPIThreadsafeModule(),
+            new OWLAPIServiceLoaderModule());
+
+    /** Creates an OWL ontology manager that is configured with standard parsers,
+     * storeres etc.
+     * 
+     * @return The new manager. */
+    public static OWLOntologyManager createOWLOntologyManager() {
+        OWLOntologyManager instance = injector.getInstance(OWLOntologyManager.class);
+        injector.injectMembers(instance);
+        return instance;
     }
 
-    @Override
-    public OWLOntology getOWLOntology(OWLOntologyManager oom, OWLOntologyID id) {
-        return new OWLOntologyImpl(oom, id);
-    }
-
-    @Override
-    public OWLDataFactory getOWLDataFactory() {
-        return new OWLDataFactoryImpl();
+    /** Gets a global data factory that can be used to create OWL API objects.
+     * 
+     * @return An OWLDataFactory that can be used for creating OWL API objects. */
+    public static OWLDataFactory getOWLDataFactory() {
+        return injector.getInstance(OWLDataFactory.class);
     }
 }

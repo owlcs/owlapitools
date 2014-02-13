@@ -49,7 +49,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
-import org.semanticweb.owlapi.apibinding.configurables.ThreadSafeOWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -58,6 +57,7 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
+import org.semanticweb.owlapi.threadsafe.ThreadSafeOWLManager;
 
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.test.RaceCallback;
 
@@ -119,7 +119,7 @@ public class RaceTestCase {
             OWLClass y;
 
             public SubClassLHSCallback() throws OWLOntologyCreationException {
-                manager = new ThreadSafeOWLManager().buildOWLOntologyManager();
+                manager = ThreadSafeOWLManager.createOWLOntologyManager();
                 factory = manager.getOWLDataFactory();
                 ontology = manager.createOntology();
                 x = factory.getOWLClass(IRI.create(NS + "X"));

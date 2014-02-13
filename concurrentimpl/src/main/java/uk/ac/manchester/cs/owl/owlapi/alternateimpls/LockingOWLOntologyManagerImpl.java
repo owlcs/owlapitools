@@ -111,7 +111,7 @@ public class LockingOWLOntologyManagerImpl extends OWLOntologyManagerImpl implem
     }
 
     @Override
-    protected void broadcastChanges(List<? extends OWLOntologyChange> changes) {
+    protected void broadcastChanges(List<? extends OWLOntologyChange<?>> changes) {
         listenerLock.lock();
         try {
             super.broadcastChanges(changes);
@@ -121,8 +121,9 @@ public class LockingOWLOntologyManagerImpl extends OWLOntologyManagerImpl implem
     }
 
     @Override
-    protected void broadcastImpendingChanges(List<? extends OWLOntologyChange> changes)
-            throws OWLOntologyChangeVetoException {
+    protected void
+            broadcastImpendingChanges(List<? extends OWLOntologyChange<?>> changes)
+                    throws OWLOntologyChangeVetoException {
         impendingLock.lock();
         try {
             super.broadcastImpendingChanges(changes);
