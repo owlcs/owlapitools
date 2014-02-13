@@ -57,7 +57,7 @@ public class FillerSuggestorTests extends AbstractSuggestorTest {
     private OWLOntology createModelA() throws Exception {
         OWLOntology ont = createOntology();
         createEntities();
-        List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
+        List<OWLOntologyChange<?>> changes = new ArrayList<OWLOntologyChange<?>>();
         changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(cb1, cb)));
         changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(ca1, ca)));
         changes.add(new AddAxiom(ont, df.getOWLSubObjectPropertyOfAxiom(ob1, ob)));
@@ -133,7 +133,7 @@ public class FillerSuggestorTests extends AbstractSuggestorTest {
     private OWLOntology createModelB() throws Exception {
         OWLOntology ont = createOntology();
         createEntities();
-        List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
+        List<OWLOntologyChange<?>> changes = new ArrayList<OWLOntologyChange<?>>();
         changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(ca,
                 df.getOWLObjectComplementOf(df.getOWLObjectSomeValuesFrom(oa, cb)))));
         changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(cb1, cb)));
@@ -167,7 +167,7 @@ public class FillerSuggestorTests extends AbstractSuggestorTest {
         // PropertySuggestor ps = fac.getPropertySuggestor();
         FillerSuggestor fs = fac.getFillerSuggestor();
         createEntities();
-        List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
+        List<OWLOntologyChange<?>> changes = new ArrayList<OWLOntologyChange<?>>();
         changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(ca,
                 df.getOWLObjectSomeValuesFrom(oa, cb))));
         changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(ca,

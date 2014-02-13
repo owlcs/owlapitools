@@ -59,7 +59,7 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
     private OWLOntology createModelA() throws Exception {
         OWLOntology ont = createOntology();
         createEntities();
-        List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
+        List<OWLOntologyChange<?>> changes = new ArrayList<OWLOntologyChange<?>>();
         changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(ca,
                 df.getOWLObjectSomeValuesFrom(op, cb))));
         changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(ca,
@@ -84,7 +84,7 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
     private OWLOntology createModelB() throws Exception {
         OWLOntology ont = createOntology();
         createEntities();
-        List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
+        List<OWLOntologyChange<?>> changes = new ArrayList<OWLOntologyChange<?>>();
         changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(ca,
                 df.getOWLObjectSomeValuesFrom(op, cb))));
         changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(ca,
@@ -230,7 +230,7 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
         createEntities();
-        List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
+        List<OWLOntologyChange<?>> changes = new ArrayList<OWLOntologyChange<?>>();
         changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(ca,
                 df.getOWLObjectSomeValuesFrom(op, cb))));
         changes.add(new AddAxiom(ont, df.getOWLEquivalentObjectPropertiesAxiom(op, oq)));
@@ -366,7 +366,7 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
         OWLObjectProperty rr = createObjectProperty("r");
         OWLDataProperty j = createDataProperty("j");
         OWLDataProperty k = createDataProperty("k");
-        List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
+        List<OWLOntologyChange<?>> changes = new ArrayList<OWLOntologyChange<?>>();
         // force a to be in the signature
         changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(a, df.getOWLThing())));
         // add an annotation on a that sanctions p

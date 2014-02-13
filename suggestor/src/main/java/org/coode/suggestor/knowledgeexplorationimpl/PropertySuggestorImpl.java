@@ -209,7 +209,7 @@ class PropertySuggestorImpl implements PropertySuggestor {
     }
 
     // DELEGATES
-    private interface Matcher<P extends OWLPropertyExpression<?, ?>> {
+    private interface Matcher<P extends OWLPropertyExpression> {
         boolean isMatch(OWLClassExpression c, P p);
 
         boolean isMatch(OWLClassExpression c, P p, boolean direct);
@@ -227,8 +227,8 @@ class PropertySuggestorImpl implements PropertySuggestor {
         NodeSet<P> getRoots(OWLClassExpression c, Node<P> start, boolean direct);
     }
 
-    private abstract class AbstractMatcher<P extends OWLPropertyExpression<?, ?>>
-            implements Matcher<P> {
+    private abstract class AbstractMatcher<P extends OWLPropertyExpression> implements
+            Matcher<P> {
         public AbstractMatcher() {}
 
         @Override

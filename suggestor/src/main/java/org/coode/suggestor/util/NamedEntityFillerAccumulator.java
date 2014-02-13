@@ -29,8 +29,8 @@ public class NamedEntityFillerAccumulator extends FillerAccumulator<OWLEntity> {
     }
 
     @Override
-    protected RestrictionVisitor getVisitor(OWLPropertyExpression<?, ?> prop,
-            Class<? extends OWLRestriction<?, ?, ?>> type) {
+    protected RestrictionVisitor getVisitor(OWLPropertyExpression prop,
+            Class<? extends OWLRestriction> type) {
         return new RestrictionVisitor(r, prop, type) {
             @Override
             public void visit(OWLObjectSomeValuesFrom desc) {
@@ -69,7 +69,7 @@ public class NamedEntityFillerAccumulator extends FillerAccumulator<OWLEntity> {
             public void visit(OWLObjectHasValue desc) {
                 super.visit(desc);
                 if (props.contains(desc.getProperty())) {
-                    final OWLIndividual ind = desc.getValue();
+                    final OWLIndividual ind = desc.getFiller();
                     if (!ind.isAnonymous()) {
                         add(ind.asOWLNamedIndividual());
                     }

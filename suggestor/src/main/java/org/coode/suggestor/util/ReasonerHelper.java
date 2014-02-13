@@ -29,6 +29,7 @@ import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.impl.OWLDatatypeNode;
 import org.semanticweb.owlapi.reasoner.impl.OWLDatatypeNodeSet;
+import org.semanticweb.owlapi.search.Searcher;
 
 /** Utility methods for common reasoner tasks. */
 public class ReasonerHelper {
@@ -156,7 +157,10 @@ public class ReasonerHelper {
         ancestors.add(p);
         for (OWLOntology ont : r.getRootOntology().getImportsClosure()) {
             for (OWLObjectPropertyExpression ancestor : ancestors) {
-                assertedRanges.addAll(ancestor.getRanges(ont));
+                Searcher<OWLClassExpression> searcher = Searcher
+                        .find(OWLClassExpression.class).in(ont)
+                        .ranges(ancestor.asOWLObjectProperty());
+                assertedRanges.addAll(searcher.asCollection());
             }
         }
         if (!assertedRanges.isEmpty()) {
@@ -191,7 +195,9 @@ public class ReasonerHelper {
         ancestors.add(p);
         for (OWLOntology ont : r.getRootOntology().getImportsClosure()) {
             for (OWLDataProperty ancestor : ancestors) {
-                assertedRanges.addAll(ancestor.getRanges(ont));
+                Searcher<OWLDataRange> searcher = Searcher.find(OWLDataRange.class)
+                        .in(ont).ranges(ancestor);
+                assertedRanges.addAll(searcher.asCollection());
             }
         }
         if (!assertedRanges.isEmpty()) {

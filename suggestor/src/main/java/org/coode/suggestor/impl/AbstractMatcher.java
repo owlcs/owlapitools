@@ -9,7 +9,7 @@ import org.semanticweb.owlapi.model.OWLPropertyRange;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 
-abstract class AbstractMatcher<R extends OWLPropertyRange, F extends R, P extends OWLPropertyExpression<R, P>>
+abstract class AbstractMatcher<R extends OWLPropertyRange, F extends R, P extends OWLPropertyExpression>
         implements Matcher<R, F, P> {
     public AbstractMatcher() {}
 
@@ -42,7 +42,7 @@ abstract class AbstractMatcher<R extends OWLPropertyRange, F extends R, P extend
                 nodes.addAll(getLeaves(c, p, sub.getRepresentativeElement(), direct)
                         .getNodes());
             }
-            if (!direct || (nodes.isEmpty() && !start.isTopEntity())) {
+            if (!direct || nodes.isEmpty() && !start.isTopEntity()) {
                 nodes.add(getEquivalents(start)); // non-optimal as we already
                                                   // had the node before
                                                   // recursing

@@ -28,8 +28,8 @@ public class DataFillerAccumulator extends FillerAccumulator<OWLObject> {
     }
 
     @Override
-    protected RestrictionVisitor getVisitor(OWLPropertyExpression<?, ?> prop,
-            Class<? extends OWLRestriction<?, ?, ?>> type) {
+    protected RestrictionVisitor getVisitor(OWLPropertyExpression prop,
+            Class<? extends OWLRestriction> type) {
         return new RestrictionVisitor(r, prop, type) {
             @Override
             public void visit(OWLDataSomeValuesFrom desc) {
@@ -65,7 +65,7 @@ public class DataFillerAccumulator extends FillerAccumulator<OWLObject> {
             public void visit(OWLDataHasValue desc) {
                 super.visit(desc);
                 if (props.contains(desc.getProperty())) {
-                    add(desc.getValue());
+                    add(desc.getFiller());
                 }
             }
         };

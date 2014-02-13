@@ -29,7 +29,7 @@ abstract class FillerAccumulator<O extends OWLObject> extends RestrictionAccumul
         super(r);
     }
 
-    public Set<O> getFillers(OWLClassExpression descr, OWLPropertyExpression<?, ?> prop) {
+    public Set<O> getFillers(OWLClassExpression descr, OWLPropertyExpression prop) {
         fillers.clear();
         accummulateRestrictions(descr, prop, null);
         return Collections.unmodifiableSet(fillers);

@@ -212,7 +212,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
     // OWLObjectPropertyExpression
     // It would be nice if we could enforce this with multiple generics, but R &
     // OWLEntity is disallowed currently
-    private interface Matcher<R extends OWLPropertyRange, F extends R, P extends OWLPropertyExpression<R, P>> {
+    private interface Matcher<R extends OWLPropertyRange, F extends R, P extends OWLPropertyExpression> {
         boolean isMatch(OWLClassExpression c, P p, R f);
 
         boolean isMatch(OWLClassExpression c, P p, R f, boolean direct);
@@ -238,7 +238,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
         NodeSet<F> getRoots(OWLClassExpression c, P p, R start, boolean direct);
     }
 
-    private abstract class AbstractMatcher<R extends OWLPropertyRange, F extends R, P extends OWLPropertyExpression<R, P>>
+    private abstract class AbstractMatcher<R extends OWLPropertyRange, F extends R, P extends OWLPropertyExpression>
             implements Matcher<R, F, P> {
         public AbstractMatcher() {}
 

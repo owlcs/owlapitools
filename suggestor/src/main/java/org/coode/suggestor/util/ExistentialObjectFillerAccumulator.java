@@ -28,8 +28,8 @@ public class ExistentialObjectFillerAccumulator extends
     }
 
     @Override
-    protected RestrictionVisitor getVisitor(OWLPropertyExpression<?, ?> prop,
-            Class<? extends OWLRestriction<?, ?, ?>> type) {
+    protected RestrictionVisitor getVisitor(OWLPropertyExpression prop,
+            Class<? extends OWLRestriction> type) {
         return new RestrictionVisitor(r, prop, type) {
             @Override
             public void visit(OWLObjectSomeValuesFrom desc) {

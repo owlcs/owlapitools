@@ -22,6 +22,7 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLProperty;
 import org.semanticweb.owlapi.model.OWLPropertyExpression;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.search.Searcher;
 
 /** Checks the class to see if it has an annotation (specified by the
  * constructor) matching the URI of the property. If recursive is true, then all
@@ -56,10 +57,10 @@ public class SimpleAnnotationPropertySanctionRule implements PropertySanctionRul
         return hasAnnotation(c, p);
     }
 
-    private boolean hasAnnotation(OWLClassExpression c, OWLPropertyExpression<?, ?> p) {
+    private boolean hasAnnotation(OWLClassExpression c, OWLPropertyExpression p) {
         if (!p.isAnonymous()) {
             if (!c.isAnonymous()
-                    && hasSanctionAnnotation(c.asOWLClass(), (OWLProperty<?, ?>) p)) {
+                    && hasSanctionAnnotation(c.asOWLClass(), (OWLProperty) p)) {
                 return true;
             }
             if (recursive) {
@@ -74,11 +75,13 @@ public class SimpleAnnotationPropertySanctionRule implements PropertySanctionRul
         return false;
     }
 
-    private boolean hasSanctionAnnotation(OWLClass c, OWLProperty<?, ?> p) {
+    private boolean hasSanctionAnnotation(OWLClass c, OWLProperty p) {
         IRIMatcher iriMatcher = new IRIMatcher(p.getIRI());
         for (OWLOntology ont : r.getRootOntology().getImportsClosure()) {
-            for (OWLAnnotation annot : c.getAnnotations(ont, annotationProperty)) {
-                if (annot.getValue().accept(iriMatcher).booleanValue()) {
+            for (OWLAnnotation annot : Searcher.find(OWLAnnotation.class).in(ont)
+                    .annotations(c)) {
+                if (annot.getProperty().equals(annotationProperty)
+                        && annot.getValue().accept(iriMatcher).booleanValue()) {
                     return true;
                 }
             }

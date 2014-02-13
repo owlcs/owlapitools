@@ -9,7 +9,7 @@ import org.semanticweb.owlapi.reasoner.NodeSet;
 // F is an OWLEntity that extends R and will be the type returned by getMatches().
 // eg for R = OWLClassExpression, F = OWLClass, P = OWLObjectPropertyExpression
 // It would be nice if we could enforce this with multiple generics, but R & OWLEntity is disallowed currently
-interface Matcher<R extends OWLPropertyRange, F extends R, P extends OWLPropertyExpression<R, P>> {
+interface Matcher<R extends OWLPropertyRange, F extends R, P extends OWLPropertyExpression> {
     boolean isMatch(OWLClassExpression c, P p, R f);
 
     boolean isMatch(OWLClassExpression c, P p, R f, boolean direct);
