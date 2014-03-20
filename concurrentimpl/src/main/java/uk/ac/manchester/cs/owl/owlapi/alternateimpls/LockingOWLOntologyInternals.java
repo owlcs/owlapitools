@@ -45,14 +45,14 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLAxiomVisitorEx;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAxiom;
-import org.semanticweb.owlapi.util.CollectionFactory;
 
 import uk.ac.manchester.cs.owl.owlapi.ClassAxiomByClassPointer;
-import uk.ac.manchester.cs.owl.owlapi.InternalsImpl;
+import uk.ac.manchester.cs.owl.owlapi.Internals;
 import uk.ac.manchester.cs.owl.owlapi.MapPointer;
 
 /** @author ignazio threadsafe implementation */
-public class LockingOWLOntologyInternals extends InternalsImpl {
+public class LockingOWLOntologyInternals extends Internals {
+
     private static final long serialVersionUID = -6742647487412288043L;
 
     @Override
@@ -62,18 +62,20 @@ public class LockingOWLOntologyInternals extends InternalsImpl {
     }
 
     @Override
-    protected <K, V extends OWLAxiom> MapPointer<K, V> buildLazy(AxiomType<?> t,
-            OWLAxiomVisitorEx<?> v) {
+    protected <K, V extends OWLAxiom> MapPointer<K, V> buildLazy(
+            AxiomType<?> t, OWLAxiomVisitorEx<?> v) {
         return new SyncMapPointer<K, V>(t, v, false, this);
     }
 
     @Override
     protected ClassAxiomByClassPointer buildClassAxiomByClass() {
         return new ClassAxiomByClassPointer(null, null, false, this) {
+
             private static final long serialVersionUID = -7264777242566648150L;
 
             @Override
-            public synchronized boolean contains(OWLClass key, OWLClassAxiom value) {
+            public synchronized boolean contains(OWLClass key,
+                    OWLClassAxiom value) {
                 return super.contains(key, value);
             }
 
@@ -93,8 +95,8 @@ public class LockingOWLOntologyInternals extends InternalsImpl {
             }
 
             @Override
-            public synchronized void init() {
-                super.init();
+            public synchronized ClassAxiomByClassPointer init() {
+                return super.init();
             }
 
             @Override
@@ -113,7 +115,8 @@ public class LockingOWLOntologyInternals extends InternalsImpl {
             }
 
             @Override
-            public synchronized boolean remove(OWLClass key, OWLClassAxiom value) {
+            public synchronized boolean
+                    remove(OWLClass key, OWLClassAxiom value) {
                 return super.remove(key, value);
             }
 
@@ -123,41 +126,4 @@ public class LockingOWLOntologyInternals extends InternalsImpl {
             }
         };
     }
-
-    @Override
-    protected <K> SetPointer<K> buildSet() {
-        return new SetPointer<K>(CollectionFactory.<K> createSet()) {
-            private static final long serialVersionUID = 5035692713549943611L;
-
-            @Override
-            public synchronized boolean add(K k) {
-                return super.add(k);
-            }
-
-            @Override
-            public synchronized boolean contains(K k) {
-                return super.contains(k);
-            }
-
-            @Override
-            public synchronized Set<K> copy() {
-                return super.copy();
-            }
-
-            @Override
-            public synchronized boolean isEmpty() {
-                return super.isEmpty();
-            }
-
-            @Override
-            public synchronized boolean remove(K k) {
-                return super.remove(k);
-            }
-        };
-    }
-
-    /**
-     * 
-     */
-    public LockingOWLOntologyInternals() {}
 }

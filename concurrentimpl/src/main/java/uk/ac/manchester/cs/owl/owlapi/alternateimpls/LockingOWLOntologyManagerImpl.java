@@ -64,10 +64,13 @@ import org.semanticweb.owlapi.util.CollectionFactory;
 import uk.ac.manchester.cs.owl.owlapi.OWLOntologyManagerImpl;
 
 /** @author ignazio threadsafe implementation */
-public class LockingOWLOntologyManagerImpl extends OWLOntologyManagerImpl implements
-        OWLOntologyManager, OWLOntologyFactory.OWLOntologyCreationHandler {
+public class LockingOWLOntologyManagerImpl extends OWLOntologyManagerImpl
+        implements OWLOntologyManager,
+        OWLOntologyFactory.OWLOntologyCreationHandler {
+
     private static final long serialVersionUID = -1920953069359718891L;
-    private final Set<Object> broadcastChanges = CollectionFactory.createSyncSet();
+    private final Set<Object> broadcastChanges = CollectionFactory
+            .createSyncSet();
     private final Lock listenerLock = new ReentrantLock();
     private final Lock impendingLock = new ReentrantLock();
 
@@ -75,17 +78,16 @@ public class LockingOWLOntologyManagerImpl extends OWLOntologyManagerImpl implem
         return new CopyOnWriteArrayList<V>();
     }
 
-    /** @param dataFactory
-     *            dataFactory */
+    /**
+     * @param dataFactory
+     *        dataFactory
+     */
     public LockingOWLOntologyManagerImpl(OWLDataFactory dataFactory) {
         super(dataFactory);
         ontologiesByID = CollectionFactory.createSyncMap();
         documentIRIsByID = CollectionFactory.createSyncMap();
         ontologyFormatsByOntology = CollectionFactory.createSyncMap();
-        documentMappers = createList();
-        ontologyFactories = createList();
         ontologyIDsByImportsDeclaration = CollectionFactory.createSyncMap();
-        ontologyStorers = createList();
         importsClosureCache = CollectionFactory.createSyncMap();
         missingImportsListeners = createList();
         loaderListeners = createList();
@@ -111,7 +113,8 @@ public class LockingOWLOntologyManagerImpl extends OWLOntologyManagerImpl implem
     }
 
     @Override
-    protected void broadcastChanges(List<? extends OWLOntologyChange<?>> changes) {
+    protected void
+            broadcastChanges(List<? extends OWLOntologyChange<?>> changes) {
         listenerLock.lock();
         try {
             super.broadcastChanges(changes);
@@ -121,9 +124,9 @@ public class LockingOWLOntologyManagerImpl extends OWLOntologyManagerImpl implem
     }
 
     @Override
-    protected void
-            broadcastImpendingChanges(List<? extends OWLOntologyChange<?>> changes)
-                    throws OWLOntologyChangeVetoException {
+    protected void broadcastImpendingChanges(
+            List<? extends OWLOntologyChange<?>> changes)
+            throws OWLOntologyChangeVetoException {
         impendingLock.lock();
         try {
             super.broadcastImpendingChanges(changes);
@@ -166,7 +169,8 @@ public class LockingOWLOntologyManagerImpl extends OWLOntologyManagerImpl implem
     }
 
     @Override
-    public void removeOntologyChangeListener(OWLOntologyChangeListener listener) {
+    public void
+            removeOntologyChangeListener(OWLOntologyChangeListener listener) {
         listenerLock.lock();
         try {
             super.removeOntologyChangeListener(listener);
@@ -176,7 +180,8 @@ public class LockingOWLOntologyManagerImpl extends OWLOntologyManagerImpl implem
     }
 
     @Override
-    protected synchronized OWLOntology loadImports(OWLImportsDeclaration declaration,
+    protected synchronized OWLOntology loadImports(
+            OWLImportsDeclaration declaration,
             OWLOntologyLoaderConfiguration configuration)
             throws OWLOntologyCreationException {
         return super.loadImports(declaration, configuration);

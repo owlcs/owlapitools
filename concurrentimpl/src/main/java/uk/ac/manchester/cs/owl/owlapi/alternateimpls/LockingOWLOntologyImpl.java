@@ -43,18 +43,24 @@ import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 import uk.ac.manchester.cs.owl.owlapi.OWLOntologyImpl;
 
-/** threadsafe extension
+/**
+ * threadsafe extension
  * 
- * @author ignazio */
+ * @author ignazio
+ */
 public class LockingOWLOntologyImpl extends OWLOntologyImpl {
+
     private static final long serialVersionUID = -1359003420840044128L;
 
-    /** @param manager
-     *            manager
+    /**
+     * @param manager
+     *        manager
      * @param ontologyID
-     *            ontologyID */
-    public LockingOWLOntologyImpl(OWLOntologyManager manager, OWLOntologyID ontologyID) {
+     *        ontologyID
+     */
+    public LockingOWLOntologyImpl(OWLOntologyManager manager,
+            OWLOntologyID ontologyID) {
         super(manager, ontologyID);
-        internals = new LockingOWLOntologyInternals();
+        ints = new LockingOWLOntologyInternals();
     }
 }

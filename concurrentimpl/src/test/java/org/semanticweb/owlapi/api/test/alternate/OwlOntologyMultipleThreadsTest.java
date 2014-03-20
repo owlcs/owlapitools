@@ -62,7 +62,9 @@ import uk.ac.manchester.cs.owl.owlapi.alternateimpls.test.TestMultithreadCallBac
 
 @SuppressWarnings("javadoc")
 public class OwlOntologyMultipleThreadsTest {
+
     private static class TestCallback implements TestMultithreadCallBack {
+
         private final OWLOntology o1;
         private final OWLOntology o2;
 
@@ -96,21 +98,23 @@ public class OwlOntologyMultipleThreadsTest {
                         .getObjectPropertiesInSignature(true);
                 o1.getObjectPropertiesInSignature(false);
                 o1.getObjectPropertiesInSignature();
-                Set<OWLDataProperty> dataProperties = o1.getDataPropertiesInSignature();
+                Set<OWLDataProperty> dataProperties = o1
+                        .getDataPropertiesInSignature();
                 o1.getDataPropertiesInSignature(true);
                 o1.getDataPropertiesInSignature(false);
-                Set<OWLNamedIndividual> individuals = o1.getIndividualsInSignature();
+                Set<OWLNamedIndividual> individuals = o1
+                        .getIndividualsInSignature();
                 o1.getIndividualsInSignature(true);
                 o1.getIndividualsInSignature(false);
                 Set<OWLAnonymousIndividual> anonIndividuals = o1
-                        .getReferencedAnonymousIndividuals();
+                        .getReferencedAnonymousIndividuals(false);
                 o1.getDatatypesInSignature();
                 o1.getDatatypesInSignature(true);
                 o1.getDatatypesInSignature(false);
-                o1.getAnnotationPropertiesInSignature();
+                o1.getAnnotationPropertiesInSignature(false);
                 for (OWLObjectProperty o : objectProperties) {
-                    o1.getAxioms(o);
-                    o1.containsObjectPropertyInSignature(o.getIRI());
+                    o1.getAxioms(o, false);
+                    o1.containsObjectPropertyInSignature(o.getIRI(), false);
                     o1.containsObjectPropertyInSignature(o.getIRI(), true);
                     o1.containsObjectPropertyInSignature(o.getIRI(), false);
                     o1.getObjectSubPropertyAxiomsForSubProperty(o);
@@ -129,8 +133,8 @@ public class OwlOntologyMultipleThreadsTest {
                     o1.getTransitiveObjectPropertyAxioms(o);
                 }
                 for (OWLClass c : classes) {
-                    o1.getAxioms(c);
-                    o1.containsClassInSignature(c.getIRI());
+                    o1.getAxioms(c, false);
+                    o1.containsClassInSignature(c.getIRI(), false);
                     o1.containsClassInSignature(c.getIRI(), true);
                     o1.containsClassInSignature(c.getIRI(), false);
                     o1.getSubClassAxiomsForSubClass(c);
@@ -142,8 +146,8 @@ public class OwlOntologyMultipleThreadsTest {
                     o1.getClassAssertionAxioms(c);
                 }
                 for (OWLDataProperty p : dataProperties) {
-                    o1.getAxioms(p);
-                    o1.containsDataPropertyInSignature(p.getIRI());
+                    o1.getAxioms(p, false);
+                    o1.containsDataPropertyInSignature(p.getIRI(), false);
                     o1.containsDataPropertyInSignature(p.getIRI(), true);
                     o1.containsDataPropertyInSignature(p.getIRI(), false);
                     o1.getDataSubPropertyAxiomsForSubProperty(p);
@@ -155,8 +159,8 @@ public class OwlOntologyMultipleThreadsTest {
                     o1.getFunctionalDataPropertyAxioms(p);
                 }
                 for (OWLNamedIndividual i : individuals) {
-                    o1.getAxioms(i);
-                    o1.containsIndividualInSignature(i.getIRI());
+                    o1.getAxioms(i, false);
+                    o1.containsIndividualInSignature(i.getIRI(), false);
                     o1.containsIndividualInSignature(i.getIRI(), true);
                     o1.containsIndividualInSignature(i.getIRI(), false);
                     o1.getClassAssertionAxioms(i);
@@ -168,7 +172,7 @@ public class OwlOntologyMultipleThreadsTest {
                     o1.getDifferentIndividualAxioms(i);
                 }
                 for (OWLAnonymousIndividual i : anonIndividuals) {
-                    o1.getAxioms(i);
+                    o1.getAxioms(i, false);
                 }
                 for (AxiomType<?> ax : AxiomType.AXIOM_TYPES) {
                     o1.getAxioms(ax);
@@ -176,15 +180,16 @@ public class OwlOntologyMultipleThreadsTest {
                     o1.getAxioms(ax, false);
                 }
                 for (OWLDatatype t : o1.getDatatypesInSignature()) {
-                    o1.getAxioms(t);
-                    o1.containsDatatypeInSignature(t.getIRI());
+                    o1.getAxioms(t, false);
+                    o1.containsDatatypeInSignature(t.getIRI(), false);
                     o1.containsDatatypeInSignature(t.getIRI(), true);
                     o1.containsDatatypeInSignature(t.getIRI(), false);
                     o1.getDatatypeDefinitions(t);
                 }
-                for (OWLAnnotationProperty p : o1.getAnnotationPropertiesInSignature()) {
-                    o1.getAxioms(p);
-                    o1.containsAnnotationPropertyInSignature(p.getIRI());
+                for (OWLAnnotationProperty p : o1
+                        .getAnnotationPropertiesInSignature(false)) {
+                    o1.getAxioms(p, false);
+                    o1.containsAnnotationPropertyInSignature(p.getIRI(), false);
                     o1.containsAnnotationPropertyInSignature(p.getIRI(), true);
                     o1.containsAnnotationPropertyInSignature(p.getIRI(), false);
                     o1.getSubAnnotationPropertyOfAxioms(p);
@@ -200,25 +205,25 @@ public class OwlOntologyMultipleThreadsTest {
                 o1.getLogicalAxiomCount();
                 for (OWLAxiom ax : o1.getLogicalAxioms()) {
                     o1.containsAxiom(ax);
-                    o1.containsAxiom(ax, true);
-                    o1.containsAxiom(ax, false);
+                    o1.containsAxiom(ax, true, false);
+                    o1.containsAxiom(ax, false, false);
                 }
                 for (OWLAxiom ax : o1.getLogicalAxioms()) {
-                    o1.containsAxiomIgnoreAnnotations(ax);
-                    o1.containsAxiomIgnoreAnnotations(ax, true);
-                    o1.containsAxiomIgnoreAnnotations(ax, false);
+                    o1.containsAxiom(ax, false, true);
+                    o1.containsAxiom(ax, true, true);
+                    o1.containsAxiom(ax, false, true);
                 }
                 for (OWLAxiom ax : o1.getLogicalAxioms()) {
-                    o1.getAxiomsIgnoreAnnotations(ax);
+                    o1.getAxiomsIgnoreAnnotations(ax, false);
                     o1.getAxiomsIgnoreAnnotations(ax, true);
                     o1.getAxiomsIgnoreAnnotations(ax, false);
                 }
                 o1.getGeneralClassAxioms();
                 for (OWLAnonymousIndividual i : anonIndividuals) {
-                    o1.getReferencingAxioms(i);
+                    o1.getReferencingAxioms(i, false);
                 }
                 for (OWLEntity e : entities) {
-                    o1.getReferencingAxioms(e);
+                    o1.getReferencingAxioms(e, false);
                     o1.getReferencingAxioms(e, true);
                     o1.getReferencingAxioms(e, false);
                     o1.getDeclarationAxioms(e);
@@ -498,12 +503,13 @@ public class OwlOntologyMultipleThreadsTest {
                 + "    <rdfs:range rdf:resource=\"http://www.w3.org/2001/XMLSchema#boolean\"/>\n"
                 + "    <rdfs:domain rdf:resource=\"#Person\"/>\n"
                 + "    <rdf:type rdf:resource=\"http://www.w3.org/2002/07/owl#DatatypeProperty\"/>\n"
-                + "  </owl:FunctionalProperty>\n" + "  <Degree rdf:ID=\"MA\"/>\n"
-                + "</rdf:RDF>";
+                + "  </owl:FunctionalProperty>\n"
+                + "  <Degree rdf:ID=\"MA\"/>\n" + "</rdf:RDF>";
         OWLOntologyManager m = ThreadSafeOWLManager.createOWLOntologyManager();
         OWLOntology o = null;
         try {
-            o = m.loadOntologyFromOntologyDocument(new StringDocumentSource(koala));
+            o = m.loadOntologyFromOntologyDocument(new StringDocumentSource(
+                    koala));
             MultiThreadChecker checker = new MultiThreadChecker(10);
             checker.check(new TestCallback(o, m.createOntology()));
             String trace = checker.getTrace();

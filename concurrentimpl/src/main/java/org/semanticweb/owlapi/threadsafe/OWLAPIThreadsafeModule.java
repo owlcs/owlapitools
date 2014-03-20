@@ -38,18 +38,19 @@ package org.semanticweb.owlapi.threadsafe;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import org.semanticweb.owlapi.OWLAPIModule;
 import org.semanticweb.owlapi.annotations.OwlapiModule;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLOntologyBuilder;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
+import uk.ac.manchester.cs.owl.owlapi.OWLAPIImplModule;
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.LockingOWLOntologyManagerImpl;
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.owldatafactory.DataFactoryCSR;
 
 /** threadsafe OWLAPI module. */
 @OwlapiModule
-public class OWLAPIThreadsafeModule extends OWLAPIModule {
+public class OWLAPIThreadsafeModule extends OWLAPIImplModule {
+
     @Override
     protected OWLDataFactory provideOWLDataFactory() {
         return new DataFactoryCSR();
