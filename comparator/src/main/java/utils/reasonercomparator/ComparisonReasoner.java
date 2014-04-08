@@ -26,6 +26,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
@@ -45,6 +46,7 @@ import org.semanticweb.owlapi.util.Version;
 /** an OWLReasoner which compares the results from different reasoners. */
 @SuppressWarnings("boxing")
 public class ComparisonReasoner implements OWLReasoner {
+
     List<OWLReasoner> delegates = new ArrayList<OWLReasoner>();
     private OWLOntology root;
     IdentityHashMap<OWLReasoner, ReasonerPerformanceResult> timings = new IdentityHashMap<OWLReasoner, ReasonerPerformanceResult>();
@@ -57,19 +59,22 @@ public class ComparisonReasoner implements OWLReasoner {
         return timings;
     }
 
-    /** @param o
-     *            the ontology to reason on
+    /**
+     * @param o
+     *        the ontology to reason on
      * @param config
-     *            the configuration for the reasoners; optional, can be null
+     *        the configuration for the reasoners; optional, can be null
      * @param delegateFactories
-     *            the factories to be used to build the reasoners */
+     *        the factories to be used to build the reasoners
+     */
     public ComparisonReasoner(OWLOntology o, OWLReasonerConfiguration config,
             OWLReasonerFactory... delegateFactories) {
         root = o;
         for (int i = 0; i < delegateFactories.length; i++) {
             long l = bean.getCurrentThreadCpuTime();
-            OWLReasoner r = config == null ? delegateFactories[i].createReasoner(o)
-                    : delegateFactories[i].createReasoner(o, config);
+            OWLReasoner r = config == null ? delegateFactories[i]
+                    .createReasoner(o) : delegateFactories[i].createReasoner(o,
+                    config);
             long elapsed = bean.getCurrentThreadCpuTime();
             elapsed = elapsed - l;
             delegates.add(r);
@@ -81,16 +86,19 @@ public class ComparisonReasoner implements OWLReasoner {
         }
     }
 
-    /** @param tolerant
-     *            false if any difference should stop the reasoning
+    /**
+     * @param tolerant
+     *        false if any difference should stop the reasoning
      * @param o
-     *            the ontology to reason on
+     *        the ontology to reason on
      * @param config
-     *            the configuration for the reasoners; optional, can be null
+     *        the configuration for the reasoners; optional, can be null
      * @param delegateFactories
-     *            the factories to be used to build the reasoners */
+     *        the factories to be used to build the reasoners
+     */
     public ComparisonReasoner(boolean tolerant, OWLOntology o,
-            OWLReasonerConfiguration config, OWLReasonerFactory... delegateFactories) {
+            OWLReasonerConfiguration config,
+            OWLReasonerFactory... delegateFactories) {
         this(o, config, delegateFactories);
         tolerateDifferences = tolerant;
     }
@@ -135,18 +143,96 @@ public class ComparisonReasoner implements OWLReasoner {
         return BufferingMode.BUFFERING;
     }
 
-    private <T> T verify(List<T> objects) {
+    private <T> T verify(List<T> objects, String method, Object... arguments) {
         for (int i = 1; i < objects.size(); i++) {
             if (!delegateEquals(objects.get(0), objects.get(i))) {
-                String template = "FederatedReasoner.verify() Object %s from reasoner %s:\n%s";
-                System.out.println(String.format(template, 0, delegates.get(0)
-                        .getReasonerName(), objects.get(0).toString()));
-                System.out.println(String.format(template, i, delegates.get(i)
-                        .getReasonerName(), objects.get(i).toString()));
+                String template = "@Test public void shouldPass" + method;
+                for (Object o : arguments) {
+                    template += args(o);
+                }
+                template += "(){\n";
+                template += vars(objects.get(0));
+                for (int index = 0; index < arguments.length; index++) {
+                    template += vars(arguments[index]);
+                }
+                template += "// expected " + args(objects.get(0))
+                        + "\n// actual__ " + args(objects.get(1));
+                template += "\nequal(reasoner." + method + "(";
+                for (int index = 0; index < arguments.length; index++) {
+                    if (index > 0) {
+                        template += ", ";
+                    }
+                    template += args(arguments[index]);
+                }
+                template += "), " + args(objects.get(0)) + ");}";
+                System.out.println(template);
+                // template =
+                // "ComparisonReasoner.verify() Object %s from reasoner %s:\n%s";
+                // System.out.println(String.format(template, 0,
+                // delegates.get(0)
+                // .getReasonerName(), objects.get(0).toString()));
+                // System.out.println(String.format(template, i,
+                // delegates.get(i)
+                // .getReasonerName(), objects.get(i).toString()));
                 throw new RuntimeException("Spotted difference!");
             }
         }
         return objects.get(0);
+    }
+
+    private String vars(Object o) {
+        StringBuilder b = new StringBuilder();
+        if (o instanceof NodeSet) {
+            for (OWLEntity e : ((NodeSet<OWLEntity>) o).getFlattened()) {
+                b.append("OWL").append(e.getEntityType().getName()).append(" ")
+                        .append(e.getIRI().getFragment());
+                b.append(" = C(\"").append(e.getIRI().getNamespace())
+                        .append(e.getIRI().getFragment()).append("\");\n");
+            }
+            return b.toString();
+        }
+        if (o instanceof NodeSet) {
+            for (OWLEntity e : ((NodeSet<OWLEntity>) o).getFlattened()) {
+                b.append("OWL").append(e.getEntityType().getName()).append(" ")
+                        .append(e.getIRI().getFragment());
+                b.append(" = C(\"").append(e.getIRI().getNamespace())
+                        .append(e.getIRI().getFragment()).append("\");\n");
+            }
+            return b.toString();
+        }
+        if (o instanceof OWLEntity) {
+            OWLEntity e = (OWLEntity) o;
+            b.append("OWL").append(e.getEntityType().getName()).append(" ")
+                    .append(e.getIRI().getFragment());
+            b.append(" = C(\"").append(e.getIRI().getNamespace())
+                    .append(e.getIRI().getFragment()).append("\");\n");
+            return b.toString();
+        }
+        return "";
+    }
+
+    private String args(Object o) {
+        StringBuilder b = new StringBuilder();
+        if (o instanceof NodeSet) {
+            for (OWLEntity e : ((NodeSet<OWLEntity>) o).getFlattened()) {
+                b.append(e.getIRI().getFragment()).append(", ");
+            }
+            b.delete(b.length() - 2, b.length());
+            return b.toString();
+        }
+        if (o instanceof NodeSet) {
+            for (OWLEntity e : ((NodeSet<OWLEntity>) o).getFlattened()) {
+                b.append(e.getIRI().getFragment()).append(", ");
+            }
+            b.delete(b.length() - 2, b.length());
+            return b.toString();
+        }
+        if (o instanceof OWLEntity) {
+            OWLEntity e = (OWLEntity) o;
+            b.append(e.getIRI().getFragment());
+            return b.toString();
+        }
+        return o.toString();
     }
 
     // never mind the warnings, this needs to be generic enough to accept
@@ -179,9 +265,6 @@ public class ComparisonReasoner implements OWLReasoner {
                 long elapsed = bean.getCurrentThreadCpuTime() - start;
                 timings.get(delegates.get(i)).add(interrupt, elapsed);
             } catch (RuntimeException e) {
-                System.out.println("Method: interrupt");
-                System.out.println(Arrays.toString(Arrays.asList().toArray()));
-                e.printStackTrace(System.out);
                 if (!tolerateDifferences) {
                     throw e;
                 }
@@ -192,8 +275,8 @@ public class ComparisonReasoner implements OWLReasoner {
     @Override
     public void flush() {
         if (log) {
-            System.out.println("r. flush(" + Arrays.toString(Arrays.asList().toArray())
-                    + ")");
+            System.out.println("r. flush("
+                    + Arrays.toString(Arrays.asList().toArray()) + ")");
         }
         for (int i = 0; i < delegates.size(); i++) {
             try {
@@ -202,9 +285,6 @@ public class ComparisonReasoner implements OWLReasoner {
                 long elapsed = bean.getCurrentThreadCpuTime() - start;
                 timings.get(delegates.get(i)).add(flush, elapsed);
             } catch (RuntimeException e) {
-                System.out.println("Method: flush");
-                System.out.println(Arrays.toString(Arrays.asList().toArray()));
-                e.printStackTrace(System.out);
                 if (!tolerateDifferences) {
                     throw e;
                 }
@@ -213,25 +293,23 @@ public class ComparisonReasoner implements OWLReasoner {
     }
 
     @Override
-    public List<OWLOntologyChange> getPendingChanges() {
+    public List<OWLOntologyChange<?>> getPendingChanges() {
         if (log) {
             System.out.println("r. getPendingChanges("
                     + Arrays.toString(Arrays.asList().toArray()) + ")");
         }
-        List<List<OWLOntologyChange>> objects = new ArrayList<List<OWLOntologyChange>>();
+        List<List<OWLOntologyChange<?>>> objects = new ArrayList<List<OWLOntologyChange<?>>>();
         for (int i = 0; i < delegates.size(); i++) {
             long start = bean.getCurrentThreadCpuTime();
-            List<OWLOntologyChange> value = delegates.get(i).getPendingChanges();
+            List<OWLOntologyChange<?>> value = delegates.get(i)
+                    .getPendingChanges();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
             timings.get(delegates.get(i)).add(getPendingChanges, elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getPendingChanges");
         } catch (RuntimeException e) {
-            System.out.println("Method: getPendingChanges");
-            System.out.println(Arrays.toString(Arrays.asList().toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -251,15 +329,13 @@ public class ComparisonReasoner implements OWLReasoner {
             long start = bean.getCurrentThreadCpuTime();
             Set<OWLAxiom> value = delegates.get(i).getPendingAxiomAdditions();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).add(getPendingAxiomAdditions, elapsed);
+            timings.get(delegates.get(i))
+                    .add(getPendingAxiomAdditions, elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getPendingAxiomAdditions");
         } catch (RuntimeException e) {
-            System.out.println("Method: getPendingAxiomAdditions");
-            System.out.println(Arrays.toString(Arrays.asList().toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -283,11 +359,8 @@ public class ComparisonReasoner implements OWLReasoner {
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getPendingAxiomRemovals");
         } catch (RuntimeException e) {
-            System.out.println("Method: getPendingAxiomRemovals");
-            System.out.println(Arrays.toString(Arrays.asList().toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -307,11 +380,9 @@ public class ComparisonReasoner implements OWLReasoner {
                 long start = bean.getCurrentThreadCpuTime();
                 delegates.get(i).precomputeInferences(arg0);
                 long elapsed = bean.getCurrentThreadCpuTime() - start;
-                timings.get(delegates.get(i)).add(precomputeInferences, elapsed);
+                timings.get(delegates.get(i))
+                        .add(precomputeInferences, elapsed);
             } catch (RuntimeException e) {
-                System.out.println("Method: precomputeInferences");
-                System.out.println(Arrays.toString(Arrays.asList(arg0).toArray()));
-                e.printStackTrace(System.out);
                 if (!tolerateDifferences) {
                     throw e;
                 }
@@ -333,20 +404,7 @@ public class ComparisonReasoner implements OWLReasoner {
             timings.get(delegates.get(i)).add(isPrecomputed, elapsed);
             objects.add(value);
         }
-        // try {
         return objects.get(0);
-        // return verify(objects);
-        // } catch (RuntimeException e) {
-        // System.out.println("Method: isPrecomputed");
-        // System.out.println(Arrays.toString(Arrays.asList(arg0).toArray()));
-        // e.printStackTrace(System.out);
-        // if (tolerateDifferences) {
-        // return objects.get(0);
-        // } else {
-        // //System.exit(0);
-        // throw e;
-        // }
-        // }
     }
 
     @Override
@@ -358,17 +416,16 @@ public class ComparisonReasoner implements OWLReasoner {
         List<Set<InferenceType>> objects = new ArrayList<Set<InferenceType>>();
         for (int i = 0; i < delegates.size(); i++) {
             long start = bean.getCurrentThreadCpuTime();
-            Set<InferenceType> value = delegates.get(i).getPrecomputableInferenceTypes();
+            Set<InferenceType> value = delegates.get(i)
+                    .getPrecomputableInferenceTypes();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).add(getPrecomputableInferenceTypes, elapsed);
+            timings.get(delegates.get(i)).add(getPrecomputableInferenceTypes,
+                    elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getPrecomputableInferenceTypes");
         } catch (RuntimeException e) {
-            System.out.println("Method: getPrecomputableInferenceTypes");
-            System.out.println(Arrays.toString(Arrays.asList().toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -392,11 +449,8 @@ public class ComparisonReasoner implements OWLReasoner {
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "isConsistent");
         } catch (RuntimeException e) {
-            System.out.println("Method: isConsistent");
-            System.out.println(Arrays.toString(Arrays.asList().toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -420,11 +474,8 @@ public class ComparisonReasoner implements OWLReasoner {
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "isSatisfiable", arg0);
         } catch (RuntimeException e) {
-            System.out.println("Method: isSatisfiable");
-            System.out.println(Arrays.toString(Arrays.asList(arg0).toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -448,11 +499,8 @@ public class ComparisonReasoner implements OWLReasoner {
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getUnsatisfiableClasses");
         } catch (RuntimeException e) {
-            System.out.println("Method: getUnsatisfiableClasses");
-            System.out.println(Arrays.toString(Arrays.asList().toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -476,11 +524,8 @@ public class ComparisonReasoner implements OWLReasoner {
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "isEntailed", arg0);
         } catch (RuntimeException e) {
-            System.out.println("Method: isEntailed");
-            System.out.println(Arrays.toString(Arrays.asList(arg0).toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -492,8 +537,8 @@ public class ComparisonReasoner implements OWLReasoner {
     @Override
     public boolean isEntailed(Set<? extends OWLAxiom> arg0) {
         if (log) {
-            System.out.println("r. isEntailed(" + Arrays.toString(new Object[] { arg0 })
-                    + ")");
+            System.out.println("r. isEntailed("
+                    + Arrays.toString(new Object[] { arg0 }) + ")");
         }
         List<Boolean> objects = new ArrayList<Boolean>();
         for (int i = 0; i < delegates.size(); i++) {
@@ -504,11 +549,8 @@ public class ComparisonReasoner implements OWLReasoner {
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "isEntailed", arg0);
         } catch (RuntimeException e) {
-            System.out.println("Method: isEntailed");
-            System.out.println(Arrays.toString(new Object[] { arg0 }));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -526,17 +568,16 @@ public class ComparisonReasoner implements OWLReasoner {
         List<Boolean> objects = new ArrayList<Boolean>();
         for (int i = 0; i < delegates.size(); i++) {
             long start = bean.getCurrentThreadCpuTime();
-            boolean value = delegates.get(i).isEntailmentCheckingSupported(arg0);
+            boolean value = delegates.get(i)
+                    .isEntailmentCheckingSupported(arg0);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).add(isEntailmentCheckingSupported, elapsed);
+            timings.get(delegates.get(i)).add(isEntailmentCheckingSupported,
+                    elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "isEntailmentCheckingSupported", arg0);
         } catch (RuntimeException e) {
-            System.out.println("Method: isEntailmentCheckingSupported");
-            System.out.println(Arrays.toString(new Object[] { arg0 }));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -560,11 +601,8 @@ public class ComparisonReasoner implements OWLReasoner {
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getTopClassNode");
         } catch (RuntimeException e) {
-            System.out.println("Method: getTopClassNode");
-            System.out.println(Arrays.toString(Arrays.asList().toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -588,11 +626,8 @@ public class ComparisonReasoner implements OWLReasoner {
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getBottomClassNode");
         } catch (RuntimeException e) {
-            System.out.println("Method: getBottomClassNode");
-            System.out.println(Arrays.toString(Arrays.asList().toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -602,7 +637,8 @@ public class ComparisonReasoner implements OWLReasoner {
     }
 
     @Override
-    public NodeSet<OWLClass> getSubClasses(OWLClassExpression arg0, boolean arg1) {
+    public NodeSet<OWLClass>
+            getSubClasses(OWLClassExpression arg0, boolean arg1) {
         if (log) {
             System.out.println("r. getSubClasses("
                     + Arrays.toString(new Object[] { arg0, arg1 }) + ")");
@@ -610,17 +646,15 @@ public class ComparisonReasoner implements OWLReasoner {
         List<NodeSet<OWLClass>> objects = new ArrayList<NodeSet<OWLClass>>();
         for (int i = 0; i < delegates.size(); i++) {
             long start = bean.getCurrentThreadCpuTime();
-            NodeSet<OWLClass> value = delegates.get(i).getSubClasses(arg0, arg1);
+            NodeSet<OWLClass> value = delegates.get(i)
+                    .getSubClasses(arg0, arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
             timings.get(delegates.get(i)).add(getSubClasses, elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getSubClasses", arg0, arg1);
         } catch (RuntimeException e) {
-            System.out.println("Method: getSubClasses");
-            System.out.println(Arrays.toString(new Object[] { arg0, arg1 }));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -630,7 +664,8 @@ public class ComparisonReasoner implements OWLReasoner {
     }
 
     @Override
-    public NodeSet<OWLClass> getSuperClasses(OWLClassExpression arg0, boolean arg1) {
+    public NodeSet<OWLClass> getSuperClasses(OWLClassExpression arg0,
+            boolean arg1) {
         if (log) {
             System.out.println("r. getSuperClasses("
                     + Arrays.toString(new Object[] { arg0, arg1 }) + ")");
@@ -638,17 +673,15 @@ public class ComparisonReasoner implements OWLReasoner {
         List<NodeSet<OWLClass>> objects = new ArrayList<NodeSet<OWLClass>>();
         for (int i = 0; i < delegates.size(); i++) {
             long start = bean.getCurrentThreadCpuTime();
-            NodeSet<OWLClass> value = delegates.get(i).getSuperClasses(arg0, arg1);
+            NodeSet<OWLClass> value = delegates.get(i).getSuperClasses(arg0,
+                    arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
             timings.get(delegates.get(i)).add(getSuperClasses, elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getSuperClasses", arg0, arg1);
         } catch (RuntimeException e) {
-            System.out.println("Method: getSuperClasses");
-            System.out.println(Arrays.toString(new Object[] { arg0, arg1 }));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -672,11 +705,8 @@ public class ComparisonReasoner implements OWLReasoner {
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getEquivalentClasses", arg0);
         } catch (RuntimeException e) {
-            System.out.println("Method: getEquivalentClasses");
-            System.out.println(Arrays.toString(Arrays.asList(arg0).toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -700,11 +730,8 @@ public class ComparisonReasoner implements OWLReasoner {
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getDisjointClasses", arg0);
         } catch (RuntimeException e) {
-            System.out.println("Method: getDisjointClasses");
-            System.out.println(Arrays.toString(Arrays.asList(arg0).toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -725,15 +752,13 @@ public class ComparisonReasoner implements OWLReasoner {
             Node<OWLObjectPropertyExpression> value = delegates.get(i)
                     .getTopObjectPropertyNode();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).add(getTopObjectPropertyNode, elapsed);
+            timings.get(delegates.get(i))
+                    .add(getTopObjectPropertyNode, elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getTopObjectPropertyNode");
         } catch (RuntimeException e) {
-            System.out.println("Method: getTopObjectPropertyNode");
-            System.out.println(Arrays.toString(Arrays.asList().toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -754,15 +779,13 @@ public class ComparisonReasoner implements OWLReasoner {
             Node<OWLObjectPropertyExpression> value = delegates.get(i)
                     .getBottomObjectPropertyNode();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).add(getBottomObjectPropertyNode, elapsed);
+            timings.get(delegates.get(i)).add(getBottomObjectPropertyNode,
+                    elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getBottomObjectPropertyNode");
         } catch (RuntimeException e) {
-            System.out.println("Method: getBottomObjectPropertyNode");
-            System.out.println(Arrays.toString(Arrays.asList().toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -788,11 +811,8 @@ public class ComparisonReasoner implements OWLReasoner {
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getSubObjectProperties", arg0, arg1);
         } catch (RuntimeException e) {
-            System.out.println("Method: getSubObjectProperties");
-            System.out.println(Arrays.toString(new Object[] { arg0, arg1 }));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -814,15 +834,13 @@ public class ComparisonReasoner implements OWLReasoner {
             NodeSet<OWLObjectPropertyExpression> value = delegates.get(i)
                     .getSuperObjectProperties(arg0, arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).add(getSuperObjectProperties, elapsed);
+            timings.get(delegates.get(i))
+                    .add(getSuperObjectProperties, elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getSuperObjectProperties", arg0, arg1);
         } catch (RuntimeException e) {
-            System.out.println("Method: getSuperObjectProperties");
-            System.out.println(Arrays.toString(new Object[] { arg0, arg1 }));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -844,15 +862,13 @@ public class ComparisonReasoner implements OWLReasoner {
             Node<OWLObjectPropertyExpression> value = delegates.get(i)
                     .getEquivalentObjectProperties(arg0);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).add(getEquivalentObjectProperties, elapsed);
+            timings.get(delegates.get(i)).add(getEquivalentObjectProperties,
+                    elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getEquivalentObjectProperties", arg0);
         } catch (RuntimeException e) {
-            System.out.println("Method: getEquivalentObjectProperties");
-            System.out.println(Arrays.toString(Arrays.asList(arg0).toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -874,15 +890,13 @@ public class ComparisonReasoner implements OWLReasoner {
             NodeSet<OWLObjectPropertyExpression> value = delegates.get(i)
                     .getDisjointObjectProperties(arg0);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).add(getDisjointObjectProperties, elapsed);
+            timings.get(delegates.get(i)).add(getDisjointObjectProperties,
+                    elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getDisjointObjectProperties", arg0);
         } catch (RuntimeException e) {
-            System.out.println("Method: getDisjointObjectProperties");
-            System.out.println(Arrays.toString(Arrays.asList(arg0).toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -904,15 +918,13 @@ public class ComparisonReasoner implements OWLReasoner {
             Node<OWLObjectPropertyExpression> value = delegates.get(i)
                     .getInverseObjectProperties(arg0);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).add(getInverseObjectProperties, elapsed);
+            timings.get(delegates.get(i)).add(getInverseObjectProperties,
+                    elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getInverseObjectProperties", arg0);
         } catch (RuntimeException e) {
-            System.out.println("Method: getInverseObjectProperties");
-            System.out.println(Arrays.toString(Arrays.asList(arg0).toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -922,8 +934,8 @@ public class ComparisonReasoner implements OWLReasoner {
     }
 
     @Override
-    public NodeSet<OWLClass> getObjectPropertyDomains(OWLObjectPropertyExpression arg0,
-            boolean arg1) {
+    public NodeSet<OWLClass> getObjectPropertyDomains(
+            OWLObjectPropertyExpression arg0, boolean arg1) {
         if (log) {
             System.out.println("r. getObjectPropertyDomains("
                     + Arrays.toString(new Object[] { arg0, arg1 }) + ")");
@@ -931,18 +943,16 @@ public class ComparisonReasoner implements OWLReasoner {
         List<NodeSet<OWLClass>> objects = new ArrayList<NodeSet<OWLClass>>();
         for (int i = 0; i < delegates.size(); i++) {
             long start = bean.getCurrentThreadCpuTime();
-            NodeSet<OWLClass> value = delegates.get(i).getObjectPropertyDomains(arg0,
-                    arg1);
+            NodeSet<OWLClass> value = delegates.get(i)
+                    .getObjectPropertyDomains(arg0, arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).add(getObjectPropertyDomains, elapsed);
+            timings.get(delegates.get(i))
+                    .add(getObjectPropertyDomains, elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getObjectPropertyDomains", arg0, arg1);
         } catch (RuntimeException e) {
-            System.out.println("Method: getObjectPropertyDomains");
-            System.out.println(Arrays.toString(new Object[] { arg0, arg1 }));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -952,8 +962,8 @@ public class ComparisonReasoner implements OWLReasoner {
     }
 
     @Override
-    public NodeSet<OWLClass> getObjectPropertyRanges(OWLObjectPropertyExpression arg0,
-            boolean arg1) {
+    public NodeSet<OWLClass> getObjectPropertyRanges(
+            OWLObjectPropertyExpression arg0, boolean arg1) {
         if (log) {
             System.out.println("r. getObjectPropertyRanges("
                     + Arrays.toString(new Object[] { arg0, arg1 }) + ")");
@@ -961,18 +971,15 @@ public class ComparisonReasoner implements OWLReasoner {
         List<NodeSet<OWLClass>> objects = new ArrayList<NodeSet<OWLClass>>();
         for (int i = 0; i < delegates.size(); i++) {
             long start = bean.getCurrentThreadCpuTime();
-            NodeSet<OWLClass> value = delegates.get(i)
-                    .getObjectPropertyRanges(arg0, arg1);
+            NodeSet<OWLClass> value = delegates.get(i).getObjectPropertyRanges(
+                    arg0, arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
             timings.get(delegates.get(i)).add(getObjectPropertyRanges, elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getObjectPropertyRanges", arg0, arg1);
         } catch (RuntimeException e) {
-            System.out.println("Method: getObjectPropertyRanges");
-            System.out.println(Arrays.toString(new Object[] { arg0, arg1 }));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -990,17 +997,15 @@ public class ComparisonReasoner implements OWLReasoner {
         List<Node<OWLDataProperty>> objects = new ArrayList<Node<OWLDataProperty>>();
         for (int i = 0; i < delegates.size(); i++) {
             long start = bean.getCurrentThreadCpuTime();
-            Node<OWLDataProperty> value = delegates.get(i).getTopDataPropertyNode();
+            Node<OWLDataProperty> value = delegates.get(i)
+                    .getTopDataPropertyNode();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
             timings.get(delegates.get(i)).add(getTopDataPropertyNode, elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getTopDataPropertyNode");
         } catch (RuntimeException e) {
-            System.out.println("Method: getTopDataPropertyNode");
-            System.out.println(Arrays.toString(Arrays.asList().toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -1018,17 +1023,16 @@ public class ComparisonReasoner implements OWLReasoner {
         List<Node<OWLDataProperty>> objects = new ArrayList<Node<OWLDataProperty>>();
         for (int i = 0; i < delegates.size(); i++) {
             long start = bean.getCurrentThreadCpuTime();
-            Node<OWLDataProperty> value = delegates.get(i).getBottomDataPropertyNode();
+            Node<OWLDataProperty> value = delegates.get(i)
+                    .getBottomDataPropertyNode();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).add(getBottomDataPropertyNode, elapsed);
+            timings.get(delegates.get(i)).add(getBottomDataPropertyNode,
+                    elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getBottomDataPropertyNode");
         } catch (RuntimeException e) {
-            System.out.println("Method: getBottomDataPropertyNode");
-            System.out.println(Arrays.toString(Arrays.asList().toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -1047,18 +1051,15 @@ public class ComparisonReasoner implements OWLReasoner {
         List<NodeSet<OWLDataProperty>> objects = new ArrayList<NodeSet<OWLDataProperty>>();
         for (int i = 0; i < delegates.size(); i++) {
             long start = bean.getCurrentThreadCpuTime();
-            NodeSet<OWLDataProperty> value = delegates.get(i).getSubDataProperties(arg0,
-                    arg1);
+            NodeSet<OWLDataProperty> value = delegates.get(i)
+                    .getSubDataProperties(arg0, arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
             timings.get(delegates.get(i)).add(getSubDataProperties, elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getSubDataProperties", arg0, arg1);
         } catch (RuntimeException e) {
-            System.out.println("Method: getSubDataProperties");
-            System.out.println(Arrays.toString(new Object[] { arg0, arg1 }));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -1068,8 +1069,8 @@ public class ComparisonReasoner implements OWLReasoner {
     }
 
     @Override
-    public NodeSet<OWLDataProperty> getSuperDataProperties(OWLDataProperty arg0,
-            boolean arg1) {
+    public NodeSet<OWLDataProperty> getSuperDataProperties(
+            OWLDataProperty arg0, boolean arg1) {
         if (log) {
             System.out.println("r. getSuperDataProperties("
                     + Arrays.toString(new Object[] { arg0, arg1 }) + ")");
@@ -1077,18 +1078,15 @@ public class ComparisonReasoner implements OWLReasoner {
         List<NodeSet<OWLDataProperty>> objects = new ArrayList<NodeSet<OWLDataProperty>>();
         for (int i = 0; i < delegates.size(); i++) {
             long start = bean.getCurrentThreadCpuTime();
-            NodeSet<OWLDataProperty> value = delegates.get(i).getSuperDataProperties(
-                    arg0, arg1);
+            NodeSet<OWLDataProperty> value = delegates.get(i)
+                    .getSuperDataProperties(arg0, arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
             timings.get(delegates.get(i)).add(getSuperDataProperties, elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getSuperDataProperties", arg0, arg1);
         } catch (RuntimeException e) {
-            System.out.println("Method: getSuperDataProperties");
-            System.out.println(Arrays.toString(new Object[] { arg0, arg1 }));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -1098,7 +1096,8 @@ public class ComparisonReasoner implements OWLReasoner {
     }
 
     @Override
-    public Node<OWLDataProperty> getEquivalentDataProperties(OWLDataProperty arg0) {
+    public Node<OWLDataProperty> getEquivalentDataProperties(
+            OWLDataProperty arg0) {
         if (log) {
             System.out.println("r. getEquivalentDataProperties("
                     + Arrays.toString(Arrays.asList(arg0).toArray()) + ")");
@@ -1106,18 +1105,16 @@ public class ComparisonReasoner implements OWLReasoner {
         List<Node<OWLDataProperty>> objects = new ArrayList<Node<OWLDataProperty>>();
         for (int i = 0; i < delegates.size(); i++) {
             long start = bean.getCurrentThreadCpuTime();
-            Node<OWLDataProperty> value = delegates.get(i).getEquivalentDataProperties(
-                    arg0);
+            Node<OWLDataProperty> value = delegates.get(i)
+                    .getEquivalentDataProperties(arg0);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).add(getEquivalentDataProperties, elapsed);
+            timings.get(delegates.get(i)).add(getEquivalentDataProperties,
+                    elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getEquivalentDataProperties", arg0);
         } catch (RuntimeException e) {
-            System.out.println("Method: getEquivalentDataProperties");
-            System.out.println(Arrays.toString(Arrays.asList(arg0).toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -1136,18 +1133,16 @@ public class ComparisonReasoner implements OWLReasoner {
         List<NodeSet<OWLDataProperty>> objects = new ArrayList<NodeSet<OWLDataProperty>>();
         for (int i = 0; i < delegates.size(); i++) {
             long start = bean.getCurrentThreadCpuTime();
-            NodeSet<OWLDataProperty> value = delegates.get(i).getDisjointDataProperties(
-                    arg0);
+            NodeSet<OWLDataProperty> value = delegates.get(i)
+                    .getDisjointDataProperties(arg0);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).add(getDisjointDataProperties, elapsed);
+            timings.get(delegates.get(i)).add(getDisjointDataProperties,
+                    elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getDisjointDataProperties", arg0);
         } catch (RuntimeException e) {
-            System.out.println("Method: getDisjointDataProperties");
-            System.out.println(Arrays.toString(Arrays.asList(arg0).toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -1157,7 +1152,8 @@ public class ComparisonReasoner implements OWLReasoner {
     }
 
     @Override
-    public NodeSet<OWLClass> getDataPropertyDomains(OWLDataProperty arg0, boolean arg1) {
+    public NodeSet<OWLClass> getDataPropertyDomains(OWLDataProperty arg0,
+            boolean arg1) {
         if (log) {
             System.out.println("r. getDataPropertyDomains("
                     + Arrays.toString(new Object[] { arg0, arg1 }) + ")");
@@ -1165,17 +1161,15 @@ public class ComparisonReasoner implements OWLReasoner {
         List<NodeSet<OWLClass>> objects = new ArrayList<NodeSet<OWLClass>>();
         for (int i = 0; i < delegates.size(); i++) {
             long start = bean.getCurrentThreadCpuTime();
-            NodeSet<OWLClass> value = delegates.get(i).getDataPropertyDomains(arg0, arg1);
+            NodeSet<OWLClass> value = delegates.get(i).getDataPropertyDomains(
+                    arg0, arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
             timings.get(delegates.get(i)).add(getDataPropertyDomains, elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getDataPropertyDomains", arg0, arg1);
         } catch (RuntimeException e) {
-            System.out.println("Method: getDataPropertyDomains");
-            System.out.println(Arrays.toString(new Object[] { arg0, arg1 }));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -1199,11 +1193,8 @@ public class ComparisonReasoner implements OWLReasoner {
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getTypes", arg0, arg1);
         } catch (RuntimeException e) {
-            System.out.println("Method: getTypes");
-            System.out.println(Arrays.toString(new Object[] { arg0, arg1 }));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -1213,8 +1204,8 @@ public class ComparisonReasoner implements OWLReasoner {
     }
 
     @Override
-    public NodeSet<OWLNamedIndividual>
-            getInstances(OWLClassExpression arg0, boolean arg1) {
+    public NodeSet<OWLNamedIndividual> getInstances(OWLClassExpression arg0,
+            boolean arg1) {
         if (log) {
             System.out.println("r. getInstances("
                     + Arrays.toString(new Object[] { arg0, arg1 }) + ")");
@@ -1222,17 +1213,15 @@ public class ComparisonReasoner implements OWLReasoner {
         List<NodeSet<OWLNamedIndividual>> objects = new ArrayList<NodeSet<OWLNamedIndividual>>();
         for (int i = 0; i < delegates.size(); i++) {
             long start = bean.getCurrentThreadCpuTime();
-            NodeSet<OWLNamedIndividual> value = delegates.get(i).getInstances(arg0, arg1);
+            NodeSet<OWLNamedIndividual> value = delegates.get(i).getInstances(
+                    arg0, arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
             timings.get(delegates.get(i)).add(getInstances, elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getInstances", arg0, arg1);
         } catch (RuntimeException e) {
-            System.out.println("Method: getInstances");
-            System.out.println(Arrays.toString(new Object[] { arg0, arg1 }));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -1242,8 +1231,8 @@ public class ComparisonReasoner implements OWLReasoner {
     }
 
     @Override
-    public NodeSet<OWLNamedIndividual> getObjectPropertyValues(OWLNamedIndividual arg0,
-            OWLObjectPropertyExpression arg1) {
+    public NodeSet<OWLNamedIndividual> getObjectPropertyValues(
+            OWLNamedIndividual arg0, OWLObjectPropertyExpression arg1) {
         if (log) {
             System.out.println("r. getObjectPropertyValues("
                     + Arrays.toString(new Object[] { arg0, arg1 }) + ")");
@@ -1251,18 +1240,15 @@ public class ComparisonReasoner implements OWLReasoner {
         List<NodeSet<OWLNamedIndividual>> objects = new ArrayList<NodeSet<OWLNamedIndividual>>();
         for (int i = 0; i < delegates.size(); i++) {
             long start = bean.getCurrentThreadCpuTime();
-            NodeSet<OWLNamedIndividual> value = delegates.get(i).getObjectPropertyValues(
-                    arg0, arg1);
+            NodeSet<OWLNamedIndividual> value = delegates.get(i)
+                    .getObjectPropertyValues(arg0, arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
             timings.get(delegates.get(i)).add(getObjectPropertyValues, elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getObjectPropertyValues", arg0, arg1);
         } catch (RuntimeException e) {
-            System.out.println("Method: getObjectPropertyValues");
-            System.out.println(Arrays.toString(new Object[] { arg0, arg1 }));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -1281,17 +1267,15 @@ public class ComparisonReasoner implements OWLReasoner {
         List<Set<OWLLiteral>> objects = new ArrayList<Set<OWLLiteral>>();
         for (int i = 0; i < delegates.size(); i++) {
             long start = bean.getCurrentThreadCpuTime();
-            Set<OWLLiteral> value = delegates.get(i).getDataPropertyValues(arg0, arg1);
+            Set<OWLLiteral> value = delegates.get(i).getDataPropertyValues(
+                    arg0, arg1);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
             timings.get(delegates.get(i)).add(getDataPropertyValues, elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getDataPropertyValues", arg0, arg1);
         } catch (RuntimeException e) {
-            System.out.println("Method: getDataPropertyValues");
-            System.out.println(Arrays.toString(new Object[] { arg0, arg1 }));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -1309,17 +1293,15 @@ public class ComparisonReasoner implements OWLReasoner {
         List<Node<OWLNamedIndividual>> objects = new ArrayList<Node<OWLNamedIndividual>>();
         for (int i = 0; i < delegates.size(); i++) {
             long start = bean.getCurrentThreadCpuTime();
-            Node<OWLNamedIndividual> value = delegates.get(i).getSameIndividuals(arg0);
+            Node<OWLNamedIndividual> value = delegates.get(i)
+                    .getSameIndividuals(arg0);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
             timings.get(delegates.get(i)).add(getSameIndividuals, elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getSameIndividuals", arg0);
         } catch (RuntimeException e) {
-            System.out.println("Method: getSameIndividuals");
-            System.out.println(Arrays.toString(Arrays.asList(arg0).toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -1329,7 +1311,8 @@ public class ComparisonReasoner implements OWLReasoner {
     }
 
     @Override
-    public NodeSet<OWLNamedIndividual> getDifferentIndividuals(OWLNamedIndividual arg0) {
+    public NodeSet<OWLNamedIndividual> getDifferentIndividuals(
+            OWLNamedIndividual arg0) {
         if (log) {
             System.out.println("r. getDifferentIndividuals("
                     + Arrays.toString(Arrays.asList(arg0).toArray()) + ")");
@@ -1337,18 +1320,15 @@ public class ComparisonReasoner implements OWLReasoner {
         List<NodeSet<OWLNamedIndividual>> objects = new ArrayList<NodeSet<OWLNamedIndividual>>();
         for (int i = 0; i < delegates.size(); i++) {
             long start = bean.getCurrentThreadCpuTime();
-            NodeSet<OWLNamedIndividual> value = delegates.get(i).getDifferentIndividuals(
-                    arg0);
+            NodeSet<OWLNamedIndividual> value = delegates.get(i)
+                    .getDifferentIndividuals(arg0);
             long elapsed = bean.getCurrentThreadCpuTime() - start;
             timings.get(delegates.get(i)).add(getDifferentIndividuals, elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getDifferentIndividuals", arg0);
         } catch (RuntimeException e) {
-            System.out.println("Method: getDifferentIndividuals");
-            System.out.println(Arrays.toString(Arrays.asList(arg0).toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -1372,11 +1352,8 @@ public class ComparisonReasoner implements OWLReasoner {
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getTimeOut");
         } catch (RuntimeException e) {
-            System.out.println("Method: getTimeOut");
-            System.out.println(Arrays.toString(Arrays.asList().toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -1400,11 +1377,8 @@ public class ComparisonReasoner implements OWLReasoner {
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getFreshEntityPolicy");
         } catch (RuntimeException e) {
-            System.out.println("Method: getFreshEntityPolicy");
-            System.out.println(Arrays.toString(Arrays.asList().toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -1422,17 +1396,16 @@ public class ComparisonReasoner implements OWLReasoner {
         List<IndividualNodeSetPolicy> objects = new ArrayList<IndividualNodeSetPolicy>();
         for (int i = 0; i < delegates.size(); i++) {
             long start = bean.getCurrentThreadCpuTime();
-            IndividualNodeSetPolicy value = delegates.get(i).getIndividualNodeSetPolicy();
+            IndividualNodeSetPolicy value = delegates.get(i)
+                    .getIndividualNodeSetPolicy();
             long elapsed = bean.getCurrentThreadCpuTime() - start;
-            timings.get(delegates.get(i)).add(getIndividualNodeSetPolicy, elapsed);
+            timings.get(delegates.get(i)).add(getIndividualNodeSetPolicy,
+                    elapsed);
             objects.add(value);
         }
         try {
-            return verify(objects);
+            return verify(objects, "getIndividualNodeSetPolicy");
         } catch (RuntimeException e) {
-            System.out.println("Method: getIndividualNodeSetPolicy");
-            System.out.println(Arrays.toString(Arrays.asList().toArray()));
-            e.printStackTrace(System.out);
             if (tolerateDifferences) {
                 return objects.get(0);
             } else {
@@ -1444,8 +1417,8 @@ public class ComparisonReasoner implements OWLReasoner {
     @Override
     public void dispose() {
         if (log) {
-            System.out.println("r. dispose(" + Arrays.toString(Arrays.asList().toArray())
-                    + ")");
+            System.out.println("r. dispose("
+                    + Arrays.toString(Arrays.asList().toArray()) + ")");
         }
         for (int i = 0; i < delegates.size(); i++) {
             try {
@@ -1454,9 +1427,6 @@ public class ComparisonReasoner implements OWLReasoner {
                 long elapsed = bean.getCurrentThreadCpuTime() - start;
                 timings.get(delegates.get(i)).add(dispose, elapsed);
             } catch (RuntimeException e) {
-                System.out.println("Method: dispose");
-                System.out.println(Arrays.toString(Arrays.asList().toArray()));
-                e.printStackTrace(System.out);
                 if (!tolerateDifferences) {
                     throw e;
                 }
