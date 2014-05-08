@@ -3,12 +3,14 @@ package uk.ac.manchester.cs.chainsaw;
 import java.util.ArrayList;
 import java.util.List;
 
-/** a multimap for int -> collection of int values. */
+/** a multimap for int to collection of int values. */
 public class ArrayIntMap {
     private final List<FastSet> map = new ArrayList<FastSet>();
 
     /** @param key
-     * @param value */
+     *            key
+     * @param value
+     *            value */
     public void put(int key, int value) {
         if (key >= map.size()) {
             while (key >= map.size()) {
@@ -27,6 +29,7 @@ public class ArrayIntMap {
      * connected, returns an immutable empty set
      * 
      * @param key
+     *            key
      * @return the set of values connected with the key */
     public FastSet get(int key) {
         if (key < map.size()) {
@@ -63,6 +66,7 @@ public class ArrayIntMap {
     }
 
     /** @param k
+     *            key
      * @return true if k is a key for the map */
     public boolean containsKey(int k) {
         return k < map.size() && map.get(k) != null;

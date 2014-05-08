@@ -733,7 +733,6 @@ public class BuildersTestCase {
         BuilderNegativeObjectPropertyAssertion builder = new BuilderNegativeObjectPropertyAssertion()
                 .withAnnotations(annotations).withProperty(op).withValue(i)
                 .withSubject(i);
-
         OWLObject expected = df.getOWLNegativeObjectPropertyAssertionAxiom(op, i, i,
                 annotations);
         // when

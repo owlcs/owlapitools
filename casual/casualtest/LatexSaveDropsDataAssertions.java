@@ -1,6 +1,6 @@
 package casualtest;
 
-import junit.framework.TestCase;
+
 
 import org.coode.owlapi.latex.LatexOntologyFormat;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 @SuppressWarnings("javadoc")
-public class LatexSaveDropsDataAssertions extends TestCase {
+public class LatexSaveDropsDataAssertions  {
 	public static final String NS = "http://protege.org/ontologies/Latex.owl";
 	public static final OWLIndividual I = Factory.getFactory()
 			.getOWLNamedIndividual(IRI.create(NS + "#i"));

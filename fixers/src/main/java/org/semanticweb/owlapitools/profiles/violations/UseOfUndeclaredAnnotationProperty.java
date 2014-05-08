@@ -51,11 +51,8 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
-/** Author: Matthew Horridge<br>
- * The University of Manchester<br>
- * Information Management Group<br>
- * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
+/** @author Matthew Horridge, The University of Manchester, Information Management
+ *         Group */
 public class UseOfUndeclaredAnnotationProperty extends
         OWLProfileViolation<OWLAnnotationProperty> implements UndeclaredEntityViolation {
     @Override
@@ -63,13 +60,16 @@ public class UseOfUndeclaredAnnotationProperty extends
         return getExpression();
     }
 
-    @Override
-    public OWLOntology getOntology() {
-        return ontology;
-    }
-
     private final OWLAnnotation annotation;
 
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param annotation
+     *            annotation
+     * @param prop
+     *            prop */
     public UseOfUndeclaredAnnotationProperty(OWLOntology ontology, OWLAxiom axiom,
             OWLAnnotation annotation, OWLAnnotationProperty prop) {
         super(ontology, axiom, prop);
@@ -85,7 +85,6 @@ public class UseOfUndeclaredAnnotationProperty extends
     public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
         return visitor.visit(this);
     }
-
 
     @Override
     public String toString() {

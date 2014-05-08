@@ -46,556 +46,546 @@ import org.semanticweb.owlapi.reasoner.TimeOutException;
 import org.semanticweb.owlapi.reasoner.UnsupportedEntailmentTypeException;
 import org.semanticweb.owlapi.util.Version;
 
-/**
- *
- * @author ignazio
- *
- *         Reasoner wrapper that will spin each call to the underlying reasoner
- *         on an Executor service and try hard to respect timeouts
- *
- */
+/** @author ignazio Reasoner wrapper that will spin each call to the underlying
+ *         reasoner on an Executor service and try hard to respect timeouts */
 @SuppressWarnings("boxing")
 public class ThreadedReasoner implements OWLReasoner {
-	protected final OWLReasoner delegate;
-	private final ExecutorService exec = Executors.newFixedThreadPool(1);
+    protected final OWLReasoner delegate;
+    private final ExecutorService exec = Executors.newFixedThreadPool(1);
 
     /** @param r
      *            reasoner to wrap */
-	public ThreadedReasoner(OWLReasoner r) {
-		delegate = r;
-	}
+    public ThreadedReasoner(OWLReasoner r) {
+        delegate = r;
+    }
 
-	@Override
+    @Override
     public String getReasonerName() {
-		return delegate.getReasonerName();
-	}
+        return delegate.getReasonerName();
+    }
 
-	@Override
+    @Override
     public Version getReasonerVersion() {
-		return delegate.getReasonerVersion();
-	}
+        return delegate.getReasonerVersion();
+    }
 
-	@Override
+    @Override
     public BufferingMode getBufferingMode() {
-		return delegate.getBufferingMode();
-	}
+        return delegate.getBufferingMode();
+    }
 
-	@Override
+    @Override
     public void flush() {
-		delegate.flush();
-	}
+        delegate.flush();
+    }
 
-	@Override
+    @Override
     public List<OWLOntologyChange> getPendingChanges() {
-		return delegate.getPendingChanges();
-	}
+        return delegate.getPendingChanges();
+    }
 
-	@Override
+    @Override
     public Set<OWLAxiom> getPendingAxiomAdditions() {
-		return delegate.getPendingAxiomAdditions();
-	}
+        return delegate.getPendingAxiomAdditions();
+    }
 
-	@Override
+    @Override
     public Set<OWLAxiom> getPendingAxiomRemovals() {
-		return delegate.getPendingAxiomRemovals();
-	}
+        return delegate.getPendingAxiomRemovals();
+    }
 
-	@Override
+    @Override
     public OWLOntology getRootOntology() {
-		return delegate.getRootOntology();
-	}
+        return delegate.getRootOntology();
+    }
 
-	@Override
+    @Override
     public boolean isPrecomputed(InferenceType inferenceType) {
-		return delegate.isPrecomputed(inferenceType);
-	}
+        return delegate.isPrecomputed(inferenceType);
+    }
 
-	@Override
+    @Override
     public Set<InferenceType> getPrecomputableInferenceTypes() {
-		return delegate.getPrecomputableInferenceTypes();
-	}
+        return delegate.getPrecomputableInferenceTypes();
+    }
 
-	@Override
+    @Override
     public Node<OWLClass> getTopClassNode() {
-		return delegate.getTopClassNode();
-	}
+        return delegate.getTopClassNode();
+    }
 
-	@Override
+    @Override
     public Node<OWLClass> getBottomClassNode() {
-		return delegate.getBottomClassNode();
-	}
+        return delegate.getBottomClassNode();
+    }
 
-	@Override
+    @Override
     public void interrupt() {
-		delegate.interrupt();
-		exec.shutdownNow();
-	}
+        delegate.interrupt();
+        exec.shutdownNow();
+    }
 
-	@Override
+    @Override
     public void precomputeInferences(final InferenceType... inferenceTypes)
-			throws ReasonerInterruptedException, TimeOutException,
-			InconsistentOntologyException {
-		Callable<Boolean> thread = new Callable<Boolean>() {
-			@Override
+            throws ReasonerInterruptedException, TimeOutException,
+            InconsistentOntologyException {
+        Callable<Boolean> thread = new Callable<Boolean>() {
+            @Override
             public Boolean call() throws Exception {
-				delegate.precomputeInferences(inferenceTypes);
-				return Boolean.TRUE;
-			}
-		};
-		threadedRun(thread);
-	}
+                delegate.precomputeInferences(inferenceTypes);
+                return Boolean.TRUE;
+            }
+        };
+        threadedRun(thread);
+    }
 
-	private <T> T threadedRun(Callable<T> r) {
-		Future<T> toReturn = exec.submit(r);
-		try {
-			if (delegate.getTimeOut() > 0) {
-				return toReturn.get(delegate.getTimeOut(), TimeUnit.MILLISECONDS);
-			} else {
-				return toReturn.get();
-			}
-		} catch (InterruptedException e) {
-			//e.printStackTrace();
-			interrupt();
-			exec.shutdownNow();
-			throw new ReasonerInterruptedException(
-					"Reasoning was interrupted; future reasoning tasks might be affected",
-					e);
-		} catch (ExecutionException e) {
-			//e.printStackTrace();
-			interrupt();
-			exec.shutdownNow();
-			throw new ReasonerInternalException(
-					"Execution problem; future reasoning tasks might be affected", e);
-		} catch (TimeoutException e) {
-			//e.printStackTrace();
-			interrupt();
-			exec.shutdownNow();
-			throw new TimeOutException(
-					"Timeout occurred; future reasoning tasks might be affected", e);
-		}
-		finally {
-			toReturn.cancel(true);
-		}
-	}
+    private <T> T threadedRun(Callable<T> r) {
+        Future<T> toReturn = exec.submit(r);
+        try {
+            if (delegate.getTimeOut() > 0) {
+                return toReturn.get(delegate.getTimeOut(), TimeUnit.MILLISECONDS);
+            } else {
+                return toReturn.get();
+            }
+        } catch (InterruptedException e) {
+            interrupt();
+            exec.shutdownNow();
+            throw new ReasonerInterruptedException(
+                    "Reasoning was interrupted; future reasoning tasks might be affected",
+                    e);
+        } catch (ExecutionException e) {
+            interrupt();
+            exec.shutdownNow();
+            throw new ReasonerInternalException(
+                    "Execution problem; future reasoning tasks might be affected", e);
+        } catch (TimeoutException e) {
+            interrupt();
+            exec.shutdownNow();
+            throw new TimeOutException(
+                    "Timeout occurred; future reasoning tasks might be affected", e);
+        } finally {
+            toReturn.cancel(true);
+        }
+    }
 
     @Override
     public boolean isConsistent() throws ReasonerInterruptedException, TimeOutException {
-		return threadedRun(new Callable<Boolean>() {
-			@Override
+        return threadedRun(new Callable<Boolean>() {
+            @Override
             public Boolean call() throws Exception {
-				return delegate.isConsistent();
-			}
-		});
-	}
+                return delegate.isConsistent();
+            }
+        });
+    }
 
-	@Override
+    @Override
     public boolean isSatisfiable(final OWLClassExpression classExpression)
-			throws ReasonerInterruptedException, TimeOutException,
-			ClassExpressionNotInProfileException, FreshEntitiesException,
-			InconsistentOntologyException {
-		return threadedRun(new Callable<Boolean>() {
-			@Override
+            throws ReasonerInterruptedException, TimeOutException,
+            ClassExpressionNotInProfileException, FreshEntitiesException,
+            InconsistentOntologyException {
+        return threadedRun(new Callable<Boolean>() {
+            @Override
             public Boolean call() throws Exception {
-				return delegate.isSatisfiable(classExpression);
-			}
-		});
-	}
+                return delegate.isSatisfiable(classExpression);
+            }
+        });
+    }
 
-	@Override
+    @Override
     public Node<OWLClass> getUnsatisfiableClasses() throws ReasonerInterruptedException,
-			TimeOutException, InconsistentOntologyException {
-		Callable<Node<OWLClass>> thread = new Callable<Node<OWLClass>>() {
-			@Override
+            TimeOutException, InconsistentOntologyException {
+        Callable<Node<OWLClass>> thread = new Callable<Node<OWLClass>>() {
+            @Override
             public Node<OWLClass> call() throws Exception {
-				return delegate.getUnsatisfiableClasses();
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getUnsatisfiableClasses();
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public boolean isEntailed(final OWLAxiom axiom) throws ReasonerInterruptedException,
-			UnsupportedEntailmentTypeException, TimeOutException,
-			AxiomNotInProfileException, FreshEntitiesException,
-			InconsistentOntologyException {
-		Callable<Boolean> thread = new Callable<Boolean>() {
-			@Override
+            UnsupportedEntailmentTypeException, TimeOutException,
+            AxiomNotInProfileException, FreshEntitiesException,
+            InconsistentOntologyException {
+        Callable<Boolean> thread = new Callable<Boolean>() {
+            @Override
             public Boolean call() {
-				return delegate.isEntailed(axiom);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.isEntailed(axiom);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public boolean isEntailed(final Set<? extends OWLAxiom> axioms)
-			throws ReasonerInterruptedException, UnsupportedEntailmentTypeException,
-			TimeOutException, AxiomNotInProfileException, FreshEntitiesException,
-			InconsistentOntologyException {
-		Callable<Boolean> thread = new Callable<Boolean>() {
-			@Override
+            throws ReasonerInterruptedException, UnsupportedEntailmentTypeException,
+            TimeOutException, AxiomNotInProfileException, FreshEntitiesException,
+            InconsistentOntologyException {
+        Callable<Boolean> thread = new Callable<Boolean>() {
+            @Override
             public Boolean call() {
-				return delegate.isEntailed(axioms);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.isEntailed(axioms);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public boolean isEntailmentCheckingSupported(final AxiomType<?> axiomType) {
-		Callable<Boolean> thread = new Callable<Boolean>() {
-			@Override
+        Callable<Boolean> thread = new Callable<Boolean>() {
+            @Override
             public Boolean call() {
-				return delegate.isEntailmentCheckingSupported(axiomType);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.isEntailmentCheckingSupported(axiomType);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public NodeSet<OWLClass> getSubClasses(final OWLClassExpression ce,
-			final boolean direct) throws ReasonerInterruptedException, TimeOutException,
-			FreshEntitiesException, InconsistentOntologyException,
-			ClassExpressionNotInProfileException {
-		Callable<NodeSet<OWLClass>> thread = new Callable<NodeSet<OWLClass>>() {
-			@Override
+            final boolean direct) throws ReasonerInterruptedException, TimeOutException,
+            FreshEntitiesException, InconsistentOntologyException,
+            ClassExpressionNotInProfileException {
+        Callable<NodeSet<OWLClass>> thread = new Callable<NodeSet<OWLClass>>() {
+            @Override
             public NodeSet<OWLClass> call() {
-				return delegate.getSubClasses(ce, direct);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getSubClasses(ce, direct);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public NodeSet<OWLClass> getSuperClasses(final OWLClassExpression ce,
-			final boolean direct) throws InconsistentOntologyException,
-			ClassExpressionNotInProfileException, FreshEntitiesException,
-			ReasonerInterruptedException, TimeOutException {
-		Callable<NodeSet<OWLClass>> thread = new Callable<NodeSet<OWLClass>>() {
-			@Override
+            final boolean direct) throws InconsistentOntologyException,
+            ClassExpressionNotInProfileException, FreshEntitiesException,
+            ReasonerInterruptedException, TimeOutException {
+        Callable<NodeSet<OWLClass>> thread = new Callable<NodeSet<OWLClass>>() {
+            @Override
             public NodeSet<OWLClass> call() {
-				return delegate.getSuperClasses(ce, direct);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getSuperClasses(ce, direct);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public Node<OWLClass> getEquivalentClasses(final OWLClassExpression ce)
-			throws InconsistentOntologyException, ClassExpressionNotInProfileException,
-			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
-		Callable<Node<OWLClass>> thread = new Callable<Node<OWLClass>>() {
-			@Override
+            throws InconsistentOntologyException, ClassExpressionNotInProfileException,
+            FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+        Callable<Node<OWLClass>> thread = new Callable<Node<OWLClass>>() {
+            @Override
             public Node<OWLClass> call() {
-				return delegate.getEquivalentClasses(ce);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getEquivalentClasses(ce);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public NodeSet<OWLClass> getDisjointClasses(final OWLClassExpression ce)
-			throws ReasonerInterruptedException, TimeOutException,
-			FreshEntitiesException, InconsistentOntologyException {
-		Callable<NodeSet<OWLClass>> thread = new Callable<NodeSet<OWLClass>>() {
-			@Override
+            throws ReasonerInterruptedException, TimeOutException,
+            FreshEntitiesException, InconsistentOntologyException {
+        Callable<NodeSet<OWLClass>> thread = new Callable<NodeSet<OWLClass>>() {
+            @Override
             public NodeSet<OWLClass> call() {
-				return delegate.getDisjointClasses(ce);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getDisjointClasses(ce);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public Node<OWLObjectPropertyExpression> getTopObjectPropertyNode() {
-		return delegate.getTopObjectPropertyNode();
-	}
+        return delegate.getTopObjectPropertyNode();
+    }
 
-	@Override
+    @Override
     public Node<OWLObjectPropertyExpression> getBottomObjectPropertyNode() {
-		return delegate.getBottomObjectPropertyNode();
-	}
+        return delegate.getBottomObjectPropertyNode();
+    }
 
-	@Override
+    @Override
     public NodeSet<OWLObjectPropertyExpression> getSubObjectProperties(
-			final OWLObjectPropertyExpression pe, final boolean direct)
-			throws InconsistentOntologyException, FreshEntitiesException,
-			ReasonerInterruptedException, TimeOutException {
-		Callable<NodeSet<OWLObjectPropertyExpression>> thread = new Callable<NodeSet<OWLObjectPropertyExpression>>() {
-			@Override
+            final OWLObjectPropertyExpression pe, final boolean direct)
+            throws InconsistentOntologyException, FreshEntitiesException,
+            ReasonerInterruptedException, TimeOutException {
+        Callable<NodeSet<OWLObjectPropertyExpression>> thread = new Callable<NodeSet<OWLObjectPropertyExpression>>() {
+            @Override
             public NodeSet<OWLObjectPropertyExpression> call() {
-				return delegate.getSubObjectProperties(pe, direct);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getSubObjectProperties(pe, direct);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public NodeSet<OWLObjectPropertyExpression> getSuperObjectProperties(
-			final OWLObjectPropertyExpression pe, final boolean direct)
-			throws InconsistentOntologyException, FreshEntitiesException,
-			ReasonerInterruptedException, TimeOutException {
-		Callable<NodeSet<OWLObjectPropertyExpression>> thread = new Callable<NodeSet<OWLObjectPropertyExpression>>() {
-			@Override
+            final OWLObjectPropertyExpression pe, final boolean direct)
+            throws InconsistentOntologyException, FreshEntitiesException,
+            ReasonerInterruptedException, TimeOutException {
+        Callable<NodeSet<OWLObjectPropertyExpression>> thread = new Callable<NodeSet<OWLObjectPropertyExpression>>() {
+            @Override
             public NodeSet<OWLObjectPropertyExpression> call() {
-				return delegate.getSuperObjectProperties(pe, direct);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getSuperObjectProperties(pe, direct);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public Node<OWLObjectPropertyExpression> getEquivalentObjectProperties(
-			final OWLObjectPropertyExpression pe) throws InconsistentOntologyException,
-			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
-		Callable<Node<OWLObjectPropertyExpression>> thread = new Callable<Node<OWLObjectPropertyExpression>>() {
-			@Override
+            final OWLObjectPropertyExpression pe) throws InconsistentOntologyException,
+            FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+        Callable<Node<OWLObjectPropertyExpression>> thread = new Callable<Node<OWLObjectPropertyExpression>>() {
+            @Override
             public Node<OWLObjectPropertyExpression> call() {
-				return delegate.getEquivalentObjectProperties(pe);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getEquivalentObjectProperties(pe);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public NodeSet<OWLObjectPropertyExpression> getDisjointObjectProperties(
-			final OWLObjectPropertyExpression pe) throws InconsistentOntologyException,
-			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
-		Callable<NodeSet<OWLObjectPropertyExpression>> thread = new Callable<NodeSet<OWLObjectPropertyExpression>>() {
-			@Override
+            final OWLObjectPropertyExpression pe) throws InconsistentOntologyException,
+            FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+        Callable<NodeSet<OWLObjectPropertyExpression>> thread = new Callable<NodeSet<OWLObjectPropertyExpression>>() {
+            @Override
             public NodeSet<OWLObjectPropertyExpression> call() {
-				return delegate.getDisjointObjectProperties(pe);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getDisjointObjectProperties(pe);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public Node<OWLObjectPropertyExpression> getInverseObjectProperties(
-			final OWLObjectPropertyExpression pe) throws InconsistentOntologyException,
-			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
-		Callable<Node<OWLObjectPropertyExpression>> thread = new Callable<Node<OWLObjectPropertyExpression>>() {
-			@Override
+            final OWLObjectPropertyExpression pe) throws InconsistentOntologyException,
+            FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+        Callable<Node<OWLObjectPropertyExpression>> thread = new Callable<Node<OWLObjectPropertyExpression>>() {
+            @Override
             public Node<OWLObjectPropertyExpression> call() {
-				return delegate.getInverseObjectProperties(pe);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getInverseObjectProperties(pe);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public NodeSet<OWLClass> getObjectPropertyDomains(
-			final OWLObjectPropertyExpression pe, final boolean direct)
-			throws InconsistentOntologyException, FreshEntitiesException,
-			ReasonerInterruptedException, TimeOutException {
-		Callable<NodeSet<OWLClass>> thread = new Callable<NodeSet<OWLClass>>() {
-			@Override
+            final OWLObjectPropertyExpression pe, final boolean direct)
+            throws InconsistentOntologyException, FreshEntitiesException,
+            ReasonerInterruptedException, TimeOutException {
+        Callable<NodeSet<OWLClass>> thread = new Callable<NodeSet<OWLClass>>() {
+            @Override
             public NodeSet<OWLClass> call() {
-				return delegate.getObjectPropertyDomains(pe, direct);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getObjectPropertyDomains(pe, direct);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public NodeSet<OWLClass> getObjectPropertyRanges(
-			final OWLObjectPropertyExpression pe, final boolean direct)
-			throws InconsistentOntologyException, FreshEntitiesException,
-			ReasonerInterruptedException, TimeOutException {
-		Callable<NodeSet<OWLClass>> thread = new Callable<NodeSet<OWLClass>>() {
-			@Override
+            final OWLObjectPropertyExpression pe, final boolean direct)
+            throws InconsistentOntologyException, FreshEntitiesException,
+            ReasonerInterruptedException, TimeOutException {
+        Callable<NodeSet<OWLClass>> thread = new Callable<NodeSet<OWLClass>>() {
+            @Override
             public NodeSet<OWLClass> call() {
-				return delegate.getObjectPropertyRanges(pe, direct);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getObjectPropertyRanges(pe, direct);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public Node<OWLDataProperty> getTopDataPropertyNode() {
-		Callable<Node<OWLDataProperty>> thread = new Callable<Node<OWLDataProperty>>() {
-			@Override
+        Callable<Node<OWLDataProperty>> thread = new Callable<Node<OWLDataProperty>>() {
+            @Override
             public Node<OWLDataProperty> call() {
-				return delegate.getTopDataPropertyNode();
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getTopDataPropertyNode();
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public Node<OWLDataProperty> getBottomDataPropertyNode() {
-		Callable<Node<OWLDataProperty>> thread = new Callable<Node<OWLDataProperty>>() {
-			@Override
+        Callable<Node<OWLDataProperty>> thread = new Callable<Node<OWLDataProperty>>() {
+            @Override
             public Node<OWLDataProperty> call() {
-				return delegate.getBottomDataPropertyNode();
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getBottomDataPropertyNode();
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public NodeSet<OWLDataProperty> getSubDataProperties(final OWLDataProperty pe,
-			final boolean direct) throws InconsistentOntologyException,
-			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
-		Callable<NodeSet<OWLDataProperty>> thread = new Callable<NodeSet<OWLDataProperty>>() {
-			@Override
+            final boolean direct) throws InconsistentOntologyException,
+            FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+        Callable<NodeSet<OWLDataProperty>> thread = new Callable<NodeSet<OWLDataProperty>>() {
+            @Override
             public NodeSet<OWLDataProperty> call() {
-				return delegate.getSubDataProperties(pe, direct);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getSubDataProperties(pe, direct);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public NodeSet<OWLDataProperty> getSuperDataProperties(final OWLDataProperty pe,
-			final boolean direct) throws InconsistentOntologyException,
-			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
-		Callable<NodeSet<OWLDataProperty>> thread = new Callable<NodeSet<OWLDataProperty>>() {
-			@Override
+            final boolean direct) throws InconsistentOntologyException,
+            FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+        Callable<NodeSet<OWLDataProperty>> thread = new Callable<NodeSet<OWLDataProperty>>() {
+            @Override
             public NodeSet<OWLDataProperty> call() {
-				return delegate.getSuperDataProperties(pe, direct);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getSuperDataProperties(pe, direct);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public Node<OWLDataProperty> getEquivalentDataProperties(final OWLDataProperty pe)
-			throws InconsistentOntologyException, FreshEntitiesException,
-			ReasonerInterruptedException, TimeOutException {
-		Callable<Node<OWLDataProperty>> thread = new Callable<Node<OWLDataProperty>>() {
-			@Override
+            throws InconsistentOntologyException, FreshEntitiesException,
+            ReasonerInterruptedException, TimeOutException {
+        Callable<Node<OWLDataProperty>> thread = new Callable<Node<OWLDataProperty>>() {
+            @Override
             public Node<OWLDataProperty> call() {
-				return delegate.getEquivalentDataProperties(pe);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getEquivalentDataProperties(pe);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public NodeSet<OWLDataProperty> getDisjointDataProperties(
-			final OWLDataPropertyExpression pe) throws InconsistentOntologyException,
-			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
-		Callable<NodeSet<OWLDataProperty>> thread = new Callable<NodeSet<OWLDataProperty>>() {
-			@Override
+            final OWLDataPropertyExpression pe) throws InconsistentOntologyException,
+            FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+        Callable<NodeSet<OWLDataProperty>> thread = new Callable<NodeSet<OWLDataProperty>>() {
+            @Override
             public NodeSet<OWLDataProperty> call() {
-				return delegate.getDisjointDataProperties(pe);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getDisjointDataProperties(pe);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public NodeSet<OWLClass> getDataPropertyDomains(final OWLDataProperty pe,
-			final boolean direct) throws InconsistentOntologyException,
-			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
-		Callable<NodeSet<OWLClass>> thread = new Callable<NodeSet<OWLClass>>() {
-			@Override
+            final boolean direct) throws InconsistentOntologyException,
+            FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+        Callable<NodeSet<OWLClass>> thread = new Callable<NodeSet<OWLClass>>() {
+            @Override
             public NodeSet<OWLClass> call() {
-				return delegate.getDataPropertyDomains(pe, direct);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getDataPropertyDomains(pe, direct);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public NodeSet<OWLClass> getTypes(final OWLNamedIndividual ind, final boolean direct)
-			throws InconsistentOntologyException, FreshEntitiesException,
-			ReasonerInterruptedException, TimeOutException {
-		Callable<NodeSet<OWLClass>> thread = new Callable<NodeSet<OWLClass>>() {
-			@Override
+            throws InconsistentOntologyException, FreshEntitiesException,
+            ReasonerInterruptedException, TimeOutException {
+        Callable<NodeSet<OWLClass>> thread = new Callable<NodeSet<OWLClass>>() {
+            @Override
             public NodeSet<OWLClass> call() {
-				return delegate.getTypes(ind, direct);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getTypes(ind, direct);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public NodeSet<OWLNamedIndividual> getInstances(final OWLClassExpression ce,
-			final boolean direct) throws InconsistentOntologyException,
-			ClassExpressionNotInProfileException, FreshEntitiesException,
-			ReasonerInterruptedException, TimeOutException {
-		Callable<NodeSet<OWLNamedIndividual>> thread = new Callable<NodeSet<OWLNamedIndividual>>() {
-			@Override
+            final boolean direct) throws InconsistentOntologyException,
+            ClassExpressionNotInProfileException, FreshEntitiesException,
+            ReasonerInterruptedException, TimeOutException {
+        Callable<NodeSet<OWLNamedIndividual>> thread = new Callable<NodeSet<OWLNamedIndividual>>() {
+            @Override
             public NodeSet<OWLNamedIndividual> call() {
-				return delegate.getInstances(ce, direct);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getInstances(ce, direct);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public NodeSet<OWLNamedIndividual> getObjectPropertyValues(
-			final OWLNamedIndividual ind, final OWLObjectPropertyExpression pe)
-			throws InconsistentOntologyException, FreshEntitiesException,
-			ReasonerInterruptedException, TimeOutException {
-		Callable<NodeSet<OWLNamedIndividual>> thread = new Callable<NodeSet<OWLNamedIndividual>>() {
-			@Override
+            final OWLNamedIndividual ind, final OWLObjectPropertyExpression pe)
+            throws InconsistentOntologyException, FreshEntitiesException,
+            ReasonerInterruptedException, TimeOutException {
+        Callable<NodeSet<OWLNamedIndividual>> thread = new Callable<NodeSet<OWLNamedIndividual>>() {
+            @Override
             public NodeSet<OWLNamedIndividual> call() {
-				return delegate.getObjectPropertyValues(ind, pe);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getObjectPropertyValues(ind, pe);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public Set<OWLLiteral> getDataPropertyValues(final OWLNamedIndividual ind,
-			final OWLDataProperty pe) throws InconsistentOntologyException,
-			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
-		Callable<Set<OWLLiteral>> thread = new Callable<Set<OWLLiteral>>() {
-			@Override
+            final OWLDataProperty pe) throws InconsistentOntologyException,
+            FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+        Callable<Set<OWLLiteral>> thread = new Callable<Set<OWLLiteral>>() {
+            @Override
             public Set<OWLLiteral> call() {
-				return delegate.getDataPropertyValues(ind, pe);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getDataPropertyValues(ind, pe);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public Node<OWLNamedIndividual> getSameIndividuals(final OWLNamedIndividual ind)
-			throws InconsistentOntologyException, FreshEntitiesException,
-			ReasonerInterruptedException, TimeOutException {
-		Callable<Node<OWLNamedIndividual>> thread = new Callable<Node<OWLNamedIndividual>>() {
-			@Override
+            throws InconsistentOntologyException, FreshEntitiesException,
+            ReasonerInterruptedException, TimeOutException {
+        Callable<Node<OWLNamedIndividual>> thread = new Callable<Node<OWLNamedIndividual>>() {
+            @Override
             public Node<OWLNamedIndividual> call() {
-				return delegate.getSameIndividuals(ind);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getSameIndividuals(ind);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public NodeSet<OWLNamedIndividual> getDifferentIndividuals(
-			final OWLNamedIndividual ind) throws InconsistentOntologyException,
-			FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
-		Callable<NodeSet<OWLNamedIndividual>> thread = new Callable<NodeSet<OWLNamedIndividual>>() {
-			@Override
+            final OWLNamedIndividual ind) throws InconsistentOntologyException,
+            FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+        Callable<NodeSet<OWLNamedIndividual>> thread = new Callable<NodeSet<OWLNamedIndividual>>() {
+            @Override
             public NodeSet<OWLNamedIndividual> call() {
-				return delegate.getDifferentIndividuals(ind);
-			}
-		};
-		return threadedRun(thread);
-	}
+                return delegate.getDifferentIndividuals(ind);
+            }
+        };
+        return threadedRun(thread);
+    }
 
-	@Override
+    @Override
     public long getTimeOut() {
-		return delegate.getTimeOut();
-	}
+        return delegate.getTimeOut();
+    }
 
-	@Override
+    @Override
     public FreshEntityPolicy getFreshEntityPolicy() {
-		return delegate.getFreshEntityPolicy();
-	}
+        return delegate.getFreshEntityPolicy();
+    }
 
-	@Override
+    @Override
     public IndividualNodeSetPolicy getIndividualNodeSetPolicy() {
-		return delegate.getIndividualNodeSetPolicy();
-	}
+        return delegate.getIndividualNodeSetPolicy();
+    }
 
-	@Override
+    @Override
     public void dispose() {
-		delegate.dispose();
-		exec.shutdownNow();
-	}
+        delegate.dispose();
+        exec.shutdownNow();
+    }
 }

@@ -14,7 +14,8 @@ public interface LocalityChecker {
 
     /** allow the checker to preprocess an ontology if necessary
      * 
-     * @param vec */
+     * @param vec
+     *            collection of axioms */
     void preprocessOntology(Collection<AxiomWrapper> vec);
 
     /** @param sig
@@ -28,10 +29,10 @@ public interface LocalityChecker {
      *            expression to evaluate
      * @return true if expr is top equivalent */
     boolean isTopEquivalent(OWLObject expr);
+
     /** @param expr
      *            expression to evaluate
      * @return true if expr is bottom equivalent */
-
     boolean isBotEquivalent(OWLObject expr);
 
     /** @param expr

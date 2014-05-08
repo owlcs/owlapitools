@@ -36,14 +36,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package uk.ac.manchester.cs.owl.owlapi.alternateimpls.test;
+
 @SuppressWarnings("javadoc")
 public interface RaceCallback {
-	void add();
+    void add();
 
-	boolean failed();
+    boolean failed();
 
-	void diagnose();
-	void race();
+    void diagnose();
+
+    void race();
 }

@@ -49,11 +49,8 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
-/** Author: Matthew Horridge<br>
- * The University of Manchester<br>
- * Information Management Group<br>
- * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
+/** @author Matthew Horridge, The University of Manchester, Information Management
+ *         Group */
 public class UseOfUndeclaredClass extends OWLProfileViolation<OWLClass> implements
         UndeclaredEntityViolation {
     @Override
@@ -61,11 +58,12 @@ public class UseOfUndeclaredClass extends OWLProfileViolation<OWLClass> implemen
         return getExpression();
     }
 
-    @Override
-    public OWLOntology getOntology() {
-        return ontology;
-    }
-
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param cls
+     *            cls */
     public UseOfUndeclaredClass(OWLOntology ontology, OWLAxiom axiom, OWLClass cls) {
         super(ontology, axiom, cls);
     }
@@ -80,7 +78,6 @@ public class UseOfUndeclaredClass extends OWLProfileViolation<OWLClass> implemen
         return visitor.visit(this);
     }
 
-
     @Override
     public String toString() {
         return toString("Use of undeclared class: %s", getExpression());
@@ -90,5 +87,4 @@ public class UseOfUndeclaredClass extends OWLProfileViolation<OWLClass> implemen
     public List<OWLOntologyChange> repair() {
         return list(addDeclaration(getExpression()));
     }
-
 }

@@ -8,7 +8,8 @@ import org.semanticweb.owlapi.model.OWLOntologyChange;
 /** A builder interface for building owl objects
  * 
  * @author ignazio
- * @param <T> */
+ * @param <T>
+ *            builder type */
 public interface Builder<T> {
     /** @return freshly built object */
     T buildObject();
@@ -19,6 +20,7 @@ public interface Builder<T> {
      * have already been applied.
      * 
      * @param o
+     *            ontology
      * @return changes the ontology to which the changes should be applied */
     List<OWLOntologyChange> buildChanges(OWLOntology o);
 }

@@ -35,7 +35,6 @@ public class AtomicDecomposerDepedenciesTest {
         // then
         assertEquals(0, dependencies2.size());
         assertEquals(0, dependencies.size());
-
     }
 
     private OWLOntology getOntology() throws OWLOntologyCreationException {

@@ -93,13 +93,10 @@ import org.semanticweb.owlapitools.profiles.violations.UseOfNonEquivalentClassEx
 import org.semanticweb.owlapitools.profiles.violations.UseOfNonSubClassExpression;
 import org.semanticweb.owlapitools.profiles.violations.UseOfNonSuperClassExpression;
 
-/** Author: Matthew Horridge<br>
- * The University of Manchester<br>
- * Information Management Group<br>
- * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
+/** @author Matthew Horridge, The University of Manchester, Information Management
+ *         Group */
 public class OWL2RLProfile implements OWLProfile {
-    private final static Set<IRI> allowedDatatypes = new HashSet<IRI>(Arrays.asList(
+    protected final static Set<IRI> allowedDatatypes = new HashSet<IRI>(Arrays.asList(
             RDF_PLAIN_LITERAL.getIRI(), RDF_XML_LITERAL.getIRI(), RDFS_LITERAL.getIRI(),
             XSD_DECIMAL.getIRI(), XSD_INTEGER.getIRI(),
             XSD_NON_NEGATIVE_INTEGER.getIRI(), XSD_NON_POSITIVE_INTEGER.getIRI(),
@@ -125,8 +122,8 @@ public class OWL2RLProfile implements OWLProfile {
      * 
      * @param ontology
      *            The ontology to be checked.
-     * @return An <code>OWLProfileReport</code> that describes whether or not
-     *         the ontology is within this profile. */
+     * @return An {@code OWLProfileReport} that describes whether or not the
+     *         ontology is within this profile. */
     @Override
     public OWLProfileReport checkOntology(OWLOntology ontology) {
         OWL2DLProfile profile = new OWL2DLProfile();
@@ -528,6 +525,9 @@ public class OWL2RLProfile implements OWLProfile {
 
     private final OWL2RLSuperClassExpressionChecker superClassExpressionChecker = new OWL2RLSuperClassExpressionChecker();
 
+    /** @param ce
+     *            ce
+     * @return true if class expression */
     public boolean isOWL2RLSuperClassExpression(OWLClassExpression ce) {
         return ce.accept(superClassExpressionChecker).booleanValue();
     }
@@ -634,6 +634,9 @@ public class OWL2RLProfile implements OWLProfile {
 
     private final OWL2RLEquivalentClassExpressionChecker equivalentClassExpressionChecker = new OWL2RLEquivalentClassExpressionChecker();
 
+    /** @param ce
+     *            ce
+     * @return true if class expression */
     public boolean isOWL2RLEquivalentClassExpression(OWLClassExpression ce) {
         return ce.accept(equivalentClassExpressionChecker).booleanValue();
     }

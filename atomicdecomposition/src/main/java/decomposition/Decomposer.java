@@ -69,8 +69,12 @@ public class Decomposer {
         return tautologies;
     }
 
-    /** build a module for given axiom AX; use parent atom's module as a base for
-     * the module search */
+    /** @param sig
+     *            signature
+     * @param parent
+     *            parent atom
+     * @return module for given axiom AX; use parent atom's module as a base for
+     *         the module search */
     private OntologyAtom buildModule(Signature sig, OntologyAtom parent) {
         // build a module for a given signature
         modularizer.extract(parent.getModule(), sig, type);
@@ -90,8 +94,12 @@ public class Decomposer {
         return atom;
     }
 
-    /** create atom for given axiom AX; use parent atom's module as a base for
-     * the module search */
+    /** @param ax
+     *            axiom
+     * @param parent
+     *            parent atom
+     * @return create atom for given axiom AX; use parent atom's module as a
+     *         base for the module search */
     private OntologyAtom createAtom(AxiomWrapper ax, OntologyAtom parent) {
         // check whether axiom already has an atom
         OntologyAtom atom = ax.getAtom();

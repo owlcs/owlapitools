@@ -52,189 +52,188 @@ import java.util.concurrent.FutureTask;
 
 import org.semanticweb.owlapi.util.CollectionFactory;
 
-/**
- * @author ignazio
- *
- *Cache where values computation is carried out with Computables and multithread safe - no stale data, no multiple computations for the same value
- *
- * @param <A> type of key
- * @param <V> type of value
- */
+/** @author ignazio Cache where values computation is carried out with
+ *         Computables and multithread safe - no stale data, no multiple
+ *         computations for the same value
+ * @param <A>
+ *            type of key
+ * @param <V>
+ *            type of value */
 public class MemoizingCache<A, V> implements Map<A, V> {
-	private final ConcurrentHashMap<A, FutureTask<V>> cache = CollectionFactory
-			.createSyncMap();
+    private final ConcurrentHashMap<A, FutureTask<V>> cache = CollectionFactory
+            .createSyncMap();
 
-	/**
-	 * @param computant the object that carries out the copmutation
-	 * @param key the key
-	 * @return the computed value
-	 */
-	public V get(final Computable<V> computant, final A key) {
-		while (true) {
-			FutureTask<V> f = cache.get(key);
-			if (f == null) {
-				Callable<V> eval = new Callable<V>() {
-					@Override
+    /** @param computant
+     *            the object that carries out the copmutation
+     * @param key
+     *            the key
+     * @return the computed value */
+    public V get(final Computable<V> computant, final A key) {
+        while (true) {
+            FutureTask<V> f = cache.get(key);
+            if (f == null) {
+                Callable<V> eval = new Callable<V>() {
+                    @Override
                     public V call() {
-						V compute = computant.compute();
-						return compute;
-					}
-				};
-				FutureTask<V> ft = new FutureTask<V>(eval);
-				f = cache.putIfAbsent(key, ft);
-				if (f == null) {
-					f = ft;
-					ft.run();
-				}
-			}
-			try {
-				return f.get();
-			} catch (CancellationException e) {
-				cache.remove(key, f);
-			} catch (ExecutionException e) {
-				throw new RuntimeException(e);
-			} catch (InterruptedException e) {
-				cache.remove(key);
-				throw new RuntimeException("Unexpected interrupted exception", e);
-			}
-		}
-	}
+                        V compute = computant.compute();
+                        return compute;
+                    }
+                };
+                FutureTask<V> ft = new FutureTask<V>(eval);
+                f = cache.putIfAbsent(key, ft);
+                if (f == null) {
+                    f = ft;
+                    ft.run();
+                }
+            }
+            try {
+                return f.get();
+            } catch (CancellationException e) {
+                cache.remove(key, f);
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                cache.remove(key);
+                throw new RuntimeException("Unexpected interrupted exception", e);
+            }
+        }
+    }
 
-	/**
-	 * @param computed the value
-	 * @param key the key
-	 * @return computed
-	 */
-	public V get(final V computed, final A key) {
-		while (true) {
-			FutureTask<V> f = cache.get(key);
-			if (f == null) {
-				Callable<V> eval = new Callable<V>() {
-					@Override
+    /** @param computed
+     *            the value
+     * @param key
+     *            the key
+     * @return computed */
+    public V get(final V computed, final A key) {
+        while (true) {
+            FutureTask<V> f = cache.get(key);
+            if (f == null) {
+                Callable<V> eval = new Callable<V>() {
+                    @Override
                     public V call() {
-						return computed;
-					}
-				};
-				FutureTask<V> ft = new FutureTask<V>(eval);
-				f = cache.putIfAbsent(key, ft);
-				if (f == null) {
-					f = ft;
-					ft.run();
-				}
-			}
-			try {
-				return f.get();
-			} catch (CancellationException e) {
-				cache.remove(key, f);
-			} catch (ExecutionException e) {
-				throw new RuntimeException(e);
-			} catch (InterruptedException e) {
-				cache.remove(key);
-				throw new RuntimeException("Unexpected interrupted exception", e);
-			}
-		}
-	}
+                        return computed;
+                    }
+                };
+                FutureTask<V> ft = new FutureTask<V>(eval);
+                f = cache.putIfAbsent(key, ft);
+                if (f == null) {
+                    f = ft;
+                    ft.run();
+                }
+            }
+            try {
+                return f.get();
+            } catch (CancellationException e) {
+                cache.remove(key, f);
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                cache.remove(key);
+                throw new RuntimeException("Unexpected interrupted exception", e);
+            }
+        }
+    }
 
-	@Override
+    @Override
     public void clear() {
-		this.cache.clear();
-	}
+        this.cache.clear();
+    }
 
-	@Override
+    @Override
     public boolean containsKey(Object key) {
-		return this.cache.containsKey(key);
-	}
+        return this.cache.containsKey(key);
+    }
 
-	@Override
+    @Override
     public boolean containsValue(Object value) {
-		for (Future<V> f : cache.values()) {
-			try {
-				if (f.get().equals(value)) {
-					return true;
-				}
-			} catch (InterruptedException e) {
-				// nothing to do here
-			} catch (ExecutionException e) {
-				// nothing to do here
-			}
-		}
-		return false;
-	}
+        for (Future<V> f : cache.values()) {
+            try {
+                if (f.get().equals(value)) {
+                    return true;
+                }
+            } catch (InterruptedException e) {
+                // nothing to do here
+            } catch (ExecutionException e) {
+                // nothing to do here
+            }
+        }
+        return false;
+    }
 
-	@Override
+    @Override
     public Set<java.util.Map.Entry<A, V>> entrySet() {
-		throw new UnsupportedOperationException("EntrySet not available");
-	}
+        throw new UnsupportedOperationException("EntrySet not available");
+    }
 
-	@Override
+    @Override
     public V get(Object key) {
-		if (!cache.containsKey(key)) {
-			return null;
-		}
-		// the run for the future task is supposed to have already been performed, so no exceptions are expected or managed here
-		try {
-			FutureTask<V> futureTask = cache.get(key);
-			if (futureTask != null) {
-				return futureTask.get();
-			} else {
-				throw new NullPointerException("Unexpected null value in the map: key was expected to be contained and checked in this method, but is no longer contained in the map");
-			}
-		} catch (CancellationException e) {
-			throw new RuntimeException(e);
-		} catch (ExecutionException e) {
-			throw new RuntimeException(e);
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		}
-	}
+        if (!cache.containsKey(key)) {
+            return null;
+        }
+        // the run for the future task is supposed to have already been
+        // performed, so no exceptions are expected or managed here
+        try {
+            FutureTask<V> futureTask = cache.get(key);
+            if (futureTask != null) {
+                return futureTask.get();
+            } else {
+                throw new NullPointerException(
+                        "Unexpected null value in the map: key was expected to be contained and checked in this method, but is no longer contained in the map");
+            }
+        } catch (CancellationException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-	@Override
+    @Override
     public boolean isEmpty() {
-		return cache.isEmpty();
-	}
+        return cache.isEmpty();
+    }
 
-	@Override
+    @Override
     public Set<A> keySet() {
-		return cache.keySet();
-	}
+        return cache.keySet();
+    }
 
-	/**
-	 * This method should not be used for a MemoizingCache; the preferred way is
-	 * to provide a Computable and use the get(Computable, A) method Notice that
-	 * the returned value might not be the last previous stored value but one of
-	 * the values stored before the new value
-	 */
-	@Override
+    /** This method should not be used for a MemoizingCache; the preferred way is
+     * to provide a Computable and use the get(Computable, A) method Notice that
+     * the returned value might not be the last previous stored value but one of
+     * the values stored before the new value */
+    @Override
     public V put(A key, final V value) {
-		V toReturn = this.get(key);
-		this.get(value, key);
-		return toReturn;
-	}
+        V toReturn = this.get(key);
+        this.get(value, key);
+        return toReturn;
+    }
 
-	@Override
-	public void putAll(Map<? extends A, ? extends V> t) {
-		throw new UnsupportedOperationException(
-				"Adding values must be done through the get(Computable<A,V>, A) method");
-	}
+    @Override
+    public void putAll(Map<? extends A, ? extends V> t) {
+        throw new UnsupportedOperationException(
+                "Adding values must be done through the get(Computable<A,V>, A) method");
+    }
 
-	@Override
+    @Override
     public V remove(Object key) {
-		V f = get(key);
-		cache.remove(key);
-		return f;
-	}
+        V f = get(key);
+        cache.remove(key);
+        return f;
+    }
 
-	@Override
+    @Override
     public int size() {
-		return cache.size();
-	}
+        return cache.size();
+    }
 
-	@Override
+    @Override
     public Collection<V> values() {
-		List<V> toReturn = new ArrayList<V>();
-		for (A key : cache.keySet()) {
-			toReturn.add(get(key));
-		}
-		return toReturn;
-	}
+        List<V> toReturn = new ArrayList<V>();
+        for (A key : cache.keySet()) {
+            toReturn.add(get(key));
+        }
+        return toReturn;
+    }
 }

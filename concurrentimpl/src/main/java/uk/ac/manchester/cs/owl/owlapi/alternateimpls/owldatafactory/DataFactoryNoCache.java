@@ -36,27 +36,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package uk.ac.manchester.cs.owl.owlapi.alternateimpls.owldatafactory;
 
 import uk.ac.manchester.cs.owl.owlapi.InternalsNoCache;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
-/**
- * @author ignazio
- *
- *Datafactory using no cache
- */
-public class DataFactoryNoCache extends OWLDataFactoryImpl {
 
-	private static final long serialVersionUID = 1261018869206596531L;
+/** @author ignazio Datafactory using no cache */
+public class DataFactoryNoCache extends OWLDataFactoryImpl {
+    private static final long serialVersionUID = 1261018869206596531L;
     private static final DataFactoryNoCache instance = new DataFactoryNoCache();
 
     public static DataFactoryNoCache getInstance() {
         return instance;
     }
 
-    @SuppressWarnings("javadoc")
-	public DataFactoryNoCache() {
+    /**
+     * 
+     */
+    public DataFactoryNoCache() {
         data = new InternalsNoCache(false);
     }
 }

@@ -36,7 +36,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.semanticweb.owlapi.apibinding.configurables;
 
 import org.semanticweb.owlapi.model.OWLDataFactory;
@@ -48,23 +47,20 @@ import uk.ac.manchester.cs.owl.owlapi.alternateimpls.LockingOWLOntologyImpl;
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.LockingOWLOntologyManagerImpl;
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.owldatafactory.DataFactoryCSR;
 
-/**
- * @author ignazio
- * binding for threadsafe implementations
- */
+/** @author ignazio binding for threadsafe implementations */
 public final class ThreadSafeBinding implements OWLImplementationBinding {
-	@Override
+    @Override
     public OWLOntologyManager getOWLOntologyManager(OWLDataFactory d) {
-		return new LockingOWLOntologyManagerImpl(d);
-	}
+        return new LockingOWLOntologyManagerImpl(d);
+    }
 
-	@Override
+    @Override
     public OWLOntology getOWLOntology(OWLOntologyManager oom, OWLOntologyID id) {
-		return new LockingOWLOntologyImpl(oom, id);
-	}
+        return new LockingOWLOntologyImpl(oom, id);
+    }
 
-	@Override
+    @Override
     public OWLDataFactory getOWLDataFactory() {
-		return DataFactoryCSR.getInstance();
-	}
+        return DataFactoryCSR.getInstance();
+    }
 }

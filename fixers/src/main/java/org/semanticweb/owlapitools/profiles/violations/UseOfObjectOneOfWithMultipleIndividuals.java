@@ -44,13 +44,15 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
-/** Author: Matthew Horridge<br>
- * The University of Manchester<br>
- * Information Management Group<br>
- * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
+/** @author Matthew Horridge, The University of Manchester, Information Management
+ *         Group */
 public class UseOfObjectOneOfWithMultipleIndividuals extends UseOfIllegalClassExpression {
-
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param oneOf
+     *            oneOf */
     public UseOfObjectOneOfWithMultipleIndividuals(OWLOntology ontology, OWLAxiom axiom,
             OWLObjectOneOf oneOf) {
         super(ontology, axiom, oneOf);
@@ -65,7 +67,6 @@ public class UseOfObjectOneOfWithMultipleIndividuals extends UseOfIllegalClassEx
     public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
         return visitor.visit(this);
     }
-
 
     @Override
     public String toString() {

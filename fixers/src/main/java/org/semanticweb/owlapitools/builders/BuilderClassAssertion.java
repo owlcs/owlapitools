@@ -31,6 +31,7 @@ public class BuilderClassAssertion extends
     }
 
     /** @param arg
+     *            argument
      * @return builder */
     public BuilderClassAssertion withClass(OWLClassExpression arg) {
         ce = arg;

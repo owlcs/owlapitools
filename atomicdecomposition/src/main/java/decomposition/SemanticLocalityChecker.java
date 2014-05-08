@@ -62,7 +62,6 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.util.MultiMap;
 
 /** semantic locality checker for DL axioms */
-@SuppressWarnings("javadoc")
 public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker {
     /** Reasoner to detect the tautology */
     OWLReasoner Kernel;
@@ -71,47 +70,15 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker
     /** map between axioms and concept expressions */
     MultiMap<OWLAxiom, OWLClassExpression> ExprMap = new MultiMap<OWLAxiom, OWLClassExpression>();
 
-    /** @return expression necessary to build query for a given type of an */
-    // axiom; @return NULL if none necessary
+    /** @param axiom
+     *            axiom
+     * @return expression necessary to build query for a given type of an axiom */
     protected Collection<OWLClassExpression> getExpr(OWLAxiom axiom) {
         return axiom.getNestedClassExpressions();
-        // if (axiom instanceof AxiomRelatedTo) {
-        // return pEM.value(((AxiomRelatedTo) axiom).getRelation(),
-        // ((AxiomRelatedTo) axiom).getRelatedIndividual());
-        // }
-        // if (axiom instanceof AxiomValueOf) {
-        // return pEM.value(((AxiomValueOf) axiom).getAttribute(),
-        // ((AxiomValueOf) axiom).getValue());
-        // }
-        // if (axiom instanceof AxiomORoleDomain) {
-        // return pEM.exists(((AxiomORoleDomain) axiom).getRole(), pEM.top());
-        // }
-        // if (axiom instanceof AxiomORoleRange) {
-        // return pEM.exists(((AxiomORoleRange) axiom).getRole(),
-        // pEM.not(((AxiomORoleRange) axiom).getRange()));
-        // }
-        // if (axiom instanceof AxiomDRoleDomain) {
-        // return pEM.exists(((AxiomDRoleDomain) axiom).getRole(),
-        // pEM.dataTop());
-        // }
-        // if (axiom instanceof AxiomDRoleRange) {
-        // return pEM.exists(((AxiomDRoleRange) axiom).getRole(),
-        // pEM.dataNot(((AxiomDRoleRange) axiom).getRange()));
-        // }
-        // if (axiom instanceof AxiomRelatedToNot) {
-        // return pEM.not(pEM.value(((AxiomRelatedToNot) axiom).getRelation(),
-        // ((AxiomRelatedToNot) axiom).getRelatedIndividual()));
-        // }
-        // if (axiom instanceof AxiomValueOfNot) {
-        // return pEM.not(pEM.value(((AxiomValueOfNot) axiom).getAttribute(),
-        // ((AxiomValueOfNot) axiom).getValue()));
-        // }
-        // // everything else doesn't require expression to be build
-        // return null;
     }
 
     /** signature to keep */
-    Signature sig;
+    private Signature sig = new Signature();
 
     @Override
     public Signature getSignature() {
@@ -128,7 +95,12 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker
     boolean isLocal;
     private OWLOntologyManager manager;
 
-    /** init c'tor */
+    /** init c'tor
+     * 
+     * @param f
+     *            reasoner factory
+     * @param m
+     *            manager */
     public SemanticLocalityChecker(OWLReasonerFactory f, OWLOntologyManager m) {
         factory = f;
         manager = m;
@@ -136,17 +108,13 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker
         isLocal = true;
     }
 
-    // set fields
-    /** @return true iff an AXIOM is local wrt defined policy */
     @Override
     public boolean local(OWLAxiom axiom) {
         axiom.accept(this);
         return isLocal;
     }
 
-    /** init kernel with the ontology signature
-     * 
-     * @throws OWLOntologyCreationException */
+    /* init kernel with the ontology signature */
     @Override
     public void preprocessOntology(Collection<AxiomWrapper> axioms) {
         ExprMap.clear();
@@ -216,7 +184,6 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker
         if (!Kernel.isEntailed(df.getOWLEquivalentClassesAxiom(axiom.getOWLClass(),
                 df.getOWLObjectIntersectionOf(axiom.getClassExpressions())))) {
             return;
-
         }
         // check disjoint(C1...Cn)
         List<OWLClassExpression> arguments = new ArrayList<OWLClassExpression>(
@@ -311,20 +278,6 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker
 
     @Override
     public void visit(OWLSubObjectPropertyOfAxiom axiom) {
-        // XXX not sure if this applies
-        // check whether the LHS is a role chain
-        // if (axiom.getSubProperty() instanceof owlObjectRoleChain) {
-        // isLocal = Kernel.isSubChain(axiom.getRole(),
-        // ((ObjectRoleChain) axiom.getSubRole()).getArguments());
-        // return;
-        // }
-        // // check whether the LHS is a plain rle or inverse
-        // if (axiom.getSubRole() instanceof ObjectRoleExpression) {
-        // isLocal = Kernel.isSubRoles(axiom.getSubRole(), axiom.getRole());
-        // return;
-        // }
-        // // here we have a projection expression. FIXME!! for now
-        // isLocal = true;
         isLocal = Kernel.isEntailed(axiom);
     }
 

@@ -46,14 +46,16 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
-/** Author: Matthew Horridge<br>
- * The University of Manchester<br>
- * Information Management Group<br>
- * Date: 03-Aug-2009 */
-@SuppressWarnings("javadoc")
+/** @author Matthew Horridge, The University of Manchester, Information Management
+ *         Group */
 public class UseOfNonSimplePropertyInObjectHasSelf extends
         OWLProfileViolation<OWLObjectHasSelf> {
-
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param hasSelf
+     *            hasSelf */
     public UseOfNonSimplePropertyInObjectHasSelf(OWLOntology ontology, OWLAxiom axiom,
             OWLObjectHasSelf hasSelf) {
         super(ontology, axiom, hasSelf);
@@ -68,7 +70,6 @@ public class UseOfNonSimplePropertyInObjectHasSelf extends
     public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
         return visitor.visit(this);
     }
-
 
     @Override
     public String toString() {

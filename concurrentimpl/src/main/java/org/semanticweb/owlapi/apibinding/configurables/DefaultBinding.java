@@ -36,7 +36,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.semanticweb.owlapi.apibinding.configurables;
 
 import org.semanticweb.owlapi.model.OWLDataFactory;
@@ -48,26 +47,20 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLOntologyImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLOntologyManagerImpl;
 
-/**
- * @author ignazio
- * Binding for special implementations
- */
-public final class DefaultBinding implements
-			OWLImplementationBinding {
-		@Override
-        public OWLOntologyManager getOWLOntologyManager(OWLDataFactory d) {
-			return new OWLOntologyManagerImpl(d);
-		}
+/** @author ignazio Binding for special implementations */
+public final class DefaultBinding implements OWLImplementationBinding {
+    @Override
+    public OWLOntologyManager getOWLOntologyManager(OWLDataFactory d) {
+        return new OWLOntologyManagerImpl(d);
+    }
 
-		@Override
-        public OWLOntology getOWLOntology(OWLOntologyManager oom,
-				OWLOntologyID id) {
+    @Override
+    public OWLOntology getOWLOntology(OWLOntologyManager oom, OWLOntologyID id) {
+        return new OWLOntologyImpl(oom, id);
+    }
 
-			return new OWLOntologyImpl(oom, id);
-		}
-
-		@Override
-        public OWLDataFactory getOWLDataFactory() {
-			return new OWLDataFactoryImpl();
-		}
-	}
+    @Override
+    public OWLDataFactory getOWLDataFactory() {
+        return new OWLDataFactoryImpl();
+    }
+}

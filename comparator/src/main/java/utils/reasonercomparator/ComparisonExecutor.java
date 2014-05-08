@@ -10,24 +10,30 @@ import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
+/** Executes a set of reasoner calls
+ * 
+ * @author ignazio */
 public class ComparisonExecutor {
     private OWLReasonerFactory[] reasonerFactories;
-    private OWLOntologyManager m;
     protected OWLOntology o1;
     protected OWLReasoner r;
     protected String name;
 
+    /** @return id for the executor */
     public String getId() {
         return "stress test for " + name;
     }
 
+    /** run execution
+     * 
+     * @throws Exception
+     *             exception */
     public void execute() throws Exception {
         r.getBottomClassNode();
         r.getBottomDataPropertyNode();
@@ -61,7 +67,7 @@ public class ComparisonExecutor {
         for (OWLObjectProperty o : objectProperties) {
             checkObject(o);
         }
-        OWLClass thing = m.getOWLDataFactory().getOWLThing();
+        OWLClass thing = o1.getOWLOntologyManager().getOWLDataFactory().getOWLThing();
         {
             NodeSet<OWLClass> subclasses = r.getSubClasses(thing, false);
             NodeSet<OWLClass> superclasses = r.getSuperClasses(thing, false);
@@ -113,6 +119,10 @@ public class ComparisonExecutor {
         // r.dispose();
     }
 
+    /** check tautology
+     * 
+     * @param index
+     *            repetition index */
     public void checkTautology(int index) {
         for (OWLAxiom ax : o1.getLogicalAxioms()) {
             if (!r.isEntailed(ax)) {
@@ -176,6 +186,12 @@ public class ComparisonExecutor {
         r.getInverseObjectProperties(o);
     }
 
+    /** @param o
+     *            ontology
+     * @param f
+     *            reasoner factories
+     * @throws Exception
+     *             exception */
     public ComparisonExecutor(OWLOntology o, OWLReasonerFactory... f) throws Exception {
         o1 = o;
         name = "Comparing";
@@ -184,6 +200,7 @@ public class ComparisonExecutor {
         r.precomputeInferences(InferenceType.values());
     }
 
+    /** @return comparison reasoner */
     public ComparisonReasoner getReasoner() {
         return (ComparisonReasoner) r;
     }

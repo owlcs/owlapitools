@@ -36,12 +36,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package uk.ac.manchester.cs.owl.owlapi.alternateimpls.test;
 
 import org.semanticweb.owlapi.model.IRI;
 
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternals;
+
 @SuppressWarnings("javadoc")
 public class InternalsTester extends Tester {
     public void run(OWLDataFactoryInternals toTest) {

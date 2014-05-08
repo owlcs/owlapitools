@@ -40,11 +40,8 @@ package org.semanticweb.owlapitools.profiles;
 
 import org.semanticweb.owlapi.model.OWLOntology;
 
-/** Author: Matthew Horridge<br>
- * The University Of Manchester<br>
- * Bio-Health Informatics Group<br>
- * Date: 16-Apr-2008<br>
- * <br> */
+/** @author Matthew Horridge, The University of Manchester, Information Management
+ *         Group */
 public interface OWLProfile {
     /** Gets the name of the profile.
      * 
@@ -56,7 +53,7 @@ public interface OWLProfile {
      * 
      * @param ontology
      *            The ontology to be checked.
-     * @return An <code>OWLProfileReport</code> that describes whether or not
-     *         the ontology is within this profile. */
+     * @return An {@code OWLProfileReport} that describes whether or not the
+     *         ontology is within this profile. */
     OWLProfileReport checkOntology(OWLOntology ontology);
 }

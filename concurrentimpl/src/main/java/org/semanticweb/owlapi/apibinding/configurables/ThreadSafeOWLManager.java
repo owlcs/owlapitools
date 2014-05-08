@@ -36,29 +36,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.semanticweb.owlapi.apibinding.configurables;/*
-* Copyright (C) 2006, University of Manchester
-*
-* Modifications to the initial code base are copyright of their
-* respective authors, or their employers as appropriate.  Authorship
-* of the modifications may be determined from the ChangeLog placed at
-* the end of this file.
-*
-* This library is free software; you can redistribute it and/or
-* modify it under the terms of the GNU Lesser General Public
-* License as published by the Free Software Foundation; either
-* version 2.1 of the License, or (at your option) any later version.
+ * Copyright (C) 2006, University of Manchester
+ *
+ * Modifications to the initial code base are copyright of their
+ * respective authors, or their employers as appropriate.  Authorship
+ * of the modifications may be determined from the ChangeLog placed at
+ * the end of this file.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
 
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-* Lesser General Public License for more details.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
 
-* You should have received a copy of the GNU Lesser General Public
-* License along with this library; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 
 /*
  * Copyright (C) 2010, University of Manchester
@@ -82,7 +81,6 @@ package org.semanticweb.owlapi.apibinding.configurables;/*
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 import org.coode.owlapi.functionalparser.OWLFunctionalSyntaxParserFactory;
 import org.coode.owlapi.functionalrenderer.OWLFunctionalSyntaxOntologyStorer;
 import org.coode.owlapi.latex.LatexOntologyStorer;
@@ -107,109 +105,87 @@ import uk.ac.manchester.cs.owl.owlapi.turtle.parser.TurtleOntologyParserFactory;
 import de.uulm.ecs.ai.owlapi.krssparser.KRSS2OWLParserFactory;
 import de.uulm.ecs.ai.owlapi.krssrenderer.KRSS2OWLSyntaxOntologyStorer;
 
-/**
- * Author: Matthew Horridge<br>
- * The University Of Manchester<br>
- * Bio-Health Informatics Group<br>
- * Date: 06-Dec-2006<br>
- * <br>
- * <p/>
- * Provides a point of convenience for creating an
- * <code>OWLOntologyManager</code> with commonly required features (such as an
- * RDF parser for example).
- */
+/** Provides a point of convenience for creating an {@code OWLOntologyManager}
+ * with commonly required features (such as an RDF parser for example).
+ * 
+ * @author Matthew Horridge, The University Of Manchester, Bio-Health
+ *         Informatics Group, Date: 06-Dec-2006 */
 public class ThreadSafeOWLManager implements OWLOntologyManagerFactory {
-	private static OWLImplementationBinding binding = new ThreadSafeBinding();
-	static {
-		// Register useful parsers
-		OWLParserFactoryRegistry registry = OWLParserFactoryRegistry
-				.getInstance();
-		registry.registerParserFactory(new ManchesterOWLSyntaxParserFactory());
-		registry.registerParserFactory(new KRSS2OWLParserFactory());
-		registry.registerParserFactory(new OBOParserFactory());
-		registry.registerParserFactory(new TurtleOntologyParserFactory());
-		registry.registerParserFactory(new OWLFunctionalSyntaxParserFactory());
-		registry.registerParserFactory(new OWLXMLParserFactory());
-		registry.registerParserFactory(new RDFXMLParserFactory());
-	}
-
-	@Override
-    public OWLOntologyManager buildOWLOntologyManager() {
-
-    	return createOWLOntologyManager();
+    private static OWLImplementationBinding binding = new ThreadSafeBinding();
+    static {
+        // Register useful parsers
+        OWLParserFactoryRegistry registry = OWLParserFactoryRegistry.getInstance();
+        registry.registerParserFactory(new ManchesterOWLSyntaxParserFactory());
+        registry.registerParserFactory(new KRSS2OWLParserFactory());
+        registry.registerParserFactory(new OBOParserFactory());
+        registry.registerParserFactory(new TurtleOntologyParserFactory());
+        registry.registerParserFactory(new OWLFunctionalSyntaxParserFactory());
+        registry.registerParserFactory(new OWLXMLParserFactory());
+        registry.registerParserFactory(new RDFXMLParserFactory());
     }
+
+    @Override
+    public OWLOntologyManager buildOWLOntologyManager() {
+        return createOWLOntologyManager();
+    }
+
     @Override
     public OWLOntologyManager buildOWLOntologyManager(OWLDataFactory f) {
-
-    	return createOWLOntologyManager(f);
+        return createOWLOntologyManager(f);
     }
 
     @Override
     public OWLDataFactory getFactory() {
-
-    	return getOWLDataFactory();
+        return getOWLDataFactory();
     }
-	/**
-	 * Creates an OWL ontology manager that is configured with standard parsers,
-	 * storeres etc.
-	 *
-	 * @return The new manager.
-	 */
-	public static OWLOntologyManager createOWLOntologyManager() {
-		return createOWLOntologyManager(getOWLDataFactory());
-	}
 
-	/**
-	 * @return the binding for threadsafe implementations
-	 */
-	public static OWLImplementationBinding getOWLImplementationBinding() {
-		return binding;
-	}
+    /** Creates an OWL ontology manager that is configured with standard parsers,
+     * storeres etc.
+     * 
+     * @return The new manager. */
+    public static OWLOntologyManager createOWLOntologyManager() {
+        return createOWLOntologyManager(getOWLDataFactory());
+    }
 
-	/**
-	 * @param b new binding
-	 */
-	public static void setOWLImplementationBinding(OWLImplementationBinding b) {
-		binding = b;
-	}
+    /** @return the binding for threadsafe implementations */
+    public static OWLImplementationBinding getOWLImplementationBinding() {
+        return binding;
+    }
 
-	/**
-	 * Creates an OWL ontology manager that is configured with standard parsers,
-	 * storeres etc.
-	 *
-	 * @param dataFactory
-	 *            The data factory that the manager should have a reference to.
-	 * @return The manager.
-	 */
-	public static OWLOntologyManager createOWLOntologyManager(
-			OWLDataFactory dataFactory) {
-		// Create the ontology manager and add ontology factories, mappers and storers
-		OWLOntologyManager ontologyManager = binding
-				.getOWLOntologyManager(dataFactory);
-		ontologyManager.addOntologyStorer(new RDFXMLOntologyStorer());
-		ontologyManager.addOntologyStorer(new OWLXMLOntologyStorer());
-		ontologyManager
-				.addOntologyStorer(new OWLFunctionalSyntaxOntologyStorer());
-		ontologyManager
-				.addOntologyStorer(new ManchesterOWLSyntaxOntologyStorer());
-		ontologyManager.addOntologyStorer(new OBOFlatFileOntologyStorer());
-		ontologyManager.addOntologyStorer(new KRSS2OWLSyntaxOntologyStorer());
-		ontologyManager.addOntologyStorer(new TurtleOntologyStorer());
-		ontologyManager.addOntologyStorer(new LatexOntologyStorer());
-		ontologyManager.addIRIMapper(new NonMappingOntologyIRIMapper());
-		ontologyManager
-				.addOntologyFactory(new AlternateEmptyInMemOWLOntologyFactory());
-		ontologyManager
-				.addOntologyFactory(new AlternateParsableOWLOntologyFactory());
-		return ontologyManager;
-	}
+    /** @param b
+     *            new binding */
+    public static void setOWLImplementationBinding(OWLImplementationBinding b) {
+        binding = b;
+    }
 
-	/**
-	 * Gets a global data factory that can be used to create OWL API objects.
-	 *
-	 * @return An OWLDataFactory that can be used for creating OWL API objects.
-	 */
-	public static OWLDataFactory getOWLDataFactory() {
-		return binding.getOWLDataFactory();
-	}
+    /** Creates an OWL ontology manager that is configured with standard parsers,
+     * storeres etc.
+     * 
+     * @param dataFactory
+     *            The data factory that the manager should have a reference to.
+     * @return The manager. */
+    public static OWLOntologyManager createOWLOntologyManager(OWLDataFactory dataFactory) {
+        // Create the ontology manager and add ontology factories, mappers and
+        // storers
+        OWLOntologyManager ontologyManager = binding.getOWLOntologyManager(dataFactory);
+        ontologyManager.addOntologyStorer(new RDFXMLOntologyStorer());
+        ontologyManager.addOntologyStorer(new OWLXMLOntologyStorer());
+        ontologyManager.addOntologyStorer(new OWLFunctionalSyntaxOntologyStorer());
+        ontologyManager.addOntologyStorer(new ManchesterOWLSyntaxOntologyStorer());
+        ontologyManager.addOntologyStorer(new OBOFlatFileOntologyStorer());
+        ontologyManager.addOntologyStorer(new KRSS2OWLSyntaxOntologyStorer());
+        ontologyManager.addOntologyStorer(new TurtleOntologyStorer());
+        ontologyManager.addOntologyStorer(new LatexOntologyStorer());
+        ontologyManager.addIRIMapper(new NonMappingOntologyIRIMapper());
+        ontologyManager.addOntologyFactory(new AlternateEmptyInMemOWLOntologyFactory());
+        ontologyManager.addOntologyFactory(new AlternateParsableOWLOntologyFactory());
+        return ontologyManager;
+    }
+
+    /** Gets a global data factory that can be used to create OWL API objects.
+     * 
+     * @return An OWLDataFactory that can be used for creating OWL API objects. */
+    public static OWLDataFactory getOWLDataFactory() {
+        return binding.getOWLDataFactory();
+    }
 }

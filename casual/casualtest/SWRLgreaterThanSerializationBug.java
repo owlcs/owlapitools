@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.TestCase;
+
 
 import org.junit.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -25,7 +25,7 @@ import org.semanticweb.owlapi.model.SWRLObjectPropertyAtom;
 import org.semanticweb.owlapi.model.SWRLRule;
 import org.semanticweb.owlapi.model.SWRLVariable;
 
-public class SWRLgreaterThanSerializationBug extends TestCase {
+public class SWRLgreaterThanSerializationBug  {
     @Test
 	public void testserialization() throws Exception {
 		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();

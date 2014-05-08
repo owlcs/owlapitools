@@ -1,6 +1,6 @@
 package casualtest;
 
-import junit.framework.TestCase;
+
 
 import org.coode.owlapi.obo.parser.OBOOntologyFormat;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 @SuppressWarnings("javadoc")
-public class NullPointerTest extends TestCase {
+public class NullPointerTest  {
     @Test
 	public void testOntologyWithIRI() throws Exception {
 		OWLOntologyManager m = OWLManager.createOWLOntologyManager();

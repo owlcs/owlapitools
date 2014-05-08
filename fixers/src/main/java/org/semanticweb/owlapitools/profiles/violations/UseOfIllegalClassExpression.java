@@ -45,14 +45,17 @@ import org.semanticweb.owlapitools.profiles.OWLProfileViolation;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitor;
 import org.semanticweb.owlapitools.profiles.OWLProfileViolationVisitorEx;
 
-/** Author: Matthew Horridge<br>
- * The University of Manchester<br>
- * Information Management Group<br>
- * Date: 03-Aug-2009 Indicates that a class expression in an axiom is not in the
- * profile */
-@SuppressWarnings("javadoc")
+/** Indicates that a class expression in an axiom is not in the profile
+ * 
+ * @author Matthew Horridge, The University of Manchester, Information
+ *         Management Group */
 public class UseOfIllegalClassExpression extends OWLProfileViolation<OWLClassExpression> {
-
+    /** @param ontology
+     *            ontology
+     * @param axiom
+     *            axiom
+     * @param classExpression
+     *            classExpression */
     public UseOfIllegalClassExpression(OWLOntology ontology, OWLAxiom axiom,
             OWLClassExpression classExpression) {
         super(ontology, axiom, classExpression);
@@ -67,7 +70,6 @@ public class UseOfIllegalClassExpression extends OWLProfileViolation<OWLClassExp
     public <O> O accept(OWLProfileViolationVisitorEx<O> visitor) {
         return visitor.visit(this);
     }
-
 
     @Override
     public String toString() {

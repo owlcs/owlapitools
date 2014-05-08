@@ -1,6 +1,5 @@
 package casualtest;
 
-import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.semanticweb.owlapi.api.test.Factory;
@@ -19,7 +18,7 @@ import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.vocab.XSDVocabulary;
 
 @SuppressWarnings("javadoc")
-public class BadDataPropertyRT extends TestCase {
+public class BadDataPropertyRT  {
 	private static final OWLDataFactory factory = Factory.getFactory();
 	public static final String NS = "http://test.org/DataPropertyRestriction.owl";
 	public static final OWLDataProperty P = factory.getOWLDataProperty(IRI.create(NS

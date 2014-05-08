@@ -25,7 +25,10 @@ public class Modularizer {
     /** queue of unprocessed entities */
     private Queue<OWLEntity> workQueue;
 
-    /** update SIG wrt the axiom signature */
+    /** update SIG wrt the axiom signature
+     * 
+     * @param axiom
+     *            axiom */
     private void addAxiomSig(AxiomWrapper axiom) {
         if (sigIndex != null) {
             for (OWLEntity p : axiom.getAxiom().getSignature()) {
@@ -36,7 +39,10 @@ public class Modularizer {
         }
     }
 
-    /** add an axiom to a module */
+    /** add an axiom to a module
+     * 
+     * @param axiom
+     *            axiom */
     private void addAxiomToModule(AxiomWrapper axiom) {
         axiom.setInModule(true);
         module.add(axiom);
@@ -44,19 +50,29 @@ public class Modularizer {
         addAxiomSig(axiom);
     }
 
-    /** @return true iff an AXiom is non-local */
+    /** @param ax
+     *            axiom
+     * @return true iff an AXiom is non-local */
     private boolean isNonLocal(OWLAxiom ax) {
         return !checker.local(ax);
     }
 
-    /** add an axiom if it is non-local (or if noCheck is true) */
+    /** @param ax
+     *            axiom add an axiom if it is non-local (or if noCheck is true)
+     * @param noCheck
+     *            true if locality check is not to be performed */
     private void addNonLocal(AxiomWrapper ax, boolean noCheck) {
         if (noCheck || isNonLocal(ax.getAxiom())) {
             addAxiomToModule(ax);
         }
     }
 
-    /** add all the non-local axioms from given axiom-set AxSet */
+    /** add all the non-local axioms from given axiom-set AxSet
+     * 
+     * @param AxSet
+     *            collection of axioms
+     * @param noCheck
+     *            true if locality check is not to be performed */
     private void addNonLocal(Collection<AxiomWrapper> AxSet, boolean noCheck) {
         for (AxiomWrapper q : AxSet) {
             if (!q.isInModule() && q.isInSearchSpace()) {
@@ -80,7 +96,10 @@ public class Modularizer {
         }
     }
 
-    /** extract module wrt presence of a sig index */
+    /** extract module wrt presence of a sig index
+     * 
+     * @param args
+     *            axioms */
     private void extractModule(List<AxiomWrapper> args) {
         module.clear();
         // clear the module flag in the input
@@ -118,7 +137,9 @@ public class Modularizer {
     }
 
     /** @param ax
+     *            axiom
      * @param type
+     *            type
      * @return true iff the axiom AX is a tautology wrt given type */
     public boolean isTautology(OWLAxiom ax, ModuleType type) {
         boolean topLocality = type == ModuleType.TOP;
@@ -140,8 +161,11 @@ public class Modularizer {
     }
 
     /** @param axiom
+     *            axiom
      * @param signature
-     * @param type */
+     *            signature
+     * @param type
+     *            type */
     public void extract(AxiomWrapper axiom, Signature signature, ModuleType type) {
         this.extract(Collections.singletonList(axiom), signature, type);
     }
@@ -149,8 +173,11 @@ public class Modularizer {
     /** extract module wrt SIGNATURE and TYPE from the set of axioms
      * 
      * @param axioms
+     *            axiom
      * @param signature
-     * @param type */
+     *            signature
+     * @param type
+     *            type */
     public void extract(List<AxiomWrapper> axioms, Signature signature, ModuleType type) {
         boolean topLocality = type == ModuleType.TOP;
         sig = signature;

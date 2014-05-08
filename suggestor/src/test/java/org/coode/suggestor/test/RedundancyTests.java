@@ -1,14 +1,11 @@
-/*
+/**
  * Date: Dec 17, 2007
  *
  * code made available under Mozilla Public License (http://www.mozilla.org/MPL/MPL-1.1.html)
  *
  * copyright 2007, The University of Manchester
  *
- * Author: Nick Drummond
- * http://www.cs.man.ac.uk/~drummond/
- * Bio Health Informatics Group
- * The University Of Manchester
+ * @author Nick Drummond, The University Of Manchester, Bio Health Informatics Group
  */
 package org.coode.suggestor.test;
 
@@ -82,18 +79,8 @@ public class RedundancyTests extends AbstractSuggestorTest {
         final OWLObjectSomeValuesFrom qSomeA = df.getOWLObjectSomeValuesFrom(q, a);
         final OWLObjectSomeValuesFrom pSomeB = df.getOWLObjectSomeValuesFrom(p, b);
         final OWLObjectSomeValuesFrom qSomeB = df.getOWLObjectSomeValuesFrom(q, b);
-        mngr.applyChange(new AddAxiom(ont, df.getOWLSubObjectPropertyOfAxiom(p, q))); // p
-                                                                                      // is
-                                                                                      // a
-                                                                                      // sub
-                                                                                      // of
-                                                                                      // q
-        mngr.applyChange(new AddAxiom(ont, df.getOWLSubClassOfAxiom(a, b))); // a
-                                                                             // is
-                                                                             // a
-                                                                             // sub
-                                                                             // of
-                                                                             // b
+        mngr.applyChange(new AddAxiom(ont, df.getOWLSubObjectPropertyOfAxiom(p, q)));
+        mngr.applyChange(new AddAxiom(ont, df.getOWLSubClassOfAxiom(a, b)));
         if (r.getBufferingMode().equals(BufferingMode.BUFFERING)) {
             r.flush();
         }

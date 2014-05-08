@@ -13,13 +13,11 @@ import java.util.concurrent.atomic.AtomicLong;
 /** bag for counting occurrences of instances of a specified type
  * 
  * @author ignazio
- * @param <Type> */
+ * @param <Type>
+ *            type */
 public class Bag<Type> {
     Map<Type, AtomicLong> map = new LinkedHashMap<Type, AtomicLong>();
     int size = 0;
-
-    @SuppressWarnings("javadoc")
-    public Bag() {}
 
     /** @return size of the bag (all occurrences) */
     public int size() {

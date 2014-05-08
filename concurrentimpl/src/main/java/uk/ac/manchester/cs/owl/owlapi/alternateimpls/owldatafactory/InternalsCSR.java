@@ -36,7 +36,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package uk.ac.manchester.cs.owl.owlapi.alternateimpls.owldatafactory;
 
 import org.semanticweb.owlapi.model.IRI;
@@ -44,50 +43,40 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImpl;
 
-/**
- * @author ignazio
- * concurrent hash maps with strong references used for cache
- */
-public class InternalsCSR extends  OWLDataFactoryInternalsImpl {
-
+/** @author ignazio concurrent hash maps with strong references used for cache */
+public class InternalsCSR extends OWLDataFactoryInternalsImpl {
     private static final long serialVersionUID = 1L;
 
     @Override
-	protected <V extends OWLEntity> BuildableWeakIndexCache<V> buildCache() {
-
-		return new BuildableWeakIndexCache<V>() {
+    protected <V extends OWLEntity> BuildableWeakIndexCache<V> buildCache() {
+        return new BuildableWeakIndexCache<V>() {
             private static final long serialVersionUID = 1L;
 
             @Override
-			public synchronized V cache(IRI s, Buildable v) {
+            public synchronized V cache(IRI s, Buildable v) {
+                return super.cache(s, v);
+            }
 
+            @Override
+            public synchronized V cache(IRI s, V v) {
+                return super.cache(s, v);
+            }
 
-				return super.cache(s, v);
-			}
-			@Override
-            public synchronized V cache(IRI s, V v) {return super.cache(s, v);}
-			@Override
-			public synchronized void clear() {
+            @Override
+            public synchronized void clear() {
+                super.clear();
+            }
 
-				super.clear();
-			}
-			@Override
-			public synchronized String toString() {
+            @Override
+            public synchronized String toString() {
+                return super.toString();
+            }
+        };
+    }
 
-				return super.toString();
-			}
-		};
-	}
-
-
-    /** @param f
-     *            the factory to refer to
-     * @param b
+    /** @param b
      *            use compression */
     public InternalsCSR(boolean b) {
         super(b);
-
     }
-
-
 }

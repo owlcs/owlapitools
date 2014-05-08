@@ -100,21 +100,32 @@ import org.semanticweb.owlapitools.profiles.violations.UseOfNonAtomicClassExpres
 import org.semanticweb.owlapitools.profiles.violations.UseOfNonSubClassExpression;
 import org.semanticweb.owlapitools.profiles.violations.UseOfNonSuperClassExpression;
 
-/** Author: Matthew Horridge<br>
- * The University of Manchester<br>
- * Information Management Group<br>
- * Date: 18-Jul-2009 */
-@SuppressWarnings("javadoc")
+/** @author Matthew Horridge, The University of Manchester, Information Management
+ *         Group */
 public class OWL2QLProfile implements OWLProfile {
-
-    private final static Set<IRI> allowedDatatypes = new HashSet<IRI>(Arrays.asList(
-            RDF_PLAIN_LITERAL.getIRI(), RDF_XML_LITERAL.getIRI(), RDFS_LITERAL.getIRI(),
-            OWL_REAL.getIRI(), OWL_RATIONAL.getIRI(), XSD_DECIMAL.getIRI(),
-            XSD_INTEGER.getIRI(), XSD_NON_NEGATIVE_INTEGER.getIRI(), XSD_STRING.getIRI(),
-            XSD_NORMALIZED_STRING.getIRI(), XSD_TOKEN.getIRI(), XSD_NAME.getIRI(),
-            XSD_NCNAME.getIRI(), XSD_NMTOKEN.getIRI(), XSD_HEX_BINARY.getIRI(),
-            XSD_BASE_64_BINARY.getIRI(), XSD_ANY_URI.getIRI(), XSD_DATE_TIME.getIRI(),
-            XSD_DATE_TIME_STAMP.getIRI()));
+    protected final static Set<IRI> allowedDatatypes = new HashSet<IRI>(Arrays.asList(
+            //@formatter:off
+            RDF_PLAIN_LITERAL.getIRI(), 
+            RDF_XML_LITERAL.getIRI(), 
+            RDFS_LITERAL.getIRI(),
+            OWL_REAL.getIRI(), 
+            OWL_RATIONAL.getIRI(), 
+            XSD_DECIMAL.getIRI(),
+            XSD_INTEGER.getIRI(), 
+            XSD_NON_NEGATIVE_INTEGER.getIRI(), 
+            XSD_STRING.getIRI(),
+            XSD_NORMALIZED_STRING.getIRI(), 
+            XSD_TOKEN.getIRI(), 
+            XSD_NAME.getIRI(),
+            XSD_NCNAME.getIRI(), 
+            XSD_NMTOKEN.getIRI(), 
+            XSD_HEX_BINARY.getIRI(),
+            XSD_BASE_64_BINARY.getIRI(), 
+            XSD_ANY_URI.getIRI(), 
+            XSD_DATE_TIME.getIRI(),
+            XSD_DATE_TIME_STAMP.getIRI()
+            //@formatter:on
+            ));
 
     /** Gets the name of the profile.
      * 
@@ -129,8 +140,8 @@ public class OWL2QLProfile implements OWLProfile {
      * 
      * @param ontology
      *            The ontology to be checked.
-     * @return An <code>OWLProfileReport</code> that describes whether or not
-     *         the ontology is within this profile. */
+     * @return An {@code OWLProfileReport} that describes whether or not the
+     *         ontology is within this profile. */
     @Override
     public OWLProfileReport checkOntology(OWLOntology ontology) {
         OWL2DLProfile profile = new OWL2DLProfile();
@@ -546,6 +557,9 @@ public class OWL2QLProfile implements OWLProfile {
 
     private final OWL2QLSuperClassExpressionChecker superClassExpressionChecker = new OWL2QLSuperClassExpressionChecker();
 
+    /** @param ce
+     *            ce
+     * @return true if class expression */
     public boolean isOWL2QLSuperClassExpression(OWLClassExpression ce) {
         return ce.accept(superClassExpressionChecker).booleanValue();
     }

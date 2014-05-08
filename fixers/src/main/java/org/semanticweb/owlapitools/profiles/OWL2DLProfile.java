@@ -119,10 +119,8 @@ import org.semanticweb.owlapitools.profiles.violations.UseOfUndeclaredDatatype;
 import org.semanticweb.owlapitools.profiles.violations.UseOfUndeclaredObjectProperty;
 import org.semanticweb.owlapitools.profiles.violations.UseOfUnknownDatatype;
 
-/** Author: Matthew Horridge<br>
- * The University of Manchester<br>
- * Information Management Group<br>
- * Date: 02-Aug-2009 */
+/** @author Matthew Horridge, The University of Manchester, Information Management
+ *         Group */
 public class OWL2DLProfile implements OWLProfile {
     /** Gets the name of the profile.
      * 
@@ -137,8 +135,8 @@ public class OWL2DLProfile implements OWLProfile {
      * 
      * @param ontology
      *            The ontology to be checked.
-     * @return An <code>OWLProfileReport</code> that describes whether or not
-     *         the ontology is within this profile. */
+     * @return An {@code OWLProfileReport} that describes whether or not the
+     *         ontology is within this profile. */
     @Override
     public OWLProfileReport checkOntology(OWLOntology ontology) {
         OWL2Profile owl2Profile = new OWL2Profile();

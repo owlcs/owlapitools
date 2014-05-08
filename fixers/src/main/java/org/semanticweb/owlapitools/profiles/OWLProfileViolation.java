@@ -50,12 +50,13 @@ import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.RemoveAxiom;
 
-/** Author: Matthew Horridge<br>
- * The University of Manchester<br>
- * Information Management Group<br>
- * Date: 03-Aug-2009 Describes a violation of an OWLProfile by an axiom.
- * Ultimately, there may be part of the axiom that violates the profile rather
- * than the complete axiom. */
+/** Describes a violation of an OWLProfile by an axiom. Ultimately, there may be
+ * part of the axiom that violates the profile rather than the complete axiom.
+ * 
+ * @author Matthew Horridge, The University of Manchester, Information
+ *         Management Group, Date: 03-Aug-2009
+ * @param <T>
+ *            violation type */
 public abstract class OWLProfileViolation<T> {
     protected final OWLOntology ontology;
     protected final OWLDataFactory df;
@@ -75,8 +76,14 @@ public abstract class OWLProfileViolation<T> {
         expression = o;
     }
 
+    /** @return ontology id */
     public OWLOntologyID getOntologyID() {
         return ontology.getOntologyID();
+    }
+
+    /** @return ontology */
+    public final OWLOntology getOntology() {
+        return ontology;
     }
 
     /** @return the expression object of this violation */
@@ -103,10 +110,12 @@ public abstract class OWLProfileViolation<T> {
 
     /** visitor accept method
      * 
-     * @param visitor */
+     * @param visitor
+     *            visitor */
     public abstract void accept(OWLProfileViolationVisitor visitor);
 
     /** @param visitor
+     *            visitor
      * @return visitor return value */
     public abstract <O> O accept(OWLProfileViolationVisitorEx<O> visitor);
 

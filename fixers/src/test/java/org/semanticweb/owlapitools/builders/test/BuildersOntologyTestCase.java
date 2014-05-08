@@ -117,7 +117,6 @@ public class BuildersOntologyTestCase {
         assertTrue(o.containsAxiom(expected));
     }
 
-
     @Test
     public void shouldBuildAnnotationPropertyDomain() throws OWLOntologyCreationException {
         // given
@@ -144,7 +143,6 @@ public class BuildersOntologyTestCase {
         assertTrue(o.containsAxiom(expected));
     }
 
-
     @Test
     public void shouldBuildAsymmetricObjectProperty() throws OWLOntologyCreationException {
         // given
@@ -158,7 +156,6 @@ public class BuildersOntologyTestCase {
         assertTrue(o.containsAxiom(expected));
     }
 
-
     @Test
     public void shouldBuildClassAssertion() throws OWLOntologyCreationException {
         // given
@@ -171,7 +168,6 @@ public class BuildersOntologyTestCase {
         // then
         assertTrue(o.containsAxiom(expected));
     }
-
 
     @Test
     public void shouldBuildDataPropertyAssertion() throws OWLOntologyCreationException {
@@ -213,8 +209,6 @@ public class BuildersOntologyTestCase {
         assertTrue(o.containsAxiom(expected));
     }
 
-
-
     @Test
     public void shouldBuildDatatypeDefinition() throws OWLOntologyCreationException {
         // given
@@ -228,8 +222,6 @@ public class BuildersOntologyTestCase {
         // then
         assertTrue(o.containsAxiom(expected));
     }
-
-
 
     @Test
     public void shouldBuildDeclaration() throws OWLOntologyCreationException {
@@ -310,7 +302,6 @@ public class BuildersOntologyTestCase {
         assertTrue(o.containsAxiom(expected));
     }
 
-
     @Test
     public void shouldBuildEquivalentClasses() throws OWLOntologyCreationException {
         // given
@@ -351,7 +342,6 @@ public class BuildersOntologyTestCase {
         assertTrue(o.containsAxiom(expected));
     }
 
-
     @Test
     public void shouldBuildFunctionalDataProperty() throws OWLOntologyCreationException {
         // given
@@ -391,7 +381,6 @@ public class BuildersOntologyTestCase {
         assertTrue(o.containsAxiom(expected));
     }
 
-
     @Test
     public void shouldBuildInverseFunctionalObjectProperty()
             throws OWLOntologyCreationException {
@@ -399,8 +388,7 @@ public class BuildersOntologyTestCase {
         BuilderInverseFunctionalObjectProperty builder = new BuilderInverseFunctionalObjectProperty()
                 .withProperty(op).withAnnotations(annotations);
         OWLAxiom expected = df
-                .getOWLInverseFunctionalObjectPropertyAxiom(op,
-                annotations);
+                .getOWLInverseFunctionalObjectPropertyAxiom(op, annotations);
         OWLOntology o = m.createOntology();
         // when
         builder.buildChanges(o);
@@ -435,7 +423,6 @@ public class BuildersOntologyTestCase {
         assertTrue(o.containsAxiom(expected));
     }
 
-
     @Test
     public void shouldBuildNegativeDataPropertyAssertion()
             throws OWLOntologyCreationException {
@@ -459,7 +446,6 @@ public class BuildersOntologyTestCase {
         BuilderNegativeObjectPropertyAssertion builder = new BuilderNegativeObjectPropertyAssertion()
                 .withAnnotations(annotations).withProperty(op).withValue(i)
                 .withSubject(i);
-
         OWLAxiom expected = df.getOWLNegativeObjectPropertyAssertionAxiom(op, i, i,
                 annotations);
         OWLOntology o = m.createOntology();
@@ -468,8 +454,6 @@ public class BuildersOntologyTestCase {
         // then
         assertTrue(o.containsAxiom(expected));
     }
-
-
 
     @Test
     public void shouldBuildObjectPropertyAssertion() throws OWLOntologyCreationException {
@@ -511,7 +495,6 @@ public class BuildersOntologyTestCase {
         // then
         assertTrue(o.containsAxiom(expected));
     }
-
 
     @Test
     public void shouldBuildPropertyChain() throws OWLOntologyCreationException {
@@ -612,7 +595,6 @@ public class BuildersOntologyTestCase {
         assertTrue(o.containsAxiom(expected));
     }
 
-
     @Test
     public void shouldBuildSWRLRule() throws OWLOntologyCreationException {
         // given
@@ -624,9 +606,6 @@ public class BuildersOntologyTestCase {
         // then
         assertTrue(o.containsAxiom(expected));
     }
-
-
-
 
     @Test
     public void shouldBuildSymmetricObjectProperty() throws OWLOntologyCreationException {
@@ -653,5 +632,4 @@ public class BuildersOntologyTestCase {
         // then
         assertTrue(o.containsAxiom(expected));
     }
-
 }

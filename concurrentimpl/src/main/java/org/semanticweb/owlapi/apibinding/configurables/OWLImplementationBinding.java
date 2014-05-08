@@ -36,7 +36,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.semanticweb.owlapi.apibinding.configurables;
 
 import org.semanticweb.owlapi.model.OWLDataFactory;
@@ -44,24 +43,20 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
-/**
- * @author ignazio
- * binding to implementations
- */
-public interface OWLImplementationBinding{
-		/**
-		 * @param d datafactory to use
-		 * @return ontology manager
-		 */
-		OWLOntologyManager getOWLOntologyManager(OWLDataFactory d);
-		/**
-		 * @return data factory
-		 */
-		OWLDataFactory getOWLDataFactory();
-		/**
-		 * @param oom ontology manager
-		 * @param id ontology ID
-		 * @return owl ontology
-		 */
-		OWLOntology getOWLOntology(OWLOntologyManager oom, OWLOntologyID id);
-	}
+/** @author ignazio binding to implementations */
+public interface OWLImplementationBinding {
+    /** @param d
+     *            datafactory to use
+     * @return ontology manager */
+    OWLOntologyManager getOWLOntologyManager(OWLDataFactory d);
+
+    /** @return data factory */
+    OWLDataFactory getOWLDataFactory();
+
+    /** @param oom
+     *            ontology manager
+     * @param id
+     *            ontology ID
+     * @return owl ontology */
+    OWLOntology getOWLOntology(OWLOntologyManager oom, OWLOntologyID id);
+}

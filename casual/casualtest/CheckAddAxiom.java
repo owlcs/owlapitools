@@ -1,6 +1,6 @@
 package casualtest;
 
-import junit.framework.TestCase;
+
 
 import org.junit.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -10,7 +10,7 @@ import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 @SuppressWarnings("javadoc")
-public class CheckAddAxiom extends TestCase{
+public class CheckAddAxiom {
     @Test
     public void testAddAxiom() throws Exception{
 		OWLOntologyManager m=OWLManager.createOWLOntologyManager();
