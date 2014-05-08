@@ -185,6 +185,9 @@ public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecke
                 }
             }
         }
+        // check whether for (2) we found a top-eq concept
+        if ( lhsIsTopEq && !topEqDesc )
+            return;
         isLocal = true;
     }
 
