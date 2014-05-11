@@ -13,7 +13,7 @@ public interface LocalityChecker {
     boolean local(OWLAxiom axiom);
 
     /** allow the checker to preprocess an ontology if necessary
-     * 
+     *
      * @param vec
      *            collection of axioms */
     void preprocessOntology(Collection<AxiomWrapper> vec);
@@ -34,9 +34,4 @@ public interface LocalityChecker {
      *            expression to evaluate
      * @return true if expr is bottom equivalent */
     boolean isBotEquivalent(OWLObject expr);
-
-    /** @param expr
-     *            expression to evaluate
-     * @return true if expr is an equivalent role */
-    boolean isREquivalent(OWLObject expr);
 }
