@@ -446,9 +446,4 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor,
         // TODO Auto-generated method stub
         return false;
     }
-
-    @Override
-    public boolean isREquivalent(OWLObject expr) {
-        return sig.topRLocal() ? isTopEquivalent(expr) : isBotEquivalent(expr);
-    }
 }
