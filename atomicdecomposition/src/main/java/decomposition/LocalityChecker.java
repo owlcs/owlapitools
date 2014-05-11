@@ -34,9 +34,4 @@ public interface LocalityChecker {
      *            expression to evaluate
      * @return true if expr is bottom equivalent */
     boolean isBotEquivalent(OWLObject expr);
-
-    /** @param expr
-     *            expression to evaluate
-     * @return true if expr is an equivalent role */
-    boolean isREquivalent(OWLObject expr);
 }
