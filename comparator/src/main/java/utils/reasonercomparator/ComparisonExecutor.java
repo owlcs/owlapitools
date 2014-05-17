@@ -14,12 +14,16 @@ import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.reasoner.OWLReasonerConfiguration;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
-/** Executes a set of reasoner calls
+/**
+ * Executes a set of reasoner calls
  * 
- * @author ignazio */
+ * @author ignazio
+ */
 public class ComparisonExecutor {
+
     private OWLReasonerFactory[] reasonerFactories;
     protected OWLOntology o1;
     protected OWLReasoner r;
@@ -30,10 +34,12 @@ public class ComparisonExecutor {
         return "stress test for " + name;
     }
 
-    /** run execution
+    /**
+     * run execution
      * 
      * @throws Exception
-     *             exception */
+     *         exception
+     */
     public void execute() throws Exception {
         r.getBottomClassNode();
         r.getBottomDataPropertyNode();
@@ -61,13 +67,15 @@ public class ComparisonExecutor {
         for (OWLClass c : classes) {
             r.isSatisfiable(c);
         }
-        Set<OWLObjectProperty> objectProperties = o1.getObjectPropertiesInSignature(true);
+        Set<OWLObjectProperty> objectProperties = o1
+                .getObjectPropertiesInSignature(true);
         Set<OWLDataProperty> dataProperties = o1.getDataPropertiesInSignature();
         Set<OWLNamedIndividual> individuals = o1.getIndividualsInSignature();
         for (OWLObjectProperty o : objectProperties) {
             checkObject(o);
         }
-        OWLClass thing = o1.getOWLOntologyManager().getOWLDataFactory().getOWLThing();
+        OWLClass thing = o1.getOWLOntologyManager().getOWLDataFactory()
+                .getOWLThing();
         {
             NodeSet<OWLClass> subclasses = r.getSubClasses(thing, false);
             NodeSet<OWLClass> superclasses = r.getSuperClasses(thing, false);
@@ -77,8 +85,10 @@ public class ComparisonExecutor {
                     for (Node<OWLClass> n1 : superclasses) {
                         for (OWLClass sup : n1) {
                             assertTrue(
-                                    "Wrong classification result! " + sub.getIRI()
-                                            + " not subclass of " + sup.getIRI()
+                                    "Wrong classification result! "
+                                            + sub.getIRI()
+                                            + " not subclass of "
+                                            + sup.getIRI()
                                             + " but it was supposed to be!",
                                     r.isEntailed(o1.getOWLOntologyManager()
                                             .getOWLDataFactory()
@@ -97,7 +107,8 @@ public class ComparisonExecutor {
                     for (Node<OWLClass> n1 : superclasses) {
                         for (OWLClass sup : n1) {
                             String message = "Wrong classification result! "
-                                    + sub.getIRI() + " not subclass of " + sup.getIRI()
+                                    + sub.getIRI() + " not subclass of "
+                                    + sup.getIRI()
                                     + " but it was supposed to be!";
                             assertTrue(
                                     message,
@@ -119,23 +130,26 @@ public class ComparisonExecutor {
         // r.dispose();
     }
 
-    /** check tautology
+    /**
+     * check tautology
      * 
      * @param index
-     *            repetition index */
+     *        repetition index
+     */
     public void checkTautology(int index) {
         for (OWLAxiom ax : o1.getLogicalAxioms()) {
             if (!r.isEntailed(ax)) {
                 System.out.println("ReloadingTestCallBack.checkTautology()");
                 r.isEntailed(ax);
             }
-            assertTrue("Axiom was supposed to be entailed! repetition: " + index
-                    + " axiom:" + ax, r.isEntailed(ax));
+            assertTrue("Axiom was supposed to be entailed! repetition: "
+                    + index + " axiom:" + ax, r.isEntailed(ax));
         }
     }
 
     private void checkIndividuals(Set<OWLObjectProperty> objectProperties,
-            Set<OWLDataProperty> dataProperties, Set<OWLNamedIndividual> individuals) {
+            Set<OWLDataProperty> dataProperties,
+            Set<OWLNamedIndividual> individuals) {
         for (OWLNamedIndividual i : individuals) {
             r.getTypes(i, false);
             r.getTypes(i, true);
@@ -186,17 +200,22 @@ public class ComparisonExecutor {
         r.getInverseObjectProperties(o);
     }
 
-    /** @param o
-     *            ontology
+    /**
+     * @param o
+     *        ontology
+     * @param c
+     *        configuration
      * @param f
-     *            reasoner factories
+     *        reasoner factories
      * @throws Exception
-     *             exception */
-    public ComparisonExecutor(OWLOntology o, OWLReasonerFactory... f) throws Exception {
+     *         exception
+     */
+    public ComparisonExecutor(OWLOntology o, OWLReasonerConfiguration c,
+            OWLReasonerFactory... f) throws Exception {
         o1 = o;
         name = "Comparing";
         reasonerFactories = f;
-        r = new ComparisonReasoner(o1, null, reasonerFactories);
+        r = new ComparisonReasoner(o1, c, reasonerFactories);
         r.precomputeInferences(InferenceType.values());
     }
 
