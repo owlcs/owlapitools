@@ -15,6 +15,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
@@ -174,8 +176,9 @@ public class ReasonerHelper {
      * @return an intersection of the non-redundant ranges or Thing if no range
      *         assertions have been made
      */
+    @Nonnull
     public OWLClassExpression getGlobalAssertedRange(
-            OWLObjectPropertyExpression p) {
+            @Nonnull OWLObjectPropertyExpression p) {
         OWLClassExpression range = df.getOWLThing();
         Set<OWLClassExpression> assertedRanges = new HashSet<OWLClassExpression>();
         Set<OWLObjectPropertyExpression> ancestors = new HashSet<OWLObjectPropertyExpression>(

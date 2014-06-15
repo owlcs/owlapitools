@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -59,6 +61,12 @@ public class ComparisonReasoner implements OWLReasoner {
         return timings;
     }
 
+    @SuppressWarnings("null")
+    @Nonnull
+    static <T> T o(List<T> l) {
+        return l.get(0);
+    }
+
     /**
      * @param o
      *        the ontology to reason on
@@ -67,7 +75,8 @@ public class ComparisonReasoner implements OWLReasoner {
      * @param delegateFactories
      *        the factories to be used to build the reasoners
      */
-    public ComparisonReasoner(OWLOntology o, OWLReasonerConfiguration config,
+    public ComparisonReasoner(@Nonnull OWLOntology o,
+            OWLReasonerConfiguration config,
             OWLReasonerFactory... delegateFactories) {
         root = o;
         for (int i = 0; i < delegateFactories.length; i++) {
@@ -143,7 +152,9 @@ public class ComparisonReasoner implements OWLReasoner {
         return BufferingMode.BUFFERING;
     }
 
-    private <T> T verify(List<T> objects, String method, Object... arguments) {
+    @Nonnull
+    private static <T> T verify(List<T> objects, String method,
+            Object... arguments) {
         for (int i = 1; i < objects.size(); i++) {
             if (!delegateEquals(objects.get(0), objects.get(i))) {
                 String template = "@Test public void shouldPass" + method;
@@ -177,7 +188,7 @@ public class ComparisonReasoner implements OWLReasoner {
                 throw new RuntimeException("Spotted difference!");
             }
         }
-        return objects.get(0);
+        return o(objects);
     }
 
     private static String vars(Object o) {
@@ -311,7 +322,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getPendingChanges");
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -337,7 +348,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getPendingAxiomAdditions");
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -362,7 +373,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getPendingAxiomRemovals");
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -404,7 +415,7 @@ public class ComparisonReasoner implements OWLReasoner {
             timings.get(delegates.get(i)).add(isPrecomputed, elapsed);
             objects.add(value);
         }
-        return objects.get(0);
+        return o(objects);
     }
 
     @Override
@@ -427,7 +438,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getPrecomputableInferenceTypes");
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -452,7 +463,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "isConsistent");
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -477,7 +488,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "isSatisfiable", arg0);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -502,7 +513,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getUnsatisfiableClasses");
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -527,7 +538,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "isEntailed", arg0);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -552,7 +563,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "isEntailed", arg0);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -579,7 +590,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "isEntailmentCheckingSupported", arg0);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -604,7 +615,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getTopClassNode");
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -629,7 +640,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getBottomClassNode");
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -656,7 +667,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getSubClasses", arg0, arg1);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -683,7 +694,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getSuperClasses", arg0, arg1);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -708,7 +719,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getEquivalentClasses", arg0);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -733,7 +744,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getDisjointClasses", arg0);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -760,7 +771,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getTopObjectPropertyNode");
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -787,7 +798,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getBottomObjectPropertyNode");
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -814,7 +825,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getSubObjectProperties", arg0, arg1);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -842,7 +853,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getSuperObjectProperties", arg0, arg1);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -870,7 +881,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getEquivalentObjectProperties", arg0);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -898,7 +909,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getDisjointObjectProperties", arg0);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -926,7 +937,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getInverseObjectProperties", arg0);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -954,7 +965,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getObjectPropertyDomains", arg0, arg1);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -981,7 +992,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getObjectPropertyRanges", arg0, arg1);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -1007,7 +1018,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getTopDataPropertyNode");
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -1034,7 +1045,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getBottomDataPropertyNode");
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -1061,7 +1072,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getSubDataProperties", arg0, arg1);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -1088,7 +1099,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getSuperDataProperties", arg0, arg1);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -1116,7 +1127,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getEquivalentDataProperties", arg0);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -1144,7 +1155,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getDisjointDataProperties", arg0);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -1171,7 +1182,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getDataPropertyDomains", arg0, arg1);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -1196,7 +1207,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getTypes", arg0, arg1);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -1223,7 +1234,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getInstances", arg0, arg1);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -1250,7 +1261,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getObjectPropertyValues", arg0, arg1);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -1277,7 +1288,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getDataPropertyValues", arg0, arg1);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -1303,7 +1314,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getSameIndividuals", arg0);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -1330,7 +1341,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getDifferentIndividuals", arg0);
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -1355,7 +1366,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getTimeOut");
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -1380,7 +1391,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getFreshEntityPolicy");
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }
@@ -1407,7 +1418,7 @@ public class ComparisonReasoner implements OWLReasoner {
             return verify(objects, "getIndividualNodeSetPolicy");
         } catch (RuntimeException e) {
             if (tolerateDifferences) {
-                return objects.get(0);
+                return o(objects);
             } else {
                 throw e;
             }

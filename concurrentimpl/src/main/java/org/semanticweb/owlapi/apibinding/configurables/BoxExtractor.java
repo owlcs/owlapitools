@@ -96,6 +96,7 @@ public class BoxExtractor extends OWLObjectVisitorExAdapter<Set<OWLAxiom>>
     public Set<OWLAxiom> visit(OWLOntology ontology) {
         Set<OWLAxiom> toReturn = new HashSet<OWLAxiom>();
         for (AxiomType<?> t : types) {
+            assert t != null;
             toReturn.addAll(ontology.getAxioms(t, closure));
         }
         return toReturn;

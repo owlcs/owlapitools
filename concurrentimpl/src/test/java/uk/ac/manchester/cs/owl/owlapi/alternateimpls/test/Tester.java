@@ -41,6 +41,8 @@ package uk.ac.manchester.cs.owl.owlapi.alternateimpls.test;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 
@@ -78,21 +80,27 @@ public class Tester {
     public void run(OWLDataFactory toTest) {
         for (int i = 0; i < _10; i++) {
             for (IRI iri : iriClasses) {
+                assert iri != null;
                 singleRunClasses(toTest, iri);
             }
             for (IRI iri : iriObjectProperties) {
+                assert iri != null;
                 singleRunObjectProp(toTest, iri);
             }
             for (IRI iri : iriDataproperties) {
+                assert iri != null;
                 singleRunDataprop(toTest, iri);
             }
             for (IRI iri : iriIndividuals) {
+                assert iri != null;
                 singleRunIndividuals(toTest, iri);
             }
             for (IRI iri : iriDatatypes) {
+                assert iri != null;
                 singleRunDatatype(toTest, iri);
             }
             for (IRI iri : iriAnnotations) {
+                assert iri != null;
                 singleRunAnnotations(toTest, iri);
             }
         }
@@ -104,27 +112,33 @@ public class Tester {
         }
     }
 
-    private static void singleRunClasses(OWLDataFactory toTest, IRI iri) {
+    private static void
+            singleRunClasses(OWLDataFactory toTest, @Nonnull IRI iri) {
         toTest.getOWLClass(iri);
     }
 
-    private static void singleRunObjectProp(OWLDataFactory toTest, IRI iri) {
+    private static void singleRunObjectProp(OWLDataFactory toTest,
+            @Nonnull IRI iri) {
         toTest.getOWLObjectProperty(iri);
     }
 
-    private static void singleRunDataprop(OWLDataFactory toTest, IRI iri) {
+    private static void singleRunDataprop(OWLDataFactory toTest,
+            @Nonnull IRI iri) {
         toTest.getOWLDataProperty(iri);
     }
 
-    private static void singleRunDatatype(OWLDataFactory toTest, IRI iri) {
+    private static void singleRunDatatype(OWLDataFactory toTest,
+            @Nonnull IRI iri) {
         toTest.getOWLDatatype(iri);
     }
 
-    private static void singleRunIndividuals(OWLDataFactory toTest, IRI iri) {
+    private static void singleRunIndividuals(OWLDataFactory toTest,
+            @Nonnull IRI iri) {
         toTest.getOWLNamedIndividual(iri);
     }
 
-    private static void singleRunAnnotations(OWLDataFactory toTest, IRI iri) {
+    private static void singleRunAnnotations(OWLDataFactory toTest,
+            @Nonnull IRI iri) {
         toTest.getOWLAnnotationProperty(iri);
     }
 }

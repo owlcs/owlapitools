@@ -9,6 +9,8 @@
  */
 package org.coode.suggestor.test;
 
+import javax.annotation.Nonnull;
+
 import org.junit.After;
 import org.junit.Before;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -24,6 +26,7 @@ import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 @SuppressWarnings("javadoc")
 public abstract class AbstractSuggestorTest {
+
     protected static final String HERMIT_FACTORY = "org.semanticweb.HermiT.Reasoner$ReasonerFactory";
     protected static final String FACTPLUSPLUS_FACTORY = "uk.ac.manchester.cs.factplusplus.owlapiv3.FaCTPlusPlusReasonerFactory";
     protected static final String JFACT_FACTORY = "uk.ac.manchester.cs.jfact.JFactFactory";
@@ -39,6 +42,7 @@ public abstract class AbstractSuggestorTest {
         df = mngr.getOWLDataFactory();
     }
 
+    @Nonnull
     protected OWLOntology createOntology() throws OWLOntologyCreationException {
         return mngr.createOntology();
     }
@@ -49,18 +53,22 @@ public abstract class AbstractSuggestorTest {
         df = null;
     }
 
+    @Nonnull
     protected OWLObjectProperty createObjectProperty(String name) {
         return df.getOWLObjectProperty(IRI.create(BASE + name));
     }
 
+    @Nonnull
     protected OWLDataProperty createDataProperty(String name) {
         return df.getOWLDataProperty(IRI.create(BASE + name));
     }
 
+    @Nonnull
     protected OWLClass createClass(String name) {
         return df.getOWLClass(IRI.create(BASE + name));
     }
 
+    @Nonnull
     protected OWLAnnotationProperty createAnnotationProperty(String name) {
         return df.getOWLAnnotationProperty(IRI.create(BASE + name));
     }

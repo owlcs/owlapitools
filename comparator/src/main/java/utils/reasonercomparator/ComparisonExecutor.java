@@ -4,6 +4,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataProperty;
@@ -26,6 +28,7 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 public class ComparisonExecutor {
 
     private OWLReasonerFactory[] reasonerFactories;
+    @Nonnull
     protected OWLOntology o1;
     protected OWLReasoner r;
     protected String name;
@@ -59,10 +62,12 @@ public class ComparisonExecutor {
         // r.isEntailmentCheckingSupported(t);
         // }
         for (InferenceType t : InferenceType.values()) {
+            assert t != null;
             r.isPrecomputed(t);
         }
         Set<OWLClass> classes = o1.getClassesInSignature();
         for (OWLClass c : classes) {
+            assert c != null;
             r.isSatisfiable(c);
         }
         Set<OWLObjectProperty> objectProperties = o1
@@ -70,6 +75,7 @@ public class ComparisonExecutor {
         Set<OWLDataProperty> dataProperties = o1.getDataPropertiesInSignature();
         Set<OWLNamedIndividual> individuals = o1.getIndividualsInSignature();
         for (OWLObjectProperty o : objectProperties) {
+            assert o != null;
             checkObject(o);
         }
         OWLClass thing = o1.getOWLOntologyManager().getOWLDataFactory()
@@ -97,6 +103,7 @@ public class ComparisonExecutor {
             }
         }
         for (OWLClass c : classes) {
+            assert c != null;
             NodeSet<OWLClass> subclasses = r.getSubClasses(c, false);
             NodeSet<OWLClass> superclasses = r.getSuperClasses(c, false);
             checkClasses(c);
@@ -119,6 +126,7 @@ public class ComparisonExecutor {
             }
         }
         for (OWLDataProperty p : dataProperties) {
+            assert p != null;
             checkDataProperties(p);
         }
         checkIndividuals(objectProperties, dataProperties, individuals);
@@ -136,6 +144,7 @@ public class ComparisonExecutor {
      */
     public void checkTautology(int index) {
         for (OWLAxiom ax : o1.getLogicalAxioms()) {
+            assert ax != null;
             if (!r.isEntailed(ax)) {
                 System.out.println("ReloadingTestCallBack.checkTautology()");
                 r.isEntailed(ax);
@@ -145,24 +154,28 @@ public class ComparisonExecutor {
         }
     }
 
-    private void checkIndividuals(Set<OWLObjectProperty> objectProperties,
-            Set<OWLDataProperty> dataProperties,
-            Set<OWLNamedIndividual> individuals) {
+    private void checkIndividuals(
+            @Nonnull Set<OWLObjectProperty> objectProperties,
+            @Nonnull Set<OWLDataProperty> dataProperties,
+            @Nonnull Set<OWLNamedIndividual> individuals) {
         for (OWLNamedIndividual i : individuals) {
+            assert i != null;
             r.getTypes(i, false);
             r.getTypes(i, true);
             r.getSameIndividuals(i);
             r.getDifferentIndividuals(i);
             for (OWLObjectProperty o : objectProperties) {
+                assert o != null;
                 r.getObjectPropertyValues(i, o);
             }
             for (OWLDataProperty p : dataProperties) {
+                assert p != null;
                 r.getDataPropertyValues(i, p);
             }
         }
     }
 
-    private void checkDataProperties(OWLDataProperty p) {
+    private void checkDataProperties(@Nonnull OWLDataProperty p) {
         r.getSubDataProperties(p, false);
         r.getSuperDataProperties(p, false);
         r.getDataPropertyDomains(p, false);
@@ -173,7 +186,7 @@ public class ComparisonExecutor {
         r.getDisjointDataProperties(p);
     }
 
-    private void checkClasses(OWLClass c) {
+    private void checkClasses(@Nonnull OWLClass c) {
         r.getSubClasses(c, false);
         r.getSuperClasses(c, false);
         r.getInstances(c, false);
@@ -184,7 +197,7 @@ public class ComparisonExecutor {
         r.getDisjointClasses(c);
     }
 
-    private void checkObject(OWLObjectProperty o) {
+    private void checkObject(@Nonnull OWLObjectProperty o) {
         r.getSubObjectProperties(o, false);
         r.getSuperObjectProperties(o, false);
         r.getObjectPropertyDomains(o, false);
@@ -206,8 +219,8 @@ public class ComparisonExecutor {
      * @param f
      *        reasoner factories
      */
-    public ComparisonExecutor(OWLOntology o, OWLReasonerConfiguration c,
-            OWLReasonerFactory... f) {
+    public ComparisonExecutor(@Nonnull OWLOntology o,
+            OWLReasonerConfiguration c, OWLReasonerFactory... f) {
         o1 = o;
         name = "Comparing";
         reasonerFactories = f;

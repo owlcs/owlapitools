@@ -11,6 +11,8 @@ package org.coode.suggestor.api;
 
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataProperty;
@@ -19,7 +21,8 @@ import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
-/** <p>
+/**
+ * <p>
  * The FillerSuggestor allows us to explore the relationships between the
  * classes in the ontology.
  * </p>
@@ -50,162 +53,206 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
  * <p>
  * For the definition of StrictSubClassOf see the OWLAPI
  * {@link org.semanticweb.owlapi.reasoner.OWLReasoner}.
- * </p> */
+ * </p>
+ */
 public interface FillerSuggestor {
-    /** @param c
-     *            a class expression
-     * @param p
-     *            an object property
-     * @param f
-     *            a filler class expression
-     * @return true if SubClassOf(c, p some f) is entailed */
-    boolean isCurrent(OWLClassExpression c, OWLObjectPropertyExpression p,
-            OWLClassExpression f);
 
-    /** @param c
-     *            a class expression
+    /**
+     * @param c
+     *        a class expression
      * @param p
-     *            an object property
+     *        an object property
      * @param f
-     *            a filler class expression
+     *        a filler class expression
+     * @return true if SubClassOf(c, p some f) is entailed
+     */
+    boolean isCurrent(@Nonnull OWLClassExpression c,
+            @Nonnull OWLObjectPropertyExpression p,
+            @Nonnull OWLClassExpression f);
+
+    /**
+     * @param c
+     *        a class expression
+     * @param p
+     *        an object property
+     * @param f
+     *        a filler class expression
      * @param direct
-     *            (see definition above)
+     *        (see definition above)
      * @return isCurrent(c, p, f). If direct then there is no g where
-     *         StrictSubClassOf(g, f) and isCurrent(c, p, g) is true */
-    boolean isCurrent(OWLClassExpression c, OWLObjectPropertyExpression p,
-            OWLClassExpression f, boolean direct);
+     *         StrictSubClassOf(g, f) and isCurrent(c, p, g) is true
+     */
+    boolean isCurrent(@Nonnull OWLClassExpression c,
+            @Nonnull OWLObjectPropertyExpression p,
+            @Nonnull OWLClassExpression f, boolean direct);
 
-    /** @param c
-     *            a class expression
+    /**
+     * @param c
+     *        a class expression
      * @param p
-     *            a data property
+     *        a data property
      * @param f
-     *            a filler data range
-     * @return true if SubClassOf(c, p some f) is entailed */
-    boolean isCurrent(OWLClassExpression c, OWLDataProperty p, OWLDataRange f);
+     *        a filler data range
+     * @return true if SubClassOf(c, p some f) is entailed
+     */
+    boolean isCurrent(@Nonnull OWLClassExpression c,
+            @Nonnull OWLDataProperty p, @Nonnull OWLDataRange f);
 
     // TODO: how do we determine if there is a more specific range on c??
-    /** @param c
-     *            class
+    /**
+     * @param c
+     *        class
      * @param p
-     *            property
+     *        property
      * @param f
-     *            filler
+     *        filler
      * @param direct
-     *            direct
-     * @return true if current */
-    boolean isCurrent(OWLClassExpression c, OWLDataProperty p, OWLDataRange f,
-            boolean direct);
+     *        direct
+     * @return true if current
+     */
+    boolean
+            isCurrent(@Nonnull OWLClassExpression c,
+                    @Nonnull OWLDataProperty p, @Nonnull OWLDataRange f,
+                    boolean direct);
 
-    /** @param c
-     *            a class expression
+    /**
+     * @param c
+     *        a class expression
      * @param p
-     *            an object property
+     *        an object property
      * @param f
-     *            a filler class expression
-     * @return true if isSatisfiable(c and p some f) */
-    boolean isPossible(OWLClassExpression c, OWLObjectPropertyExpression p,
-            OWLClassExpression f);
+     *        a filler class expression
+     * @return true if isSatisfiable(c and p some f)
+     */
+    boolean isPossible(@Nonnull OWLClassExpression c,
+            @Nonnull OWLObjectPropertyExpression p,
+            @Nonnull OWLClassExpression f);
 
-    /** @param c
-     *            a class expression
+    /**
+     * @param c
+     *        a class expression
      * @param p
-     *            a data property
+     *        a data property
      * @param f
-     *            a filler data range
-     * @return true if isSatisfiable(c and p some f) */
-    boolean isPossible(OWLClassExpression c, OWLDataProperty p, OWLDataRange f);
+     *        a filler data range
+     * @return true if isSatisfiable(c and p some f)
+     */
+    boolean isPossible(@Nonnull OWLClassExpression c,
+            @Nonnull OWLDataProperty p, @Nonnull OWLDataRange f);
 
-    /** @param c
-     *            a class expression
+    /**
+     * @param c
+     *        a class expression
      * @param p
-     *            an object property
+     *        an object property
      * @param f
-     *            a filler class expression
-     * @return true if isPossible(c, p, f) and ANY filler sanction rule is met */
-    boolean isSanctioned(OWLClassExpression c, OWLObjectPropertyExpression p,
-            OWLClassExpression f);
+     *        a filler class expression
+     * @return true if isPossible(c, p, f) and ANY filler sanction rule is met
+     */
+    boolean isSanctioned(@Nonnull OWLClassExpression c,
+            @Nonnull OWLObjectPropertyExpression p,
+            @Nonnull OWLClassExpression f);
 
-    /** @param c
-     *            a class expression
+    /**
+     * @param c
+     *        a class expression
      * @param p
-     *            a data property
+     *        a data property
      * @param f
-     *            a filler data range
-     * @return true if isPossible(c, p, f) and ANY filler sanction rule is met */
-    boolean isSanctioned(OWLClassExpression c, OWLDataProperty p, OWLDataRange f);
+     *        a filler data range
+     * @return true if isPossible(c, p, f) and ANY filler sanction rule is met
+     */
+    boolean isSanctioned(@Nonnull OWLClassExpression c,
+            @Nonnull OWLDataProperty p, @Nonnull OWLDataRange f);
 
-    /** Roughly speaking, would adding SubClassOf(c, p some f) fail to usefully
+    /**
+     * Roughly speaking, would adding SubClassOf(c, p some f) fail to usefully
      * "specialise" c
      * 
      * @param c
-     *            a class expression
+     *        a class expression
      * @param p
-     *            an object property
+     *        an object property
      * @param f
-     *            a filler class expression
+     *        a filler class expression
      * @return isCurrent(c, p, f) or there is a g such that StrictSubClassOf(g,
-     *         f) and isCurrent(c, p, g) or SubClassOf(c, p only g) */
-    boolean isRedundant(OWLClassExpression c, OWLObjectPropertyExpression p,
-            OWLClassExpression f);
+     *         f) and isCurrent(c, p, g) or SubClassOf(c, p only g)
+     */
+    boolean isRedundant(@Nonnull OWLClassExpression c,
+            @Nonnull OWLObjectPropertyExpression p,
+            @Nonnull OWLClassExpression f);
 
-    /** @param c
-     *            a class expression
+    /**
+     * @param c
+     *        a class expression
      * @param p
-     *            an object property
+     *        an object property
      * @param direct
-     *            (see definition above)
+     *        (see definition above)
      * @return a set of named class fillers where every f satisfies isCurrent(c,
-     *         p, f, direct) */
-    NodeSet<OWLClass> getCurrentNamedFillers(OWLClassExpression c,
-            OWLObjectPropertyExpression p, boolean direct);
+     *         p, f, direct)
+     */
+    @Nonnull
+    NodeSet<OWLClass> getCurrentNamedFillers(@Nonnull OWLClassExpression c,
+            @Nonnull OWLObjectPropertyExpression p, boolean direct);
 
-    /** Find subclasses (or descendants) of root for which isPossible() holds.
+    /**
+     * Find subclasses (or descendants) of root for which isPossible() holds.
      * 
      * @param c
-     *            a class expression
+     *        a class expression
      * @param p
-     *            an object property
+     *        an object property
      * @param root
-     *            the class from which we start our search
+     *        the class from which we start our search
      * @param direct
-     *            controls whether subclasses or descendants of root are
-     *            searched
+     *        controls whether subclasses or descendants of root are searched
      * @return a set of named class fillers where every f satisfies
      *         StrictSubClassOf(f, root) or StrictDescendantOf(f, root) and
-     *         isPossible(c, p, f) */
-    NodeSet<OWLClass> getPossibleNamedFillers(OWLClassExpression c,
-            OWLObjectPropertyExpression p, OWLClassExpression root, boolean direct);
+     *         isPossible(c, p, f)
+     */
+    @Nonnull
+    NodeSet<OWLClass> getPossibleNamedFillers(@Nonnull OWLClassExpression c,
+            @Nonnull OWLObjectPropertyExpression p,
+            @Nonnull OWLClassExpression root, boolean direct);
 
-    /** Find subclasses (or descendants) of root for which isSanctioned() holds.
+    /**
+     * Find subclasses (or descendants) of root for which isSanctioned() holds.
      * 
      * @param c
-     *            a class expression
+     *        a class expression
      * @param p
-     *            an object property
+     *        an object property
      * @param root
-     *            the class from which we start our search
+     *        the class from which we start our search
      * @param direct
-     *            controls whether subclasses or descendants of root are
-     *            searched
+     *        controls whether subclasses or descendants of root are searched
      * @return a set of named class fillers where every f satisfies
      *         StrictSubClassOf(f, root) or StrictDescendantOf(f, root) and
-     *         isSanctioned(c, p, f, direct) */
-    Set<OWLClass> getSanctionedFillers(OWLClassExpression c,
-            OWLObjectPropertyExpression p, OWLClassExpression root, boolean direct);
+     *         isSanctioned(c, p, f, direct)
+     */
+    @Nonnull
+    Set<OWLClass> getSanctionedFillers(@Nonnull OWLClassExpression c,
+            @Nonnull OWLObjectPropertyExpression p,
+            @Nonnull OWLClassExpression root, boolean direct);
 
-    /** Add a FillerSanctionRule to the end of the rules used for sanctioning
+    /**
+     * Add a FillerSanctionRule to the end of the rules used for sanctioning
      * 
      * @param rule
-     *            the rule to add */
-    void addSanctionRule(FillerSanctionRule rule);
+     *        the rule to add
+     */
+    void addSanctionRule(@Nonnull FillerSanctionRule rule);
 
-    /** Remove this FillerSanctionRule from the rules used for sanctioning
+    /**
+     * Remove this FillerSanctionRule from the rules used for sanctioning
      * 
      * @param rule
-     *            the rule to remove */
-    void removeSanctionRule(FillerSanctionRule rule);
+     *        the rule to remove
+     */
+    void removeSanctionRule(@Nonnull FillerSanctionRule rule);
 
     /** @return get the reasoner used by this suggestor instance */
+    @Nonnull
     OWLReasoner getReasoner();
 }

@@ -18,6 +18,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import javax.annotation.Nonnull;
+
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -145,6 +147,8 @@ public class ThreadedReasoner implements OWLReasoner {
         threadedRun(thread);
     }
 
+    @SuppressWarnings("null")
+    @Nonnull
     private <T> T threadedRun(Callable<T> r) {
         Future<T> toReturn = exec.submit(r);
         try {
