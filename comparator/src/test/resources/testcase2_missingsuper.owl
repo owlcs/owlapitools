@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE Ontology [
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY xml "http://www.w3.org/XML/1998/namespace" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<Ontology xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.w3.org/2002/07/owl#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace">
+    <Prefix name="" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Declaration>
+        <Class IRI="http://www.daml.org/services/owl-s/1.1/Process.owl#AtomicProcess"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.daml.org/services/owl-s/1.1/Process.owl#CompositeProcess"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.daml.org/services/owl-s/1.1/Process.owl#Process"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.daml.org/services/owl-s/1.1/Process.owl#SimpleProcess"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="http://www.daml.org/services/owl-s/1.1/Service.owl#ServiceModel"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="http://www.daml.org/services/owl-s/1.1/Process.owl#composedOf"/>
+    </Declaration>
+    <EquivalentClasses>
+        <Class IRI="http://www.daml.org/services/owl-s/1.1/Process.owl#CompositeProcess"/>
+        <ObjectIntersectionOf>
+            <Class IRI="http://www.daml.org/services/owl-s/1.1/Process.owl#Process"/>
+            <ObjectExactCardinality cardinality="1">
+                <ObjectProperty IRI="http://www.daml.org/services/owl-s/1.1/Process.owl#composedOf"/>
+            </ObjectExactCardinality>
+        </ObjectIntersectionOf>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class IRI="http://www.daml.org/services/owl-s/1.1/Process.owl#Process"/>
+        <ObjectUnionOf>
+            <Class IRI="http://www.daml.org/services/owl-s/1.1/Process.owl#AtomicProcess"/>
+            <Class IRI="http://www.daml.org/services/owl-s/1.1/Process.owl#CompositeProcess"/>
+        </ObjectUnionOf>
+    </EquivalentClasses>
+    <SubClassOf>
+        <Class IRI="http://www.daml.org/services/owl-s/1.1/Process.owl#AtomicProcess"/>
+        <Class IRI="http://www.daml.org/services/owl-s/1.1/Process.owl#Process"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.daml.org/services/owl-s/1.1/Process.owl#CompositeProcess"/>
+        <Class IRI="http://www.daml.org/services/owl-s/1.1/Process.owl#Process"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.daml.org/services/owl-s/1.1/Process.owl#Process"/>
+        <Class IRI="http://www.daml.org/services/owl-s/1.1/Service.owl#ServiceModel"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="http://www.daml.org/services/owl-s/1.1/Process.owl#SimpleProcess"/>
+        <Class IRI="http://www.daml.org/services/owl-s/1.1/Process.owl#Process"/>
+    </SubClassOf>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="http://www.daml.org/services/owl-s/1.1/Process.owl#composedOf"/>
+        <Class IRI="http://www.daml.org/services/owl-s/1.1/Process.owl#CompositeProcess"/>
+    </ObjectPropertyDomain>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.daml.org/services/owl-s/1.1/Process.owl#CompositeProcess</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">
+    A CompositeProcess can have at most one invocable property. Similarly for
+    computedInput, computedOutput, computedEffect, and
+    computedPrecondition.
+  </Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.daml.org/services/owl-s/1.1/Process.owl#CompositeProcess</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">
+    A CompositeProcess must have exactly 1 composedOf property.
+  </Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.daml.org/services/owl-s/1.1/Process.owl#Process</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">
+    A Process can have at most one name, but names need not be unique.
+  </Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.daml.org/services/owl-s/1.1/Process.owl#Process</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral"> The most general class of processes </Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.daml.org/services/owl-s/1.1/Process.owl#TheParentPerform</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">
+    A special-purpose object, used to refer, at runtime, to the execution
+    instance of the enclosing composite process definition.
+  </Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.daml.org/services/owl-s/1.1/Process.owl#ThisPerform</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">
+    A special-purpose object, used to refer, at runtime, to the execution
+    instance of the enclosing atomic process definition.
+  </Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.daml.org/services/owl-s/1.1/Service.owl#ServiceModel</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">See comments above</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.daml.org/services/owl-s/1.1/Service.owl#ServiceModel</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">ServiceModel</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#AlwaysTrue</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">
+    An empty AtomList always evaluates to true. Note that this is not equivalent to specifiying no 
+    precondition. Due to open-world semantics of OWL, it would not be possible to distinguish 
+    having no precondition from not knowing the precondition. We would need to specify a
+    cardinality 0 restriction on precondition property to indicate that there is no precondition
+    which would be also valid.
+  </Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.daml.org/services/owl-s/1.1/generic/Expression.owl#AlwaysTrue</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Always True</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.daml.org/services/owl-s/1.1/generic/ObjectList.owl#nil</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">The empty list, with no items in it. If the rest of a list is nil then the list has no more items in it.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>http://www.daml.org/services/owl-s/1.1/generic/ObjectList.owl#nil</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">nil</Literal>
+    </AnnotationAssertion>
+</Ontology>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+

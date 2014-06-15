@@ -43,14 +43,16 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 
-import uk.ac.manchester.cs.owl.owlapi.alternateimpls.owldatafactory.DataFactoryCSR;
+import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.test.MultiThreadChecker;
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.test.TestMultithreadCallBack;
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.test.Tester;
 
 @SuppressWarnings("javadoc")
 public class ConcurrentSafetyTest {
+
     private class CallBack1 implements TestMultithreadCallBack {
+
         private final OWLDataFactory f;
         private final Tester t;
 
@@ -71,7 +73,8 @@ public class ConcurrentSafetyTest {
     }
 
     private Tester tester = new Tester();
-    private OWLDataFactory[] factories = new OWLDataFactory[] { new DataFactoryCSR() };
+    private OWLDataFactory[] factories = new OWLDataFactory[] { new OWLDataFactoryImpl(
+            true, true) };
 
     @Test
     public void testSafeImplementation() {

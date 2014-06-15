@@ -43,24 +43,25 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
-import uk.ac.manchester.cs.owl.owlapi.alternateimpls.LockingOWLOntologyImpl;
-import uk.ac.manchester.cs.owl.owlapi.alternateimpls.LockingOWLOntologyManagerImpl;
-import uk.ac.manchester.cs.owl.owlapi.alternateimpls.owldatafactory.DataFactoryCSR;
+import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLOntologyImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLOntologyManagerImpl;
 
 /** @author ignazio binding for threadsafe implementations */
 public final class ThreadSafeBinding implements OWLImplementationBinding {
+
     @Override
     public OWLOntologyManager getOWLOntologyManager(OWLDataFactory d) {
-        return new LockingOWLOntologyManagerImpl(d);
+        return new OWLOntologyManagerImpl(d);
     }
 
     @Override
     public OWLOntology getOWLOntology(OWLOntologyManager oom, OWLOntologyID id) {
-        return new LockingOWLOntologyImpl(oom, id);
+        return new OWLOntologyImpl(oom, id);
     }
 
     @Override
     public OWLDataFactory getOWLDataFactory() {
-        return DataFactoryCSR.getInstance();
+        return new OWLDataFactoryImpl(true, true);
     }
 }
