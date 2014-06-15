@@ -14,6 +14,8 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.coode.suggestor.api.PropertySuggestor;
 import org.coode.suggestor.impl.SimpleAnnotationPropertySanctionRule;
 import org.coode.suggestor.impl.SuggestorFactory;
@@ -32,33 +34,42 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
 @SuppressWarnings("javadoc")
 public class PropertySuggestorTests extends AbstractSuggestorTest {
-    OWLClass ca, cb, cc, cd, ce, cf;
-    OWLObjectProperty op, oq, or, os, ot;
-    OWLDataProperty dx, dy, z;
 
-    private void createEntities() {
-        ca = createClass("a");
-        cb = createClass("b");
-        cc = createClass("c");
-        cd = createClass("d");
-        ce = createClass("e");
-        cf = createClass("f");
-        op = createObjectProperty("p");
-        oq = createObjectProperty("q");
-        or = createObjectProperty("r");
-        os = createObjectProperty("s");
-        ot = createObjectProperty("t");
-        dx = createDataProperty("x");
-        dy = createDataProperty("y");
-    }
+    @Nonnull
+    OWLClass ca = createClass("a");
+    @Nonnull
+    OWLClass cb = createClass("b");
+    @Nonnull
+    OWLClass cc = createClass("c");
+    @Nonnull
+    OWLClass cd = createClass("d");
+    @Nonnull
+    OWLClass ce = createClass("e");
+    @Nonnull
+    OWLClass cf = createClass("f");
+    @Nonnull
+    OWLObjectProperty op = createObjectProperty("p");
+    @Nonnull
+    OWLObjectProperty oq = createObjectProperty("q");
+    @Nonnull
+    OWLObjectProperty or = createObjectProperty("r");
+    @Nonnull
+    OWLObjectProperty os = createObjectProperty("s");
+    @Nonnull
+    OWLObjectProperty ot = createObjectProperty("t");
+    @Nonnull
+    OWLDataProperty dx = createDataProperty("x");
+    @Nonnull
+    OWLDataProperty dy = createDataProperty("y");
+    @Nonnull
+    OWLDataProperty z = createDataProperty("z");
 
     /*
      * a -> p some b a -> q some b a -> not(s some Thing) a -> x some integer c
      * -> a c -> t some b q -> r
-     */
+     */@Nonnull
     private OWLOntology createModelA() throws Exception {
         OWLOntology ont = createOntology();
-        createEntities();
         List<OWLOntologyChange<?>> changes = new ArrayList<OWLOntologyChange<?>>();
         changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(ca,
                 df.getOWLObjectSomeValuesFrom(op, cb))));
@@ -70,9 +81,8 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
         changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(cc,
                 df.getOWLObjectSomeValuesFrom(ot, cb))));
         changes.add(new AddAxiom(ont, df.getOWLSubObjectPropertyOfAxiom(oq, or)));
-        changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(
-                ca,
-                df.getOWLObjectComplementOf(df.getOWLObjectSomeValuesFrom(os,
+        changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(ca, df
+                .getOWLObjectComplementOf(df.getOWLObjectSomeValuesFrom(os,
                         df.getOWLThing())))));
         mngr.applyChanges(changes);
         return ont;
@@ -80,18 +90,16 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
 
     /*
      * a -> p some b a -> q some b a -> not(s some Thing) r -> s
-     */
+     */@Nonnull
     private OWLOntology createModelB() throws Exception {
         OWLOntology ont = createOntology();
-        createEntities();
         List<OWLOntologyChange<?>> changes = new ArrayList<OWLOntologyChange<?>>();
         changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(ca,
                 df.getOWLObjectSomeValuesFrom(op, cb))));
         changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(ca,
                 df.getOWLObjectSomeValuesFrom(oq, cb))));
-        changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(
-                ca,
-                df.getOWLObjectComplementOf(df.getOWLObjectSomeValuesFrom(os,
+        changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(ca, df
+                .getOWLObjectComplementOf(df.getOWLObjectSomeValuesFrom(os,
                         df.getOWLThing())))));
         changes.add(new AddAxiom(ont, df.getOWLSubObjectPropertyOfAxiom(or, os)));
         mngr.applyChanges(changes);
@@ -100,8 +108,9 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
 
     public void testIsCurrentObjectProperties() throws Exception {
         OWLOntology ont = createModelA();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY)
-                .newInstance()).createNonBufferingReasoner(ont);
+        OWLReasoner r = ((OWLReasonerFactory) Class.forName(
+                DEFAULT_REASONER_FACTORY).newInstance())
+                .createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
@@ -144,8 +153,9 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
 
     public void testIsPossibleObjectProperties() throws Exception {
         OWLOntology ont = createModelA();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY)
-                .newInstance()).createNonBufferingReasoner(ont);
+        OWLReasoner r = ((OWLReasonerFactory) Class.forName(
+                DEFAULT_REASONER_FACTORY).newInstance())
+                .createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
@@ -170,8 +180,9 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
 
     public void testIsImpossibleObjectProperties() throws Exception {
         OWLOntology ont = createModelB();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY)
-                .newInstance()).createNonBufferingReasoner(ont);
+        OWLReasoner r = ((OWLReasonerFactory) Class.forName(
+                DEFAULT_REASONER_FACTORY).newInstance())
+                .createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
@@ -184,18 +195,19 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
 
     public void testGetCurrentObjectProperties() throws Exception {
         OWLOntology ont = createModelA();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY)
-                .newInstance()).createNonBufferingReasoner(ont);
+        OWLReasoner r = ((OWLReasonerFactory) Class.forName(
+                DEFAULT_REASONER_FACTORY).newInstance())
+                .createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
-        NodeSet<OWLObjectPropertyExpression> direct = ps.getCurrentObjectProperties(ca,
-                true);
+        NodeSet<OWLObjectPropertyExpression> direct = ps
+                .getCurrentObjectProperties(ca, true);
         assertTrue(direct.containsEntity(op));
         assertTrue(direct.containsEntity(oq));
         assertEquals(2, direct.getNodes().size());
-        NodeSet<OWLObjectPropertyExpression> all = ps.getCurrentObjectProperties(ca,
-                false);
+        NodeSet<OWLObjectPropertyExpression> all = ps
+                .getCurrentObjectProperties(ca, false);
         assertTrue(all.containsEntity(op));
         assertTrue(all.containsEntity(oq));
         assertTrue(all.containsEntity(or));
@@ -205,8 +217,9 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
 
     public void testGetCurrentDataProperties() throws Exception {
         OWLOntology ont = createModelA();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY)
-                .newInstance()).createNonBufferingReasoner(ont);
+        OWLReasoner r = ((OWLReasonerFactory) Class.forName(
+                DEFAULT_REASONER_FACTORY).newInstance())
+                .createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
@@ -224,26 +237,27 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
      */
     public void testCurrentObjectPropertiesSynonyms() throws Exception {
         OWLOntology ont = createOntology();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY)
-                .newInstance()).createNonBufferingReasoner(ont);
+        OWLReasoner r = ((OWLReasonerFactory) Class.forName(
+                DEFAULT_REASONER_FACTORY).newInstance())
+                .createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
-        createEntities();
         List<OWLOntologyChange<?>> changes = new ArrayList<OWLOntologyChange<?>>();
         changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(ca,
                 df.getOWLObjectSomeValuesFrom(op, cb))));
-        changes.add(new AddAxiom(ont, df.getOWLEquivalentObjectPropertiesAxiom(op, oq)));
+        changes.add(new AddAxiom(ont, df.getOWLEquivalentObjectPropertiesAxiom(
+                op, oq)));
         mngr.applyChanges(changes);
         assertTrue(ps.isCurrent(ca, op, true));
         assertTrue(ps.isCurrent(ca, oq, true));
-        NodeSet<OWLObjectPropertyExpression> direct = ps.getCurrentObjectProperties(ca,
-                true);
+        NodeSet<OWLObjectPropertyExpression> direct = ps
+                .getCurrentObjectProperties(ca, true);
         assertTrue(direct.containsEntity(op));
         assertTrue(direct.containsEntity(oq));
         assertEquals(1, direct.getNodes().size());
-        NodeSet<OWLObjectPropertyExpression> all = ps.getCurrentObjectProperties(ca,
-                false);
+        NodeSet<OWLObjectPropertyExpression> all = ps
+                .getCurrentObjectProperties(ca, false);
         assertTrue(all.containsEntity(op));
         assertTrue(all.containsEntity(oq));
         assertTrue(all.containsEntity(df.getOWLTopObjectProperty()));
@@ -252,13 +266,14 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
 
     public void testGetPossibleObjectProperties() throws Exception {
         OWLOntology ont = createModelA();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY)
-                .newInstance()).createNonBufferingReasoner(ont);
+        OWLReasoner r = ((OWLReasonerFactory) Class.forName(
+                DEFAULT_REASONER_FACTORY).newInstance())
+                .createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
-        NodeSet<OWLObjectPropertyExpression> specific = ps.getPossibleObjectProperties(
-                ca, null, true);
+        NodeSet<OWLObjectPropertyExpression> specific = ps
+                .getPossibleObjectProperties(ca, null, true);
         assertEquals(7, specific.getNodes().size());
         assertTrue(specific.containsEntity(op));
         assertTrue(specific.containsEntity(df.getOWLObjectInverseOf(op)));
@@ -267,8 +282,8 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
         assertTrue(specific.containsEntity(ot));
         assertTrue(specific.containsEntity(df.getOWLObjectInverseOf(ot)));
         assertTrue(specific.containsEntity(df.getOWLObjectInverseOf(os)));
-        NodeSet<OWLObjectPropertyExpression> all = ps.getPossibleObjectProperties(ca,
-                null, false);
+        NodeSet<OWLObjectPropertyExpression> all = ps
+                .getPossibleObjectProperties(ca, null, false);
         assertEquals(9, all.getNodes().size());
         assertTrue(all.containsEntity(op));
         assertTrue(all.containsEntity(df.getOWLObjectInverseOf(op)));
@@ -283,31 +298,36 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
 
     public void testGetImpossibleObjectProperties() throws Exception {
         OWLOntology ont = createModelB();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY)
-                .newInstance()).createNonBufferingReasoner(ont);
+        OWLReasoner r = ((OWLReasonerFactory) Class.forName(
+                DEFAULT_REASONER_FACTORY).newInstance())
+                .createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
-        NodeSet<OWLObjectPropertyExpression> properties = ps.getPossibleObjectProperties(
-                ca, null, false);
+        NodeSet<OWLObjectPropertyExpression> properties = ps
+                .getPossibleObjectProperties(ca, null, false);
         assertFalse(properties.containsEntity(os));
         assertFalse(properties.containsEntity(or)); // any ancestor of s will
                                                     // also be impossible
     }
 
-    /** Check that the getters return the same results as running the is..
-     * methods over the signature */
+    /**
+     * Check that the getters return the same results as running the is..
+     * methods over the signature
+     */
     public void testGettersAgainstBooleanMethods() throws Exception {
         OWLOntology ont = createModelA();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY)
-                .newInstance()).createNonBufferingReasoner(ont);
+        OWLReasoner r = ((OWLReasonerFactory) Class.forName(
+                DEFAULT_REASONER_FACTORY).newInstance())
+                .createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
         // current direct
-        NodeSet<OWLObjectPropertyExpression> direct = ps.getCurrentObjectProperties(ca,
-                true);
+        NodeSet<OWLObjectPropertyExpression> direct = ps
+                .getCurrentObjectProperties(ca, true);
         for (OWLObjectProperty p : ont.getObjectPropertiesInSignature()) {
+            assert p != null;
             if (ps.isCurrent(ca, p, true)) {
                 assertTrue(direct.containsEntity(p));
             } else {
@@ -315,9 +335,10 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
             }
         }
         // current indirect
-        NodeSet<OWLObjectPropertyExpression> indirect = ps.getCurrentObjectProperties(ca,
-                false);
+        NodeSet<OWLObjectPropertyExpression> indirect = ps
+                .getCurrentObjectProperties(ca, false);
         for (OWLObjectProperty p : ont.getObjectPropertiesInSignature()) {
+            assert p != null;
             if (ps.isCurrent(ca, p, false)) {
                 assertTrue(indirect.containsEntity(p));
             } else {
@@ -327,15 +348,20 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
         // possible direct
         // check for all properties in the ontology
         for (OWLObjectProperty p : ont.getObjectPropertiesInSignature()) {
+            assert p != null;
             NodeSet<OWLObjectPropertyExpression> posdirect = ps
                     .getPossibleObjectProperties(ca, p, true);
-            for (Node<OWLObjectPropertyExpression> q : r.getSubObjectProperties(p, true)) {
-                final OWLObjectPropertyExpression qRep = q.getRepresentativeElement();
+            for (Node<OWLObjectPropertyExpression> q : r
+                    .getSubObjectProperties(p, true)) {
+                final OWLObjectPropertyExpression qRep = q
+                        .getRepresentativeElement();
                 if (ps.isPossible(ca, qRep)) {
-                    assertTrue("Cannot find " + q + " in direct possible properties of "
-                            + p, posdirect.containsEntity(qRep));
+                    assertTrue("Cannot find " + q
+                            + " in direct possible properties of " + p,
+                            posdirect.containsEntity(qRep));
                 } else {
-                    assertFalse("Found " + q + " in direct possible properties of " + p,
+                    assertFalse("Found " + q
+                            + " in direct possible properties of " + p,
                             posdirect.containsEntity(qRep));
                 }
             }
@@ -344,6 +370,7 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
         NodeSet<OWLObjectPropertyExpression> posindirect = ps
                 .getPossibleObjectProperties(ca, null, false);
         for (OWLObjectProperty p : ont.getObjectPropertiesInSignature()) {
+            assert p != null;
             if (ps.isPossible(ca, p)) {
                 assertTrue(posindirect.containsEntity(p));
             } else {
@@ -354,8 +381,9 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
 
     public void testAnnotationPropertySanctioning() throws Exception {
         OWLOntology ont = createOntology();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY)
-                .newInstance()).createNonBufferingReasoner(ont);
+        OWLReasoner r = ((OWLReasonerFactory) Class.forName(
+                DEFAULT_REASONER_FACTORY).newInstance())
+                .createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
@@ -368,21 +396,25 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
         OWLDataProperty k = createDataProperty("k");
         List<OWLOntologyChange<?>> changes = new ArrayList<OWLOntologyChange<?>>();
         // force a to be in the signature
-        changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(a, df.getOWLThing())));
+        changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(a,
+                df.getOWLThing())));
         // add an annotation on a that sanctions p
-        changes.add(new AddAxiom(ont, df.getOWLAnnotationAssertionAxiom(a.getIRI(),
-                df.getOWLAnnotation(annot, p.getIRI()))));
+        changes.add(new AddAxiom(ont, df.getOWLAnnotationAssertionAxiom(
+                a.getIRI(), df.getOWLAnnotation(annot, p.getIRI()))));
         // and one that uses a plain literal to say q is sanctioned
-        changes.add(new AddAxiom(ont, df.getOWLAnnotationAssertionAxiom(a.getIRI(),
-                df.getOWLAnnotation(annot, df.getOWLLiteral(q.getIRI().toString())))));
+        changes.add(new AddAxiom(ont, df.getOWLAnnotationAssertionAxiom(
+                a.getIRI(),
+                df.getOWLAnnotation(annot,
+                        df.getOWLLiteral(q.getIRI().toString())))));
         // add an annotation on a that sanctions j
-        changes.add(new AddAxiom(ont, df.getOWLAnnotationAssertionAxiom(a.getIRI(),
-                df.getOWLAnnotation(annot, j.getIRI()))));
+        changes.add(new AddAxiom(ont, df.getOWLAnnotationAssertionAxiom(
+                a.getIRI(), df.getOWLAnnotation(annot, j.getIRI()))));
         // force properties to be in the signature by stating something about
         // them
         changes.add(new AddAxiom(ont, df.getOWLFunctionalObjectPropertyAxiom(p)));
         changes.add(new AddAxiom(ont, df.getOWLFunctionalObjectPropertyAxiom(q)));
-        changes.add(new AddAxiom(ont, df.getOWLFunctionalObjectPropertyAxiom(rr)));
+        changes.add(new AddAxiom(ont, df
+                .getOWLFunctionalObjectPropertyAxiom(rr)));
         changes.add(new AddAxiom(ont, df.getOWLFunctionalDataPropertyAxiom(j)));
         changes.add(new AddAxiom(ont, df.getOWLFunctionalDataPropertyAxiom(k)));
         mngr.applyChanges(changes);

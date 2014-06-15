@@ -63,6 +63,7 @@ import uk.ac.manchester.cs.owl.owlapi.alternateimpls.test.RaceCallback;
 
 @SuppressWarnings("javadoc")
 public class RaceTestCase {
+
     @Test
     public void testSubClassLHS() throws Exception {
         final int totalRepetitions = 10000;
@@ -83,10 +84,12 @@ public class RaceTestCase {
     }
 
     static class RaceTestCaseRunner {
+
         private static final String A_CLASS = "http://www.race.org#testclass";
         public static final String NS = "http://www.race.org#";
         protected RaceCallback callback;
         private Runnable writer = new Runnable() {
+
             @Override
             public void run() {
                 while (!done.get()) {
@@ -111,6 +114,7 @@ public class RaceTestCase {
         }
 
         public static class SubClassLHSCallback implements RaceCallback {
+
             private AtomicInteger counter = new AtomicInteger();
             OWLDataFactory factory;
             OWLOntologyManager manager;

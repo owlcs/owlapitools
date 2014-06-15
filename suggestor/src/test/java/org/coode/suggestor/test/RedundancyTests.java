@@ -32,10 +32,12 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
 @SuppressWarnings("javadoc")
 public class RedundancyTests extends AbstractSuggestorTest {
+
     public void testFilterClasses() throws Exception {
         OWLOntology ont = createOntology();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY)
-                .newInstance()).createNonBufferingReasoner(ont);
+        OWLReasoner r = ((OWLReasonerFactory) Class.forName(
+                DEFAULT_REASONER_FACTORY).newInstance())
+                .createNonBufferingReasoner(ont);
         // SuggestorFactory fac = new SuggestorFactory(r);
         // PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
@@ -47,27 +49,31 @@ public class RedundancyTests extends AbstractSuggestorTest {
         /*
          * a1 a2 a3 b1 b2
          */
-        mngr.applyChanges(Arrays.asList(
-                new AddAxiom(ont, df.getOWLSubClassOfAxiom(a2, a1)),
-                new AddAxiom(ont, df.getOWLSubClassOfAxiom(a3, a2)),
-                new AddAxiom(ont, df.getOWLSubClassOfAxiom(b2, b1))));
+        mngr.applyChange(new AddAxiom(ont, df.getOWLSubClassOfAxiom(a2, a1)));
+        mngr.applyChange(new AddAxiom(ont, df.getOWLSubClassOfAxiom(a3, a2)));
+        mngr.applyChange(new AddAxiom(ont, df.getOWLSubClassOfAxiom(b2, b1)));
         ReasonerHelper helper = new ReasonerHelper(r);
         Random ran = new Random(2);
-        List<OWLClassExpression> data = Arrays.<OWLClassExpression> asList(a2, b2, a3,
-                b1, a1);
+        List<OWLClassExpression> data = Arrays.<OWLClassExpression> asList(a2,
+                b2, a3, b1, a1);
         for (int i = 0; i < 25; i++) {
             System.out.println(data);
-            Set<OWLClassExpression> test = new LinkedHashSet<OWLClassExpression>(data);
-            Set<OWLClassExpression> result = helper.filterClassExpressions(test);
-            assertEquals(new HashSet<OWLClassExpression>(Arrays.asList(a3, b2)), result);
+            Set<OWLClassExpression> test = new LinkedHashSet<OWLClassExpression>(
+                    data);
+            Set<OWLClassExpression> result = helper
+                    .filterClassExpressions(test);
+            assertEquals(
+                    new HashSet<OWLClassExpression>(Arrays.asList(a3, b2)),
+                    result);
             Collections.shuffle(data, ran);
         }
     }
 
     public void testFilters() throws Exception {
         OWLOntology ont = createOntology();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY)
-                .newInstance()).createNonBufferingReasoner(ont);
+        OWLReasoner r = ((OWLReasonerFactory) Class.forName(
+                DEFAULT_REASONER_FACTORY).newInstance())
+                .createNonBufferingReasoner(ont);
         // SuggestorFactory fac = new SuggestorFactory(r);
         // PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
@@ -75,11 +81,16 @@ public class RedundancyTests extends AbstractSuggestorTest {
         final OWLObjectProperty p = createObjectProperty("p");
         final OWLClass a = createClass("a");
         final OWLClass b = createClass("b");
-        final OWLObjectSomeValuesFrom pSomeA = df.getOWLObjectSomeValuesFrom(p, a);
-        final OWLObjectSomeValuesFrom qSomeA = df.getOWLObjectSomeValuesFrom(q, a);
-        final OWLObjectSomeValuesFrom pSomeB = df.getOWLObjectSomeValuesFrom(p, b);
-        final OWLObjectSomeValuesFrom qSomeB = df.getOWLObjectSomeValuesFrom(q, b);
-        mngr.applyChange(new AddAxiom(ont, df.getOWLSubObjectPropertyOfAxiom(p, q)));
+        final OWLObjectSomeValuesFrom pSomeA = df.getOWLObjectSomeValuesFrom(p,
+                a);
+        final OWLObjectSomeValuesFrom qSomeA = df.getOWLObjectSomeValuesFrom(q,
+                a);
+        final OWLObjectSomeValuesFrom pSomeB = df.getOWLObjectSomeValuesFrom(p,
+                b);
+        final OWLObjectSomeValuesFrom qSomeB = df.getOWLObjectSomeValuesFrom(q,
+                b);
+        mngr.applyChange(new AddAxiom(ont, df.getOWLSubObjectPropertyOfAxiom(p,
+                q)));
         mngr.applyChange(new AddAxiom(ont, df.getOWLSubClassOfAxiom(a, b)));
         if (r.getBufferingMode().equals(BufferingMode.BUFFERING)) {
             r.flush();

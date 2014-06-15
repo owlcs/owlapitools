@@ -28,49 +28,44 @@ import org.semanticweb.owlapi.reasoner.knowledgeexploration.OWLKnowledgeExplorer
 
 /** Default implementation of the PropertySuggestor. */
 class PropertySuggestorImpl implements PropertySuggestor {
-
     protected final OWLKnowledgeExplorerReasoner r;
     protected final OWLDataFactory df;
     protected final ReasonerHelper helper;
     private final Set<PropertySanctionRule> sanctionRules = new HashSet<PropertySanctionRule>();
     private final Matcher<OWLObjectPropertyExpression> currentOPMatcher = new AbstractOPMatcher() {
-
         @Override
         public boolean isMatch(OWLClassExpression c, OWLObjectPropertyExpression p) {
             if (p.isTopEntity()) {
                 return true;
             }
             return helper.isDescendantOf(c,
-                df.getOWLObjectSomeValuesFrom(p, df.getOWLThing()));
+                    df.getOWLObjectSomeValuesFrom(p, df.getOWLThing()));
         }
     };
     private final Matcher<OWLDataProperty> currentDPMatcher = new AbstractDPMatcher() {
-
         @Override
         public boolean isMatch(OWLClassExpression c, OWLDataProperty p) {
             if (p.isTopEntity()) {
                 return true;
             }
             return helper.isDescendantOf(c,
-                df.getOWLDataSomeValuesFrom(p, df.getTopDatatype()));
+                    df.getOWLDataSomeValuesFrom(p, df.getTopDatatype()));
         }
     };
     private Matcher<OWLObjectPropertyExpression> possibleOPMatcher = new AbstractOPMatcher() {
-
         @Override
         public boolean isMatch(OWLClassExpression c, OWLObjectPropertyExpression p) {
             // Hermit and JFact are very slightly faster using the entailment
             // check
             return !r.isEntailed(df.getOWLSubClassOfAxiom(c,
-                df.getOWLObjectAllValuesFrom(p, df.getOWLNothing())));
+                    df.getOWLObjectAllValuesFrom(p, df.getOWLNothing())));
         }
     };
     private Matcher<OWLDataProperty> possibleDPMatcher = new AbstractDPMatcher() {
-
         @Override
         public boolean isMatch(OWLClassExpression c, OWLDataProperty p) {
             return r.isSatisfiable(df.getOWLObjectIntersectionOf(c,
-                df.getOWLDataSomeValuesFrom(p, df.getTopDatatype())));
+                    df.getOWLDataSomeValuesFrom(p, df.getTopDatatype())));
         }
     };
 
@@ -105,7 +100,7 @@ class PropertySuggestorImpl implements PropertySuggestor {
 
     @Override
     public boolean isCurrent(OWLClassExpression c, OWLObjectPropertyExpression p,
-        boolean direct) {
+            boolean direct) {
         return currentOPMatcher.isMatch(c, p, direct);
     }
 
@@ -142,38 +137,38 @@ class PropertySuggestorImpl implements PropertySuggestor {
     // GETTERS
     @Override
     public NodeSet<OWLObjectPropertyExpression> getCurrentObjectProperties(
-        OWLClassExpression c, boolean direct) {
+            OWLClassExpression c, boolean direct) {
         return currentOPMatcher.getLeaves(c, r.getTopObjectPropertyNode(), direct);
     }
 
     @Override
     public NodeSet<OWLDataProperty> getCurrentDataProperties(OWLClassExpression c,
-        boolean direct) {
+            boolean direct) {
         return currentDPMatcher.getLeaves(c, r.getTopDataPropertyNode(), direct);
     }
 
     @Override
     public NodeSet<OWLObjectPropertyExpression> getPossibleObjectProperties(
-        OWLClassExpression c, OWLObjectPropertyExpression root, boolean direct) {
+            OWLClassExpression c, OWLObjectPropertyExpression root, boolean direct) {
         Node<OWLObjectPropertyExpression> rootNode = root == null ? r
-            .getTopObjectPropertyNode() : r.getEquivalentObjectProperties(root);
+                .getTopObjectPropertyNode() : r.getEquivalentObjectProperties(root);
         return possibleOPMatcher.getRoots(c, rootNode, direct);
     }
 
     @Override
     public NodeSet<OWLDataProperty> getPossibleDataProperties(OWLClassExpression c,
-        OWLDataProperty root, boolean direct) {
+            OWLDataProperty root, boolean direct) {
         Node<OWLDataProperty> rootNode = root == null ? r.getTopDataPropertyNode() : r
-            .getEquivalentDataProperties(root);
+                .getEquivalentDataProperties(root);
         return possibleDPMatcher.getRoots(c, rootNode, direct);
     }
 
     @Override
     public Set<OWLObjectPropertyExpression> getSanctionedObjectProperties(
-        OWLClassExpression c, OWLObjectPropertyExpression root, boolean direct) {
+            OWLClassExpression c, OWLObjectPropertyExpression root, boolean direct) {
         Set<OWLObjectPropertyExpression> props = new HashSet<OWLObjectPropertyExpression>();
         for (OWLObjectPropertyExpression pNode : getPossibleObjectProperties(c, root,
-            direct).getFlattened()) {
+                direct).getFlattened()) {
             if (meetsOPSanctions(c, pNode)) {
                 props.add(pNode);
             }
@@ -183,10 +178,10 @@ class PropertySuggestorImpl implements PropertySuggestor {
 
     @Override
     public Set<OWLDataProperty> getSanctionedDataProperties(OWLClassExpression c,
-        OWLDataProperty root, boolean direct) {
+            OWLDataProperty root, boolean direct) {
         Set<OWLDataProperty> props = new HashSet<OWLDataProperty>();
         for (OWLDataProperty pNode : getPossibleDataProperties(c, root, direct)
-            .getFlattened()) {
+                .getFlattened()) {
             if (meetsDPSanctions(c, pNode)) {
                 props.add(pNode);
             }
@@ -215,7 +210,6 @@ class PropertySuggestorImpl implements PropertySuggestor {
 
     // DELEGATES
     private interface Matcher<P extends OWLPropertyExpression> {
-
         boolean isMatch(OWLClassExpression c, P p);
 
         boolean isMatch(OWLClassExpression c, P p, boolean direct);
@@ -233,9 +227,8 @@ class PropertySuggestorImpl implements PropertySuggestor {
         NodeSet<P> getRoots(OWLClassExpression c, Node<P> start, boolean direct);
     }
 
-    private abstract class AbstractMatcher<P extends OWLPropertyExpression>
-        implements Matcher<P> {
-
+    private abstract class AbstractMatcher<P extends OWLPropertyExpression> implements
+            Matcher<P> {
         public AbstractMatcher() {}
 
         @Override
@@ -257,7 +250,7 @@ class PropertySuggestorImpl implements PropertySuggestor {
 
         @Override
         public final NodeSet<P> getLeaves(OWLClassExpression c, Node<P> root,
-            boolean direct) {
+                boolean direct) {
             Set<Node<P>> nodes = new HashSet<Node<P>>();
             final P p = root.getRepresentativeElement();
             if (isMatch(c, p)) {
@@ -273,7 +266,7 @@ class PropertySuggestorImpl implements PropertySuggestor {
 
         @Override
         public final NodeSet<P> getRoots(OWLClassExpression c, Node<P> root,
-            boolean direct) {
+                boolean direct) {
             Set<Node<P>> nodes = new HashSet<Node<P>>();
             for (Node<P> sub : getDirectSubs(root.getRepresentativeElement())) {
                 if (isMatch(c, sub.getRepresentativeElement())) {
@@ -292,25 +285,23 @@ class PropertySuggestorImpl implements PropertySuggestor {
     }
 
     private abstract class AbstractOPMatcher extends
-        AbstractMatcher<OWLObjectPropertyExpression> {
-
+            AbstractMatcher<OWLObjectPropertyExpression> {
         public AbstractOPMatcher() {}
 
         @Override
         protected final NodeSet<OWLObjectPropertyExpression> getDirectSubs(
-            OWLObjectPropertyExpression p) {
+                OWLObjectPropertyExpression p) {
             return r.getSubObjectProperties(p, true);
         }
 
         @Override
         protected final NodeSet<OWLObjectPropertyExpression> createNodeSet(
-            Set<Node<OWLObjectPropertyExpression>> nodes) {
+                Set<Node<OWLObjectPropertyExpression>> nodes) {
             return new OWLObjectPropertyNodeSet(nodes);
         }
     }
 
     private abstract class AbstractDPMatcher extends AbstractMatcher<OWLDataProperty> {
-
         public AbstractDPMatcher() {}
 
         @Override
@@ -319,7 +310,8 @@ class PropertySuggestorImpl implements PropertySuggestor {
         }
 
         @Override
-        protected NodeSet<OWLDataProperty> createNodeSet(Set<Node<OWLDataProperty>> nodes) {
+        protected NodeSet<OWLDataProperty>
+                createNodeSet(Set<Node<OWLDataProperty>> nodes) {
             return new OWLDataPropertyNodeSet(nodes);
         }
     }

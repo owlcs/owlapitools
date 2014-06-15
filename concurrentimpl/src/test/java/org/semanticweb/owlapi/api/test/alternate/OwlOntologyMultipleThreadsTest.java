@@ -181,9 +181,11 @@ public class OwlOntologyMultipleThreadsTest {
                     o1.getDifferentIndividualAxioms(i);
                 }
                 for (OWLAnonymousIndividual i : anonIndividuals) {
+                    assert i != null;
                     o1.getAxioms(i, Imports.EXCLUDED);
                 }
                 for (AxiomType<?> ax : AxiomType.AXIOM_TYPES) {
+                    assert ax != null;
                     o1.getAxioms(ax);
                     o1.getAxioms(ax, Imports.INCLUDED);
                     o1.getAxioms(ax, Imports.EXCLUDED);
@@ -197,6 +199,7 @@ public class OwlOntologyMultipleThreadsTest {
                 }
                 for (OWLAnnotationProperty p : o1
                         .getAnnotationPropertiesInSignature(Imports.EXCLUDED)) {
+                    assert p != null;
                     o1.getAxioms(p, Imports.EXCLUDED);
                     o1.containsAnnotationPropertyInSignature(p.getIRI(),
                             Imports.EXCLUDED);
@@ -209,6 +212,7 @@ public class OwlOntologyMultipleThreadsTest {
                     o1.getAnnotationPropertyRangeAxioms(p);
                 }
                 for (AxiomType<?> ax : AxiomType.AXIOM_TYPES) {
+                    assert ax != null;
                     o1.getAxiomCount(ax);
                     o1.getAxiomCount(ax, Imports.INCLUDED);
                     o1.getAxiomCount(ax, Imports.EXCLUDED);
@@ -216,6 +220,7 @@ public class OwlOntologyMultipleThreadsTest {
                 o1.getLogicalAxioms();
                 o1.getLogicalAxiomCount();
                 for (OWLAxiom ax : o1.getLogicalAxioms()) {
+                    assert ax != null;
                     o1.containsAxiom(ax);
                     o1.containsAxiom(ax, Imports.INCLUDED,
                             Search.IGNORE_ANNOTATIONS);
@@ -223,6 +228,7 @@ public class OwlOntologyMultipleThreadsTest {
                             Search.IGNORE_ANNOTATIONS);
                 }
                 for (OWLAxiom ax : o1.getLogicalAxioms()) {
+                    assert ax != null;
                     o1.containsAxiom(ax, Imports.EXCLUDED,
                             Search.CONSIDER_ANNOTATIONS);
                     o1.containsAxiom(ax, Imports.INCLUDED,
@@ -231,15 +237,18 @@ public class OwlOntologyMultipleThreadsTest {
                             Search.CONSIDER_ANNOTATIONS);
                 }
                 for (OWLAxiom ax : o1.getLogicalAxioms()) {
+                    assert ax != null;
                     o1.getAxiomsIgnoreAnnotations(ax, Imports.EXCLUDED);
                     o1.getAxiomsIgnoreAnnotations(ax, Imports.INCLUDED);
                     o1.getAxiomsIgnoreAnnotations(ax, Imports.EXCLUDED);
                 }
                 o1.getGeneralClassAxioms();
                 for (OWLAnonymousIndividual i : anonIndividuals) {
+                    assert i != null;
                     o1.getReferencingAxioms(i, Imports.EXCLUDED);
                 }
                 for (OWLEntity e : entities) {
+                    assert e != null;
                     o1.getReferencingAxioms(e, Imports.EXCLUDED);
                     o1.getReferencingAxioms(e, Imports.INCLUDED);
                     o1.getReferencingAxioms(e, Imports.EXCLUDED);
