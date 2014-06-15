@@ -41,6 +41,7 @@ package org.semanticweb.owlapi.api.test.alternate;
 import java.util.Set;
 
 import org.junit.Test;
+import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.io.StringDocumentSource;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
@@ -55,7 +56,8 @@ import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
-import org.semanticweb.owlapi.threadsafe.ThreadSafeOWLManager;
+import org.semanticweb.owlapi.model.parameters.Imports;
+import org.semanticweb.owlapi.model.parameters.Search;
 
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.test.MultiThreadChecker;
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.test.TestMultithreadCallBack;
@@ -74,12 +76,12 @@ public class OwlOntologyMultipleThreadsTest {
         }
 
         @Override
-        public void execute() throws Exception {
+        public void execute() {
             for (int index = 0; index < 100; index++) {
                 o1.isEmpty();
                 o1.getAnnotations();
-                o1.getSignature(true);
-                o1.getSignature(false);
+                o1.getSignature(Imports.INCLUDED);
+                o1.getSignature(Imports.EXCLUDED);
                 Set<OWLEntity> entities = o1.getSignature();
                 o1.getOWLOntologyManager();
                 o1.getOntologyID();
@@ -92,31 +94,34 @@ public class OwlOntologyMultipleThreadsTest {
                 o1.getAxioms();
                 o1.getAxiomCount();
                 Set<OWLClass> classes = o1.getClassesInSignature();
-                o1.getClassesInSignature(true);
-                o1.getClassesInSignature(false);
+                o1.getClassesInSignature(Imports.INCLUDED);
+                o1.getClassesInSignature(Imports.EXCLUDED);
                 Set<OWLObjectProperty> objectProperties = o1
-                        .getObjectPropertiesInSignature(true);
-                o1.getObjectPropertiesInSignature(false);
+                        .getObjectPropertiesInSignature(Imports.INCLUDED);
+                o1.getObjectPropertiesInSignature(Imports.EXCLUDED);
                 o1.getObjectPropertiesInSignature();
                 Set<OWLDataProperty> dataProperties = o1
                         .getDataPropertiesInSignature();
-                o1.getDataPropertiesInSignature(true);
-                o1.getDataPropertiesInSignature(false);
+                o1.getDataPropertiesInSignature(Imports.INCLUDED);
+                o1.getDataPropertiesInSignature(Imports.EXCLUDED);
                 Set<OWLNamedIndividual> individuals = o1
                         .getIndividualsInSignature();
-                o1.getIndividualsInSignature(true);
-                o1.getIndividualsInSignature(false);
+                o1.getIndividualsInSignature(Imports.INCLUDED);
+                o1.getIndividualsInSignature(Imports.EXCLUDED);
                 Set<OWLAnonymousIndividual> anonIndividuals = o1
-                        .getReferencedAnonymousIndividuals(false);
+                        .getReferencedAnonymousIndividuals(Imports.EXCLUDED);
                 o1.getDatatypesInSignature();
-                o1.getDatatypesInSignature(true);
-                o1.getDatatypesInSignature(false);
-                o1.getAnnotationPropertiesInSignature(false);
+                o1.getDatatypesInSignature(Imports.INCLUDED);
+                o1.getDatatypesInSignature(Imports.EXCLUDED);
+                o1.getAnnotationPropertiesInSignature(Imports.EXCLUDED);
                 for (OWLObjectProperty o : objectProperties) {
-                    o1.getAxioms(o, false);
-                    o1.containsObjectPropertyInSignature(o.getIRI(), false);
-                    o1.containsObjectPropertyInSignature(o.getIRI(), true);
-                    o1.containsObjectPropertyInSignature(o.getIRI(), false);
+                    o1.getAxioms(o, Imports.EXCLUDED);
+                    o1.containsObjectPropertyInSignature(o.getIRI(),
+                            Imports.EXCLUDED);
+                    o1.containsObjectPropertyInSignature(o.getIRI(),
+                            Imports.INCLUDED);
+                    o1.containsObjectPropertyInSignature(o.getIRI(),
+                            Imports.EXCLUDED);
                     o1.getObjectSubPropertyAxiomsForSubProperty(o);
                     o1.getObjectSubPropertyAxiomsForSuperProperty(o);
                     o1.getObjectPropertyDomainAxioms(o);
@@ -133,10 +138,10 @@ public class OwlOntologyMultipleThreadsTest {
                     o1.getTransitiveObjectPropertyAxioms(o);
                 }
                 for (OWLClass c : classes) {
-                    o1.getAxioms(c, false);
-                    o1.containsClassInSignature(c.getIRI(), false);
-                    o1.containsClassInSignature(c.getIRI(), true);
-                    o1.containsClassInSignature(c.getIRI(), false);
+                    o1.getAxioms(c, Imports.EXCLUDED);
+                    o1.containsClassInSignature(c.getIRI(), Imports.EXCLUDED);
+                    o1.containsClassInSignature(c.getIRI(), Imports.INCLUDED);
+                    o1.containsClassInSignature(c.getIRI(), Imports.EXCLUDED);
                     o1.getSubClassAxiomsForSubClass(c);
                     o1.getSubClassAxiomsForSuperClass(c);
                     o1.getEquivalentClassesAxioms(c);
@@ -146,10 +151,13 @@ public class OwlOntologyMultipleThreadsTest {
                     o1.getClassAssertionAxioms(c);
                 }
                 for (OWLDataProperty p : dataProperties) {
-                    o1.getAxioms(p, false);
-                    o1.containsDataPropertyInSignature(p.getIRI(), false);
-                    o1.containsDataPropertyInSignature(p.getIRI(), true);
-                    o1.containsDataPropertyInSignature(p.getIRI(), false);
+                    o1.getAxioms(p, Imports.EXCLUDED);
+                    o1.containsDataPropertyInSignature(p.getIRI(),
+                            Imports.EXCLUDED);
+                    o1.containsDataPropertyInSignature(p.getIRI(),
+                            Imports.INCLUDED);
+                    o1.containsDataPropertyInSignature(p.getIRI(),
+                            Imports.EXCLUDED);
                     o1.getDataSubPropertyAxiomsForSubProperty(p);
                     o1.getDataSubPropertyAxiomsForSuperProperty(p);
                     o1.getDataPropertyDomainAxioms(p);
@@ -159,10 +167,13 @@ public class OwlOntologyMultipleThreadsTest {
                     o1.getFunctionalDataPropertyAxioms(p);
                 }
                 for (OWLNamedIndividual i : individuals) {
-                    o1.getAxioms(i, false);
-                    o1.containsIndividualInSignature(i.getIRI(), false);
-                    o1.containsIndividualInSignature(i.getIRI(), true);
-                    o1.containsIndividualInSignature(i.getIRI(), false);
+                    o1.getAxioms(i, Imports.EXCLUDED);
+                    o1.containsIndividualInSignature(i.getIRI(),
+                            Imports.EXCLUDED);
+                    o1.containsIndividualInSignature(i.getIRI(),
+                            Imports.INCLUDED);
+                    o1.containsIndividualInSignature(i.getIRI(),
+                            Imports.EXCLUDED);
                     o1.getClassAssertionAxioms(i);
                     o1.getDataPropertyAssertionAxioms(i);
                     o1.getObjectPropertyAssertionAxioms(i);
@@ -172,72 +183,80 @@ public class OwlOntologyMultipleThreadsTest {
                     o1.getDifferentIndividualAxioms(i);
                 }
                 for (OWLAnonymousIndividual i : anonIndividuals) {
-                    o1.getAxioms(i, false);
+                    o1.getAxioms(i, Imports.EXCLUDED);
                 }
                 for (AxiomType<?> ax : AxiomType.AXIOM_TYPES) {
                     o1.getAxioms(ax);
-                    o1.getAxioms(ax, true);
-                    o1.getAxioms(ax, false);
+                    o1.getAxioms(ax, Imports.INCLUDED);
+                    o1.getAxioms(ax, Imports.EXCLUDED);
                 }
                 for (OWLDatatype t : o1.getDatatypesInSignature()) {
-                    o1.getAxioms(t, false);
-                    o1.containsDatatypeInSignature(t.getIRI(), false);
-                    o1.containsDatatypeInSignature(t.getIRI(), true);
-                    o1.containsDatatypeInSignature(t.getIRI(), false);
+                    o1.getAxioms(t, Imports.EXCLUDED);
+                    o1.containsDatatypeInSignature(t.getIRI(), Imports.EXCLUDED);
+                    o1.containsDatatypeInSignature(t.getIRI(), Imports.INCLUDED);
+                    o1.containsDatatypeInSignature(t.getIRI(), Imports.EXCLUDED);
                     o1.getDatatypeDefinitions(t);
                 }
                 for (OWLAnnotationProperty p : o1
-                        .getAnnotationPropertiesInSignature(false)) {
-                    o1.getAxioms(p, false);
-                    o1.containsAnnotationPropertyInSignature(p.getIRI(), false);
-                    o1.containsAnnotationPropertyInSignature(p.getIRI(), true);
-                    o1.containsAnnotationPropertyInSignature(p.getIRI(), false);
+                        .getAnnotationPropertiesInSignature(Imports.EXCLUDED)) {
+                    o1.getAxioms(p, Imports.EXCLUDED);
+                    o1.containsAnnotationPropertyInSignature(p.getIRI(),
+                            Imports.EXCLUDED);
+                    o1.containsAnnotationPropertyInSignature(p.getIRI(),
+                            Imports.INCLUDED);
+                    o1.containsAnnotationPropertyInSignature(p.getIRI(),
+                            Imports.EXCLUDED);
                     o1.getSubAnnotationPropertyOfAxioms(p);
                     o1.getAnnotationPropertyDomainAxioms(p);
                     o1.getAnnotationPropertyRangeAxioms(p);
                 }
                 for (AxiomType<?> ax : AxiomType.AXIOM_TYPES) {
                     o1.getAxiomCount(ax);
-                    o1.getAxiomCount(ax, true);
-                    o1.getAxiomCount(ax, false);
+                    o1.getAxiomCount(ax, Imports.INCLUDED);
+                    o1.getAxiomCount(ax, Imports.EXCLUDED);
                 }
                 o1.getLogicalAxioms();
                 o1.getLogicalAxiomCount();
                 for (OWLAxiom ax : o1.getLogicalAxioms()) {
                     o1.containsAxiom(ax);
-                    o1.containsAxiom(ax, true, false);
-                    o1.containsAxiom(ax, false, false);
+                    o1.containsAxiom(ax, Imports.INCLUDED,
+                            Search.IGNORE_ANNOTATIONS);
+                    o1.containsAxiom(ax, Imports.EXCLUDED,
+                            Search.IGNORE_ANNOTATIONS);
                 }
                 for (OWLAxiom ax : o1.getLogicalAxioms()) {
-                    o1.containsAxiom(ax, false, true);
-                    o1.containsAxiom(ax, true, true);
-                    o1.containsAxiom(ax, false, true);
+                    o1.containsAxiom(ax, Imports.EXCLUDED,
+                            Search.CONSIDER_ANNOTATIONS);
+                    o1.containsAxiom(ax, Imports.INCLUDED,
+                            Search.CONSIDER_ANNOTATIONS);
+                    o1.containsAxiom(ax, Imports.EXCLUDED,
+                            Search.CONSIDER_ANNOTATIONS);
                 }
                 for (OWLAxiom ax : o1.getLogicalAxioms()) {
-                    o1.getAxiomsIgnoreAnnotations(ax, false);
-                    o1.getAxiomsIgnoreAnnotations(ax, true);
-                    o1.getAxiomsIgnoreAnnotations(ax, false);
+                    o1.getAxiomsIgnoreAnnotations(ax, Imports.EXCLUDED);
+                    o1.getAxiomsIgnoreAnnotations(ax, Imports.INCLUDED);
+                    o1.getAxiomsIgnoreAnnotations(ax, Imports.EXCLUDED);
                 }
                 o1.getGeneralClassAxioms();
                 for (OWLAnonymousIndividual i : anonIndividuals) {
-                    o1.getReferencingAxioms(i, false);
+                    o1.getReferencingAxioms(i, Imports.EXCLUDED);
                 }
                 for (OWLEntity e : entities) {
-                    o1.getReferencingAxioms(e, false);
-                    o1.getReferencingAxioms(e, true);
-                    o1.getReferencingAxioms(e, false);
+                    o1.getReferencingAxioms(e, Imports.EXCLUDED);
+                    o1.getReferencingAxioms(e, Imports.INCLUDED);
+                    o1.getReferencingAxioms(e, Imports.EXCLUDED);
                     o1.getDeclarationAxioms(e);
-                    o1.containsEntityInSignature(e, true);
-                    o1.containsEntityInSignature(e, false);
+                    o1.containsEntityInSignature(e, Imports.INCLUDED);
+                    o1.containsEntityInSignature(e, Imports.EXCLUDED);
                     o1.containsEntityInSignature(e);
-                    o1.containsEntityInSignature(e.getIRI(), false);
-                    o1.containsEntityInSignature(e.getIRI(), true);
+                    o1.containsEntityInSignature(e.getIRI(), Imports.EXCLUDED);
+                    o1.containsEntityInSignature(e.getIRI(), Imports.INCLUDED);
                     o1.getEntitiesInSignature(e.getIRI());
-                    o1.getEntitiesInSignature(e.getIRI(), false);
-                    o1.getEntitiesInSignature(e.getIRI(), true);
+                    o1.getEntitiesInSignature(e.getIRI(), Imports.EXCLUDED);
+                    o1.getEntitiesInSignature(e.getIRI(), Imports.INCLUDED);
                     o1.isDeclared(e);
-                    o1.isDeclared(e, true);
-                    o1.isDeclared(e, false);
+                    o1.isDeclared(e, Imports.INCLUDED);
+                    o1.isDeclared(e, Imports.EXCLUDED);
                     if (e instanceof OWLAnnotationSubject) {
                         o1.getAnnotationAssertionAxioms((OWLAnnotationSubject) e);
                     }
@@ -505,7 +524,7 @@ public class OwlOntologyMultipleThreadsTest {
                 + "    <rdf:type rdf:resource=\"http://www.w3.org/2002/07/owl#DatatypeProperty\"/>\n"
                 + "  </owl:FunctionalProperty>\n"
                 + "  <Degree rdf:ID=\"MA\"/>\n" + "</rdf:RDF>";
-        OWLOntologyManager m = ThreadSafeOWLManager.createOWLOntologyManager();
+        OWLOntologyManager m = OWLManager.createOWLOntologyManager();
         OWLOntology o = null;
         try {
             o = m.loadOntologyFromOntologyDocument(new StringDocumentSource(

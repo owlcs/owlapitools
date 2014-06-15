@@ -10,6 +10,7 @@ import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.NodeSet;
@@ -36,11 +37,8 @@ public class ComparisonExecutor {
 
     /**
      * run execution
-     * 
-     * @throws Exception
-     *         exception
      */
-    public void execute() throws Exception {
+    public void execute() {
         r.getBottomClassNode();
         r.getBottomDataPropertyNode();
         r.getBottomObjectPropertyNode();
@@ -68,7 +66,7 @@ public class ComparisonExecutor {
             r.isSatisfiable(c);
         }
         Set<OWLObjectProperty> objectProperties = o1
-                .getObjectPropertiesInSignature(true);
+                .getObjectPropertiesInSignature(Imports.INCLUDED);
         Set<OWLDataProperty> dataProperties = o1.getDataPropertiesInSignature();
         Set<OWLNamedIndividual> individuals = o1.getIndividualsInSignature();
         for (OWLObjectProperty o : objectProperties) {
@@ -203,13 +201,13 @@ public class ComparisonExecutor {
     /**
      * @param o
      *        ontology
+     * @param c
+     *        configuration
      * @param f
      *        reasoner factories
-     * @throws Exception
-     *         exception
      */
     public ComparisonExecutor(OWLOntology o, OWLReasonerConfiguration c,
-            OWLReasonerFactory... f) throws Exception {
+            OWLReasonerFactory... f) {
         o1 = o;
         name = "Comparing";
         reasonerFactories = f;

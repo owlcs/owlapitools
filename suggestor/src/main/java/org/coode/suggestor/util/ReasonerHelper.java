@@ -24,6 +24,7 @@ import org.semanticweb.owlapi.model.OWLDataSomeValuesFrom;
 import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
@@ -53,7 +54,7 @@ public class ReasonerHelper {
     public Set<OWLObjectPropertyExpression> getReferencedObjectProperties() {
         final OWLOntology root = r.getRootOntology();
         Set<OWLObjectPropertyExpression> p = new HashSet<OWLObjectPropertyExpression>(
-                root.getObjectPropertiesInSignature(true));
+                root.getObjectPropertiesInSignature(Imports.INCLUDED));
         p.add(df.getOWLTopObjectProperty());
         p.add(df.getOWLBottomObjectProperty());
         return p;
@@ -63,7 +64,7 @@ public class ReasonerHelper {
     public Set<OWLDataProperty> getReferencedDataProperties() {
         final OWLOntology root = r.getRootOntology();
         Set<OWLDataProperty> p = new HashSet<OWLDataProperty>(
-                root.getDataPropertiesInSignature(true));
+                root.getDataPropertiesInSignature(Imports.INCLUDED));
         p.add(df.getOWLTopDataProperty());
         p.add(df.getOWLBottomDataProperty());
         return p;

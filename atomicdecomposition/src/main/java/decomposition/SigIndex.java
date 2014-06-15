@@ -5,14 +5,20 @@ import java.util.Collection;
 import java.util.List;
 
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.util.MultiMap;
 
-/** signature index
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+
+/**
+ * signature index
  * 
- * @author ignazio */
+ * @author ignazio
+ */
 public class SigIndex {
+
     /** map between entities and axioms that contains them in their signature */
-    private MultiMap<OWLEntity, AxiomWrapper> Base = new MultiMap<OWLEntity, AxiomWrapper>();
+    private Multimap<OWLEntity, AxiomWrapper> Base = LinkedHashMultimap
+            .create();
     /** locality checker */
     private LocalityChecker checker;
     /** sets of axioms non-local wrt the empty signature */
@@ -29,12 +35,14 @@ public class SigIndex {
         return nRegistered;
     }
 
-    /** add axiom AX to the non-local set with top-locality value TOP
+    /**
+     * add axiom AX to the non-local set with top-locality value TOP
      * 
      * @param ax
-     *            axiom
+     *        axiom
      * @param top
-     *            top or bottom */
+     *        top or bottom
+     */
     private void checkNonLocal(AxiomWrapper ax, boolean top) {
         emptySig.setLocality(top);
         checker.setSignatureValue(emptySig);
@@ -47,17 +55,21 @@ public class SigIndex {
         }
     }
 
-    /** @param c
-     *            locality checker */
+    /**
+     * @param c
+     *        locality checker
+     */
     public SigIndex(LocalityChecker c) {
         checker = c;
     }
 
     // work with axioms
-    /** register an axiom
+    /**
+     * register an axiom
      * 
      * @param ax
-     *            axiom */
+     *        axiom
+     */
     private void registerAx(AxiomWrapper ax) {
         for (OWLEntity p : ax.getAxiom().getSignature()) {
             Base.put(p, ax);
@@ -68,10 +80,12 @@ public class SigIndex {
         ++nRegistered;
     }
 
-    /** unregister an axiom AX
+    /**
+     * unregister an axiom AX
      * 
      * @param ax
-     *            axiom */
+     *        axiom
+     */
     private void unregisterAx(AxiomWrapper ax) {
         for (OWLEntity p : ax.getAxiom().getSignature()) {
             Base.remove(p, ax);
@@ -81,10 +95,12 @@ public class SigIndex {
         NonLocalTrue.remove(ax);
     }
 
-    /** process an axiom wrt its Used status
+    /**
+     * process an axiom wrt its Used status
      * 
      * @param ax
-     *            the axiom to process */
+     *        the axiom to process
+     */
     public void processAx(AxiomWrapper ax) {
         if (ax.isUsed()) {
             registerAx(ax);
@@ -93,10 +109,12 @@ public class SigIndex {
         }
     }
 
-    /** preprocess given set of axioms
+    /**
+     * preprocess given set of axioms
      * 
      * @param axioms
-     *            the axioms to process */
+     *        the axioms to process
+     */
     public void preprocessOntology(Collection<AxiomWrapper> axioms) {
         for (AxiomWrapper ax : axioms) {
             processAx(ax);
@@ -111,21 +129,25 @@ public class SigIndex {
     }
 
     // get the set by the index
-    /** given an entity, return a set of all axioms that contain this entity in a
+    /**
+     * given an entity, return a set of all axioms that contain this entity in a
      * signature
      * 
      * @param entity
-     *            the entity
-     * @return collection of axioms referring the entity */
+     *        the entity
+     * @return collection of axioms referring the entity
+     */
     public Collection<AxiomWrapper> getAxioms(OWLEntity entity) {
         return Base.get(entity);
     }
 
-    /** get the non-local axioms with top-locality value TOP
+    /**
+     * get the non-local axioms with top-locality value TOP
      * 
      * @param top
-     *            true if top locality should be used
-     * @return collection of non local axioms */
+     *        true if top locality should be used
+     * @return collection of non local axioms
+     */
     public Collection<AxiomWrapper> getNonLocal(boolean top) {
         return top ? NonLocalFalse : NonLocalTrue;
     }

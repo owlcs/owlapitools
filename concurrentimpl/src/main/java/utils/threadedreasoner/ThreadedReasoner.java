@@ -137,7 +137,7 @@ public class ThreadedReasoner implements OWLReasoner {
         Callable<Boolean> thread = new Callable<Boolean>() {
 
             @Override
-            public Boolean call() throws Exception {
+            public Boolean call() {
                 delegate.precomputeInferences(inferenceTypes);
                 return Boolean.TRUE;
             }
@@ -183,7 +183,7 @@ public class ThreadedReasoner implements OWLReasoner {
         return threadedRun(new Callable<Boolean>() {
 
             @Override
-            public Boolean call() throws Exception {
+            public Boolean call() {
                 return delegate.isConsistent();
             }
         });
@@ -197,7 +197,7 @@ public class ThreadedReasoner implements OWLReasoner {
         return threadedRun(new Callable<Boolean>() {
 
             @Override
-            public Boolean call() throws Exception {
+            public Boolean call() {
                 return delegate.isSatisfiable(classExpression);
             }
         });
@@ -210,7 +210,7 @@ public class ThreadedReasoner implements OWLReasoner {
         Callable<Node<OWLClass>> thread = new Callable<Node<OWLClass>>() {
 
             @Override
-            public Node<OWLClass> call() throws Exception {
+            public Node<OWLClass> call() {
                 return delegate.getUnsatisfiableClasses();
             }
         };

@@ -59,20 +59,27 @@ import org.semanticweb.owlapi.model.SWRLRule;
 import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
-import org.semanticweb.owlapi.util.MultiMap;
+
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 
 /** semantic locality checker for DL axioms */
-public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker {
+public class SemanticLocalityChecker implements OWLAxiomVisitor,
+        LocalityChecker {
+
     /** Reasoner to detect the tautology */
     OWLReasoner Kernel;
     OWLDataFactory df;
     OWLReasonerFactory factory;
     /** map between axioms and concept expressions */
-    MultiMap<OWLAxiom, OWLClassExpression> ExprMap = new MultiMap<OWLAxiom, OWLClassExpression>();
+    Multimap<OWLAxiom, OWLClassExpression> ExprMap = LinkedHashMultimap
+            .create();
 
-    /** @param axiom
-     *            axiom
-     * @return expression necessary to build query for a given type of an axiom */
+    /**
+     * @param axiom
+     *        axiom
+     * @return expression necessary to build query for a given type of an axiom
+     */
     protected Collection<OWLClassExpression> getExpr(OWLAxiom axiom) {
         return axiom.getNestedClassExpressions();
     }
@@ -95,12 +102,14 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker
     boolean isLocal;
     private OWLOntologyManager manager;
 
-    /** init c'tor
+    /**
+     * init c'tor
      * 
      * @param f
-     *            reasoner factory
+     *        reasoner factory
      * @param m
-     *            manager */
+     *        manager
+     */
     public SemanticLocalityChecker(OWLReasonerFactory f, OWLOntologyManager m) {
         factory = f;
         manager = m;
@@ -131,7 +140,8 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker
             declarationAxioms.add(df.getOWLDeclarationAxiom(p));
         }
         try {
-            Kernel = factory.createReasoner(manager.createOntology(declarationAxioms));
+            Kernel = factory.createReasoner(manager
+                    .createOntology(declarationAxioms));
         } catch (OWLOntologyCreationException e) {
             throw new OWLRuntimeException(e);
         }
@@ -181,7 +191,8 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker
     public void visit(OWLDisjointUnionAxiom axiom) {
         isLocal = false;
         // check A = (or C1... Cn)
-        if (!Kernel.isEntailed(df.getOWLEquivalentClassesAxiom(axiom.getOWLClass(),
+        if (!Kernel.isEntailed(df.getOWLEquivalentClassesAxiom(
+                axiom.getOWLClass(),
                 df.getOWLObjectIntersectionOf(axiom.getClassExpressions())))) {
             return;
         }
@@ -191,8 +202,8 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker
         int size = arguments.size();
         for (int i = 0; i < size; i++) {
             for (int j = i + 1; j < size; j++) {
-                if (!Kernel.isEntailed(df.getOWLDisjointClassesAxiom(arguments.get(i),
-                        arguments.get(j)))) {
+                if (!Kernel.isEntailed(df.getOWLDisjointClassesAxiom(
+                        arguments.get(i), arguments.get(j)))) {
                     return;
                 }
             }
@@ -208,9 +219,9 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker
         int size = arguments.size();
         OWLObjectPropertyExpression R = arguments.get(0);
         for (int i = 1; i < size; i++) {
-            if (!(Kernel
-                    .isEntailed(df.getOWLSubObjectPropertyOfAxiom(R, arguments.get(i))) && Kernel
-                    .isEntailed(df.getOWLSubObjectPropertyOfAxiom(arguments.get(i), R)))) {
+            if (!(Kernel.isEntailed(df.getOWLSubObjectPropertyOfAxiom(R,
+                    arguments.get(i))) && Kernel.isEntailed(df
+                    .getOWLSubObjectPropertyOfAxiom(arguments.get(i), R)))) {
                 return;
             }
         }
@@ -225,8 +236,9 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker
                 axiom.getProperties());
         OWLDataPropertyExpression R = arguments.get(0);
         for (int i = 1; i < arguments.size(); i++) {
-            if (!(Kernel.isEntailed(df.getOWLSubDataPropertyOfAxiom(R, arguments.get(i))) && Kernel
-                    .isEntailed(df.getOWLSubDataPropertyOfAxiom(arguments.get(i), R)))) {
+            if (!(Kernel.isEntailed(df.getOWLSubDataPropertyOfAxiom(R,
+                    arguments.get(i))) && Kernel.isEntailed(df
+                    .getOWLSubDataPropertyOfAxiom(arguments.get(i), R)))) {
                 return;
             }
         }
@@ -258,9 +270,9 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker
     // R = inverse(S) is tautology iff R [= S- and S [= R-
     @Override
     public void visit(OWLInverseObjectPropertiesAxiom axiom) {
-        isLocal = Kernel
-                .isEntailed(df.getOWLSubObjectPropertyOfAxiom(axiom.getFirstProperty(),
-                        axiom.getSecondProperty().getInverseProperty()))
+        isLocal = Kernel.isEntailed(df.getOWLSubObjectPropertyOfAxiom(axiom
+                .getFirstProperty(), axiom.getSecondProperty()
+                .getInverseProperty()))
                 && Kernel.isEntailed(df.getOWLSubObjectPropertyOfAxiom(axiom
                         .getFirstProperty().getInverseProperty(), axiom
                         .getSecondProperty()));
@@ -286,7 +298,8 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker
     public void visit(OWLObjectPropertyDomainAxiom axiom) {
         isLocal = true;
         for (OWLClassExpression e : ExprMap.get(axiom)) {
-            isLocal &= Kernel.isEntailed(df.getOWLSubClassOfAxiom(e, axiom.getDomain()));
+            isLocal &= Kernel.isEntailed(df.getOWLSubClassOfAxiom(e,
+                    axiom.getDomain()));
         }
     }
 
@@ -294,7 +307,8 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor, LocalityChecker
     public void visit(OWLDataPropertyDomainAxiom axiom) {
         isLocal = true;
         for (OWLClassExpression e : ExprMap.get(axiom)) {
-            isLocal &= Kernel.isEntailed(df.getOWLSubClassOfAxiom(e, axiom.getDomain()));
+            isLocal &= Kernel.isEntailed(df.getOWLSubClassOfAxiom(e,
+                    axiom.getDomain()));
         }
     }
 

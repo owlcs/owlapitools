@@ -180,56 +180,56 @@ public class ComparisonReasoner implements OWLReasoner {
         return objects.get(0);
     }
 
-    private String vars(Object o) {
+    private static String vars(Object o) {
         StringBuilder b = new StringBuilder();
-        if (o instanceof NodeSet) {
-            for (OWLEntity e : ((NodeSet<OWLEntity>) o).getFlattened()) {
+        if (o instanceof Node) {
+            for (OWLEntity e : ((Node<OWLEntity>) o).getEntities()) {
                 b.append("OWL").append(e.getEntityType().getName()).append(" ")
-                        .append(e.getIRI().getFragment());
+                        .append(e.getIRI().getShortForm());
                 b.append(" = C(\"").append(e.getIRI().getNamespace())
-                        .append(e.getIRI().getFragment()).append("\");\n");
+                        .append(e.getIRI().getShortForm()).append("\");\n");
             }
             return b.toString();
         }
         if (o instanceof NodeSet) {
             for (OWLEntity e : ((NodeSet<OWLEntity>) o).getFlattened()) {
                 b.append("OWL").append(e.getEntityType().getName()).append(" ")
-                        .append(e.getIRI().getFragment());
+                        .append(e.getIRI().getShortForm());
                 b.append(" = C(\"").append(e.getIRI().getNamespace())
-                        .append(e.getIRI().getFragment()).append("\");\n");
+                        .append(e.getIRI().getShortForm()).append("\");\n");
             }
             return b.toString();
         }
         if (o instanceof OWLEntity) {
             OWLEntity e = (OWLEntity) o;
             b.append("OWL").append(e.getEntityType().getName()).append(" ")
-                    .append(e.getIRI().getFragment());
+                    .append(e.getIRI().getShortForm());
             b.append(" = C(\"").append(e.getIRI().getNamespace())
-                    .append(e.getIRI().getFragment()).append("\");\n");
+                    .append(e.getIRI().getShortForm()).append("\");\n");
             return b.toString();
         }
         return "";
     }
 
-    private String args(Object o) {
+    private static String args(Object o) {
         StringBuilder b = new StringBuilder();
-        if (o instanceof NodeSet) {
-            for (OWLEntity e : ((NodeSet<OWLEntity>) o).getFlattened()) {
-                b.append(e.getIRI().getFragment()).append(", ");
+        if (o instanceof Node) {
+            for (OWLEntity e : ((Node<OWLEntity>) o).getEntities()) {
+                b.append(e.getIRI().getShortForm()).append(", ");
             }
             b.delete(b.length() - 2, b.length());
             return b.toString();
         }
         if (o instanceof NodeSet) {
             for (OWLEntity e : ((NodeSet<OWLEntity>) o).getFlattened()) {
-                b.append(e.getIRI().getFragment()).append(", ");
+                b.append(e.getIRI().getShortForm()).append(", ");
             }
             b.delete(b.length() - 2, b.length());
             return b.toString();
         }
         if (o instanceof OWLEntity) {
             OWLEntity e = (OWLEntity) o;
-            b.append(e.getIRI().getFragment());
+            b.append(e.getIRI().getShortForm());
             return b.toString();
         }
         return o.toString();

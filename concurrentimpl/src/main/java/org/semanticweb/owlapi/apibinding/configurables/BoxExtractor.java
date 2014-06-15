@@ -43,13 +43,18 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.parameters.Imports;
+import org.semanticweb.owlapi.util.CollectionFactory;
 import org.semanticweb.owlapi.util.OWLObjectVisitorExAdapter;
 
-/** This class allows for the extraction of subsets of axioms based on their
+/**
+ * This class allows for the extraction of subsets of axioms based on their
  * types; the purpose is to offer a flexible extraction mechanism to collect
  * axioms belonging to, e.g., the ABox, the TBox or the RBox of an ontology.
  * Sets of axiom types covering these cases are available in
@@ -63,20 +68,28 @@ import org.semanticweb.owlapi.util.OWLObjectVisitorExAdapter;
  * safe for use in multithread environments, provided that the parameters to the
  * constructor do not change while the constructor executes and the OWLOntology
  * implementation is itself threadsafe. A single instance can be reused for
- * extracting the same Box from different ontologies without side effects. */
-public class BoxExtractor extends OWLObjectVisitorExAdapter<Set<OWLAxiom>> implements
-        OWLObjectVisitorEx<Set<OWLAxiom>> {
-    private final Collection<AxiomType<?>> types;
-    private final boolean closure;
+ * extracting the same Box from different ontologies without side effects.
+ */
+public class BoxExtractor extends OWLObjectVisitorExAdapter<Set<OWLAxiom>>
+        implements OWLObjectVisitorEx<Set<OWLAxiom>> {
 
-    /** @param types
-     *            the set of AxiomType objects to use for selection
+    @Nonnull
+    private final Collection<AxiomType<?>> types;
+    @Nonnull
+    private final Imports closure;
+
+    /**
+     * @param types
+     *        the set of AxiomType objects to use for selection
      * @param importsClosure
-     *            if true, the imports closure is included in the search,
-     *            otherwise only the visited ontology is included */
-    public BoxExtractor(Collection<AxiomType<?>> types, boolean importsClosure) {
+     *        if true, the imports closure is included in the search, otherwise
+     *        only the visited ontology is included
+     */
+    public BoxExtractor(@Nonnull Collection<AxiomType<?>> types,
+            @Nonnull Imports importsClosure) {
+        super(CollectionFactory.<OWLAxiom> emptySet());
         this.types = new ArrayList<AxiomType<?>>(types);
-        this.closure = importsClosure;
+        closure = importsClosure;
     }
 
     @Override

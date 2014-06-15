@@ -44,6 +44,7 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternals;
 
 @SuppressWarnings("javadoc")
 public class InternalsTester extends Tester {
+
     public void run(OWLDataFactoryInternals toTest) {
         for (int i = 0; i < _10; i++) {
             for (IRI iri : iriClasses) {
@@ -67,27 +68,33 @@ public class InternalsTester extends Tester {
         }
     }
 
-    private void singleRunClasses(OWLDataFactoryInternals toTest, IRI iri) {
+    private static void
+            singleRunClasses(OWLDataFactoryInternals toTest, IRI iri) {
         toTest.getOWLClass(iri);
     }
 
-    private void singleRunObjectProp(OWLDataFactoryInternals toTest, IRI iri) {
+    private static void singleRunObjectProp(OWLDataFactoryInternals toTest,
+            IRI iri) {
         toTest.getOWLObjectProperty(iri);
     }
 
-    private void singleRunDataprop(OWLDataFactoryInternals toTest, IRI iri) {
+    private static void singleRunDataprop(OWLDataFactoryInternals toTest,
+            IRI iri) {
         toTest.getOWLDataProperty(iri);
     }
 
-    private void singleRunDatatype(OWLDataFactoryInternals toTest, IRI iri) {
+    private static void singleRunDatatype(OWLDataFactoryInternals toTest,
+            IRI iri) {
         toTest.getOWLDatatype(iri);
     }
 
-    private void singleRunIndividuals(OWLDataFactoryInternals toTest, IRI iri) {
+    private static void singleRunIndividuals(OWLDataFactoryInternals toTest,
+            IRI iri) {
         toTest.getOWLNamedIndividual(iri);
     }
 
-    private void singleRunAnnotations(OWLDataFactoryInternals toTest, IRI iri) {
+    private static void singleRunAnnotations(OWLDataFactoryInternals toTest,
+            IRI iri) {
         toTest.getOWLAnnotationProperty(iri);
     }
 }
