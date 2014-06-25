@@ -13,6 +13,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.annotation.Nonnull;
+
 import org.coode.suggestor.api.FillerSuggestor;
 import org.coode.suggestor.api.PropertySuggestor;
 import org.coode.suggestor.impl.SuggestorFactory;
@@ -31,7 +33,7 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 @SuppressWarnings("javadoc")
 public class CreateExistentialTree extends AbstractSuggestorTest {
 
-    private final Set<Node<OWLClass>> visited = new HashSet<Node<OWLClass>>();
+    private final Set<Node<OWLClass>> visited = new HashSet<>();
 
     @Override
     protected OWLOntology createOntology() throws OWLOntologyCreationException {
@@ -74,7 +76,7 @@ public class CreateExistentialTree extends AbstractSuggestorTest {
     }
 
     private static void
-            printProperty(OWLClassExpression c,
+            printProperty(@Nonnull OWLClassExpression c,
                     Node<OWLObjectPropertyExpression> p, int indent,
                     FillerSuggestor fs) {
         print(p, indent);
@@ -90,8 +92,7 @@ public class CreateExistentialTree extends AbstractSuggestorTest {
             System.out.print("    ");
         }
         boolean started = false;
-        final Set<OWLObject> entities = new TreeSet<OWLObject>(
-                node.getEntities());
+        final Set<OWLObject> entities = new TreeSet<>(node.getEntities());
         for (OWLObject o : entities) {
             if (started) {
                 System.out.print(" == ");

@@ -40,10 +40,11 @@ import org.semanticweb.owlapi.reasoner.knowledgeexploration.OWLKnowledgeExplorer
 /** Default implementation of the FillerSuggestor. */
 class FillerSuggestorImpl implements FillerSuggestor {
 
+    @Nonnull
     protected final OWLKnowledgeExplorerReasoner r;
     protected final OWLDataFactory df;
     protected final ReasonerHelper helper;
-    private final Set<FillerSanctionRule> sanctioningRules = new HashSet<FillerSanctionRule>();
+    private final Set<FillerSanctionRule> sanctioningRules = new HashSet<>();
     private final AbstractOPMatcher currentOPMatcher = new AbstractOPMatcher() {
 
         @Override
@@ -85,7 +86,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
         }
     };
 
-    public FillerSuggestorImpl(OWLKnowledgeExplorerReasoner r) {
+    public FillerSuggestorImpl(@Nonnull OWLKnowledgeExplorerReasoner r) {
         this.r = r;
         df = r.getRootOntology().getOWLOntologyManager().getOWLDataFactory();
         helper = new ReasonerHelper(r);
@@ -186,7 +187,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
 
     @Override
     public NodeSet<OWLClass> getPossibleNamedFillers(OWLClassExpression c,
-            OWLObjectPropertyExpression p, OWLClassExpression root,
+            @Nonnull OWLObjectPropertyExpression p, OWLClassExpression root,
             boolean direct) {
         return possibleOPMatcher.getRoots(c, p,
                 root == null ? helper.getGlobalAssertedRange(p) : root, direct);
@@ -196,7 +197,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
     public Set<OWLClass> getSanctionedFillers(OWLClassExpression c,
             OWLObjectPropertyExpression p, OWLClassExpression root,
             boolean direct) {
-        Set<OWLClass> fillers = new HashSet<OWLClass>();
+        Set<OWLClass> fillers = new HashSet<>();
         for (OWLClass f : getPossibleNamedFillers(c, p, root, direct)
                 .getFlattened()) {
             if (meetsSanctions(c, p, f)) {
@@ -295,7 +296,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
         @Override
         public final NodeSet<F> getRoots(OWLClassExpression c, P p, R start,
                 boolean direct) {
-            Set<Node<F>> nodes = new HashSet<Node<F>>();
+            Set<Node<F>> nodes = new HashSet<>();
             for (Node<F> sub : getDirectSubs(start)) {
                 if (isMatch(c, p, sub.getRepresentativeElement())) {
                     nodes.add(sub);
@@ -347,7 +348,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
         public final NodeSet<OWLClass> getLeaves(OWLClassExpression c,
                 OWLObjectPropertyExpression p, OWLClassExpression start,
                 boolean direct) {
-            Set<Node<OWLClass>> toReturn = new HashSet<Node<OWLClass>>();
+            Set<Node<OWLClass>> toReturn = new HashSet<>();
             RootNode root = r.getRoot(c);
             if (root.getNode() == null) {
                 System.out
@@ -362,7 +363,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
                     for (RootNode pointer : objectNeighbours) {
                         final Node<? extends OWLClassExpression> objectLabel = r
                                 .getObjectLabel(pointer, direct);
-                        Set<OWLClass> node = new HashSet<OWLClass>();
+                        Set<OWLClass> node = new HashSet<>();
                         for (OWLClassExpression c1 : objectLabel.getEntities()) {
                             if (c1 == null) {
                                 // TODO anonymous expressions
@@ -404,7 +405,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
         public final NodeSet<OWLDatatype>
                 getLeaves(OWLClassExpression c, OWLDataPropertyExpression p,
                         OWLDataRange start, boolean direct) {
-            Set<Node<OWLDatatype>> toReturn = new HashSet<Node<OWLDatatype>>();
+            Set<Node<OWLDatatype>> toReturn = new HashSet<>();
             RootNode root = r.getRoot(c);
             if (root.getNode() == null) {
                 System.out
@@ -419,7 +420,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
                     for (RootNode pointer : objectNeighbours) {
                         final Node<? extends OWLDataRange> objectLabel = r
                                 .getDataLabel(pointer, direct);
-                        Set<OWLDatatype> node = new HashSet<OWLDatatype>();
+                        Set<OWLDatatype> node = new HashSet<>();
                         for (OWLDataRange c1 : objectLabel.getEntities()) {
                             if (c1 == null) {
                                 // TODO anonymous expressions

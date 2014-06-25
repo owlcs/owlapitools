@@ -34,7 +34,7 @@ class PropertySuggestorImpl implements PropertySuggestor {
     protected final OWLKnowledgeExplorerReasoner r;
     protected final OWLDataFactory df;
     protected final ReasonerHelper helper;
-    private final Set<PropertySanctionRule> sanctionRules = new HashSet<PropertySanctionRule>();
+    private final Set<PropertySanctionRule> sanctionRules = new HashSet<>();
     private final Matcher<OWLObjectPropertyExpression> currentOPMatcher = new AbstractOPMatcher() {
 
         @Override
@@ -184,7 +184,7 @@ class PropertySuggestorImpl implements PropertySuggestor {
     public Set<OWLObjectPropertyExpression> getSanctionedObjectProperties(
             OWLClassExpression c, OWLObjectPropertyExpression root,
             boolean direct) {
-        Set<OWLObjectPropertyExpression> props = new HashSet<OWLObjectPropertyExpression>();
+        Set<OWLObjectPropertyExpression> props = new HashSet<>();
         for (OWLObjectPropertyExpression pNode : getPossibleObjectProperties(c,
                 root, direct).getFlattened()) {
             if (meetsOPSanctions(c, pNode)) {
@@ -197,7 +197,7 @@ class PropertySuggestorImpl implements PropertySuggestor {
     @Override
     public Set<OWLDataProperty> getSanctionedDataProperties(
             OWLClassExpression c, OWLDataProperty root, boolean direct) {
-        Set<OWLDataProperty> props = new HashSet<OWLDataProperty>();
+        Set<OWLDataProperty> props = new HashSet<>();
         for (OWLDataProperty pNode : getPossibleDataProperties(c, root, direct)
                 .getFlattened()) {
             if (meetsDPSanctions(c, pNode)) {
@@ -274,7 +274,7 @@ class PropertySuggestorImpl implements PropertySuggestor {
         @Override
         public final NodeSet<P> getLeaves(OWLClassExpression c, Node<P> root,
                 boolean direct) {
-            Set<Node<P>> nodes = new HashSet<Node<P>>();
+            Set<Node<P>> nodes = new HashSet<>();
             final P p = root.getRepresentativeElement();
             if (isMatch(c, p)) {
                 for (Node<P> sub : getDirectSubs(p)) {
@@ -290,7 +290,7 @@ class PropertySuggestorImpl implements PropertySuggestor {
         @Override
         public final NodeSet<P> getRoots(OWLClassExpression c, Node<P> root,
                 boolean direct) {
-            Set<Node<P>> nodes = new HashSet<Node<P>>();
+            Set<Node<P>> nodes = new HashSet<>();
             for (Node<P> sub : getDirectSubs(root.getRepresentativeElement())) {
                 if (isMatch(c, sub.getRepresentativeElement())) {
                     nodes.add(sub);

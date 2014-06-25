@@ -51,12 +51,12 @@ public class Tester {
 
     public static final int _10 = 10;
     public static final int _10000 = 10000;
-    protected List<IRI> iriClasses = new ArrayList<IRI>();
-    protected List<IRI> iriDataproperties = new ArrayList<IRI>();
-    protected List<IRI> iriObjectProperties = new ArrayList<IRI>();
-    protected List<IRI> iriIndividuals = new ArrayList<IRI>();
-    protected List<IRI> iriDatatypes = new ArrayList<IRI>();
-    protected List<IRI> iriAnnotations = new ArrayList<IRI>();
+    protected List<IRI> iriClasses = new ArrayList<>();
+    protected List<IRI> iriDataproperties = new ArrayList<>();
+    protected List<IRI> iriObjectProperties = new ArrayList<>();
+    protected List<IRI> iriIndividuals = new ArrayList<>();
+    protected List<IRI> iriDatatypes = new ArrayList<>();
+    protected List<IRI> iriAnnotations = new ArrayList<>();
 
     public Tester() {
         init();

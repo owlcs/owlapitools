@@ -63,7 +63,7 @@ public class RestrictionAccumulator {
     @SuppressWarnings("unchecked")
     public <T extends OWLRestriction> Set<T> getRestrictions(
             OWLClassExpression cls, OWLPropertyExpression prop, Class<T> type) {
-        Set<T> results = new HashSet<T>();
+        Set<T> results = new HashSet<>();
         for (OWLRestriction restr : accummulateRestrictions(cls, prop, type)) {
             results.add((T) restr);
         }

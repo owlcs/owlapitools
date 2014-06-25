@@ -8,8 +8,12 @@
  */
 package utils.cachedreasoner;
 
+import static org.semanticweb.owlapi.util.OWLAPIPreconditions.verifyNotNull;
+
 import java.util.List;
 import java.util.Set;
+
+import javax.annotation.Nonnull;
 
 import org.semanticweb.owlapi.apibinding.configurables.Computable;
 import org.semanticweb.owlapi.apibinding.configurables.ComputableAllThrowables;
@@ -52,9 +56,10 @@ public final class CachedOWLReasoner implements OWLReasoner,
 
     private final class Entailer extends ComputableAllThrowables<Object> {
 
+        @Nonnull
         private final OWLClassExpression classExpression;
 
-        public Entailer(OWLClassExpression classExpression) {
+        public Entailer(@Nonnull OWLClassExpression classExpression) {
             this.classExpression = classExpression;
         }
 
@@ -122,7 +127,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
 
         public CachedReasoner() {}
 
-        MemoizingCache<CacheKeys, MemoizingCache<Object, Object>> mainCache = new MemoizingCache<CacheKeys, MemoizingCache<Object, Object>>();
+        MemoizingCache<CacheKeys, MemoizingCache<Object, Object>> mainCache = new MemoizingCache<>();
 
         public void clear() {
             mainCache.clear();
@@ -134,7 +139,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
                 @Override
                 public MemoizingCache<Object, Object> compute() {
                     try {
-                        return new MemoizingCache<Object, Object>();
+                        return new MemoizingCache<>();
                     } catch (Throwable e) {
                         exception = e;
                         return null;
@@ -153,6 +158,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
     }
 
     private final CachedReasoner cache = new CachedReasoner();
+    @Nonnull
     private final OWLOntology rootOntology;
 
     /**
@@ -231,7 +237,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
     }
 
     @Override
-    public List<OWLOntologyChange<?>> getPendingChanges() {
+    public List<OWLOntologyChange> getPendingChanges() {
         return delegate.getPendingChanges();
     }
 
@@ -384,7 +390,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             AxiomNotInProfileException, FreshEntitiesException,
             InconsistentOntologyException {
         for (OWLAxiom ax : axioms) {
-            if (!isEntailed(ax)) {
+            if (!isEntailed(verifyNotNull(ax))) {
                 return false;
             }
         }
@@ -458,7 +464,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -508,7 +514,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             throw new RuntimeException("Failure asking for superclasses of "
                     + ce + " " + direct, e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -558,7 +564,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -608,7 +614,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -670,7 +676,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -722,7 +728,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -773,7 +779,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -824,7 +830,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -875,7 +881,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -927,7 +933,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -979,7 +985,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1041,7 +1047,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1093,7 +1099,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1144,7 +1150,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1195,7 +1201,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1247,7 +1253,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1298,7 +1304,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1351,7 +1357,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1402,7 +1408,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1453,7 +1459,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1504,7 +1510,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1555,7 +1561,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1580,7 +1586,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
     }
 
     @Override
-    public void ontologiesChanged(List<? extends OWLOntologyChange<?>> changes) {
+    public void ontologiesChanged(List<? extends OWLOntologyChange> changes) {
         // only invalidate the caches, the changes are supposed to go to the
         // reasoner via its own listener
         cache.clear();

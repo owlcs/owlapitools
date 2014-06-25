@@ -114,7 +114,7 @@ public final class PooledOWLReasoner implements OWLReasoner,
 
         public CachedReasoner() {}
 
-        MemoizingCache<CacheKeys, MemoizingCache<Object, Object>> mainCache = new MemoizingCache<CacheKeys, MemoizingCache<Object, Object>>();
+        MemoizingCache<CacheKeys, MemoizingCache<Object, Object>> mainCache = new MemoizingCache<>();
 
         public void clear() {
             mainCache.clear();
@@ -126,7 +126,7 @@ public final class PooledOWLReasoner implements OWLReasoner,
                 @Override
                 public MemoizingCache<Object, Object> compute() {
                     try {
-                        return new MemoizingCache<Object, Object>();
+                        return new MemoizingCache<>();
                     } catch (Throwable e) {
                         exception = e;
                         return null;
@@ -169,7 +169,7 @@ public final class PooledOWLReasoner implements OWLReasoner,
     }
 
     private void prefetch() {
-        final List<OWLClass> classes = new ArrayList<OWLClass>(
+        final List<OWLClass> classes = new ArrayList<>(
                 rootOntology.getClassesInSignature());
         final int chunk = classes.size() / concurrentNumber;
         for (int i = 0; i < concurrentNumber; i++) {
@@ -274,7 +274,7 @@ public final class PooledOWLReasoner implements OWLReasoner,
     }
 
     @Override
-    public List<OWLOntologyChange<?>> getPendingChanges() {
+    public List<OWLOntologyChange> getPendingChanges() {
         return next().getPendingChanges();
     }
 
@@ -1679,7 +1679,7 @@ public final class PooledOWLReasoner implements OWLReasoner,
     }
 
     @Override
-    public void ontologiesChanged(List<? extends OWLOntologyChange<?>> changes) {
+    public void ontologiesChanged(List<? extends OWLOntologyChange> changes) {
         // only invalidate the caches, the changes are supposed to go to the
         // reasoner via its own listener
         cache.clear();

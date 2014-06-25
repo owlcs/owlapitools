@@ -147,7 +147,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
     }
 
     @Override
-    public List<OWLOntologyChange<?>> getPendingChanges() {
+    public List<OWLOntologyChange> getPendingChanges() {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()

@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 /** The Class Checker. */
 public class Checker {
+
     /** The default rep. */
     public static int defaultRep = 10;
     /** The rep. */
@@ -25,10 +26,12 @@ public class Checker {
     /** The successful. */
     private boolean successful = false;
 
-    /** Instantiates a new checker.
+    /**
+     * Instantiates a new checker.
      * 
      * @param i
-     *            the i */
+     *        the i
+     */
     public Checker(int i) {
         this();
         if (i > 0) {
@@ -41,15 +44,18 @@ public class Checker {
         p = System.out;
     }
 
-    /** Check.
+    /**
+     * Check.
      * 
      * @param cb
-     *            the cb */
+     *        the cb
+     */
     public void check(final ComparisonExecutor cb) {
-        final ConcurrentLinkedQueue<Long> results = new ConcurrentLinkedQueue<Long>();
+        final ConcurrentLinkedQueue<Long> results = new ConcurrentLinkedQueue<>();
         ExecutorService service = Executors.newFixedThreadPool(rep);
         for (int i = 0; i < rep; i++) {
             service.execute(new Runnable() {
+
                 @Override
                 public void run() {
                     int replay = Math.min(10, rep);
@@ -76,14 +82,17 @@ public class Checker {
         printout(results);
     }
 
-    /** Printout.
+    /**
+     * Printout.
      * 
      * @param results
-     *            the results */
+     *        the results
+     */
     protected void printout(ConcurrentLinkedQueue<Long> results) {
-        List<Object> list = new ArrayList<Object>();
+        List<Object> list = new ArrayList<>();
         list.addAll(Arrays.asList(results.toArray()));
         Collections.sort(list, new Comparator<Object>() {
+
             @Override
             public int compare(Object o1, Object o2) {
                 return ((Long) o1).compareTo((Long) o2);
@@ -93,16 +102,20 @@ public class Checker {
         successful = list.size() == expected;
     }
 
-    /** Checks if is successful.
+    /**
+     * Checks if is successful.
      * 
-     * @return true, if is successful */
+     * @return true, if is successful
+     */
     public boolean isSuccessful() {
         return successful;
     }
 
-    /** Gets the trace.
+    /**
+     * Gets the trace.
      * 
-     * @return the trace */
+     * @return the trace
+     */
     public String getTrace() {
         p.flush();
         return out.toString();

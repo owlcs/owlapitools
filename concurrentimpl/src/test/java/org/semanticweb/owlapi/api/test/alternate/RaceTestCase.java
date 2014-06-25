@@ -159,7 +159,7 @@ public class RaceTestCase {
             public Set<OWLAxiom> computeChanges(@Nonnull OWLClass middle) {
                 OWLAxiom axiom1 = factory.getOWLSubClassOfAxiom(x, middle);
                 OWLAxiom axiom2 = factory.getOWLSubClassOfAxiom(middle, y);
-                Set<OWLAxiom> axioms = new HashSet<OWLAxiom>();
+                Set<OWLAxiom> axioms = new HashSet<>();
                 axioms.add(axiom1);
                 axioms.add(axiom2);
                 return axioms;

@@ -27,25 +27,28 @@ import org.semanticweb.owlapi.model.OWLRestriction;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.util.OWLClassExpressionVisitorAdapter;
 
-/** @author Nick Drummond, The University Of Manchester, Bio Health Informatics
- *         Group, Date: Jul 12, 2011 */
+/**
+ * @author Nick Drummond, The University Of Manchester, Bio Health Informatics
+ *         Group, Date: Jul 12, 2011
+ */
 class RestrictionVisitor extends OWLClassExpressionVisitorAdapter {
+
     protected final OWLReasoner r;
     protected final OWLPropertyExpression prop;
     protected final Set<OWLPropertyExpression> props;
     private final Class<? extends OWLRestriction> type;
-    final Set<OWLRestriction> restrs = new HashSet<OWLRestriction>();
+    final Set<OWLRestriction> restrs = new HashSet<>();
 
     RestrictionVisitor(OWLReasoner r, OWLPropertyExpression prop,
             Class<? extends OWLRestriction> type) {
         this.r = r;
         this.prop = prop;
         this.type = type;
-        props = new HashSet<OWLPropertyExpression>();
+        props = new HashSet<>();
         props.add(prop);
         if (prop instanceof OWLObjectProperty) {
-            props.addAll(r.getSubObjectProperties((OWLObjectProperty) prop, false)
-                    .getFlattened());
+            props.addAll(r.getSubObjectProperties((OWLObjectProperty) prop,
+                    false).getFlattened());
         } else if (prop instanceof OWLDataProperty) {
             props.addAll(r.getSubDataProperties((OWLDataProperty) prop, false)
                     .getFlattened());

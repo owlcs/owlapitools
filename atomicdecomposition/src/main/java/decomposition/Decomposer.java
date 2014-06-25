@@ -13,22 +13,25 @@ import uk.ac.manchester.cs.owlapi.modularity.ModuleType;
 
 /** atomical decomposer of the ontology */
 public class Decomposer {
+
     /** atomic structure to build */
     private AtomList atomList = null;
     /** modularizer to build modules */
     private Modularizer modularizer;
     /** tautologies of the ontology */
-    private List<AxiomWrapper> tautologies = new ArrayList<AxiomWrapper>();
+    private List<AxiomWrapper> tautologies = new ArrayList<>();
     /** fake atom that represents the whole ontology */
     private OntologyAtom rootAtom = null;
     /** module type for current AOS creation */
     private ModuleType type;
     private List<AxiomWrapper> axioms;
 
-    /** @param axioms
-     *            axiom wrappers to decompose
+    /**
+     * @param axioms
+     *        axiom wrappers to decompose
      * @param c
-     *            locality checker to use */
+     *        locality checker to use
+     */
     public Decomposer(List<AxiomWrapper> axioms, LocalityChecker c) {
         this.axioms = axioms;
         modularizer = new Modularizer(c);
@@ -47,15 +50,18 @@ public class Decomposer {
         }
     }
 
-    /** remove tautologies (axioms that are always local) from the ontology
-     * temporarily */
+    /**
+     * remove tautologies (axioms that are always local) from the ontology
+     * temporarily
+     */
     private void removeTautologies() {
         // we might use it for another decomposition
         tautologies.clear();
         for (AxiomWrapper p : axioms) {
             if (p.isUsed()) {
                 // check whether an axiom is local wrt its own signature
-                modularizer.extract(p, new Signature(p.getAxiom().getSignature()), type);
+                modularizer.extract(p, new Signature(p.getAxiom()
+                        .getSignature()), type);
                 if (modularizer.isTautology(p.getAxiom(), type)) {
                     tautologies.add(p);
                     p.setUsed(false);
@@ -69,12 +75,14 @@ public class Decomposer {
         return tautologies;
     }
 
-    /** @param sig
-     *            signature
+    /**
+     * @param sig
+     *        signature
      * @param parent
-     *            parent atom
+     *        parent atom
      * @return module for given axiom AX; use parent atom's module as a base for
-     *         the module search */
+     *         the module search
+     */
     private OntologyAtom buildModule(Signature sig, OntologyAtom parent) {
         // build a module for a given signature
         modularizer.extract(parent.getModule(), sig, type);
@@ -94,12 +102,14 @@ public class Decomposer {
         return atom;
     }
 
-    /** @param ax
-     *            axiom
+    /**
+     * @param ax
+     *        axiom
      * @param parent
-     *            parent atom
+     *        parent atom
      * @return create atom for given axiom AX; use parent atom's module as a
-     *         base for the module search */
+     *         base for the module search
+     */
     private OntologyAtom createAtom(AxiomWrapper ax, OntologyAtom parent) {
         // check whether axiom already has an atom
         OntologyAtom atom = ax.getAtom();
@@ -133,9 +143,11 @@ public class Decomposer {
         return atomList;
     }
 
-    /** @param t
-     *            module type
-     * @return the atomic structure for given module type T */
+    /**
+     * @param t
+     *        module type
+     * @return the atomic structure for given module type T
+     */
     public AtomList getAOS(ModuleType t) {
         // remember the type of the module
         type = t;
@@ -147,7 +159,7 @@ public class Decomposer {
         removeTautologies();
         // init the root atom
         rootAtom = new OntologyAtom();
-        rootAtom.setModule(new HashSet<AxiomWrapper>(axioms));
+        rootAtom.setModule(new HashSet<>(axioms));
         // build the "bottom" atom for an empty signature
         OntologyAtom bottomAtom = buildModule(new Signature(), rootAtom);
         if (bottomAtom != null) {
@@ -167,18 +179,21 @@ public class Decomposer {
         return atomList;
     }
 
-    /** @param signature
-     *            the signature to use
+    /**
+     * @param signature
+     *        the signature to use
      * @param moduletype
-     *            the module type
-     * @return a set of axioms that corresponds to the atom with the id INDEX */
-    public Set<OWLAxiom> getNonLocal(Set<OWLEntity> signature, ModuleType moduletype) {
+     *        the module type
+     * @return a set of axioms that corresponds to the atom with the id INDEX
+     */
+    public Set<OWLAxiom> getNonLocal(Set<OWLEntity> signature,
+            ModuleType moduletype) {
         // init signature
         Signature sig = new Signature(signature);
         sig.setLocality(false);
         // do check
         modularizer.getLocalityChecker().setSignatureValue(sig);
-        Set<OWLAxiom> result = new HashSet<OWLAxiom>();
+        Set<OWLAxiom> result = new HashSet<>();
         for (AxiomWrapper p : axioms) {
             if (!modularizer.getLocalityChecker().local(p.getAxiom())) {
                 result.add(p.getAxiom());
@@ -187,13 +202,15 @@ public class Decomposer {
         return result;
     }
 
-    /** @param signature
-     *            the signature to use
+    /**
+     * @param signature
+     *        the signature to use
      * @param moduletype
-     *            module type
+     *        module type
      * @param useSemantics
-     *            true if semantic locality should be used
-     * @return a set of axioms that corresponds to the atom with the id INDEX */
+     *        true if semantic locality should be used
+     * @return a set of axioms that corresponds to the atom with the id INDEX
+     */
     public Collection<AxiomWrapper> getModule(Set<OWLEntity> signature,
             boolean useSemantics, ModuleType moduletype) {
         // init signature

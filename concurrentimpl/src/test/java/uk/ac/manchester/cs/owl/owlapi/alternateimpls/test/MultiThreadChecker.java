@@ -52,6 +52,7 @@ import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("javadoc")
 public class MultiThreadChecker {
+
     public static final int defaultRep = 10;
     protected int rep = defaultRep;
     protected final PrintStream p;
@@ -71,11 +72,12 @@ public class MultiThreadChecker {
 
     public void check(final TestMultithreadCallBack cb) {
         p.println("MultiThreadChecker.check() " + cb.getId());
-        final ConcurrentLinkedQueue<Long> results = new ConcurrentLinkedQueue<Long>();
+        final ConcurrentLinkedQueue<Long> results = new ConcurrentLinkedQueue<>();
         final long start = System.currentTimeMillis();
         ExecutorService service = Executors.newFixedThreadPool(rep);
         for (int i = 0; i < rep; i++) {
             service.execute(new Runnable() {
+
                 @Override
                 public void run() {
                     for (int j = 0; j < rep; j++) {
@@ -104,9 +106,10 @@ public class MultiThreadChecker {
 
     protected void printout(final TestMultithreadCallBack cb, long start,
             ConcurrentLinkedQueue<Long> results) {
-        List<Object> list = new ArrayList<Object>();
+        List<Object> list = new ArrayList<>();
         list.addAll(Arrays.asList(results.toArray()));
         Collections.sort(list, new Comparator<Object>() {
+
             @Override
             public int compare(Object o1, Object o2) {
                 return ((Long) o1).compareTo((Long) o2);
@@ -118,7 +121,8 @@ public class MultiThreadChecker {
         }
         int expected = rep * rep;
         p.println(cb.getId() + ": elapsed time (ms): " + (end - start));
-        p.println("Successful threads: " + list.size() + "\t expected: " + expected);
+        p.println("Successful threads: " + list.size() + "\t expected: "
+                + expected);
         successful = list.size() == expected;
     }
 

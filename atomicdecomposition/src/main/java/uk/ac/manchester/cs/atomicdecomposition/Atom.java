@@ -9,29 +9,34 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 /** An atom in the atomic decomposition */
 public class Atom {
+
     private final Collection<OWLAxiom> axioms;
     private List<OWLEntity> signature;
     private Collection<OWLEntity> label;
     private int hashcode;
 
-    /** @param ax
-     *            axiom
-     * @return true if ax is in this atom */
+    /**
+     * @param ax
+     *        axiom
+     * @return true if ax is in this atom
+     */
     public boolean contains(OWLAxiom ax) {
         return axioms.contains(ax);
     }
 
     private void initSignature() {
         if (signature == null) {
-            signature = new ArrayList<OWLEntity>();
+            signature = new ArrayList<>();
             for (OWLAxiom ax : axioms) {
                 signature.addAll(ax.getSignature());
             }
         }
     }
 
-    /** @param axioms
-     *            build an atom out of a set of axioms */
+    /**
+     * @param axioms
+     *        build an atom out of a set of axioms
+     */
     public Atom(Collection<OWLAxiom> axioms) {
         this.axioms = axioms;
         hashcode = this.axioms.hashCode();
@@ -53,8 +58,10 @@ public class Atom {
         return label;
     }
 
-    /** @param labelSignature
-     *            the label for the atom */
+    /**
+     * @param labelSignature
+     *        the label for the atom
+     */
     public void setLabel(Collection<OWLEntity> labelSignature) {
         label = labelSignature;
     }

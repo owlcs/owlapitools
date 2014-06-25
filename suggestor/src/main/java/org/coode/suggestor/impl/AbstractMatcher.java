@@ -38,16 +38,15 @@ abstract class AbstractMatcher<R extends OWLPropertyRange, F extends R, P extend
     @Override
     public final NodeSet<F> getLeaves(OWLClassExpression c, P p, R start,
             boolean direct) {
-        Set<Node<F>> nodes = new HashSet<Node<F>>();
+        Set<Node<F>> nodes = new HashSet<>();
         if (isMatch(c, p, start)) {
             for (Node<F> sub : getDirectSubs(start)) {
                 nodes.addAll(getLeaves(c, p, sub.getRepresentativeElement(),
                         direct).getNodes());
             }
             if (!direct || nodes.isEmpty() && !start.isTopEntity()) {
-                nodes.add(getEquivalents(start)); // non-optimal as we already
-                                                  // had the node before
-                                                  // recursing
+                nodes.add(getEquivalents(start));
+                // non-optimal as we already had the node before recursing
             }
         }
         return createNodeSet(nodes);
@@ -56,7 +55,7 @@ abstract class AbstractMatcher<R extends OWLPropertyRange, F extends R, P extend
     @Override
     public final NodeSet<F> getRoots(OWLClassExpression c, P p, R start,
             boolean direct) {
-        Set<Node<F>> nodes = new HashSet<Node<F>>();
+        Set<Node<F>> nodes = new HashSet<>();
         for (Node<F> sub : getDirectSubs(start)) {
             if (isMatch(c, p, sub.getRepresentativeElement())) {
                 nodes.add(sub);

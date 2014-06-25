@@ -88,13 +88,13 @@ public class BoxExtractor extends OWLObjectVisitorExAdapter<Set<OWLAxiom>>
     public BoxExtractor(@Nonnull Collection<AxiomType<?>> types,
             @Nonnull Imports importsClosure) {
         super(CollectionFactory.<OWLAxiom> emptySet());
-        this.types = new ArrayList<AxiomType<?>>(types);
+        this.types = new ArrayList<>(types);
         closure = importsClosure;
     }
 
     @Override
     public Set<OWLAxiom> visit(OWLOntology ontology) {
-        Set<OWLAxiom> toReturn = new HashSet<OWLAxiom>();
+        Set<OWLAxiom> toReturn = new HashSet<>();
         for (AxiomType<?> t : types) {
             assert t != null;
             toReturn.addAll(ontology.getAxioms(t, closure));

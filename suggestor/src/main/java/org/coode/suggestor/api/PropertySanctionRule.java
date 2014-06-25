@@ -9,35 +9,48 @@
  */
 package org.coode.suggestor.api;
 
+import javax.annotation.Nonnull;
+
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 
-/** <p>
+/**
+ * <p>
  * A pluggable way of determining if a property is "interesting" for a given
  * class.
- * </p> */
+ * </p>
+ */
 public interface PropertySanctionRule {
-    /** Called by the suggestor when the rule has been registered (in case the
+
+    /**
+     * Called by the suggestor when the rule has been registered (in case the
      * rule requires suggestor methods)
      * 
      * @param ps
-     *            The PropertySuggestor */
-    void setSuggestor(PropertySuggestor ps);
+     *        The PropertySuggestor
+     */
+    void setSuggestor(@Nonnull PropertySuggestor ps);
 
-    /** @param c
-     *            a class expression
+    /**
+     * @param c
+     *        a class expression
      * @param p
-     *            an object property
+     *        an object property
      * @return true if p is an "interesting" property to use in the axiom
-     *         SubClassOf(c, p some x) */
-    boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p);
+     *         SubClassOf(c, p some x)
+     */
+    boolean meetsSanction(@Nonnull OWLClassExpression c,
+            @Nonnull OWLObjectPropertyExpression p);
 
-    /** @param c
-     *            a class expression
+    /**
+     * @param c
+     *        a class expression
      * @param p
-     *            a data property
+     *        a data property
      * @return true if p is an "interesting" property to use in the axiom
-     *         SubClassOf(c, p some x) */
-    boolean meetsSanction(OWLClassExpression c, OWLDataProperty p);
+     *         SubClassOf(c, p some x)
+     */
+    boolean meetsSanction(@Nonnull OWLClassExpression c,
+            @Nonnull OWLDataProperty p);
 }

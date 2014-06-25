@@ -5,12 +5,15 @@ import java.util.List;
 
 /** a multimap for int to collection of int values. */
 public class ArrayIntMap {
-    private final List<FastSet> map = new ArrayList<FastSet>();
 
-    /** @param key
-     *            key
+    private final List<FastSet> map = new ArrayList<>();
+
+    /**
+     * @param key
+     *        key
      * @param value
-     *            value */
+     *        value
+     */
     public void put(int key, int value) {
         if (key >= map.size()) {
             while (key >= map.size()) {
@@ -25,12 +28,14 @@ public class ArrayIntMap {
         set.add(value);
     }
 
-    /** returns a mutable set of values connected to the key; if no value is
+    /**
+     * returns a mutable set of values connected to the key; if no value is
      * connected, returns an immutable empty set
      * 
      * @param key
-     *            key
-     * @return the set of values connected with the key */
+     *        key
+     * @return the set of values connected with the key
+     */
     public FastSet get(int key) {
         if (key < map.size()) {
             FastSet collection = map.get(key);
@@ -43,7 +48,7 @@ public class ArrayIntMap {
 
     /** @return the set of keys */
     public List<Integer> keySet() {
-        List<Integer> toReturn = new ArrayList<Integer>();
+        List<Integer> toReturn = new ArrayList<>();
         for (int i = 0; i < map.size(); i++) {
             if (map.get(i) != null) {
                 toReturn.add(i);
@@ -54,7 +59,7 @@ public class ArrayIntMap {
 
     /** @return all values in the map */
     public List<Integer> getAllValues() {
-        List<Integer> list = new ArrayList<Integer>();
+        List<Integer> list = new ArrayList<>();
         for (FastSet f : map) {
             if (f != null) {
                 for (int i = 0; i < f.size(); i++) {
@@ -65,9 +70,11 @@ public class ArrayIntMap {
         return list;
     }
 
-    /** @param k
-     *            key
-     * @return true if k is a key for the map */
+    /**
+     * @param k
+     *        key
+     * @return true if k is a key for the map
+     */
     public boolean containsKey(int k) {
         return k < map.size() && map.get(k) != null;
     }

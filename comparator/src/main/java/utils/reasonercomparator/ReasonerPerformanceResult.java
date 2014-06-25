@@ -7,54 +7,65 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 /** The Class ReasonerPerformanceResult. */
 public class ReasonerPerformanceResult {
+
     /** The reasoner name. */
     private String reasonerName;
     /** The columns. */
-    private Map<MethodNames, Column> columns = new HashMap<MethodNames, Column>();
+    private Map<MethodNames, Column> columns = new HashMap<>();
 
-    /** Instantiates a new reasoner performance result.
+    /**
+     * Instantiates a new reasoner performance result.
      * 
      * @param name
-     *            the name */
+     *        the name
+     */
     public ReasonerPerformanceResult(String name) {
         reasonerName = name;
     }
 
-    /** Instantiates a new reasoner performance result.
+    /**
+     * Instantiates a new reasoner performance result.
      * 
      * @param r
-     *            the r */
+     *        the r
+     */
     public ReasonerPerformanceResult(OWLReasoner r) {
         reasonerName = r.getClass().getSimpleName()
                 .replace("FaCTPlusPlusReasoner", "fact")
                 .replace("JFactReasoner", "jfact");
     }
 
-    /** Put.
+    /**
+     * Put.
      * 
      * @param m
-     *            the m
+     *        the m
      * @param c
-     *            the c */
+     *        the c
+     */
     public void put(MethodNames m, Column c) {
         columns.put(m, c);
     }
 
-    /** Adds the.
+    /**
+     * Adds the.
      * 
      * @param init
-     *            the init
+     *        the init
      * @param elapsed
-     *            the elapsed */
+     *        the elapsed
+     */
     public void add(MethodNames init, long elapsed) {
         columns.get(init).values.add(elapsed);
     }
 
-    /** Average.
+    /**
+     * Average.
      * 
      * @param m
-     *            the m
-     * @return the long */
+     *        the m
+     * @return the long
+     */
     public long average(MethodNames m) {
         Column c = columns.get(m);
         long sum = 0;
@@ -66,11 +77,13 @@ public class ReasonerPerformanceResult {
         return Math.round(average);
     }
 
-    /** Calls.
+    /**
+     * Calls.
      * 
      * @param m
-     *            the m
-     * @return the int */
+     *        the m
+     * @return the int
+     */
     public int calls(MethodNames m) {
         return columns.get(m).values.size();
     }

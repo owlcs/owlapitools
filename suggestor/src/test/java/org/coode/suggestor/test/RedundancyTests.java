@@ -58,8 +58,7 @@ public class RedundancyTests extends AbstractSuggestorTest {
                 b2, a3, b1, a1);
         for (int i = 0; i < 25; i++) {
             System.out.println(data);
-            Set<OWLClassExpression> test = new LinkedHashSet<OWLClassExpression>(
-                    data);
+            Set<OWLClassExpression> test = new LinkedHashSet<>(data);
             Set<OWLClassExpression> result = helper
                     .filterClassExpressions(test);
             assertEquals(
@@ -95,7 +94,7 @@ public class RedundancyTests extends AbstractSuggestorTest {
         if (r.getBufferingMode().equals(BufferingMode.BUFFERING)) {
             r.flush();
         }
-        Set<OWLClassExpression> expressions = new HashSet<OWLClassExpression>();
+        Set<OWLClassExpression> expressions = new HashSet<>();
         expressions.add(pSomeA);
         expressions.add(qSomeA); // redundant as p some a is more specific
         expressions.add(pSomeB); // redundant as p some a is more specific

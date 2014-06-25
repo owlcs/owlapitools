@@ -87,7 +87,7 @@ public class ThreadedReasoner implements OWLReasoner {
     }
 
     @Override
-    public List<OWLOntologyChange<?>> getPendingChanges() {
+    public List<OWLOntologyChange> getPendingChanges() {
         return delegate.getPendingChanges();
     }
 

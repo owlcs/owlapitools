@@ -24,6 +24,7 @@ import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLDataSomeValuesFrom;
 import org.semanticweb.owlapi.model.OWLDatatype;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.parameters.Imports;
@@ -53,9 +54,9 @@ public class ReasonerHelper {
     }
 
     /** @return referenced properties */
-    public Set<OWLObjectPropertyExpression> getReferencedObjectProperties() {
+    public Set<OWLObjectProperty> getReferencedObjectProperties() {
         final OWLOntology root = r.getRootOntology();
-        Set<OWLObjectPropertyExpression> p = new HashSet<OWLObjectPropertyExpression>(
+        Set<OWLObjectProperty> p = new HashSet<>(
                 root.getObjectPropertiesInSignature(Imports.INCLUDED));
         p.add(df.getOWLTopObjectProperty());
         p.add(df.getOWLBottomObjectProperty());
@@ -65,7 +66,7 @@ public class ReasonerHelper {
     /** @return referenced properties */
     public Set<OWLDataProperty> getReferencedDataProperties() {
         final OWLOntology root = r.getRootOntology();
-        Set<OWLDataProperty> p = new HashSet<OWLDataProperty>(
+        Set<OWLDataProperty> p = new HashSet<>(
                 root.getDataPropertiesInSignature(Imports.INCLUDED));
         p.add(df.getOWLTopDataProperty());
         p.add(df.getOWLBottomDataProperty());
@@ -79,8 +80,8 @@ public class ReasonerHelper {
      *        class 2
      * @return true if cls1 is a subclass of cls2
      */
-    public boolean isDescendantOf(OWLClassExpression cls1,
-            OWLClassExpression cls2) {
+    public boolean isDescendantOf(@Nonnull OWLClassExpression cls1,
+            @Nonnull OWLClassExpression cls2) {
         // return isAncestorOf(cls2, cls1);
         if (!cls1.isAnonymous()) {
             return r.getSubClasses(cls2, false).containsEntity(
@@ -96,8 +97,8 @@ public class ReasonerHelper {
      *        class 2
      * @return true if cls2 is a subclass of cls1
      */
-    public boolean
-            isAncestorOf(OWLClassExpression cls1, OWLClassExpression cls2) {
+    public boolean isAncestorOf(@Nonnull OWLClassExpression cls1,
+            @Nonnull OWLClassExpression cls2) {
         if (!cls1.isAnonymous()) {
             return r.getSuperClasses(cls2, false).containsEntity(
                     cls1.asOWLClass());
@@ -112,11 +113,11 @@ public class ReasonerHelper {
      */
     public Set<OWLClassExpression> filterClassExpressions(
             Set<OWLClassExpression> clses) {
-        Set<OWLClassExpression> nonRedundantSet = new HashSet<OWLClassExpression>();
-        List<OWLClassExpression> clsList = new ArrayList<OWLClassExpression>(
-                clses);
+        Set<OWLClassExpression> nonRedundantSet = new HashSet<>();
+        List<OWLClassExpression> clsList = new ArrayList<>(clses);
         for (int i = 0; i < clsList.size(); i++) {
             final OWLClassExpression head = clsList.get(i);
+            assert head != null;
             if (!containsSubclass(clsList.subList(i + 1, clsList.size()), head)
                     && !containsSubclass(nonRedundantSet, head)) {
                 nonRedundantSet.add(head);
@@ -132,10 +133,11 @@ public class ReasonerHelper {
      *        class
      * @return true if one of potentialSubs is a subclass of cls
      */
-    public boolean
-            containsSubclass(Collection<OWLClassExpression> potentialSubs,
-                    OWLClassExpression cls) {
+    public boolean containsSubclass(
+            Collection<OWLClassExpression> potentialSubs,
+            @Nonnull OWLClassExpression cls) {
         for (OWLClassExpression potentialSub : potentialSubs) {
+            assert potentialSub != null;
             if (isDescendantOf(potentialSub, cls)) {
                 return true;
             }
@@ -162,7 +164,8 @@ public class ReasonerHelper {
      *        property
      * @return true if c is a subclass of max 1 p
      */
-    public boolean isLocallyFunctional(OWLClassExpression c, OWLDataProperty p) {
+    public boolean isLocallyFunctional(OWLClassExpression c,
+            @Nonnull OWLDataProperty p) {
         return isDescendantOf(c, df.getOWLDataMaxCardinality(1, p));
     }
 
@@ -180,9 +183,9 @@ public class ReasonerHelper {
     public OWLClassExpression getGlobalAssertedRange(
             @Nonnull OWLObjectPropertyExpression p) {
         OWLClassExpression range = df.getOWLThing();
-        Set<OWLClassExpression> assertedRanges = new HashSet<OWLClassExpression>();
-        Set<OWLObjectPropertyExpression> ancestors = new HashSet<OWLObjectPropertyExpression>(
-                r.getSuperObjectProperties(p, false).getFlattened());
+        Set<OWLClassExpression> assertedRanges = new HashSet<>();
+        Set<OWLObjectPropertyExpression> ancestors = new HashSet<>(r
+                .getSuperObjectProperties(p, false).getFlattened());
         ancestors.add(p);
         for (OWLOntology ont : r.getRootOntology().getImportsClosure()) {
             for (OWLObjectPropertyExpression ancestor : ancestors) {
@@ -219,8 +222,8 @@ public class ReasonerHelper {
      */
     public OWLDataRange getGlobalAssertedRange(OWLDataProperty p) {
         OWLDataRange range = df.getTopDatatype();
-        Set<OWLDataRange> assertedRanges = new HashSet<OWLDataRange>();
-        Set<OWLDataProperty> ancestors = new HashSet<OWLDataProperty>(r
+        Set<OWLDataRange> assertedRanges = new HashSet<>();
+        Set<OWLDataProperty> ancestors = new HashSet<>(r
                 .getSuperDataProperties(p, false).getFlattened());
         ancestors.add(p);
         for (OWLOntology ont : r.getRootOntology().getImportsClosure()) {
@@ -277,13 +280,14 @@ public class ReasonerHelper {
      * @throws RuntimeException
      *         if no suitable property can be found
      */
+    @Nonnull
     public NodeSet<OWLDatatype> getSubtypes(OWLDataRange range) {
         OWLDataPropertyExpression p = getCandidatePropForRangeSubsumptionCheck(range);
         if (p == null) {
             throw new RuntimeException(
                     "Cannot find a candidate property for datatype subsumption checking");
         }
-        Set<Node<OWLDatatype>> subs = new HashSet<Node<OWLDatatype>>();
+        Set<Node<OWLDatatype>> subs = new HashSet<>();
         OWLDataSomeValuesFrom pSomeRange = df
                 .getOWLDataSomeValuesFrom(p, range);
         for (OWLDatatype dt : getDatatypesInSignature()) {
@@ -316,13 +320,14 @@ public class ReasonerHelper {
      * @throws RuntimeException
      *         if no suitable property can be found
      */
+    @Nonnull
     public Node<OWLDatatype> getEquivalentTypes(OWLDataRange range) {
         OWLDataPropertyExpression p = getCandidatePropForRangeSubsumptionCheck(range);
         if (p == null) {
             throw new RuntimeException(
                     "Cannot find a candidate property for datatype subsumption checking");
         }
-        Set<OWLDatatype> subs = new HashSet<OWLDatatype>();
+        Set<OWLDatatype> subs = new HashSet<>();
         if (range.isDatatype()) {
             subs.add(range.asOWLDatatype());
         }
@@ -377,7 +382,7 @@ public class ReasonerHelper {
 
     /** @return all datatypes in the ontology import closure */
     public Set<OWLDatatype> getDatatypesInSignature() {
-        Set<OWLDatatype> dts = new HashSet<OWLDatatype>();
+        Set<OWLDatatype> dts = new HashSet<>();
         for (OWLOntology ont : r.getRootOntology().getImportsClosure()) {
             dts.addAll(ont.getDatatypesInSignature());
         }

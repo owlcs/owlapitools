@@ -39,7 +39,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
     protected final OWLReasoner r;
     protected final OWLDataFactory df;
     protected final ReasonerHelper helper;
-    private final Set<FillerSanctionRule> sanctioningRules = new HashSet<FillerSanctionRule>();
+    private final Set<FillerSanctionRule> sanctioningRules = new HashSet<>();
     private final AbstractOPMatcher currentOPMatcher = new AbstractOPMatcher() {
 
         @Override
@@ -192,7 +192,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
     public Set<OWLClass> getSanctionedFillers(OWLClassExpression c,
             OWLObjectPropertyExpression p, OWLClassExpression root,
             boolean direct) {
-        Set<OWLClass> fillers = new HashSet<OWLClass>();
+        Set<OWLClass> fillers = new HashSet<>();
         for (OWLClass f : getPossibleNamedFillers(c, p, root, direct)
                 .getFlattened()) {
             if (meetsSanctions(c, p, f)) {
@@ -291,7 +291,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
         @Override
         public final NodeSet<F> getLeaves(OWLClassExpression c, P p, R start,
                 boolean direct) {
-            Set<Node<F>> nodes = new HashSet<Node<F>>();
+            Set<Node<F>> nodes = new HashSet<>();
             if (isMatch(c, p, start)) {
                 for (Node<F> sub : getDirectSubs(start)) {
                     nodes.addAll(getLeaves(c, p,
@@ -308,7 +308,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
         @Override
         public final NodeSet<F> getRoots(OWLClassExpression c, P p, R start,
                 boolean direct) {
-            Set<Node<F>> nodes = new HashSet<Node<F>>();
+            Set<Node<F>> nodes = new HashSet<>();
             for (Node<F> sub : getDirectSubs(start)) {
                 if (isMatch(c, p, sub.getRepresentativeElement())) {
                     nodes.add(sub);
@@ -322,10 +322,13 @@ class FillerSuggestorImpl implements FillerSuggestor {
             return createNodeSet(nodes);
         }
 
+        @Nonnull
         protected abstract NodeSet<F> getDirectSubs(@Nonnull R f);
 
+        @Nonnull
         protected abstract Node<F> getEquivalents(@Nonnull R f);
 
+        @Nonnull
         protected abstract NodeSet<F>
                 createNodeSet(@Nonnull Set<Node<F>> nodes);
     }
