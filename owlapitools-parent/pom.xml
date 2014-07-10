@@ -51,11 +51,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>net.sourceforge.owlapi</groupId>
-			<artifactId>owlapi-rio</artifactId>
-			<version>4.0.0-RC1</version>
-		</dependency>
-		<dependency>
-			<groupId>net.sourceforge.owlapi</groupId>
 			<artifactId>owlapi-apibinding</artifactId>
 			<version>4.0.0-RC1</version>
 		</dependency>
