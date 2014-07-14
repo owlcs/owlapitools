@@ -38,12 +38,12 @@
  */
 package org.coode.owlapi.obo12.parser;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.semanticweb.owlapi.io.OWLParser;
 import org.semanticweb.owlapi.io.OWLParserFactory;
 import org.semanticweb.owlapi.model.OWLDocumentFormatFactory;
-import org.semanticweb.owlapi.util.CollectionFactory;
 
 /**
  * Author: Matthew Horridge<br>
@@ -68,7 +68,7 @@ public class OBO12ParserFactory implements OWLParserFactory {
 
     @Override
     public List<String> getMIMETypes() {
-        return CollectionFactory.emptyList();
+        return Collections.emptyList();
     }
 
     @Override

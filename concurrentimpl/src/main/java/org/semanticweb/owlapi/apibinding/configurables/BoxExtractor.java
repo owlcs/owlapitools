@@ -40,6 +40,7 @@ package org.semanticweb.owlapi.apibinding.configurables;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,7 +51,6 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.parameters.Imports;
-import org.semanticweb.owlapi.util.CollectionFactory;
 import org.semanticweb.owlapi.util.OWLObjectVisitorExAdapter;
 
 /**
@@ -87,7 +87,7 @@ public class BoxExtractor extends OWLObjectVisitorExAdapter<Set<OWLAxiom>>
      */
     public BoxExtractor(@Nonnull Collection<AxiomType<?>> types,
             @Nonnull Imports importsClosure) {
-        super(CollectionFactory.<OWLAxiom> emptySet());
+        super(Collections.<OWLAxiom> emptySet());
         this.types = new ArrayList<>(types);
         closure = importsClosure;
     }
