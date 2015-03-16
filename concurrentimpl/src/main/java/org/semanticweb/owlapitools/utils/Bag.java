@@ -1,4 +1,4 @@
-package utils;
+package org.semanticweb.owlapitools.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

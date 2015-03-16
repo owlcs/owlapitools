@@ -1,13 +1,13 @@
-package decomposition;
-
-import static org.semanticweb.owlapi.model.AxiomType.AXIOM_TYPES;
-
-import java.util.ArrayList;
-import java.util.List;
+package org.semanticweb.owlapitools.decomposition;
 
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.semanticweb.owlapi.model.AxiomType.AXIOM_TYPES;
 
 /**
  * A filter for axioms

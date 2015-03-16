@@ -1,4 +1,4 @@
-package utils.reasonercomparator;
+package org.semanticweb.owlapitools.utils.reasonercomparator;
 
 /** methods to measure */
 public enum MethodNames {

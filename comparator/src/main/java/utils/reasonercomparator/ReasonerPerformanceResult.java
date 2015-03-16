@@ -1,4 +1,4 @@
-package utils.reasonercomparator;
+package org.semanticweb.owlapitools.utils.reasonercomparator;
 
 import java.util.HashMap;
 import java.util.Map;

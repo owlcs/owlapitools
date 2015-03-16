@@ -1,4 +1,4 @@
-package decomposition.test;
+package org.semanticweb.owlapitools.decomposition.test;
 
 import static org.junit.Assert.assertEquals;
 
@@ -8,8 +8,12 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.semanticweb.owlapitools.decomposition.AxiomWrapper;
+import org.semanticweb.owlapitools.decomposition.Signature;
+import org.semanticweb.owlapitools.decomposition.SyntacticLocalityChecker;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
@@ -26,10 +30,6 @@ import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.semanticweb.owlapi.model.SWRLAtom;
-
-import decomposition.AxiomWrapper;
-import decomposition.Signature;
-import decomposition.SyntacticLocalityChecker;
 
 @SuppressWarnings("javadoc")
 public class SyntacticLocalityTestCase {
@@ -478,7 +478,7 @@ public class SyntacticLocalityTestCase {
     public void shouldResetSignature() {
         OWLSubClassOfAxiom ax = df.getOWLSubClassOfAxiom(a, b);
         testSubject.preprocessOntology(Arrays.asList(new AxiomWrapper(ax)));
-        assertEquals(ax.getSignature(), testSubject.getSignature()
+        Assert.assertEquals(ax.getSignature(), testSubject.getSignature()
                 .getSignature());
     }
 

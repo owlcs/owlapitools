@@ -1,29 +1,15 @@
 package uk.ac.manchester.cs.atomicdecomposition;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+import org.semanticweb.owlapitools.decomposition.*;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
-
 import uk.ac.manchester.cs.chainsaw.FastSet;
 import uk.ac.manchester.cs.owlapi.modularity.ModuleType;
 
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
-
-import decomposition.AxiomSelector;
-import decomposition.AxiomWrapper;
-import decomposition.Decomposer;
-import decomposition.IdentityMultiMap;
-import decomposition.OntologyAtom;
-import decomposition.SyntacticLocalityChecker;
+import java.util.*;
 
 /** atomc decomposition implementation */
 public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {

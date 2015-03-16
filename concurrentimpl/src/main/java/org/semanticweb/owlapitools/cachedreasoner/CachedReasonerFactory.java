@@ -1,4 +1,4 @@
-package utils.cachedreasoner;
+package org.semanticweb.owlapitools.cachedreasoner;
 
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.IllegalConfigurationException;

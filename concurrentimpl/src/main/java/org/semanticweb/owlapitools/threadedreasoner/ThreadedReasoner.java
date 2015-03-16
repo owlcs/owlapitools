@@ -6,7 +6,7 @@
  * copyright 2012, Ignazio Palmisano, University of Manchester
  *
  */
-package utils.threadedreasoner;
+package org.semanticweb.owlapitools.threadedreasoner;
 
 import java.util.List;
 import java.util.Set;

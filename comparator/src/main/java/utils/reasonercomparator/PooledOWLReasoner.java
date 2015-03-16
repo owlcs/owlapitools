@@ -6,7 +6,7 @@
  * copyright 2012, Ignazio Palmisano, University of Manchester
  *
  */
-package utils.reasonercomparator;
+package org.semanticweb.owlapitools.utils.reasonercomparator;
 
 import java.util.ArrayList;
 import java.util.List;
