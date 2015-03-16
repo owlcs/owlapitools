@@ -1,7 +1,16 @@
 package org.semanticweb.owlapitools.decomposition.test;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
+import org.semanticweb.owlapitools.decomposition.AxiomWrapper;
+import org.semanticweb.owlapitools.decomposition.SemanticLocalityChecker;
+import org.semanticweb.owlapitools.decomposition.Signature;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,6 +39,7 @@ import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.semanticweb.owlapi.model.SWRLAtom;
 
 import org.semanticweb.owlapitools.decomposition.AxiomWrapper;
+import static org.junit.Assert.assertEquals;
 
 @Ignore
 @SuppressWarnings("javadoc")
