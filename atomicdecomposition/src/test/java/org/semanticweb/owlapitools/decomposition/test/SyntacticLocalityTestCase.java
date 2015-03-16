@@ -552,9 +552,7 @@ public class SyntacticLocalityTestCase {
     }
 
     private void test(OWLAxiom ax, boolean expected, OWLEntity... entities) {
-        set(entities);
-        boolean local = testSubject.local(ax);
-        assertEquals(expected, local);
+        test(ax, expected, false, entities);
     }
 
     private void test(OWLAxiom ax, boolean expected, boolean locality,
