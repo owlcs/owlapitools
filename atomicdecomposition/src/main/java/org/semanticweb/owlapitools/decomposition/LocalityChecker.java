@@ -1,4 +1,4 @@
-package decomposition;
+package org.semanticweb.owlapitools.decomposition;
 
 import java.util.Collection;
 

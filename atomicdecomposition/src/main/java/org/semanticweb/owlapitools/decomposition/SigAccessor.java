@@ -1,4 +1,4 @@
-package decomposition;
+package org.semanticweb.owlapitools.decomposition;
 
 import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.util.OWLObjectVisitorAdapter;

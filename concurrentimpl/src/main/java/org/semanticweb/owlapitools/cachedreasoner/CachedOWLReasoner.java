@@ -6,7 +6,7 @@
  * copyright 2012, Ignazio Palmisano, University of Manchester
  *
  */
-package utils.cachedreasoner;
+package org.semanticweb.owlapitools.cachedreasoner;
 
 import static org.semanticweb.owlapi.util.OWLAPIPreconditions.verifyNotNull;
 

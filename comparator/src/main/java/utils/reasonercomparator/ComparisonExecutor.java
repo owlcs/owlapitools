@@ -1,4 +1,4 @@
-package utils.reasonercomparator;
+package org.semanticweb.owlapitools.utils.reasonercomparator;
 
 import static org.junit.Assert.assertTrue;
 

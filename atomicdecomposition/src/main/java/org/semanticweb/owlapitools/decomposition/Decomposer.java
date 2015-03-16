@@ -1,4 +1,4 @@
-package decomposition;
+package org.semanticweb.owlapitools.decomposition;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,6 +13,7 @@ import uk.ac.manchester.cs.owlapi.modularity.ModuleType;
 
 /** atomical decomposer of the ontology */
 public class Decomposer {
+
     /** atomic structure to build */
     private AtomList atomList = null;
     /** modularizer to build modules */
@@ -27,7 +28,7 @@ public class Decomposer {
 
     /**
      * @param axioms
-     *            axiom wrappers to decompose
+     *        axiom wrappers to decompose
      * @param c
      *        locality checker to use
      */
@@ -76,9 +77,9 @@ public class Decomposer {
 
     /**
      * @param sig
-     *            signature
+     *        signature
      * @param parent
-     *            parent atom
+     *        parent atom
      * @return module for given axiom AX; use parent atom's module as a base for
      *         the module search
      */
@@ -103,9 +104,9 @@ public class Decomposer {
 
     /**
      * @param ax
-     *            axiom
+     *        axiom
      * @param parent
-     *            parent atom
+     *        parent atom
      * @return create atom for given axiom AX; use parent atom's module as a
      *         base for the module search
      */
@@ -144,7 +145,7 @@ public class Decomposer {
 
     /**
      * @param t
-     *            module type
+     *        module type
      * @return the atomic structure for given module type T
      */
     public AtomList getAOS(ModuleType t) {
@@ -180,9 +181,9 @@ public class Decomposer {
 
     /**
      * @param signature
-     *            the signature to use
+     *        the signature to use
      * @param moduletype
-     *            the module type
+     *        the module type
      * @return a set of axioms that corresponds to the atom with the id INDEX
      */
     public Set<OWLAxiom> getNonLocal(Set<OWLEntity> signature,
@@ -203,11 +204,11 @@ public class Decomposer {
 
     /**
      * @param signature
-     *            the signature to use
+     *        the signature to use
      * @param moduletype
-     *            module type
+     *        module type
      * @param useSemantics
-     *            true if semantic locality should be used
+     *        true if semantic locality should be used
      * @return a set of axioms that corresponds to the atom with the id INDEX
      */
     public Collection<AxiomWrapper> getModule(Set<OWLEntity> signature,

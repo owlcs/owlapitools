@@ -1,4 +1,4 @@
-package decomposition;
+package org.semanticweb.owlapitools.decomposition;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +13,9 @@ import java.util.Set;
  * @author ignazio
  */
 public class OntologyAtom {
+
     static Comparator<OntologyAtom> comparator = new Comparator<OntologyAtom>() {
+
         @Override
         public int compare(OntologyAtom arg0, OntologyAtom arg1) {
             return arg0.getId() - arg1.getId();
@@ -101,7 +103,7 @@ public class OntologyAtom {
      * get all the atoms the current one depends on; build this set if necessary
      * 
      * @param checked
-     *            atoms to check
+     *        atoms to check
      * @return all dependencies
      */
     public Set<OntologyAtom> getAllDepAtoms(Set<OntologyAtom> checked) {

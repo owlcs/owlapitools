@@ -1,4 +1,4 @@
-package decomposition;
+package org.semanticweb.owlapitools.decomposition;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -7,6 +7,7 @@ import java.util.Set;
 
 /** atomical ontology structure */
 public class AtomList {
+
     /** all the atoms */
     private List<OntologyAtom> atoms = new ArrayList<>();
 
@@ -28,7 +29,7 @@ public class AtomList {
 
     /**
      * @param index
-     *            index of the atom to retrieve
+     *        index of the atom to retrieve
      * @return atom with index
      */
     public OntologyAtom get(int index) {

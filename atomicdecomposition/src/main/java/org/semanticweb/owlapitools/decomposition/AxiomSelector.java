@@ -1,13 +1,13 @@
-package decomposition;
-
-import static org.semanticweb.owlapi.model.AxiomType.AXIOM_TYPES;
-
-import java.util.ArrayList;
-import java.util.List;
+package org.semanticweb.owlapitools.decomposition;
 
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.semanticweb.owlapi.model.AxiomType.AXIOM_TYPES;
 
 /**
  * A filter for axioms
@@ -18,7 +18,7 @@ public class AxiomSelector {
 
     /**
      * @param o
-     *            the ontology to filter
+     *        the ontology to filter
      * @return list of declarations and logical axioms
      */
     public static List<OWLAxiom> selectAxioms(OWLOntology o) {
@@ -37,7 +37,7 @@ public class AxiomSelector {
 
     /**
      * @param o
-     *            axioms to wrap
+     *        axioms to wrap
      * @return axioms wrapped as AxiomWrapper
      */
     public static List<AxiomWrapper> wrap(List<OWLAxiom> o) {

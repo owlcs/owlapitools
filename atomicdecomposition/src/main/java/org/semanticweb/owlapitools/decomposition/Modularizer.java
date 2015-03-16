@@ -1,4 +1,4 @@
-package decomposition;
+package org.semanticweb.owlapitools.decomposition;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -14,6 +14,7 @@ import uk.ac.manchester.cs.owlapi.modularity.ModuleType;
 
 /** class to create modules of an ontology wrt module type */
 public class Modularizer {
+
     /** shared signature signature */
     private Signature sig;
     /** internal syntactic locality checker */
@@ -56,7 +57,7 @@ public class Modularizer {
 
     /**
      * @param ax
-     *            axiom
+     *        axiom
      * @return true iff an AXiom is non-local
      */
     private boolean isNonLocal(OWLAxiom ax) {
@@ -65,7 +66,7 @@ public class Modularizer {
 
     /**
      * @param ax
-     *            axiom add an axiom if it is non-local (or if noCheck is true)
+     *        axiom add an axiom if it is non-local (or if noCheck is true)
      * @param noCheck
      *        true if locality check is not to be performed
      */
@@ -79,7 +80,7 @@ public class Modularizer {
      * add all the non-local axioms from given axiom-set AxSet
      * 
      * @param AxSet
-     *            collection of axioms
+     *        collection of axioms
      * @param noCheck
      *        true if locality check is not to be performed
      */
@@ -155,9 +156,9 @@ public class Modularizer {
 
     /**
      * @param ax
-     *            axiom
+     *        axiom
      * @param type
-     *            type
+     *        type
      * @return true iff the axiom AX is a tautology wrt given type
      */
     public boolean isTautology(OWLAxiom ax, ModuleType type) {
@@ -181,9 +182,9 @@ public class Modularizer {
 
     /**
      * @param axiom
-     *            axiom
+     *        axiom
      * @param signature
-     *            signature
+     *        signature
      * @param type
      *        type
      */
@@ -196,9 +197,9 @@ public class Modularizer {
      * extract module wrt SIGNATURE and TYPE from the set of axioms
      * 
      * @param axioms
-     *            axiom
+     *        axiom
      * @param signature
-     *            signature
+     *        signature
      * @param type
      *        type
      */

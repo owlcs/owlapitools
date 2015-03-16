@@ -1,4 +1,4 @@
-package utils;
+package org.semanticweb.owlapitools.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +29,7 @@ public class Bag<Type> {
 
     /**
      * @param t
-     *            instance to add to the bag
+     *        instance to add to the bag
      * @return new number of occurrences
      */
     public long add(Type t) {
@@ -45,7 +45,7 @@ public class Bag<Type> {
 
     /**
      * @param t
-     *            instance to check
+     *        instance to check
      * @return number of occurrences for t
      */
     public long check(Type t) {
@@ -58,12 +58,13 @@ public class Bag<Type> {
 
     /**
      * @param increasing
-     *            true for ascending sorting
+     *        true for ascending sorting
      * @return list of distinct instances
      */
     public List<Type> sortedList(final boolean increasing) {
         List<Type> toReturn = new ArrayList<>(map.keySet());
         Collections.sort(toReturn, new Comparator<Type>() {
+
             @Override
             public int compare(Type o1, Type o2) {
                 if (increasing) {

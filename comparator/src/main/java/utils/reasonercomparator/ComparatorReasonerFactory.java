@@ -6,7 +6,7 @@
  * copyright 2012, Ignazio Palmisano, University of Manchester
  *
  */
-package utils.reasonercomparator;
+package org.semanticweb.owlapitools.utils.reasonercomparator;
 
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.IllegalConfigurationException;

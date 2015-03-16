@@ -1,4 +1,4 @@
-package decomposition;
+package org.semanticweb.owlapitools.decomposition;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,6 +15,7 @@ import com.google.common.collect.Multimap;
  * @author ignazio
  */
 public class SigIndex {
+
     /** map between entities and axioms that contains them in their signature */
     private Multimap<OWLEntity, AxiomWrapper> Base = LinkedHashMultimap
             .create();
@@ -38,7 +39,7 @@ public class SigIndex {
      * add axiom AX to the non-local set with top-locality value TOP
      * 
      * @param ax
-     *            axiom
+     *        axiom
      * @param top
      *        top or bottom
      */
@@ -133,7 +134,7 @@ public class SigIndex {
      * signature
      * 
      * @param entity
-     *            the entity
+     *        the entity
      * @return collection of axioms referring the entity
      */
     public Collection<AxiomWrapper> getAxioms(OWLEntity entity) {
@@ -144,7 +145,7 @@ public class SigIndex {
      * get the non-local axioms with top-locality value TOP
      * 
      * @param top
-     *            true if top locality should be used
+     *        true if top locality should be used
      * @return collection of non local axioms
      */
     public Collection<AxiomWrapper> getNonLocal(boolean top) {

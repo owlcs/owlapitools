@@ -1,4 +1,4 @@
-package decomposition;
+package org.semanticweb.owlapitools.decomposition;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,6 +10,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 /** class to hold the signature of a module */
 public class Signature {
+
     /** set to keep all the elements in signature */
     private final Set<OWLEntity> set = new HashSet<>();
     /** true if concept TOP-locality; false if concept BOTTOM-locality */
@@ -30,7 +31,7 @@ public class Signature {
 
     /**
      * @param p
-     *            entity to add to signature
+     *        entity to add to signature
      * @return true if p was not in the signature already
      */
     public boolean add(OWLEntity p) {
@@ -55,7 +56,7 @@ public class Signature {
 
     /**
      * @param topC
-     *            new concept locality polarity
+     *        new concept locality polarity
      * @param topR
      *        new role locality polarity
      */
@@ -85,7 +86,7 @@ public class Signature {
 
     /**
      * @param p
-     *            entity to find
+     *        entity to find
      * @return true iff signature contains p
      */
     public boolean contains(OWLEntity p) {
@@ -109,7 +110,7 @@ public class Signature {
 
     /**
      * @param s2
-     *            signature to intersect
+     *        signature to intersect
      * @return intersection
      */
     public List<OWLEntity> intersect(Signature s2) {

@@ -1,4 +1,4 @@
-package decomposition;
+package org.semanticweb.owlapitools.decomposition;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,21 +12,22 @@ import org.semanticweb.owlapi.util.CollectionFactory;
 
 /**
  * @param <K>
- *            key
+ *        key
  * @param <V>
- *            value
+ *        value
  * @author ignazio palmisano
  */
 public class IdentityMultiMap<K, V> implements Serializable {
+
     private static final long serialVersionUID = 30402L;
     private final IdentityHashMap<K, Collection<V>> map = new IdentityHashMap<>();
     private int size = 0;
 
     /**
      * @param key
-     *            key
+     *        key
      * @param value
-     *            value
+     *        value
      * @return true if changes happen
      */
     public boolean put(K key, V value) {
@@ -50,7 +51,7 @@ public class IdentityMultiMap<K, V> implements Serializable {
 
     /**
      * @param key
-     *            key
+     *        key
      * @param values
      *        values
      */
@@ -64,7 +65,7 @@ public class IdentityMultiMap<K, V> implements Serializable {
      * connected, returns an immutable empty set
      * 
      * @param key
-     *            key
+     *        key
      * @return the set of values connected with the key
      */
     public Collection<V> get(K key) {
@@ -93,7 +94,7 @@ public class IdentityMultiMap<K, V> implements Serializable {
      * removes the set of values connected to the key
      * 
      * @param key
-     *            key
+     *        key
      * @return true if changes made
      */
     public boolean remove(K key) {
@@ -109,9 +110,9 @@ public class IdentityMultiMap<K, V> implements Serializable {
      * connected to the key, only one is removed
      * 
      * @param key
-     *            key
+     *        key
      * @param value
-     *            value
+     *        value
      * @return true if changes made
      */
     public boolean remove(K key, V value) {
@@ -141,9 +142,9 @@ public class IdentityMultiMap<K, V> implements Serializable {
 
     /**
      * @param k
-     *            key
+     *        key
      * @param v
-     *            value
+     *        value
      * @return true if the pairing (k, v) is in the map (set equality for v)
      */
     public boolean contains(K k, V v) {
@@ -156,7 +157,7 @@ public class IdentityMultiMap<K, V> implements Serializable {
 
     /**
      * @param k
-     *            key
+     *        key
      * @return true if k is a key for the map
      */
     public boolean containsKey(K k) {
@@ -165,7 +166,7 @@ public class IdentityMultiMap<K, V> implements Serializable {
 
     /**
      * @param v
-     *            value
+     *        value
      * @return true if v is a value for a key in the map
      */
     public boolean containsValue(V v) {
@@ -202,7 +203,7 @@ public class IdentityMultiMap<K, V> implements Serializable {
 
     /**
      * @param k
-     *            k
+     *        k
      * @param v
      *        v
      */

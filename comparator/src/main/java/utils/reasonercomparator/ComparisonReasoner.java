@@ -6,9 +6,9 @@
  * copyright 2012, Ignazio Palmisano, University of Manchester
  *
  */
-package utils.reasonercomparator;
+package org.semanticweb.owlapitools.utils.reasonercomparator;
 
-import static utils.reasonercomparator.MethodNames.*;
+import static org.semanticweb.owlapitools.utils.reasonercomparator.MethodNames.*;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
