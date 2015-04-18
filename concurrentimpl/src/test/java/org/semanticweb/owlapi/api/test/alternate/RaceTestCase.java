@@ -81,7 +81,7 @@ public class RaceTestCase {
             fail("Failed after " + repetitions + " repetition(s).");
         } else {
             System.out.println("No race condition found in " + totalRepetitions
-                    + " repetitiions");
+                + " repetitiions");
         }
     }
 
@@ -139,16 +139,15 @@ public class RaceTestCase {
 
             @Override
             public void add() {
-                OWLClass middle = createMiddleClass(counter.get());
+                OWLClass middle = createMiddleClass(counter.getAndIncrement());
                 Set<OWLAxiom> axioms = computeChanges(middle);
                 manager.addAxioms(ontology, axioms);
-                counter.incrementAndGet();
             }
 
             @Override
             public boolean failed() {
                 int size = computeSize();
-                return size != counter.get();
+                return size < counter.get();
             }
 
             public int computeSize() {
@@ -168,20 +167,17 @@ public class RaceTestCase {
             @Override
             public void diagnose() {
                 Set<OWLSubClassOfAxiom> axiomsFound = ontology
-                        .getSubClassAxiomsForSubClass(x);
-                System.out
-                        .println("Expected getSubClassAxiomsForSubClass to return "
-                                + counter
-                                + " axioms but it only found "
-                                + axiomsFound.size());
+                    .getSubClassAxiomsForSubClass(x);
+                System.out.println(
+                    "Expected getSubClassAxiomsForSubClass to return " + counter
+                        + " axioms but it only found " + axiomsFound.size());
                 for (int i = 0; i < counter.get(); i++) {
                     OWLAxiom checkMe = factory.getOWLSubClassOfAxiom(x,
-                            createMiddleClass(i));
-                    if (!axiomsFound.contains(checkMe)
-                            && ontology.containsAxiom(checkMe)) {
-                        System.out
-                                .println(checkMe.toString()
-                                        + " is an axiom in the ontology that is not found by getSubClassAxiomsForSubClass");
+                        createMiddleClass(i));
+                    if (!ontology.getSubClassAxiomsForSubClass(x)
+                        .contains(checkMe) && ontology.containsAxiom(checkMe)) {
+                        System.out.println(checkMe.toString()
+                            + " is an axiom in the ontology that is not found by getSubClassAxiomsForSubClass");
                         return;
                     }
                 }
@@ -189,8 +185,8 @@ public class RaceTestCase {
 
             @Override
             public void race() {
-                ontology.getSubClassAxiomsForSubClass(factory.getOWLClass(IRI
-                        .create(A_CLASS)));
+                ontology.getSubClassAxiomsForSubClass(
+                    factory.getOWLClass(IRI.create(A_CLASS)));
             }
 
             @Nonnull
