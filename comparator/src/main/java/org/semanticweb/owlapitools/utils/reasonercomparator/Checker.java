@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 /** The Class Checker. */
 public class Checker {
+
     /** The default rep. */
     public static int defaultRep = 10;
     /** The rep. */
@@ -54,6 +55,7 @@ public class Checker {
         ExecutorService service = Executors.newFixedThreadPool(rep);
         for (int i = 0; i < rep; i++) {
             service.execute(new Runnable() {
+
                 @Override
                 public void run() {
                     int replay = Math.min(10, rep);
@@ -90,6 +92,7 @@ public class Checker {
         List<Object> list = new ArrayList<>();
         list.addAll(Arrays.asList(results.toArray()));
         Collections.sort(list, new Comparator<Object>() {
+
             @Override
             public int compare(Object o1, Object o2) {
                 return ((Long) o1).compareTo((Long) o2);

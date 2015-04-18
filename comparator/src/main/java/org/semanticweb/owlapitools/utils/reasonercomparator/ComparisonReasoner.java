@@ -70,9 +70,9 @@ public class ComparisonReasoner implements OWLReasoner {
 
     /**
      * @param o
-     *            the ontology to reason on
+     *        the ontology to reason on
      * @param config
-     *            the configuration for the reasoners; optional, can be null
+     *        the configuration for the reasoners; optional, can be null
      * @param delegateFactories
      *        the factories to be used to build the reasoners
      */
@@ -98,15 +98,15 @@ public class ComparisonReasoner implements OWLReasoner {
 
     /**
      * @param tolerant
-     *            false if any difference should stop the reasoning
+     *        false if any difference should stop the reasoning
      * @param o
-     *            the ontology to reason on
+     *        the ontology to reason on
      * @param config
-     *            the configuration for the reasoners; optional, can be null
+     *        the configuration for the reasoners; optional, can be null
      * @param delegateFactories
      *        the factories to be used to build the reasoners
      */
-    public ComparisonReasoner(boolean tolerant, OWLOntology o,
+    public ComparisonReasoner(boolean tolerant, @Nonnull OWLOntology o,
             OWLReasonerConfiguration config,
             OWLReasonerFactory... delegateFactories) {
         this(o, config, delegateFactories);

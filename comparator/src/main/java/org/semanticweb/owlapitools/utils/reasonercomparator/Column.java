@@ -9,6 +9,7 @@ import java.util.List;
  * @author ignazio
  */
 public class Column {
+
     /** header */
     public MethodNames header;
     /** values */

@@ -11,11 +11,12 @@ import org.semanticweb.owlapi.util.AutoIRIMapper;
 
 /** utility to lad a number of ontologies */
 public class OntologyLoader {
+
     AutoIRIMapper mapper;
 
     /**
      * @param fileName
-     *            name
+     *        name
      * @return ontology
      */
     public OWLOntology getOntology(String fileName) {
@@ -35,6 +36,7 @@ public class OntologyLoader {
     private File baseFile;
     private File[] folders;
     final FilenameFilter filenameFilter = new FilenameFilter() {
+
         @Override
         public boolean accept(File arg0, String arg1) {
             return arg1.endsWith("_main.owl") || arg1.endsWith("_main.owl.zip");
@@ -53,7 +55,7 @@ public class OntologyLoader {
 
     /**
      * @param folder
-     *            base folder
+     *        base folder
      * @return ontology
      */
     public OWLOntology getOntology(File folder) {
@@ -67,7 +69,7 @@ public class OntologyLoader {
             if (files.length > 1) {
                 System.out
                         .println("Atomize.getOntology() More than one main file for "
-                        + folder + ", using: " + files[0].getName());
+                                + folder + ", using: " + files[0].getName());
             }
             File f = files[0];
             try {
