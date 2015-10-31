@@ -97,33 +97,33 @@ public class Tester {
         }
     }
 
-    private void add(List<IRI> l, String s) {
+    private static void add(List<IRI> l, String s) {
         for (int i = 0; i < _10000; i++) {
             l.add(IRI.create(s + i));
         }
     }
 
-    private void singleRunClasses(OWLDataFactory toTest, IRI iri) {
+    private static void singleRunClasses(OWLDataFactory toTest, IRI iri) {
         toTest.getOWLClass(iri);
     }
 
-    private void singleRunObjectProp(OWLDataFactory toTest, IRI iri) {
+    private static void singleRunObjectProp(OWLDataFactory toTest, IRI iri) {
         toTest.getOWLObjectProperty(iri);
     }
 
-    private void singleRunDataprop(OWLDataFactory toTest, IRI iri) {
+    private static void singleRunDataprop(OWLDataFactory toTest, IRI iri) {
         toTest.getOWLDataProperty(iri);
     }
 
-    private void singleRunDatatype(OWLDataFactory toTest, IRI iri) {
+    private static void singleRunDatatype(OWLDataFactory toTest, IRI iri) {
         toTest.getOWLDatatype(iri);
     }
 
-    private void singleRunIndividuals(OWLDataFactory toTest, IRI iri) {
+    private static void singleRunIndividuals(OWLDataFactory toTest, IRI iri) {
         toTest.getOWLNamedIndividual(iri);
     }
 
-    private void singleRunAnnotations(OWLDataFactory toTest, IRI iri) {
+    private static void singleRunAnnotations(OWLDataFactory toTest, IRI iri) {
         toTest.getOWLAnnotationProperty(iri);
     }
 }

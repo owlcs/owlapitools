@@ -12,31 +12,29 @@ package org.coode.suggestor.knowledgeexplorationimpl;
 import org.coode.suggestor.api.PropertySanctionRule;
 import org.coode.suggestor.api.PropertySuggestor;
 import org.coode.suggestor.impl.IRIMatcher;
-import org.semanticweb.owlapi.model.OWLAnnotation;
-import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLProperty;
-import org.semanticweb.owlapi.model.OWLPropertyExpression;
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.search.Searcher;
 
-/** Checks the class to see if it has an annotation (specified by the
+/**
+ * Checks the class to see if it has an annotation (specified by the
  * constructor) matching the URI of the property. If recursive is true, then all
- * ancestors of the class are also checked. */
+ * ancestors of the class are also checked.
+ */
 public class SimpleAnnotationPropertySanctionRule implements PropertySanctionRule {
+
     private OWLReasoner r;
     private final OWLAnnotationProperty annotationProperty;
     private final boolean recursive;
 
-    /** @param annotationProperty
-     *            annotationProperty
+    /**
+     * @param annotationProperty
+     *        annotationProperty
      * @param recursive
-     *            recursive */
+     *        recursive
+     */
     public SimpleAnnotationPropertySanctionRule(OWLAnnotationProperty annotationProperty,
-            boolean recursive) {
+        boolean recursive) {
         this.annotationProperty = annotationProperty;
         this.recursive = recursive;
     }
@@ -56,10 +54,10 @@ public class SimpleAnnotationPropertySanctionRule implements PropertySanctionRul
         return hasAnnotation(c, p);
     }
 
-    private boolean hasAnnotation(OWLClassExpression c, OWLPropertyExpression<?, ?> p) {
+    private boolean hasAnnotation(OWLClassExpression c, OWLPropertyExpression p) {
         if (!p.isAnonymous()) {
             if (!c.isAnonymous()
-                    && hasSanctionAnnotation(c.asOWLClass(), (OWLProperty<?, ?>) p)) {
+                && hasSanctionAnnotation(c.asOWLClass(), (OWLProperty) p)) {
                 return true;
             }
             if (recursive) {
@@ -74,11 +72,13 @@ public class SimpleAnnotationPropertySanctionRule implements PropertySanctionRul
         return false;
     }
 
-    private boolean hasSanctionAnnotation(OWLClass c, OWLProperty<?, ?> p) {
+    private boolean hasSanctionAnnotation(OWLClass c, OWLProperty p) {
         IRIMatcher iriMatcher = new IRIMatcher(p.getIRI());
         for (OWLOntology ont : r.getRootOntology().getImportsClosure()) {
-            for (OWLAnnotation annot : c.getAnnotations(ont, annotationProperty)) {
-                if (annot.getValue().accept(iriMatcher).booleanValue()) {
+            for (OWLAnnotation annot : Searcher.annotations(ont
+                    .getAnnotationAssertionAxioms(c.getIRI()))) {
+                if (annot.getProperty().equals(annotationProperty)
+                        && annot.getValue().accept(iriMatcher).booleanValue()) {
                     return true;
                 }
             }

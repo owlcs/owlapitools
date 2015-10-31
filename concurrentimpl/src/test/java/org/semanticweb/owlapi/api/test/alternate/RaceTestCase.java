@@ -49,7 +49,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
-import org.semanticweb.owlapi.apibinding.configurables.ThreadSafeOWLManager;
+import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -119,7 +119,7 @@ public class RaceTestCase {
             OWLClass y;
 
             public SubClassLHSCallback() throws OWLOntologyCreationException {
-                manager = new ThreadSafeOWLManager().buildOWLOntologyManager();
+                manager = OWLManager.createOWLOntologyManager();
                 factory = manager.getOWLDataFactory();
                 ontology = manager.createOntology();
                 x = factory.getOWLClass(IRI.create(NS + "X"));
@@ -157,12 +157,16 @@ public class RaceTestCase {
             public void diagnose() {
                 Set<OWLSubClassOfAxiom> axiomsFound = ontology
                         .getSubClassAxiomsForSubClass(x);
-                System.out.println("Expected getSubClassAxiomsForSubClass to return "
-                        + counter + " axioms but it only found " + axiomsFound.size());
+                System.out
+                        .println("Expected getSubClassAxiomsForSubClass to return "
+                                + counter
+                                + " axioms but it only found "
+                                + axiomsFound.size());
                 for (int i = 0; i < counter.get(); i++) {
                     OWLAxiom checkMe = factory.getOWLSubClassOfAxiom(x,
                             createMiddleClass(i));
-                    if (!axiomsFound.contains(checkMe) && ontology.containsAxiom(checkMe)) {
+                    if (!axiomsFound.contains(checkMe)
+                            && ontology.containsAxiom(checkMe)) {
                         System.out
                                 .println(checkMe.toString()
                                         + " is an axiom in the ontology that is not found by getSubClassAxiomsForSubClass");

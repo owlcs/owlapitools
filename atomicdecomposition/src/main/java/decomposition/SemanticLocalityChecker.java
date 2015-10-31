@@ -59,7 +59,9 @@ import org.semanticweb.owlapi.model.SWRLRule;
 import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
-import org.semanticweb.owlapi.util.MultiMap;
+
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 
 /** semantic locality checker for DL axioms */
 public class SemanticLocalityChecker implements OWLAxiomVisitor,
@@ -70,7 +72,8 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor,
     OWLDataFactory df;
     OWLReasonerFactory factory;
     /** map between axioms and concept expressions */
-    MultiMap<OWLAxiom, OWLClassExpression> ExprMap = new MultiMap<OWLAxiom, OWLClassExpression>();
+    Multimap<OWLAxiom, OWLClassExpression> ExprMap = LinkedHashMultimap
+            .create();
 
     /**
      * @param axiom

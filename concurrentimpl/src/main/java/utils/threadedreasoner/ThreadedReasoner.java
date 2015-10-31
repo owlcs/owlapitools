@@ -46,15 +46,19 @@ import org.semanticweb.owlapi.reasoner.TimeOutException;
 import org.semanticweb.owlapi.reasoner.UnsupportedEntailmentTypeException;
 import org.semanticweb.owlapi.util.Version;
 
-/** @author ignazio Reasoner wrapper that will spin each call to the underlying
- *         reasoner on an Executor service and try hard to respect timeouts */
+/**
+ * @author ignazio Reasoner wrapper that will spin each call to the underlying
+ *         reasoner on an Executor service and try hard to respect timeouts
+ */
 @SuppressWarnings("boxing")
 public class ThreadedReasoner implements OWLReasoner {
     protected final OWLReasoner delegate;
     private final ExecutorService exec = Executors.newFixedThreadPool(1);
 
-    /** @param r
-     *            reasoner to wrap */
+    /**
+     * @param r
+     *        reasoner to wrap
+     */
     public ThreadedReasoner(OWLReasoner r) {
         delegate = r;
     }
@@ -80,7 +84,7 @@ public class ThreadedReasoner implements OWLReasoner {
     }
 
     @Override
-    public List<OWLOntologyChange> getPendingChanges() {
+    public List<OWLOntologyChange<?>> getPendingChanges() {
         return delegate.getPendingChanges();
     }
 
@@ -131,7 +135,7 @@ public class ThreadedReasoner implements OWLReasoner {
             InconsistentOntologyException {
         Callable<Boolean> thread = new Callable<Boolean>() {
             @Override
-            public Boolean call() throws Exception {
+            public Boolean call() {
                 delegate.precomputeInferences(inferenceTypes);
                 return Boolean.TRUE;
             }
@@ -143,7 +147,8 @@ public class ThreadedReasoner implements OWLReasoner {
         Future<T> toReturn = exec.submit(r);
         try {
             if (delegate.getTimeOut() > 0) {
-                return toReturn.get(delegate.getTimeOut(), TimeUnit.MILLISECONDS);
+                return toReturn.get(delegate.getTimeOut(),
+                        TimeUnit.MILLISECONDS);
             } else {
                 return toReturn.get();
             }
@@ -157,22 +162,25 @@ public class ThreadedReasoner implements OWLReasoner {
             interrupt();
             exec.shutdownNow();
             throw new ReasonerInternalException(
-                    "Execution problem; future reasoning tasks might be affected", e);
+                    "Execution problem; future reasoning tasks might be affected",
+                    e);
         } catch (TimeoutException e) {
             interrupt();
             exec.shutdownNow();
             throw new TimeOutException(
-                    "Timeout occurred; future reasoning tasks might be affected", e);
+                    "Timeout occurred; future reasoning tasks might be affected",
+                    e);
         } finally {
             toReturn.cancel(true);
         }
     }
 
     @Override
-    public boolean isConsistent() throws ReasonerInterruptedException, TimeOutException {
+    public boolean isConsistent() throws ReasonerInterruptedException,
+            TimeOutException {
         return threadedRun(new Callable<Boolean>() {
             @Override
-            public Boolean call() throws Exception {
+            public Boolean call() {
                 return delegate.isConsistent();
             }
         });
@@ -185,18 +193,19 @@ public class ThreadedReasoner implements OWLReasoner {
             InconsistentOntologyException {
         return threadedRun(new Callable<Boolean>() {
             @Override
-            public Boolean call() throws Exception {
+            public Boolean call() {
                 return delegate.isSatisfiable(classExpression);
             }
         });
     }
 
     @Override
-    public Node<OWLClass> getUnsatisfiableClasses() throws ReasonerInterruptedException,
-            TimeOutException, InconsistentOntologyException {
+    public Node<OWLClass> getUnsatisfiableClasses()
+            throws ReasonerInterruptedException, TimeOutException,
+            InconsistentOntologyException {
         Callable<Node<OWLClass>> thread = new Callable<Node<OWLClass>>() {
             @Override
-            public Node<OWLClass> call() throws Exception {
+            public Node<OWLClass> call() {
                 return delegate.getUnsatisfiableClasses();
             }
         };
@@ -204,7 +213,8 @@ public class ThreadedReasoner implements OWLReasoner {
     }
 
     @Override
-    public boolean isEntailed(final OWLAxiom axiom) throws ReasonerInterruptedException,
+    public boolean isEntailed(final OWLAxiom axiom)
+            throws ReasonerInterruptedException,
             UnsupportedEntailmentTypeException, TimeOutException,
             AxiomNotInProfileException, FreshEntitiesException,
             InconsistentOntologyException {
@@ -219,8 +229,9 @@ public class ThreadedReasoner implements OWLReasoner {
 
     @Override
     public boolean isEntailed(final Set<? extends OWLAxiom> axioms)
-            throws ReasonerInterruptedException, UnsupportedEntailmentTypeException,
-            TimeOutException, AxiomNotInProfileException, FreshEntitiesException,
+            throws ReasonerInterruptedException,
+            UnsupportedEntailmentTypeException, TimeOutException,
+            AxiomNotInProfileException, FreshEntitiesException,
             InconsistentOntologyException {
         Callable<Boolean> thread = new Callable<Boolean>() {
             @Override
@@ -244,9 +255,9 @@ public class ThreadedReasoner implements OWLReasoner {
 
     @Override
     public NodeSet<OWLClass> getSubClasses(final OWLClassExpression ce,
-            final boolean direct) throws ReasonerInterruptedException, TimeOutException,
-            FreshEntitiesException, InconsistentOntologyException,
-            ClassExpressionNotInProfileException {
+            final boolean direct) throws ReasonerInterruptedException,
+            TimeOutException, FreshEntitiesException,
+            InconsistentOntologyException, ClassExpressionNotInProfileException {
         Callable<NodeSet<OWLClass>> thread = new Callable<NodeSet<OWLClass>>() {
             @Override
             public NodeSet<OWLClass> call() {
@@ -272,8 +283,9 @@ public class ThreadedReasoner implements OWLReasoner {
 
     @Override
     public Node<OWLClass> getEquivalentClasses(final OWLClassExpression ce)
-            throws InconsistentOntologyException, ClassExpressionNotInProfileException,
-            FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+            throws InconsistentOntologyException,
+            ClassExpressionNotInProfileException, FreshEntitiesException,
+            ReasonerInterruptedException, TimeOutException {
         Callable<Node<OWLClass>> thread = new Callable<Node<OWLClass>>() {
             @Override
             public Node<OWLClass> call() {
@@ -336,8 +348,9 @@ public class ThreadedReasoner implements OWLReasoner {
 
     @Override
     public Node<OWLObjectPropertyExpression> getEquivalentObjectProperties(
-            final OWLObjectPropertyExpression pe) throws InconsistentOntologyException,
-            FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+            final OWLObjectPropertyExpression pe)
+            throws InconsistentOntologyException, FreshEntitiesException,
+            ReasonerInterruptedException, TimeOutException {
         Callable<Node<OWLObjectPropertyExpression>> thread = new Callable<Node<OWLObjectPropertyExpression>>() {
             @Override
             public Node<OWLObjectPropertyExpression> call() {
@@ -349,8 +362,9 @@ public class ThreadedReasoner implements OWLReasoner {
 
     @Override
     public NodeSet<OWLObjectPropertyExpression> getDisjointObjectProperties(
-            final OWLObjectPropertyExpression pe) throws InconsistentOntologyException,
-            FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+            final OWLObjectPropertyExpression pe)
+            throws InconsistentOntologyException, FreshEntitiesException,
+            ReasonerInterruptedException, TimeOutException {
         Callable<NodeSet<OWLObjectPropertyExpression>> thread = new Callable<NodeSet<OWLObjectPropertyExpression>>() {
             @Override
             public NodeSet<OWLObjectPropertyExpression> call() {
@@ -362,8 +376,9 @@ public class ThreadedReasoner implements OWLReasoner {
 
     @Override
     public Node<OWLObjectPropertyExpression> getInverseObjectProperties(
-            final OWLObjectPropertyExpression pe) throws InconsistentOntologyException,
-            FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+            final OWLObjectPropertyExpression pe)
+            throws InconsistentOntologyException, FreshEntitiesException,
+            ReasonerInterruptedException, TimeOutException {
         Callable<Node<OWLObjectPropertyExpression>> thread = new Callable<Node<OWLObjectPropertyExpression>>() {
             @Override
             public Node<OWLObjectPropertyExpression> call() {
@@ -424,9 +439,10 @@ public class ThreadedReasoner implements OWLReasoner {
     }
 
     @Override
-    public NodeSet<OWLDataProperty> getSubDataProperties(final OWLDataProperty pe,
-            final boolean direct) throws InconsistentOntologyException,
-            FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+    public NodeSet<OWLDataProperty> getSubDataProperties(
+            final OWLDataProperty pe, final boolean direct)
+            throws InconsistentOntologyException, FreshEntitiesException,
+            ReasonerInterruptedException, TimeOutException {
         Callable<NodeSet<OWLDataProperty>> thread = new Callable<NodeSet<OWLDataProperty>>() {
             @Override
             public NodeSet<OWLDataProperty> call() {
@@ -437,9 +453,10 @@ public class ThreadedReasoner implements OWLReasoner {
     }
 
     @Override
-    public NodeSet<OWLDataProperty> getSuperDataProperties(final OWLDataProperty pe,
-            final boolean direct) throws InconsistentOntologyException,
-            FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+    public NodeSet<OWLDataProperty> getSuperDataProperties(
+            final OWLDataProperty pe, final boolean direct)
+            throws InconsistentOntologyException, FreshEntitiesException,
+            ReasonerInterruptedException, TimeOutException {
         Callable<NodeSet<OWLDataProperty>> thread = new Callable<NodeSet<OWLDataProperty>>() {
             @Override
             public NodeSet<OWLDataProperty> call() {
@@ -450,9 +467,10 @@ public class ThreadedReasoner implements OWLReasoner {
     }
 
     @Override
-    public Node<OWLDataProperty> getEquivalentDataProperties(final OWLDataProperty pe)
-            throws InconsistentOntologyException, FreshEntitiesException,
-            ReasonerInterruptedException, TimeOutException {
+    public Node<OWLDataProperty> getEquivalentDataProperties(
+            final OWLDataProperty pe) throws InconsistentOntologyException,
+            FreshEntitiesException, ReasonerInterruptedException,
+            TimeOutException {
         Callable<Node<OWLDataProperty>> thread = new Callable<Node<OWLDataProperty>>() {
             @Override
             public Node<OWLDataProperty> call() {
@@ -464,8 +482,9 @@ public class ThreadedReasoner implements OWLReasoner {
 
     @Override
     public NodeSet<OWLDataProperty> getDisjointDataProperties(
-            final OWLDataPropertyExpression pe) throws InconsistentOntologyException,
-            FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+            final OWLDataPropertyExpression pe)
+            throws InconsistentOntologyException, FreshEntitiesException,
+            ReasonerInterruptedException, TimeOutException {
         Callable<NodeSet<OWLDataProperty>> thread = new Callable<NodeSet<OWLDataProperty>>() {
             @Override
             public NodeSet<OWLDataProperty> call() {
@@ -478,7 +497,8 @@ public class ThreadedReasoner implements OWLReasoner {
     @Override
     public NodeSet<OWLClass> getDataPropertyDomains(final OWLDataProperty pe,
             final boolean direct) throws InconsistentOntologyException,
-            FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+            FreshEntitiesException, ReasonerInterruptedException,
+            TimeOutException {
         Callable<NodeSet<OWLClass>> thread = new Callable<NodeSet<OWLClass>>() {
             @Override
             public NodeSet<OWLClass> call() {
@@ -489,9 +509,10 @@ public class ThreadedReasoner implements OWLReasoner {
     }
 
     @Override
-    public NodeSet<OWLClass> getTypes(final OWLNamedIndividual ind, final boolean direct)
-            throws InconsistentOntologyException, FreshEntitiesException,
-            ReasonerInterruptedException, TimeOutException {
+    public NodeSet<OWLClass> getTypes(final OWLNamedIndividual ind,
+            final boolean direct) throws InconsistentOntologyException,
+            FreshEntitiesException, ReasonerInterruptedException,
+            TimeOutException {
         Callable<NodeSet<OWLClass>> thread = new Callable<NodeSet<OWLClass>>() {
             @Override
             public NodeSet<OWLClass> call() {
@@ -502,8 +523,9 @@ public class ThreadedReasoner implements OWLReasoner {
     }
 
     @Override
-    public NodeSet<OWLNamedIndividual> getInstances(final OWLClassExpression ce,
-            final boolean direct) throws InconsistentOntologyException,
+    public NodeSet<OWLNamedIndividual> getInstances(
+            final OWLClassExpression ce, final boolean direct)
+            throws InconsistentOntologyException,
             ClassExpressionNotInProfileException, FreshEntitiesException,
             ReasonerInterruptedException, TimeOutException {
         Callable<NodeSet<OWLNamedIndividual>> thread = new Callable<NodeSet<OWLNamedIndividual>>() {
@@ -532,7 +554,8 @@ public class ThreadedReasoner implements OWLReasoner {
     @Override
     public Set<OWLLiteral> getDataPropertyValues(final OWLNamedIndividual ind,
             final OWLDataProperty pe) throws InconsistentOntologyException,
-            FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+            FreshEntitiesException, ReasonerInterruptedException,
+            TimeOutException {
         Callable<Set<OWLLiteral>> thread = new Callable<Set<OWLLiteral>>() {
             @Override
             public Set<OWLLiteral> call() {
@@ -543,9 +566,10 @@ public class ThreadedReasoner implements OWLReasoner {
     }
 
     @Override
-    public Node<OWLNamedIndividual> getSameIndividuals(final OWLNamedIndividual ind)
-            throws InconsistentOntologyException, FreshEntitiesException,
-            ReasonerInterruptedException, TimeOutException {
+    public Node<OWLNamedIndividual> getSameIndividuals(
+            final OWLNamedIndividual ind) throws InconsistentOntologyException,
+            FreshEntitiesException, ReasonerInterruptedException,
+            TimeOutException {
         Callable<Node<OWLNamedIndividual>> thread = new Callable<Node<OWLNamedIndividual>>() {
             @Override
             public Node<OWLNamedIndividual> call() {
@@ -558,7 +582,8 @@ public class ThreadedReasoner implements OWLReasoner {
     @Override
     public NodeSet<OWLNamedIndividual> getDifferentIndividuals(
             final OWLNamedIndividual ind) throws InconsistentOntologyException,
-            FreshEntitiesException, ReasonerInterruptedException, TimeOutException {
+            FreshEntitiesException, ReasonerInterruptedException,
+            TimeOutException {
         Callable<NodeSet<OWLNamedIndividual>> thread = new Callable<NodeSet<OWLNamedIndividual>>() {
             @Override
             public NodeSet<OWLNamedIndividual> call() {

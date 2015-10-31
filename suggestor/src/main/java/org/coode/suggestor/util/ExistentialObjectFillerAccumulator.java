@@ -9,28 +9,29 @@
  */
 package org.coode.suggestor.util;
 
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLObjectExactCardinality;
-import org.semanticweb.owlapi.model.OWLObjectMinCardinality;
-import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
-import org.semanticweb.owlapi.model.OWLPropertyExpression;
-import org.semanticweb.owlapi.model.OWLRestriction;
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
-/** Get all fillers of SomeValueFrom restrictions along the given object
- * property. */
+/**
+ * Get all fillers of SomeValueFrom restrictions along the given object
+ * property.
+ */
 public class ExistentialObjectFillerAccumulator extends
-        FillerAccumulator<OWLClassExpression> {
-    /** @param r
-     *            reasoner to use */
+    FillerAccumulator<OWLClassExpression> {
+
+    /**
+     * @param r
+     *        reasoner to use
+     */
     public ExistentialObjectFillerAccumulator(OWLReasoner r) {
         super(r);
     }
 
     @Override
-    protected RestrictionVisitor getVisitor(OWLPropertyExpression<?, ?> prop,
-            Class<? extends OWLRestriction<?, ?, ?>> type) {
+    protected RestrictionVisitor getVisitor(OWLPropertyExpression prop,
+        Class<? extends OWLRestriction> type) {
         return new RestrictionVisitor(r, prop, type) {
+
             @Override
             public void visit(OWLObjectSomeValuesFrom desc) {
                 super.visit(desc);

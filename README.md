@@ -1,5 +1,5 @@
-# OWLAPITOOLS 1.1.1
-## Built for OWLAPI version: 3.4.10
+# OWLAPITOOLS 4.1.1
+## Built for OWLAPI version: 4.1.1
 
 ### concurrentimpl
 Multithread safe internals for the OWLAPI. Access with ThreadSafeOWLManager.
@@ -9,6 +9,3 @@ An API to simplify recurring tasks that use a reasoner. Uses OWLKnowledgeExplore
 
 ### atomicdecomposition
 A reasoner independent, self contained implementation of atomic decomposition and modularisation. It is a port of the same tools implemented by Dmitry Tsarkov in FaCT++, but can be used in Java without JNI and without FaCT++.
-
-### fixers
-OWL profile detection and violation detection and repair (experimental repair)

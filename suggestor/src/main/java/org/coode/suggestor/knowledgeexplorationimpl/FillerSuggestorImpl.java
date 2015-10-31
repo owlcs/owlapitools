@@ -16,16 +16,7 @@ import java.util.Set;
 import org.coode.suggestor.api.FillerSanctionRule;
 import org.coode.suggestor.api.FillerSuggestor;
 import org.coode.suggestor.util.ReasonerHelper;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
-import org.semanticweb.owlapi.model.OWLDataRange;
-import org.semanticweb.owlapi.model.OWLDatatype;
-import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
-import org.semanticweb.owlapi.model.OWLPropertyExpression;
-import org.semanticweb.owlapi.model.OWLPropertyRange;
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.impl.OWLClassNode;
@@ -37,38 +28,43 @@ import org.semanticweb.owlapi.reasoner.knowledgeexploration.OWLKnowledgeExplorer
 
 /** Default implementation of the FillerSuggestor. */
 class FillerSuggestorImpl implements FillerSuggestor {
+
     protected final OWLKnowledgeExplorerReasoner r;
     protected final OWLDataFactory df;
     protected final ReasonerHelper helper;
     private final Set<FillerSanctionRule> sanctioningRules = new HashSet<FillerSanctionRule>();
     private final AbstractOPMatcher currentOPMatcher = new AbstractOPMatcher() {
+
         @Override
         public boolean isMatch(OWLClassExpression c, OWLObjectPropertyExpression p,
-                OWLClassExpression f) {
+            OWLClassExpression f) {
             return helper.isDescendantOf(c, df.getOWLObjectSomeValuesFrom(p, f));
         }
     };
     private final AbstractDPMatcher currentDPMatcher = new AbstractDPMatcher() {
+
         @Override
         public boolean isMatch(OWLClassExpression c, OWLDataPropertyExpression p,
-                OWLDataRange f) {
+            OWLDataRange f) {
             return helper.isDescendantOf(c, df.getOWLDataSomeValuesFrom(p, f));
         }
     };
     private final AbstractOPMatcher possibleOPMatcher = new AbstractOPMatcher() {
+
         @Override
         public boolean isMatch(OWLClassExpression c, OWLObjectPropertyExpression p,
-                OWLClassExpression f) {
+            OWLClassExpression f) {
             return !r.isSatisfiable(df.getOWLObjectIntersectionOf(c,
-                    df.getOWLObjectAllValuesFrom(p, df.getOWLObjectComplementOf(f))));
+                df.getOWLObjectAllValuesFrom(p, df.getOWLObjectComplementOf(f))));
         }
     };
     private final AbstractDPMatcher possibleDPMatcher = new AbstractDPMatcher() {
+
         @Override
         public boolean isMatch(OWLClassExpression c, OWLDataPropertyExpression p,
-                OWLDataRange f) {
+            OWLDataRange f) {
             return !r.isSatisfiable(df.getOWLObjectIntersectionOf(c,
-                    df.getOWLDataAllValuesFrom(p, df.getOWLDataComplementOf(f))));
+                df.getOWLDataAllValuesFrom(p, df.getOWLDataComplementOf(f))));
         }
     };
 
@@ -98,13 +94,13 @@ class FillerSuggestorImpl implements FillerSuggestor {
     // BOOLEAN TESTS
     @Override
     public boolean isCurrent(OWLClassExpression c, OWLObjectPropertyExpression p,
-            OWLClassExpression f) {
+        OWLClassExpression f) {
         return currentOPMatcher.isMatch(c, p, f);
     }
 
     @Override
     public boolean isCurrent(OWLClassExpression c, OWLObjectPropertyExpression p,
-            OWLClassExpression f, boolean direct) {
+        OWLClassExpression f, boolean direct) {
         return currentOPMatcher.isMatch(c, p, f, direct);
     }
 
@@ -115,13 +111,13 @@ class FillerSuggestorImpl implements FillerSuggestor {
 
     @Override
     public boolean isCurrent(OWLClassExpression c, OWLDataProperty p, OWLDataRange f,
-            boolean direct) {
+        boolean direct) {
         return currentDPMatcher.isMatch(c, p, f, direct);
     }
 
     @Override
     public boolean isPossible(OWLClassExpression c, OWLObjectPropertyExpression p,
-            OWLClassExpression f) {
+        OWLClassExpression f) {
         return possibleOPMatcher.isMatch(c, p, f);
     }
 
@@ -132,7 +128,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
 
     @Override
     public boolean isSanctioned(OWLClassExpression c, OWLObjectPropertyExpression p,
-            OWLClassExpression f) {
+        OWLClassExpression f) {
         return isPossible(c, p, f) && meetsSanctions(c, p, f);
     }
 
@@ -143,7 +139,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
 
     @Override
     public boolean isRedundant(OWLClassExpression c, OWLObjectPropertyExpression p,
-            OWLClassExpression f) {
+        OWLClassExpression f) {
         if (isCurrent(c, p, f)) {
             return true;
         }
@@ -151,7 +147,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
             // check the direct subclasses
             final OWLClass sub = node.getRepresentativeElement();
             if (isCurrent(c, p, sub)
-                    || helper.isDescendantOf(c, df.getOWLObjectAllValuesFrom(p, sub))) {
+                || helper.isDescendantOf(c, df.getOWLObjectAllValuesFrom(p, sub))) {
                 return true;
             }
         }
@@ -161,20 +157,20 @@ class FillerSuggestorImpl implements FillerSuggestor {
     // GETTERS
     @Override
     public NodeSet<OWLClass> getCurrentNamedFillers(OWLClassExpression c,
-            OWLObjectPropertyExpression p, boolean direct) {
+        OWLObjectPropertyExpression p, boolean direct) {
         return currentOPMatcher.getLeaves(c, p, helper.getGlobalAssertedRange(p), direct);
     }
 
     @Override
     public NodeSet<OWLClass> getPossibleNamedFillers(OWLClassExpression c,
-            OWLObjectPropertyExpression p, OWLClassExpression root, boolean direct) {
+        OWLObjectPropertyExpression p, OWLClassExpression root, boolean direct) {
         return possibleOPMatcher.getRoots(c, p,
-                root == null ? helper.getGlobalAssertedRange(p) : root, direct);
+            root == null ? helper.getGlobalAssertedRange(p) : root, direct);
     }
 
     @Override
     public Set<OWLClass> getSanctionedFillers(OWLClassExpression c,
-            OWLObjectPropertyExpression p, OWLClassExpression root, boolean direct) {
+        OWLObjectPropertyExpression p, OWLClassExpression root, boolean direct) {
         Set<OWLClass> fillers = new HashSet<OWLClass>();
         for (OWLClass f : getPossibleNamedFillers(c, p, root, direct).getFlattened()) {
             if (meetsSanctions(c, p, f)) {
@@ -186,7 +182,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
 
     // INTERNALS
     private boolean meetsSanctions(OWLClassExpression c, OWLObjectPropertyExpression p,
-            OWLClassExpression f) {
+        OWLClassExpression f) {
         for (FillerSanctionRule rule : sanctioningRules) {
             if (rule.meetsSanction(c, p, f)) {
                 return true;
@@ -195,8 +191,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
         return false;
     }
 
-    private boolean
-            meetsSanctions(OWLClassExpression c, OWLDataProperty p, OWLDataRange f) {
+    private boolean meetsSanctions(OWLClassExpression c, OWLDataProperty p, OWLDataRange f) {
         for (FillerSanctionRule rule : sanctioningRules) {
             if (rule.meetsSanction(c, p, f)) {
                 return true;
@@ -212,23 +207,26 @@ class FillerSuggestorImpl implements FillerSuggestor {
     // OWLObjectPropertyExpression
     // It would be nice if we could enforce this with multiple generics, but R &
     // OWLEntity is disallowed currently
-    private interface Matcher<R extends OWLPropertyRange, F extends R, P extends OWLPropertyExpression<R, P>> {
+    private interface Matcher<R extends OWLPropertyRange, F extends R, P extends OWLPropertyExpression> {
+
         boolean isMatch(OWLClassExpression c, P p, R f);
 
         boolean isMatch(OWLClassExpression c, P p, R f, boolean direct);
 
-        /** Perform a recursive search, adding nodes that match. If direct is
+        /**
+         * Perform a recursive search, adding nodes that match. If direct is
          * true only add nodes if they have no subs that match
          * 
          * @param c
-         *            class
+         *        class
          * @param p
-         *            property
+         *        property
          * @param start
-         *            start
+         *        start
          * @param direct
-         *            direct
-         * @return set of matching nodes */
+         *        direct
+         * @return set of matching nodes
+         */
         NodeSet<F> getLeaves(OWLClassExpression c, P p, R start, boolean direct);
 
         /*
@@ -238,8 +236,9 @@ class FillerSuggestorImpl implements FillerSuggestor {
         NodeSet<F> getRoots(OWLClassExpression c, P p, R start, boolean direct);
     }
 
-    private abstract class AbstractMatcher<R extends OWLPropertyRange, F extends R, P extends OWLPropertyExpression<R, P>>
-            implements Matcher<R, F, P> {
+    private abstract class AbstractMatcher<R extends OWLPropertyRange, F extends R, P extends OWLPropertyExpression>
+        implements Matcher<R, F, P> {
+
         public AbstractMatcher() {}
 
         @Override
@@ -255,7 +254,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
                 final F representativeElement = node.getRepresentativeElement();
                 if (representativeElement == null) {
                     System.out.println("FillerSuggestorImpl.AbstractMatcher.isMatch() "
-                            + f);
+                        + f);
                 }
                 if (isMatch(c, p, representativeElement)) {
                     return false;
@@ -266,14 +265,14 @@ class FillerSuggestorImpl implements FillerSuggestor {
 
         @Override
         public final NodeSet<F> getRoots(OWLClassExpression c, P p, R start,
-                boolean direct) {
+            boolean direct) {
             Set<Node<F>> nodes = new HashSet<Node<F>>();
             for (Node<F> sub : getDirectSubs(start)) {
                 if (isMatch(c, p, sub.getRepresentativeElement())) {
                     nodes.add(sub);
                     if (!direct) {
                         nodes.addAll(getRoots(c, p, sub.getRepresentativeElement(),
-                                direct).getNodes());
+                            direct).getNodes());
                     }
                 }
             }
@@ -288,7 +287,8 @@ class FillerSuggestorImpl implements FillerSuggestor {
     }
 
     private abstract class AbstractOPMatcher extends
-            AbstractMatcher<OWLClassExpression, OWLClass, OWLObjectPropertyExpression> {
+        AbstractMatcher<OWLClassExpression, OWLClass, OWLObjectPropertyExpression> {
+
         public AbstractOPMatcher() {}
 
         @Override
@@ -308,22 +308,22 @@ class FillerSuggestorImpl implements FillerSuggestor {
 
         @Override
         public final NodeSet<OWLClass> getLeaves(OWLClassExpression c,
-                OWLObjectPropertyExpression p, OWLClassExpression start, boolean direct) {
+            OWLObjectPropertyExpression p, OWLClassExpression start, boolean direct) {
             Set<Node<OWLClass>> toReturn = new HashSet<Node<OWLClass>>();
             RootNode root = r.getRoot(c);
             if (root.getNode() == null) {
                 System.out
-                        .println("FillerSuggestorImpl.AbstractMatcher.getLeaves() null root? "
-                                + c + "\t" + p + "\t" + start + "\t" + direct);
+                    .println("FillerSuggestorImpl.AbstractMatcher.getLeaves() null root? "
+                        + c + "\t" + p + "\t" + start + "\t" + direct);
             } else {
                 Node<? extends OWLObjectPropertyExpression> responses = r
-                        .getObjectNeighbours(root, true);
+                    .getObjectNeighbours(root, true);
                 for (OWLObjectPropertyExpression p1 : responses.getEntities()) {
                     final Collection<RootNode> objectNeighbours = r.getObjectNeighbours(
-                            root, p1.asOWLObjectProperty());
+                        root, p1.asOWLObjectProperty());
                     for (RootNode pointer : objectNeighbours) {
                         final Node<? extends OWLClassExpression> objectLabel = r
-                                .getObjectLabel(pointer, direct);
+                            .getObjectLabel(pointer, direct);
                         Set<OWLClass> node = new HashSet<OWLClass>();
                         for (OWLClassExpression c1 : objectLabel.getEntities()) {
                             if (c1 == null) {
@@ -341,7 +341,8 @@ class FillerSuggestorImpl implements FillerSuggestor {
     }
 
     private abstract class AbstractDPMatcher extends
-            AbstractMatcher<OWLDataRange, OWLDatatype, OWLDataPropertyExpression> {
+        AbstractMatcher<OWLDataRange, OWLDatatype, OWLDataPropertyExpression> {
+
         public AbstractDPMatcher() {}
 
         @Override
@@ -361,22 +362,22 @@ class FillerSuggestorImpl implements FillerSuggestor {
 
         @Override
         public final NodeSet<OWLDatatype> getLeaves(OWLClassExpression c,
-                OWLDataPropertyExpression p, OWLDataRange start, boolean direct) {
+            OWLDataPropertyExpression p, OWLDataRange start, boolean direct) {
             Set<Node<OWLDatatype>> toReturn = new HashSet<Node<OWLDatatype>>();
             RootNode root = r.getRoot(c);
             if (root.getNode() == null) {
                 System.out
-                        .println("FillerSuggestorImpl.AbstractMatcher.getLeaves() null root? "
-                                + c + "\t" + p + "\t" + start + "\t" + direct);
+                    .println("FillerSuggestorImpl.AbstractMatcher.getLeaves() null root? "
+                        + c + "\t" + p + "\t" + start + "\t" + direct);
             } else {
                 Node<? extends OWLDataPropertyExpression> responses = r
-                        .getDataNeighbours(root, true);
+                    .getDataNeighbours(root, true);
                 for (OWLDataPropertyExpression p1 : responses.getEntities()) {
                     final Collection<RootNode> objectNeighbours = r.getDataNeighbours(
-                            root, p1.asOWLDataProperty());
+                        root, p1.asOWLDataProperty());
                     for (RootNode pointer : objectNeighbours) {
                         final Node<? extends OWLDataRange> objectLabel = r.getDataLabel(
-                                pointer, direct);
+                            pointer, direct);
                         Set<OWLDatatype> node = new HashSet<OWLDatatype>();
                         for (OWLDataRange c1 : objectLabel.getEntities()) {
                             if (c1 == null) {

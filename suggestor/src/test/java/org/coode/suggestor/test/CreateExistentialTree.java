@@ -40,8 +40,9 @@ public class CreateExistentialTree extends AbstractSuggestorTest {
 
     public void testCreateTree() throws Exception {
         OWLOntology ont = createOntology();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY)
-                .newInstance()).createNonBufferingReasoner(ont);
+        OWLReasoner r = ((OWLReasonerFactory) Class.forName(
+                DEFAULT_REASONER_FACTORY).newInstance())
+                .createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         FillerSuggestor fs = fac.getFillerSuggestor();
@@ -54,13 +55,13 @@ public class CreateExistentialTree extends AbstractSuggestorTest {
         System.out.println("Complete in " + (end - start) + "ms");
     }
 
-    private void printClass(Node<OWLClass> cNode, int indent, PropertySuggestor ps,
-            OWLReasoner r, FillerSuggestor fs) {
+    private void printClass(Node<OWLClass> cNode, int indent,
+            PropertySuggestor ps, OWLReasoner r, FillerSuggestor fs) {
         print(cNode, indent);
         if (visited.add(cNode)) {
             final OWLClassExpression c = cNode.getRepresentativeElement();
-            for (Node<OWLObjectPropertyExpression> p : ps.getCurrentObjectProperties(c,
-                    true)) {
+            for (Node<OWLObjectPropertyExpression> p : ps
+                    .getCurrentObjectProperties(c, true)) {
                 printProperty(c, p, indent + 3, fs);
             }
             for (Node<OWLClass> sub : r.getSubClasses(c, true)) {
@@ -71,8 +72,10 @@ public class CreateExistentialTree extends AbstractSuggestorTest {
         }
     }
 
-    private void printProperty(OWLClassExpression c, Node<OWLObjectPropertyExpression> p,
-            int indent, FillerSuggestor fs) {
+    private static void
+            printProperty(OWLClassExpression c,
+                    Node<OWLObjectPropertyExpression> p, int indent,
+                    FillerSuggestor fs) {
         print(p, indent);
         for (Node<OWLClass> f : fs.getCurrentNamedFillers(c,
                 p.getRepresentativeElement(), true)) {
@@ -80,13 +83,14 @@ public class CreateExistentialTree extends AbstractSuggestorTest {
         }
     }
 
-    private void print(Node<? extends OWLObject> node, int indent) {
+    private static void print(Node<? extends OWLObject> node, int indent) {
         System.out.println();
         for (int i = 0; i < indent; i++) {
             System.out.print("    ");
         }
         boolean started = false;
-        final Set<OWLObject> entities = new TreeSet<OWLObject>(node.getEntities());
+        final Set<OWLObject> entities = new TreeSet<OWLObject>(
+                node.getEntities());
         for (OWLObject o : entities) {
             if (started) {
                 System.out.print(" == ");
@@ -94,7 +98,7 @@ public class CreateExistentialTree extends AbstractSuggestorTest {
                 started = true;
             }
             if (o instanceof OWLEntity) {
-                System.out.print(((OWLEntity) o).getIRI().getFragment());
+                System.out.print(((OWLEntity) o).getIRI().getShortForm());
             } else {
                 System.out.print(o);
             }

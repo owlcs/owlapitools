@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.profiles.OWL2DLProfile;
+import org.semanticweb.owlapi.profiles.OWLProfileReport;
+import org.semanticweb.owlapi.profiles.OWLProfileViolation;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
 /** The Class PerformanceComparator. */
@@ -26,11 +29,11 @@ public class PerformanceComparator {
     public static List<ReasonerPerformanceResult> runTest(OWLOntology o1,
             OWLReasonerFactory... factories) throws Exception {
         Checker checker = new Checker(1);
-        // OWL2DLProfile profile = new OWL2DLProfile();
-        // OWLProfileReport report = profile.checkOntology(o1);
-        // for (OWLProfileViolation<?> v : report.getViolations()) {
-        // System.out.println(v);
-        // }
+        OWL2DLProfile profile = new OWL2DLProfile();
+        OWLProfileReport report = profile.checkOntology(o1);
+        for (OWLProfileViolation<?> v : report.getViolations()) {
+            System.out.println(v);
+        }
         List<ReasonerPerformanceResult> toReturn = new ArrayList<ReasonerPerformanceResult>();
         // TODO number of runs
         ComparisonExecutor ccb = new ComparisonExecutor(o1, null, factories);

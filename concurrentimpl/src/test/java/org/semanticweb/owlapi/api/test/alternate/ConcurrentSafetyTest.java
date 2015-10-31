@@ -62,7 +62,7 @@ public class ConcurrentSafetyTest {
         }
 
         @Override
-        public void execute() throws Exception {
+        public void execute() {
             t.run(f);
         }
 
