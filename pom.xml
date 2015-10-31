@@ -24,7 +24,6 @@
 		<module>suggestor</module>
 		<module>atomicdecomposition</module>
 		<module>concurrentimpl</module>
-		<module>fixers</module>
 	</modules>
 
 	<issueManagement>
