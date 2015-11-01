@@ -16,7 +16,7 @@
 	<groupId>net.sourceforge.owlapi</groupId>
 	<artifactId>owlapitools-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>4.0.1</version>
+	<version>4.1.0</version>
 	<name>OWLAPI_TOOLS</name>
 	<description>OWLAPI_TOOLS is a collection of add-ons for OWL API</description>
 	<url>http://owlapitools.sourceforge.net/</url>
@@ -153,8 +153,8 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>2.5.1</version>
 					<configuration>
-						<source>1.6</source>
-						<target>1.6</target>
+						<source>1.7</source>
+						<target>1.7</target>
 						<encoding>UTF-8</encoding>
 					</configuration>
 				</plugin>
