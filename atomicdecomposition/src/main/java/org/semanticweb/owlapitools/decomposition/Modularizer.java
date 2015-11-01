@@ -1,11 +1,6 @@
 package org.semanticweb.owlapitools.decomposition;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -22,7 +17,7 @@ public class Modularizer {
     /** module as a list of axioms */
     private List<AxiomWrapper> module = new ArrayList<>();
     /** pointer to a sig index; if not NULL then use optimized algo */
-    private SigIndex sigIndex = null;
+    private final SigIndex sigIndex;
     /** queue of unprocessed entities */
     private Queue<OWLEntity> workQueue;
 
@@ -33,11 +28,9 @@ public class Modularizer {
      *        axiom
      */
     private void addAxiomSig(AxiomWrapper axiom) {
-        if (sigIndex != null) {
-            for (OWLEntity p : axiom.getAxiom().getSignature()) {
-                if (sig.add(p)) {
-                    workQueue.add(p);
-                }
+        for (OWLEntity p : axiom.getAxiom().getSignature()) {
+            if (sig.add(p)) {
+                workQueue.add(p);
             }
         }
     }
@@ -103,7 +96,7 @@ public class Modularizer {
         while (!workQueue.isEmpty()) {
             // for all the axioms that contains entity in their signature
             Collection<AxiomWrapper> axioms = sigIndex.getAxioms(workQueue
-                    .poll());
+                .poll());
             this.addNonLocal(axioms, false);
         }
     }
@@ -188,8 +181,7 @@ public class Modularizer {
      * @param type
      *        type
      */
-    public void
-            extract(AxiomWrapper axiom, Signature signature, ModuleType type) {
+    public void extract(AxiomWrapper axiom, Signature signature, ModuleType type) {
         this.extract(Collections.singletonList(axiom), signature, type);
     }
 
@@ -204,7 +196,7 @@ public class Modularizer {
      *        type
      */
     public void extract(List<AxiomWrapper> axioms, Signature signature,
-            ModuleType type) {
+        ModuleType type) {
         boolean topLocality = type == ModuleType.TOP;
         sig = signature;
         checker.setSignatureValue(sig);

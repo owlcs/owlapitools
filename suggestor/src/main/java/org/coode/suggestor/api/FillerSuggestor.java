@@ -11,7 +11,7 @@ package org.coode.suggestor.api;
 
 import java.util.Set;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
@@ -27,8 +27,8 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
  * classes in the ontology.
  * </p>
  * <p>
- * For more general discussion of the suggestor idea please see the <a
- * href="package-summary.html">package summary</a>
+ * For more general discussion of the suggestor idea please see the
+ * <a href="package-summary.html">package summary</a>
  * </p>
  * <p>
  * To help with the notion of "property values" or "local ranges".
@@ -38,8 +38,10 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
  * </p>
  * <ol>
  * <li>What are the named fillers on these properties?</li>
- * <li>What are the possible named fillers for a new existential restriction?</li>
- * <li>What are the sanctioned named fillers for a new existential restriction?</li>
+ * <li>What are the possible named fillers for a new existential restriction?
+ * </li>
+ * <li>What are the sanctioned named fillers for a new existential restriction?
+ * </li>
  * </ol>
  * <p>
  * The following definitions are used in the API definition:
@@ -66,9 +68,7 @@ public interface FillerSuggestor {
      *        a filler class expression
      * @return true if SubClassOf(c, p some f) is entailed
      */
-    boolean isCurrent(@Nonnull OWLClassExpression c,
-            @Nonnull OWLObjectPropertyExpression p,
-            @Nonnull OWLClassExpression f);
+    boolean isCurrent(OWLClassExpression c, OWLObjectPropertyExpression p, OWLClassExpression f);
 
     /**
      * @param c
@@ -82,9 +82,7 @@ public interface FillerSuggestor {
      * @return isCurrent(c, p, f). If direct then there is no g where
      *         StrictSubClassOf(g, f) and isCurrent(c, p, g) is true
      */
-    boolean isCurrent(@Nonnull OWLClassExpression c,
-            @Nonnull OWLObjectPropertyExpression p,
-            @Nonnull OWLClassExpression f, boolean direct);
+    boolean isCurrent(OWLClassExpression c, OWLObjectPropertyExpression p, OWLClassExpression f, boolean direct);
 
     /**
      * @param c
@@ -95,8 +93,7 @@ public interface FillerSuggestor {
      *        a filler data range
      * @return true if SubClassOf(c, p some f) is entailed
      */
-    boolean isCurrent(@Nonnull OWLClassExpression c,
-            @Nonnull OWLDataProperty p, @Nonnull OWLDataRange f);
+    boolean isCurrent(OWLClassExpression c, OWLDataProperty p, OWLDataRange f);
 
     // TODO: how do we determine if there is a more specific range on c??
     /**
@@ -110,10 +107,7 @@ public interface FillerSuggestor {
      *        direct
      * @return true if current
      */
-    boolean
-            isCurrent(@Nonnull OWLClassExpression c,
-                    @Nonnull OWLDataProperty p, @Nonnull OWLDataRange f,
-                    boolean direct);
+    boolean isCurrent(OWLClassExpression c, OWLDataProperty p, OWLDataRange f, boolean direct);
 
     /**
      * @param c
@@ -124,9 +118,7 @@ public interface FillerSuggestor {
      *        a filler class expression
      * @return true if isSatisfiable(c and p some f)
      */
-    boolean isPossible(@Nonnull OWLClassExpression c,
-            @Nonnull OWLObjectPropertyExpression p,
-            @Nonnull OWLClassExpression f);
+    boolean isPossible(OWLClassExpression c, OWLObjectPropertyExpression p, OWLClassExpression f);
 
     /**
      * @param c
@@ -137,8 +129,7 @@ public interface FillerSuggestor {
      *        a filler data range
      * @return true if isSatisfiable(c and p some f)
      */
-    boolean isPossible(@Nonnull OWLClassExpression c,
-            @Nonnull OWLDataProperty p, @Nonnull OWLDataRange f);
+    boolean isPossible(OWLClassExpression c, OWLDataProperty p, OWLDataRange f);
 
     /**
      * @param c
@@ -149,9 +140,7 @@ public interface FillerSuggestor {
      *        a filler class expression
      * @return true if isPossible(c, p, f) and ANY filler sanction rule is met
      */
-    boolean isSanctioned(@Nonnull OWLClassExpression c,
-            @Nonnull OWLObjectPropertyExpression p,
-            @Nonnull OWLClassExpression f);
+    boolean isSanctioned(OWLClassExpression c, OWLObjectPropertyExpression p, OWLClassExpression f);
 
     /**
      * @param c
@@ -162,8 +151,7 @@ public interface FillerSuggestor {
      *        a filler data range
      * @return true if isPossible(c, p, f) and ANY filler sanction rule is met
      */
-    boolean isSanctioned(@Nonnull OWLClassExpression c,
-            @Nonnull OWLDataProperty p, @Nonnull OWLDataRange f);
+    boolean isSanctioned(OWLClassExpression c, OWLDataProperty p, OWLDataRange f);
 
     /**
      * Roughly speaking, would adding SubClassOf(c, p some f) fail to usefully
@@ -178,9 +166,7 @@ public interface FillerSuggestor {
      * @return isCurrent(c, p, f) or there is a g such that StrictSubClassOf(g,
      *         f) and isCurrent(c, p, g) or SubClassOf(c, p only g)
      */
-    boolean isRedundant(@Nonnull OWLClassExpression c,
-            @Nonnull OWLObjectPropertyExpression p,
-            @Nonnull OWLClassExpression f);
+    boolean isRedundant(OWLClassExpression c, OWLObjectPropertyExpression p, OWLClassExpression f);
 
     /**
      * @param c
@@ -192,9 +178,7 @@ public interface FillerSuggestor {
      * @return a set of named class fillers where every f satisfies isCurrent(c,
      *         p, f, direct)
      */
-    @Nonnull
-    NodeSet<OWLClass> getCurrentNamedFillers(@Nonnull OWLClassExpression c,
-            @Nonnull OWLObjectPropertyExpression p, boolean direct);
+    NodeSet<OWLClass> getCurrentNamedFillers(OWLClassExpression c, OWLObjectPropertyExpression p, boolean direct);
 
     /**
      * Find subclasses (or descendants) of root for which isPossible() holds.
@@ -211,10 +195,8 @@ public interface FillerSuggestor {
      *         StrictSubClassOf(f, root) or StrictDescendantOf(f, root) and
      *         isPossible(c, p, f)
      */
-    @Nonnull
-    NodeSet<OWLClass> getPossibleNamedFillers(@Nonnull OWLClassExpression c,
-            @Nonnull OWLObjectPropertyExpression p,
-            @Nonnull OWLClassExpression root, boolean direct);
+    NodeSet<OWLClass> getPossibleNamedFillers(OWLClassExpression c, OWLObjectPropertyExpression p,
+        @Nullable OWLClassExpression root, boolean direct);
 
     /**
      * Find subclasses (or descendants) of root for which isSanctioned() holds.
@@ -231,10 +213,8 @@ public interface FillerSuggestor {
      *         StrictSubClassOf(f, root) or StrictDescendantOf(f, root) and
      *         isSanctioned(c, p, f, direct)
      */
-    @Nonnull
-    Set<OWLClass> getSanctionedFillers(@Nonnull OWLClassExpression c,
-            @Nonnull OWLObjectPropertyExpression p,
-            @Nonnull OWLClassExpression root, boolean direct);
+    Set<OWLClass> getSanctionedFillers(OWLClassExpression c, OWLObjectPropertyExpression p, OWLClassExpression root,
+        boolean direct);
 
     /**
      * Add a FillerSanctionRule to the end of the rules used for sanctioning
@@ -242,7 +222,7 @@ public interface FillerSuggestor {
      * @param rule
      *        the rule to add
      */
-    void addSanctionRule(@Nonnull FillerSanctionRule rule);
+    void addSanctionRule(FillerSanctionRule rule);
 
     /**
      * Remove this FillerSanctionRule from the rules used for sanctioning
@@ -250,9 +230,8 @@ public interface FillerSuggestor {
      * @param rule
      *        the rule to remove
      */
-    void removeSanctionRule(@Nonnull FillerSanctionRule rule);
+    void removeSanctionRule(FillerSanctionRule rule);
 
     /** @return get the reasoner used by this suggestor instance */
-    @Nonnull
     OWLReasoner getReasoner();
 }

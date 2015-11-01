@@ -1,45 +1,18 @@
 package org.semanticweb.owlapitools.decomposition.test;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapitools.decomposition.AxiomWrapper;
 import org.semanticweb.owlapitools.decomposition.SemanticLocalityChecker;
-import org.semanticweb.owlapitools.decomposition.Signature;
-
-import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.semanticweb.owlapitools.decomposition.SemanticLocalityChecker;
-import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLDatatype;
-import org.semanticweb.owlapi.model.OWLDisjointUnionAxiom;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLLiteral;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
-import org.semanticweb.owlapi.model.SWRLAtom;
-
-import org.semanticweb.owlapitools.decomposition.AxiomWrapper;
-import static org.junit.Assert.assertEquals;
 
 @Ignore
 @SuppressWarnings("javadoc")
@@ -73,7 +46,7 @@ public class SemanticLocalityTestCase {
         test(df.getOWLEquivalentClassesAxiom(owlThing, a, b), false, a);
         // include bottom and top
         test(df.getOWLEquivalentClassesAxiom(owlNothing, owlThing, a, b),
-                false, a);
+            false, a);
     }
 
     @Test
@@ -111,9 +84,9 @@ public class SemanticLocalityTestCase {
 
     /** @return disjoint union of superclass and classes */
     private OWLDisjointUnionAxiom disjointUnion(OWLClass superclass,
-            OWLClass... classes) {
+        OWLClass... classes) {
         return df.getOWLDisjointUnionAxiom(superclass,
-                new HashSet<OWLClassExpression>(Arrays.asList(classes)));
+            new HashSet<OWLClassExpression>(Arrays.asList(classes)));
     }
 
     @Test
@@ -406,7 +379,7 @@ public class SemanticLocalityTestCase {
     @Test
     public void shouldBeLocalowlAnnotationAssertionAxiom() {
         axiom = df.getOWLAnnotationAssertionAxiom(a.getIRI(),
-                df.getOWLAnnotation(g, l));
+            df.getOWLAnnotation(g, l));
         // signature intersects
         test(axiom, true, g);
         // signature does not intersect
@@ -451,7 +424,7 @@ public class SemanticLocalityTestCase {
         test(axiom, false, p, q, r);
         // top property
         axiom = df
-                .getOWLSubPropertyChainOfAxiom(Arrays.asList(p, q), topObject);
+            .getOWLSubPropertyChainOfAxiom(Arrays.asList(p, q), topObject);
         // signature intersects
         test(axiom, true, p);
     }
@@ -468,7 +441,7 @@ public class SemanticLocalityTestCase {
     @Test
     public void shouldBeLocalowlDatatypeDefinitionAxiom() {
         axiom = df.getOWLDatatypeDefinitionAxiom(i,
-                df.getOWLDatatypeMinMaxExclusiveRestriction(1, 3));
+            df.getOWLDatatypeMinMaxExclusiveRestriction(1, 3));
         // signature intersects
         // test(axiom, true, i);
         // signature does not intersect
@@ -478,9 +451,9 @@ public class SemanticLocalityTestCase {
     @Test
     public void shouldBeLocalswrlRule() {
         Set<SWRLAtom> head = new HashSet<SWRLAtom>(Arrays.asList(df
-                .getSWRLClassAtom(a, df.getSWRLIndividualArgument(x))));
+            .getSWRLClassAtom(a, df.getSWRLIndividualArgument(x))));
         Set<SWRLAtom> body = new HashSet<SWRLAtom>(Arrays.asList(df
-                .getSWRLClassAtom(b, df.getSWRLIndividualArgument(y))));
+            .getSWRLClassAtom(b, df.getSWRLIndividualArgument(y))));
         axiom = df.getSWRLRule(head, body);
         // signature intersects
         test(axiom, true, a);
@@ -494,69 +467,44 @@ public class SemanticLocalityTestCase {
         testSubject.preprocessOntology(Arrays.asList(new AxiomWrapper(ax)));
     }
 
-    @Nonnull
     private OWLDataFactory df = OWLManager.getOWLDataFactory();
-    @Nonnull
     private OWLClass a = df.getOWLClass(IRI.create("urn:test#a"));
-    @Nonnull
     private OWLClass b = df.getOWLClass(IRI.create("urn:test#b"));
-    @Nonnull
     private OWLClass c = df.getOWLClass(IRI.create("urn:test#c"));
-    @Nonnull
     private OWLClass d = df.getOWLClass(IRI.create("urn:test#d"));
-    @Nonnull
     private OWLAnnotationProperty g = df.getOWLAnnotationProperty(IRI
-            .create("urn:test#g"));
-    @Nonnull
+        .create("urn:test#g"));
     private OWLAnnotationProperty h = df.getOWLAnnotationProperty(IRI
-            .create("urn:test#h"));
-    @Nonnull
+        .create("urn:test#h"));
     private OWLDatatype i = df.getOWLDatatype(IRI.create("urn:test#i"));
-    @Nonnull
     private OWLLiteral j = df.getOWLLiteral(true);
-    @Nonnull
     private OWLLiteral l = df.getOWLLiteral(3.5D);
-    @Nonnull
     private OWLObjectProperty p = df.getOWLObjectProperty(IRI
-            .create("urn:test#p"));
-    @Nonnull
+        .create("urn:test#p"));
     private OWLObjectProperty q = df.getOWLObjectProperty(IRI
-            .create("urn:test#q"));
-    @Nonnull
+        .create("urn:test#q"));
     private OWLObjectProperty r = df.getOWLObjectProperty(IRI
-            .create("urn:test#r"));
-    @Nonnull
+        .create("urn:test#r"));
     private OWLDataProperty s = df.getOWLDataProperty(IRI.create("urn:test#s"));
-    @Nonnull
     private OWLDataProperty t = df.getOWLDataProperty(IRI.create("urn:test#t"));
-    @Nonnull
     private OWLDataProperty v = df.getOWLDataProperty(IRI.create("urn:test#v"));
-    @Nonnull
     private OWLNamedIndividual x = df.getOWLNamedIndividual(IRI
-            .create("urn:test#x"));
-    @Nonnull
+        .create("urn:test#x"));
     private OWLNamedIndividual y = df.getOWLNamedIndividual(IRI
-            .create("urn:test#y"));
-    @Nonnull
+        .create("urn:test#y"));
     private OWLNamedIndividual z = df.getOWLNamedIndividual(IRI
-            .create("urn:test#z"));
-    @Nonnull
+        .create("urn:test#z"));
     private OWLClass owlNothing = df.getOWLNothing();
-    @Nonnull
     private OWLClass owlThing = df.getOWLThing();
-    @Nonnull
     private OWLDataProperty bottomData = df.getOWLBottomDataProperty();
-    @Nonnull
     private OWLDataProperty topData = df.getOWLTopDataProperty();
-    @Nonnull
     private OWLObjectProperty bottomObject = df.getOWLBottomObjectProperty();
-    @Nonnull
     private OWLObjectProperty topObject = df.getOWLTopObjectProperty();
 
     @Before
     public void setUp() {
-        testSubject = new SemanticLocalityChecker(null,
-                OWLManager.createOWLOntologyManager());
+        // XXX add a reasoner factory
+        testSubject = new SemanticLocalityChecker(null, OWLManager.createOWLOntologyManager());
     }
 
     private void set(OWLEntity... entities) {
@@ -571,7 +519,7 @@ public class SemanticLocalityTestCase {
     }
 
     private void test(OWLAxiom ax, boolean expected, boolean locality,
-            OWLEntity... entities) {
+        OWLEntity... entities) {
         testSubject.preprocessOntology(Arrays.asList(new AxiomWrapper(ax)));
         set(entities);
         testSubject.getSignature().setLocality(locality);

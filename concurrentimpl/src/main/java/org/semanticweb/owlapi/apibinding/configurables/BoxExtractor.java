@@ -44,8 +44,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
@@ -71,11 +69,9 @@ import org.semanticweb.owlapi.util.OWLObjectVisitorExAdapter;
  * extracting the same Box from different ontologies without side effects.
  */
 public class BoxExtractor extends OWLObjectVisitorExAdapter<Set<OWLAxiom>>
-        implements OWLObjectVisitorEx<Set<OWLAxiom>> {
+    implements OWLObjectVisitorEx<Set<OWLAxiom>> {
 
-    @Nonnull
     private final Collection<AxiomType<?>> types;
-    @Nonnull
     private final Imports closure;
 
     /**
@@ -85,8 +81,8 @@ public class BoxExtractor extends OWLObjectVisitorExAdapter<Set<OWLAxiom>>
      *        if true, the imports closure is included in the search, otherwise
      *        only the visited ontology is included
      */
-    public BoxExtractor(@Nonnull Collection<AxiomType<?>> types,
-            @Nonnull Imports importsClosure) {
+    public BoxExtractor(Collection<AxiomType<?>> types,
+        Imports importsClosure) {
         super(Collections.<OWLAxiom> emptySet());
         this.types = new ArrayList<>(types);
         closure = importsClosure;

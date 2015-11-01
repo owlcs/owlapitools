@@ -41,9 +41,9 @@ package org.semanticweb.owlapi.api.test.alternate;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 
-import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.test.MultiThreadChecker;
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.test.TestMultithreadCallBack;
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.test.Tester;
@@ -73,8 +73,7 @@ public class ConcurrentSafetyTest {
     }
 
     private Tester tester = new Tester();
-    private OWLDataFactory[] factories = new OWLDataFactory[] { new OWLDataFactoryImpl(
-            true, true) };
+    private OWLDataFactory[] factories = new OWLDataFactory[] { OWLManager.getOWLDataFactory() };
 
     @Test
     public void testSafeImplementation() {

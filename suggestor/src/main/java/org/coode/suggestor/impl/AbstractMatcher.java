@@ -3,8 +3,6 @@ package org.coode.suggestor.impl;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLPropertyExpression;
 import org.semanticweb.owlapi.model.OWLPropertyRange;
@@ -12,13 +10,12 @@ import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 
 abstract class AbstractMatcher<R extends OWLPropertyRange, F extends R, P extends OWLPropertyExpression>
-        implements Matcher<R, F, P> {
+    implements Matcher<R, F, P> {
 
     public AbstractMatcher() {}
 
     @Override
-    public final boolean
-            isMatch(OWLClassExpression c, P p, R f, boolean direct) {
+    public final boolean isMatch(OWLClassExpression c, P p, R f, boolean direct) {
         if (!direct) {
             return isMatch(c, p, f);
         }
@@ -37,12 +34,12 @@ abstract class AbstractMatcher<R extends OWLPropertyRange, F extends R, P extend
 
     @Override
     public final NodeSet<F> getLeaves(OWLClassExpression c, P p, R start,
-            boolean direct) {
+        boolean direct) {
         Set<Node<F>> nodes = new HashSet<>();
         if (isMatch(c, p, start)) {
             for (Node<F> sub : getDirectSubs(start)) {
                 nodes.addAll(getLeaves(c, p, sub.getRepresentativeElement(),
-                        direct).getNodes());
+                    direct).getNodes());
             }
             if (!direct || nodes.isEmpty() && !start.isTopEntity()) {
                 nodes.add(getEquivalents(start));
@@ -54,26 +51,23 @@ abstract class AbstractMatcher<R extends OWLPropertyRange, F extends R, P extend
 
     @Override
     public final NodeSet<F> getRoots(OWLClassExpression c, P p, R start,
-            boolean direct) {
+        boolean direct) {
         Set<Node<F>> nodes = new HashSet<>();
         for (Node<F> sub : getDirectSubs(start)) {
             if (isMatch(c, p, sub.getRepresentativeElement())) {
                 nodes.add(sub);
                 if (!direct) {
                     nodes.addAll(getRoots(c, p, sub.getRepresentativeElement(),
-                            direct).getNodes());
+                        direct).getNodes());
                 }
             }
         }
         return createNodeSet(nodes);
     }
 
-    @Nonnull
-    protected abstract NodeSet<F> getDirectSubs(@Nonnull R f);
+    protected abstract NodeSet<F> getDirectSubs(R f);
 
-    @Nonnull
-    protected abstract Node<F> getEquivalents(@Nonnull R f);
+    protected abstract Node<F> getEquivalents(R f);
 
-    @Nonnull
-    protected abstract NodeSet<F> createNodeSet(@Nonnull Set<Node<F>> nodes);
+    protected abstract NodeSet<F> createNodeSet(Set<Node<F>> nodes);
 }

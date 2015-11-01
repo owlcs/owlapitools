@@ -43,33 +43,31 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
+import java.util.concurrent.*;
+
+import javax.annotation.Nullable;
 
 import org.semanticweb.owlapi.util.CollectionFactory;
 
 /**
- * @author ignazio Cache where values computation is carried out with Computables
- *         and multithread safe - no stale data, no multiple computations for
- *         the same value
+ * @author ignazio Cache where values computation is carried out with
+ *         Computables and multithread safe - no stale data, no multiple
+ *         computations for the same value
  * @param <A>
- *            type of key
+ *        type of key
  * @param <V>
  *        type of value
  */
 public class MemoizingCache<A, V> implements Map<A, V> {
+
     private final ConcurrentHashMap<A, FutureTask<V>> cache = CollectionFactory
-            .createSyncMap();
+        .createSyncMap();
 
     /**
      * @param computant
-     *            the object that carries out the copmutation
+     *        the object that carries out the copmutation
      * @param key
-     *            the key
+     *        the key
      * @return the computed value
      */
     public V get(final Computable<V> computant, final A key) {
@@ -77,8 +75,9 @@ public class MemoizingCache<A, V> implements Map<A, V> {
             FutureTask<V> f = cache.get(key);
             if (f == null) {
                 Callable<V> eval = new Callable<V>() {
+
                     @Override
-                    public V call() {
+                    public @Nullable V call() {
                         V compute = computant.compute();
                         return compute;
                     }
@@ -98,26 +97,26 @@ public class MemoizingCache<A, V> implements Map<A, V> {
                 throw new RuntimeException(e);
             } catch (InterruptedException e) {
                 cache.remove(key);
-                throw new RuntimeException("Unexpected interrupted exception",
-                        e);
+                throw new RuntimeException("Unexpected interrupted exception", e);
             }
         }
     }
 
     /**
      * @param computed
-     *            the value
+     *        the value
      * @param key
-     *            the key
+     *        the key
      * @return computed
      */
-    public V get(final V computed, final A key) {
+    public V get(final @Nullable V computed, final @Nullable A key) {
         while (true) {
             FutureTask<V> f = cache.get(key);
             if (f == null) {
                 Callable<V> eval = new Callable<V>() {
+
                     @Override
-                    public V call() {
+                    public @Nullable V call() {
                         return computed;
                     }
                 };
@@ -137,7 +136,7 @@ public class MemoizingCache<A, V> implements Map<A, V> {
             } catch (InterruptedException e) {
                 cache.remove(key);
                 throw new RuntimeException("Unexpected interrupted exception",
-                        e);
+                    e);
             }
         }
     }
@@ -148,20 +147,18 @@ public class MemoizingCache<A, V> implements Map<A, V> {
     }
 
     @Override
-    public boolean containsKey(Object key) {
+    public boolean containsKey(@Nullable Object key) {
         return this.cache.containsKey(key);
     }
 
     @Override
-    public boolean containsValue(Object value) {
+    public boolean containsValue(@Nullable Object value) {
         for (Future<V> f : cache.values()) {
             try {
                 if (f.get().equals(value)) {
                     return true;
                 }
-            } catch (InterruptedException e) {
-                // nothing to do here
-            } catch (ExecutionException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 // nothing to do here
             }
         }
@@ -174,7 +171,7 @@ public class MemoizingCache<A, V> implements Map<A, V> {
     }
 
     @Override
-    public V get(Object key) {
+    public @Nullable V get(@Nullable Object key) {
         if (!cache.containsKey(key)) {
             return null;
         }
@@ -186,7 +183,7 @@ public class MemoizingCache<A, V> implements Map<A, V> {
                 return futureTask.get();
             } else {
                 throw new NullPointerException(
-                        "Unexpected null value in the map: key was expected to be contained and checked in this method, but is no longer contained in the map");
+                    "Unexpected null value in the map: key was expected to be contained and checked in this method, but is no longer contained in the map");
             }
         } catch (CancellationException e) {
             throw new RuntimeException(e);
@@ -214,20 +211,20 @@ public class MemoizingCache<A, V> implements Map<A, V> {
      * the values stored before the new value
      */
     @Override
-    public V put(A key, final V value) {
+    public @Nullable V put(@Nullable A key, final @Nullable V value) {
         V toReturn = this.get(key);
         this.get(value, key);
         return toReturn;
     }
 
     @Override
-    public void putAll(Map<? extends A, ? extends V> t) {
+    public void putAll(@Nullable Map<? extends A, ? extends V> t) {
         throw new UnsupportedOperationException(
-                "Adding values must be done through the get(Computable<A,V>, A) method");
+            "Adding values must be done through the get(Computable<A,V>, A) method");
     }
 
     @Override
-    public V remove(Object key) {
+    public @Nullable V remove(@Nullable Object key) {
         V f = get(key);
         cache.remove(key);
         return f;

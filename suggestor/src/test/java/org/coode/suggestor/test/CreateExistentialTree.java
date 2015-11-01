@@ -13,19 +13,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.annotation.Nonnull;
-
 import org.coode.suggestor.api.FillerSuggestor;
 import org.coode.suggestor.api.PropertySuggestor;
 import org.coode.suggestor.impl.SuggestorFactory;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLObject;
-import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
@@ -38,14 +29,13 @@ public class CreateExistentialTree extends AbstractSuggestorTest {
     @Override
     protected OWLOntology createOntology() throws OWLOntologyCreationException {
         return mngr.loadOntologyFromOntologyDocument(IRI
-                .create("http://www.co-ode.org/ontologies/pizza/pizza.owl"));
+            .create("http://www.co-ode.org/ontologies/pizza/pizza.owl"));
     }
 
     public void testCreateTree() throws Exception {
         OWLOntology ont = createOntology();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(
-                DEFAULT_REASONER_FACTORY).newInstance())
-                .createNonBufferingReasoner(ont);
+        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY).newInstance())
+            .createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         FillerSuggestor fs = fac.getFillerSuggestor();
@@ -58,13 +48,12 @@ public class CreateExistentialTree extends AbstractSuggestorTest {
         System.out.println("Complete in " + (end - start) + "ms");
     }
 
-    private void printClass(Node<OWLClass> cNode, int indent,
-            PropertySuggestor ps, OWLReasoner r, FillerSuggestor fs) {
+    private void printClass(Node<OWLClass> cNode, int indent, PropertySuggestor ps, OWLReasoner r, FillerSuggestor fs) {
         print(cNode, indent);
         if (visited.add(cNode)) {
             final OWLClassExpression c = cNode.getRepresentativeElement();
             for (Node<OWLObjectPropertyExpression> p : ps
-                    .getCurrentObjectProperties(c, true)) {
+                .getCurrentObjectProperties(c, true)) {
                 printProperty(c, p, indent + 3, fs);
             }
             for (Node<OWLClass> sub : r.getSubClasses(c, true)) {
@@ -75,13 +64,10 @@ public class CreateExistentialTree extends AbstractSuggestorTest {
         }
     }
 
-    private static void
-            printProperty(@Nonnull OWLClassExpression c,
-                    Node<OWLObjectPropertyExpression> p, int indent,
-                    FillerSuggestor fs) {
+    private static void printProperty(OWLClassExpression c, Node<OWLObjectPropertyExpression> p, int indent,
+        FillerSuggestor fs) {
         print(p, indent);
-        for (Node<OWLClass> f : fs.getCurrentNamedFillers(c,
-                p.getRepresentativeElement(), true)) {
+        for (Node<OWLClass> f : fs.getCurrentNamedFillers(c, p.getRepresentativeElement(), true)) {
             print(f, indent + 1);
         }
     }

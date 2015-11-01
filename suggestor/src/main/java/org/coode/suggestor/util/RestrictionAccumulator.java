@@ -13,6 +13,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -45,7 +47,7 @@ public class RestrictionAccumulator {
      * @return restrictions
      */
     public Set<OWLRestriction> getRestrictions(OWLClassExpression cls,
-            OWLPropertyExpression prop) {
+        OWLPropertyExpression prop) {
         return accummulateRestrictions(cls, prop, null);
     }
 
@@ -62,7 +64,7 @@ public class RestrictionAccumulator {
      */
     @SuppressWarnings("unchecked")
     public <T extends OWLRestriction> Set<T> getRestrictions(
-            OWLClassExpression cls, OWLPropertyExpression prop, Class<T> type) {
+        OWLClassExpression cls, OWLPropertyExpression prop, Class<T> type) {
         Set<T> results = new HashSet<>();
         for (OWLRestriction restr : accummulateRestrictions(cls, prop, type)) {
             results.add((T) restr);
@@ -71,10 +73,10 @@ public class RestrictionAccumulator {
     }
 
     protected Set<OWLRestriction> accummulateRestrictions(
-            OWLClassExpression cls, OWLPropertyExpression prop,
-            Class<? extends OWLRestriction> type) {
+        OWLClassExpression cls, @Nullable OWLPropertyExpression prop,
+        @Nullable Class<? extends OWLRestriction> type) {
         Set<OWLClass> relevantClasses = r.getSuperClasses(cls, false)
-                .getFlattened();
+            .getFlattened();
         RestrictionVisitor v = getVisitor(prop, type);
         if (!cls.isAnonymous()) {
             relevantClasses.add(cls.asOWLClass());
@@ -86,12 +88,12 @@ public class RestrictionAccumulator {
         for (OWLClass ancestor : relevantClasses) {
             for (OWLOntology ont : onts) {
                 Collection<OWLClassExpression> superclasses = Searcher.sup(ont
-                        .getSubClassAxiomsForSubClass(ancestor));
+                    .getSubClassAxiomsForSubClass(ancestor));
                 for (OWLClassExpression restr : superclasses) {
                     restr.accept(v);
                 }
                 Collection<OWLClassExpression> equivalent = Searcher
-                        .equivalent(ont.getEquivalentClassesAxioms(ancestor));
+                    .equivalent(ont.getEquivalentClassesAxioms(ancestor));
                 for (OWLClassExpression restr : equivalent) {
                     restr.accept(v);
                 }
@@ -100,8 +102,8 @@ public class RestrictionAccumulator {
         return v.restrs;
     }
 
-    protected RestrictionVisitor getVisitor(OWLPropertyExpression prop,
-            Class<? extends OWLRestriction> type) {
+    protected RestrictionVisitor getVisitor(@Nullable OWLPropertyExpression prop,
+        @Nullable Class<? extends OWLRestriction> type) {
         return new RestrictionVisitor(r, prop, type);
     }
 }

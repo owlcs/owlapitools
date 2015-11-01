@@ -7,8 +7,11 @@ package uk.ac.manchester.cs.chainsaw;
  You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA*/
 import java.util.Arrays;
 
+import javax.annotation.Nullable;
+
 /** @author ignazio */
 public class FastSetSimple implements FastSet {
+
     private static final int limit = 5;
 
     @Override
@@ -27,11 +30,13 @@ public class FastSetSimple implements FastSet {
         return b.toString();
     }
 
-    protected int[] values;
+    protected @Nullable int[] values;
     protected int size = 0;
     protected static final int defaultSize = 16;
 
+    @SuppressWarnings("null")
     protected int insertionIndex(int key) {
+        assert values != null;
         if (key < values[0]) {
             return -1;
         }
@@ -69,10 +74,13 @@ public class FastSetSimple implements FastSet {
     /** default constructor */
     public FastSetSimple() {}
 
-    /** @param c1
-     *            c1
+    /**
+     * @param c1
+     *        c1
      * @param c2
-     *            c2 */
+     *        c2
+     */
+    @SuppressWarnings("null")
     public FastSetSimple(FastSetSimple c1, FastSetSimple c2) {
         values = new int[(c1.size + c2.size) / defaultSize * defaultSize + defaultSize];
         int i = 0;
@@ -122,6 +130,7 @@ public class FastSetSimple implements FastSet {
         size = 0;
     }
 
+    @SuppressWarnings("null")
     @Override
     public void add(int e) {
         int pos = -1;
@@ -151,6 +160,7 @@ public class FastSetSimple implements FastSet {
         size++;
     }
 
+    @SuppressWarnings("null")
     @Override
     public void addAll(FastSet c) {
         if (c.isEmpty()) {
@@ -323,7 +333,7 @@ public class FastSetSimple implements FastSet {
     }
 
     @Override
-    public boolean equals(Object arg0) {
+    public boolean equals(@Nullable Object arg0) {
         if (arg0 == null) {
             return false;
         }
@@ -350,6 +360,7 @@ public class FastSetSimple implements FastSet {
         return super.hashCode();
     }
 
+    @SuppressWarnings("null")
     @Override
     public void removeAt(int i) {
         if (values == null) {
@@ -371,6 +382,7 @@ public class FastSetSimple implements FastSet {
         }
     }
 
+    @SuppressWarnings("null")
     @Override
     public void removeAll(int i, int end) {
         if (values == null) {
@@ -378,7 +390,7 @@ public class FastSetSimple implements FastSet {
         }
         if (end < -1 || end < i || end > size || i < -1 || i > size) {
             throw new IllegalArgumentException("illegal arguments: " + i + " " + end
-                    + " size: " + size);
+                + " size: " + size);
         }
         if (size == 1 || i == 0 && end == size) {
             values = null;
@@ -399,6 +411,7 @@ public class FastSetSimple implements FastSet {
         }
     }
 
+    @SuppressWarnings("null")
     @Override
     public void removeAllValues(int... vals) {
         if (values == null) {

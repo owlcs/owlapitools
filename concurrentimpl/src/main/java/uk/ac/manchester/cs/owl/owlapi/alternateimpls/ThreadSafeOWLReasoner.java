@@ -38,45 +38,25 @@
  */
 package uk.ac.manchester.cs.owl.owlapi.alternateimpls;
 
+import static org.semanticweb.owlapi.util.OWLAPIPreconditions.checkNotNull;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import org.semanticweb.owlapi.model.AxiomType;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
-import org.semanticweb.owlapi.model.OWLLiteral;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
-import org.semanticweb.owlapi.reasoner.AxiomNotInProfileException;
-import org.semanticweb.owlapi.reasoner.BufferingMode;
-import org.semanticweb.owlapi.reasoner.ClassExpressionNotInProfileException;
-import org.semanticweb.owlapi.reasoner.FreshEntitiesException;
-import org.semanticweb.owlapi.reasoner.FreshEntityPolicy;
-import org.semanticweb.owlapi.reasoner.InconsistentOntologyException;
-import org.semanticweb.owlapi.reasoner.IndividualNodeSetPolicy;
-import org.semanticweb.owlapi.reasoner.InferenceType;
-import org.semanticweb.owlapi.reasoner.Node;
-import org.semanticweb.owlapi.reasoner.NodeSet;
-import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import org.semanticweb.owlapi.reasoner.ReasonerInterruptedException;
-import org.semanticweb.owlapi.reasoner.TimeOutException;
-import org.semanticweb.owlapi.reasoner.UnsupportedEntailmentTypeException;
+import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.reasoner.*;
 import org.semanticweb.owlapi.util.Version;
 
 /** @author ignazio a threadsafe wrapper for OWLReasoners */
 public class ThreadSafeOWLReasoner implements OWLReasoner {
+
     private final OWLReasoner delegate;
     private boolean log = false;
 
     /**
      * @param reasoner
-     *            the reasoner to wrap
+     *        the reasoner to wrap
      * @param log
      *        true if logging is required
      */
@@ -90,10 +70,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
      *        the reasoner to wrap
      */
     public ThreadSafeOWLReasoner(OWLReasoner reasoner) {
-        if (reasoner == null) {
-            throw new IllegalArgumentException(
-                    "The input reasoner cannot be null");
-        }
+        checkNotNull(reasoner, "The input reasoner cannot be null");
         delegate = reasoner;
     }
 
@@ -102,7 +79,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getReasonerName()");
+                    + " reasoner.getReasonerName()");
                 System.out.flush();
             }
             return delegate.getReasonerName();
@@ -114,7 +91,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getReasonerVersion()");
+                    + " reasoner.getReasonerVersion()");
                 System.out.flush();
             }
             return delegate.getReasonerVersion();
@@ -126,7 +103,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getBufferingMode()");
+                    + " reasoner.getBufferingMode()");
                 System.out.flush();
             }
             return delegate.getBufferingMode();
@@ -138,7 +115,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.flush()");
+                    + " reasoner.flush()");
                 System.out.flush();
             }
             delegate.flush();
@@ -150,7 +127,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getPendingChanges()");
+                    + " reasoner.getPendingChanges()");
                 System.out.flush();
             }
             return delegate.getPendingChanges();
@@ -162,7 +139,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getPendingAxiomAdditions()");
+                    + " reasoner.getPendingAxiomAdditions()");
                 System.out.flush();
             }
             return delegate.getPendingAxiomAdditions();
@@ -174,7 +151,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getPendingAxiomRemovals()");
+                    + " reasoner.getPendingAxiomRemovals()");
                 System.out.flush();
             }
             return delegate.getPendingAxiomRemovals();
@@ -186,7 +163,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getRootOntology()");
+                    + " reasoner.getRootOntology()");
                 System.out.flush();
             }
             return delegate.getRootOntology();
@@ -198,7 +175,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.interrupt()");
+                    + " reasoner.interrupt()");
                 System.out.flush();
             }
             delegate.interrupt();
@@ -207,13 +184,13 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
 
     @Override
     public void precomputeInferences(InferenceType... inferenceTypes)
-            throws ReasonerInterruptedException, TimeOutException,
-            InconsistentOntologyException {
+        throws ReasonerInterruptedException, TimeOutException,
+        InconsistentOntologyException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.precomputeInferences() "
-                        + Arrays.toString(inferenceTypes));
+                    + " reasoner.precomputeInferences() "
+                    + Arrays.toString(inferenceTypes));
                 System.out.flush();
             }
             delegate.precomputeInferences(inferenceTypes);
@@ -225,7 +202,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.isPrecomputed() " + inferenceType);
+                    + " reasoner.isPrecomputed() " + inferenceType);
                 System.out.flush();
             }
             return delegate.isPrecomputed(inferenceType);
@@ -237,7 +214,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getPrecomputableInferenceTypes()");
+                    + " reasoner.getPrecomputableInferenceTypes()");
                 System.out.flush();
             }
             return delegate.getPrecomputableInferenceTypes();
@@ -246,11 +223,11 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
 
     @Override
     public boolean isConsistent() throws ReasonerInterruptedException,
-            TimeOutException {
+        TimeOutException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.isConsistent()");
+                    + " reasoner.isConsistent()");
                 System.out.flush();
             }
             return delegate.isConsistent();
@@ -259,13 +236,13 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
 
     @Override
     public boolean isSatisfiable(OWLClassExpression classExpression)
-            throws ReasonerInterruptedException, TimeOutException,
-            ClassExpressionNotInProfileException, FreshEntitiesException,
-            InconsistentOntologyException {
+        throws ReasonerInterruptedException, TimeOutException,
+        ClassExpressionNotInProfileException, FreshEntitiesException,
+        InconsistentOntologyException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.isSatisfiable() " + classExpression);
+                    + " reasoner.isSatisfiable() " + classExpression);
                 System.out.flush();
             }
             return delegate.isSatisfiable(classExpression);
@@ -274,12 +251,12 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
 
     @Override
     public Node<OWLClass> getUnsatisfiableClasses()
-            throws ReasonerInterruptedException, TimeOutException,
-            InconsistentOntologyException {
+        throws ReasonerInterruptedException, TimeOutException,
+        InconsistentOntologyException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getUnsatisfiableClasses()");
+                    + " reasoner.getUnsatisfiableClasses()");
                 System.out.flush();
             }
             return delegate.getUnsatisfiableClasses();
@@ -288,35 +265,35 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
 
     @Override
     public boolean isEntailed(OWLAxiom axiom)
-            throws ReasonerInterruptedException,
-            UnsupportedEntailmentTypeException, TimeOutException,
-            AxiomNotInProfileException, FreshEntitiesException,
-            InconsistentOntologyException {
+        throws ReasonerInterruptedException,
+        UnsupportedEntailmentTypeException, TimeOutException,
+        AxiomNotInProfileException, FreshEntitiesException,
+        InconsistentOntologyException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.isEntailed() " + axiom);
+                    + " reasoner.isEntailed() " + axiom);
                 System.out.flush();
             }
             try {
                 return delegate.isEntailed(axiom);
             } catch (RuntimeException e) {
                 throw new RuntimeException(
-                        "Exception checking entailment of axiom: " + axiom, e);
+                    "Exception checking entailment of axiom: " + axiom, e);
             }
         }
     }
 
     @Override
     public boolean isEntailed(Set<? extends OWLAxiom> axioms)
-            throws ReasonerInterruptedException,
-            UnsupportedEntailmentTypeException, TimeOutException,
-            AxiomNotInProfileException, FreshEntitiesException,
-            InconsistentOntologyException {
+        throws ReasonerInterruptedException,
+        UnsupportedEntailmentTypeException, TimeOutException,
+        AxiomNotInProfileException, FreshEntitiesException,
+        InconsistentOntologyException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.isEntailed() " + axioms);
+                    + " reasoner.isEntailed() " + axioms);
                 System.out.flush();
             }
             return delegate.isEntailed(axioms);
@@ -328,8 +305,8 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.isEntailmentCheckingSupported() "
-                        + axiomType);
+                    + " reasoner.isEntailmentCheckingSupported() "
+                    + axiomType);
                 System.out.flush();
             }
             return delegate.isEntailmentCheckingSupported(axiomType);
@@ -341,7 +318,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getTopClassNode()");
+                    + " reasoner.getTopClassNode()");
                 System.out.flush();
             }
             return delegate.getTopClassNode();
@@ -353,7 +330,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getBottomClassNode()");
+                    + " reasoner.getBottomClassNode()");
                 System.out.flush();
             }
             return delegate.getBottomClassNode();
@@ -361,15 +338,14 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
     }
 
     @Override
-    public NodeSet<OWLClass>
-            getSubClasses(OWLClassExpression ce, boolean direct)
-            throws ReasonerInterruptedException, TimeOutException,
-            FreshEntitiesException, InconsistentOntologyException,
-            ClassExpressionNotInProfileException {
+    public NodeSet<OWLClass> getSubClasses(OWLClassExpression ce, boolean direct)
+        throws ReasonerInterruptedException, TimeOutException,
+        FreshEntitiesException, InconsistentOntologyException,
+        ClassExpressionNotInProfileException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getSubClasses() " + ce + " " + direct);
+                    + " reasoner.getSubClasses() " + ce + " " + direct);
                 System.out.flush();
             }
             NodeSet<OWLClass> subClasses = delegate.getSubClasses(ce, direct);
@@ -379,46 +355,46 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
 
     @Override
     public NodeSet<OWLClass> getSuperClasses(OWLClassExpression ce,
-            boolean direct) throws InconsistentOntologyException,
+        boolean direct) throws InconsistentOntologyException,
             ClassExpressionNotInProfileException, FreshEntitiesException,
             ReasonerInterruptedException, TimeOutException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getSuperClasses()" + ce + " " + direct);
+                    + " reasoner.getSuperClasses()" + ce + " " + direct);
                 System.out.flush();
             }
             NodeSet<OWLClass> superClasses = delegate.getSuperClasses(ce,
-                    direct);
+                direct);
             return superClasses;
         }
     }
 
     @Override
     public Node<OWLClass> getEquivalentClasses(OWLClassExpression ce)
-            throws InconsistentOntologyException,
-            ClassExpressionNotInProfileException, FreshEntitiesException,
-            ReasonerInterruptedException, TimeOutException {
+        throws InconsistentOntologyException,
+        ClassExpressionNotInProfileException, FreshEntitiesException,
+        ReasonerInterruptedException, TimeOutException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getEquivalentClasses() " + ce);
+                    + " reasoner.getEquivalentClasses() " + ce);
                 System.out.flush();
             }
             Node<OWLClass> equivalentClasses = delegate
-                    .getEquivalentClasses(ce);
+                .getEquivalentClasses(ce);
             return equivalentClasses;
         }
     }
 
     @Override
     public NodeSet<OWLClass> getDisjointClasses(OWLClassExpression ce)
-            throws ReasonerInterruptedException, TimeOutException,
-            FreshEntitiesException, InconsistentOntologyException {
+        throws ReasonerInterruptedException, TimeOutException,
+        FreshEntitiesException, InconsistentOntologyException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getDisjointClasses() " + ce);
+                    + " reasoner.getDisjointClasses() " + ce);
                 System.out.flush();
             }
             NodeSet<OWLClass> disjointClasses = delegate.getDisjointClasses(ce);
@@ -431,7 +407,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getTopObjectPropertyNode()");
+                    + " reasoner.getTopObjectPropertyNode()");
                 System.out.flush();
             }
             return delegate.getTopObjectPropertyNode();
@@ -443,7 +419,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getBottomObjectPropertyNode()");
+                    + " reasoner.getBottomObjectPropertyNode()");
                 System.out.flush();
             }
             return delegate.getBottomObjectPropertyNode();
@@ -452,66 +428,66 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
 
     @Override
     public NodeSet<OWLObjectPropertyExpression> getSubObjectProperties(
-            OWLObjectPropertyExpression pe, boolean direct)
+        OWLObjectPropertyExpression pe, boolean direct)
             throws InconsistentOntologyException, FreshEntitiesException,
             ReasonerInterruptedException, TimeOutException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getSubObjectProperties() " + pe + " "
-                        + direct);
+                    + " reasoner.getSubObjectProperties() " + pe + " "
+                    + direct);
                 System.out.flush();
             }
             NodeSet<OWLObjectPropertyExpression> subObjectProperties = delegate
-                    .getSubObjectProperties(pe, direct);
+                .getSubObjectProperties(pe, direct);
             return subObjectProperties;
         }
     }
 
     @Override
     public NodeSet<OWLObjectPropertyExpression> getSuperObjectProperties(
-            OWLObjectPropertyExpression pe, boolean direct)
+        OWLObjectPropertyExpression pe, boolean direct)
             throws InconsistentOntologyException, FreshEntitiesException,
             ReasonerInterruptedException, TimeOutException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getSuperObjectProperties() " + pe + " "
-                        + direct);
+                    + " reasoner.getSuperObjectProperties() " + pe + " "
+                    + direct);
                 System.out.flush();
             }
             NodeSet<OWLObjectPropertyExpression> superObjectProperties = delegate
-                    .getSuperObjectProperties(pe, direct);
+                .getSuperObjectProperties(pe, direct);
             return superObjectProperties;
         }
     }
 
     @Override
     public Node<OWLObjectPropertyExpression> getEquivalentObjectProperties(
-            OWLObjectPropertyExpression pe)
+        OWLObjectPropertyExpression pe)
             throws InconsistentOntologyException, FreshEntitiesException,
             ReasonerInterruptedException, TimeOutException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getEquivalentObjectProperties() " + pe);
+                    + " reasoner.getEquivalentObjectProperties() " + pe);
                 System.out.flush();
             }
             Node<OWLObjectPropertyExpression> equivalentObjectProperties = delegate
-                    .getEquivalentObjectProperties(pe);
+                .getEquivalentObjectProperties(pe);
             return equivalentObjectProperties;
         }
     }
 
     @Override
     public NodeSet<OWLObjectPropertyExpression> getDisjointObjectProperties(
-            OWLObjectPropertyExpression pe)
+        OWLObjectPropertyExpression pe)
             throws InconsistentOntologyException, FreshEntitiesException,
             ReasonerInterruptedException, TimeOutException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getDisjointObjectProperties() " + pe);
+                    + " reasoner.getDisjointObjectProperties() " + pe);
                 System.out.flush();
             }
             return delegate.getDisjointObjectProperties(pe);
@@ -520,13 +496,13 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
 
     @Override
     public Node<OWLObjectPropertyExpression> getInverseObjectProperties(
-            OWLObjectPropertyExpression pe)
+        OWLObjectPropertyExpression pe)
             throws InconsistentOntologyException, FreshEntitiesException,
             ReasonerInterruptedException, TimeOutException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getInverseObjectProperties() " + pe);
+                    + " reasoner.getInverseObjectProperties() " + pe);
                 System.out.flush();
             }
             return delegate.getInverseObjectProperties(pe);
@@ -535,14 +511,14 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
 
     @Override
     public NodeSet<OWLClass> getObjectPropertyDomains(
-            OWLObjectPropertyExpression pe, boolean direct)
+        OWLObjectPropertyExpression pe, boolean direct)
             throws InconsistentOntologyException, FreshEntitiesException,
             ReasonerInterruptedException, TimeOutException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getObjectPropertyDomains() " + pe + " "
-                        + direct);
+                    + " reasoner.getObjectPropertyDomains() " + pe + " "
+                    + direct);
                 System.out.flush();
             }
             return delegate.getObjectPropertyDomains(pe, direct);
@@ -551,14 +527,14 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
 
     @Override
     public NodeSet<OWLClass> getObjectPropertyRanges(
-            OWLObjectPropertyExpression pe, boolean direct)
+        OWLObjectPropertyExpression pe, boolean direct)
             throws InconsistentOntologyException, FreshEntitiesException,
             ReasonerInterruptedException, TimeOutException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getObjectPropertyRanges() " + pe + " "
-                        + direct);
+                    + " reasoner.getObjectPropertyRanges() " + pe + " "
+                    + direct);
                 System.out.flush();
             }
             return delegate.getObjectPropertyRanges(pe, direct);
@@ -570,7 +546,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getTopDataPropertyNode()");
+                    + " reasoner.getTopDataPropertyNode()");
                 System.out.flush();
             }
             return delegate.getTopDataPropertyNode();
@@ -582,7 +558,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getBottomDataPropertyNode()");
+                    + " reasoner.getBottomDataPropertyNode()");
                 System.out.flush();
             }
             return delegate.getBottomDataPropertyNode();
@@ -591,14 +567,14 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
 
     @Override
     public NodeSet<OWLDataProperty> getSubDataProperties(OWLDataProperty pe,
-            boolean direct) throws InconsistentOntologyException,
+        boolean direct) throws InconsistentOntologyException,
             FreshEntitiesException, ReasonerInterruptedException,
             TimeOutException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getSubDataProperties() " + pe + " "
-                        + direct);
+                    + " reasoner.getSubDataProperties() " + pe + " "
+                    + direct);
                 System.out.flush();
             }
             return delegate.getSubDataProperties(pe, direct);
@@ -607,14 +583,14 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
 
     @Override
     public NodeSet<OWLDataProperty> getSuperDataProperties(OWLDataProperty pe,
-            boolean direct) throws InconsistentOntologyException,
+        boolean direct) throws InconsistentOntologyException,
             FreshEntitiesException, ReasonerInterruptedException,
             TimeOutException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getSuperDataProperties() " + pe + " "
-                        + direct);
+                    + " reasoner.getSuperDataProperties() " + pe + " "
+                    + direct);
                 System.out.flush();
             }
             return delegate.getSuperDataProperties(pe, direct);
@@ -622,15 +598,14 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
     }
 
     @Override
-    public Node<OWLDataProperty>
-            getEquivalentDataProperties(OWLDataProperty pe)
-                    throws InconsistentOntologyException,
-                    FreshEntitiesException, ReasonerInterruptedException,
-                    TimeOutException {
+    public Node<OWLDataProperty> getEquivalentDataProperties(OWLDataProperty pe)
+        throws InconsistentOntologyException,
+        FreshEntitiesException, ReasonerInterruptedException,
+        TimeOutException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getEquivalentDataProperties() " + pe);
+                    + " reasoner.getEquivalentDataProperties() " + pe);
                 System.out.flush();
             }
             return delegate.getEquivalentDataProperties(pe);
@@ -639,13 +614,13 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
 
     @Override
     public NodeSet<OWLDataProperty> getDisjointDataProperties(
-            OWLDataPropertyExpression pe) throws InconsistentOntologyException,
+        OWLDataPropertyExpression pe) throws InconsistentOntologyException,
             FreshEntitiesException, ReasonerInterruptedException,
             TimeOutException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getDisjointDataProperties() " + pe);
+                    + " reasoner.getDisjointDataProperties() " + pe);
                 System.out.flush();
             }
             return delegate.getDisjointDataProperties(pe);
@@ -654,14 +629,14 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
 
     @Override
     public NodeSet<OWLClass> getDataPropertyDomains(OWLDataProperty pe,
-            boolean direct) throws InconsistentOntologyException,
+        boolean direct) throws InconsistentOntologyException,
             FreshEntitiesException, ReasonerInterruptedException,
             TimeOutException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getDataPropertyDomains() " + pe + " "
-                        + direct);
+                    + " reasoner.getDataPropertyDomains() " + pe + " "
+                    + direct);
                 System.out.flush();
             }
             return delegate.getDataPropertyDomains(pe, direct);
@@ -670,12 +645,12 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
 
     @Override
     public NodeSet<OWLClass> getTypes(OWLNamedIndividual ind, boolean direct)
-            throws InconsistentOntologyException, FreshEntitiesException,
-            ReasonerInterruptedException, TimeOutException {
+        throws InconsistentOntologyException, FreshEntitiesException,
+        ReasonerInterruptedException, TimeOutException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getTypes() " + ind + " " + direct);
+                    + " reasoner.getTypes() " + ind + " " + direct);
                 System.out.flush();
             }
             return delegate.getTypes(ind, direct);
@@ -684,13 +659,13 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
 
     @Override
     public NodeSet<OWLNamedIndividual> getInstances(OWLClassExpression ce,
-            boolean direct) throws InconsistentOntologyException,
-                    ClassExpressionNotInProfileException, FreshEntitiesException,
-                    ReasonerInterruptedException, TimeOutException {
+        boolean direct) throws InconsistentOntologyException,
+            ClassExpressionNotInProfileException, FreshEntitiesException,
+            ReasonerInterruptedException, TimeOutException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getInstances() " + ce + " " + direct);
+                    + " reasoner.getInstances() " + ce + " " + direct);
                 System.out.flush();
             }
             return delegate.getInstances(ce, direct);
@@ -699,14 +674,14 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
 
     @Override
     public NodeSet<OWLNamedIndividual> getObjectPropertyValues(
-            OWLNamedIndividual ind, OWLObjectPropertyExpression pe)
+        OWLNamedIndividual ind, OWLObjectPropertyExpression pe)
             throws InconsistentOntologyException, FreshEntitiesException,
             ReasonerInterruptedException, TimeOutException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getObjectPropertyValues() " + ind + " "
-                        + pe);
+                    + " reasoner.getObjectPropertyValues() " + ind + " "
+                    + pe);
                 System.out.flush();
             }
             return delegate.getObjectPropertyValues(ind, pe);
@@ -715,15 +690,15 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
 
     @Override
     public Set<OWLLiteral> getDataPropertyValues(OWLNamedIndividual ind,
-            OWLDataProperty pe) throws InconsistentOntologyException,
+        OWLDataProperty pe) throws InconsistentOntologyException,
             FreshEntitiesException, ReasonerInterruptedException,
             TimeOutException {
         synchronized (delegate) {
             if (log) {
                 System.out
-                        .println(Thread.currentThread().getName()
-                                + " reasoner.getDataPropertyValues() " + ind
-                                + " " + pe);
+                    .println(Thread.currentThread().getName()
+                        + " reasoner.getDataPropertyValues() " + ind
+                        + " " + pe);
                 System.out.flush();
             }
             return delegate.getDataPropertyValues(ind, pe);
@@ -732,12 +707,12 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
 
     @Override
     public Node<OWLNamedIndividual> getSameIndividuals(OWLNamedIndividual ind)
-            throws InconsistentOntologyException, FreshEntitiesException,
-            ReasonerInterruptedException, TimeOutException {
+        throws InconsistentOntologyException, FreshEntitiesException,
+        ReasonerInterruptedException, TimeOutException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getSameIndividuals() " + ind);
+                    + " reasoner.getSameIndividuals() " + ind);
                 System.out.flush();
             }
             return delegate.getSameIndividuals(ind);
@@ -746,13 +721,13 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
 
     @Override
     public NodeSet<OWLNamedIndividual> getDifferentIndividuals(
-            OWLNamedIndividual ind) throws InconsistentOntologyException,
+        OWLNamedIndividual ind) throws InconsistentOntologyException,
             FreshEntitiesException, ReasonerInterruptedException,
             TimeOutException {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getDifferentIndividuals() " + ind);
+                    + " reasoner.getDifferentIndividuals() " + ind);
                 System.out.flush();
             }
             return delegate.getDifferentIndividuals(ind);
@@ -764,7 +739,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getTimeOut()");
+                    + " reasoner.getTimeOut()");
                 System.out.flush();
             }
             return delegate.getTimeOut();
@@ -776,7 +751,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getFreshEntityPolicy()");
+                    + " reasoner.getFreshEntityPolicy()");
                 System.out.flush();
             }
             return delegate.getFreshEntityPolicy();
@@ -788,7 +763,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.getIndividualNodeSetPolicy()");
+                    + " reasoner.getIndividualNodeSetPolicy()");
                 System.out.flush();
             }
             return delegate.getIndividualNodeSetPolicy();
@@ -800,7 +775,7 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         synchronized (delegate) {
             if (log) {
                 System.out.println(Thread.currentThread().getName()
-                        + " reasoner.dispose()");
+                    + " reasoner.dispose()");
                 System.out.flush();
             }
             delegate.dispose();

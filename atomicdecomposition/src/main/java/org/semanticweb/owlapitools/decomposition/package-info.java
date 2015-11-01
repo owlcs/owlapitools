@@ -1,2 +1,2 @@
 @javax.annotation.ParametersAreNonnullByDefault
-package decomposition;
+package org.semanticweb.owlapitools.decomposition;

@@ -9,8 +9,6 @@
  */
 package org.coode.suggestor.api;
 
-import javax.annotation.Nonnull;
-
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
@@ -30,27 +28,25 @@ public interface PropertySanctionRule {
      * @param ps
      *        The PropertySuggestor
      */
-    void setSuggestor(@Nonnull PropertySuggestor ps);
+    void setSuggestor(PropertySuggestor ps);
 
     /**
      * @param c
-     *            a class expression
+     *        a class expression
      * @param p
-     *            an object property
+     *        an object property
      * @return true if p is an "interesting" property to use in the axiom
      *         SubClassOf(c, p some x)
      */
-    boolean meetsSanction(@Nonnull OWLClassExpression c,
-            @Nonnull OWLObjectPropertyExpression p);
+    boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p);
 
     /**
      * @param c
-     *            a class expression
+     *        a class expression
      * @param p
-     *            a data property
+     *        a data property
      * @return true if p is an "interesting" property to use in the axiom
      *         SubClassOf(c, p some x)
      */
-    boolean meetsSanction(@Nonnull OWLClassExpression c,
-            @Nonnull OWLDataProperty p);
+    boolean meetsSanction(OWLClassExpression c, OWLDataProperty p);
 }

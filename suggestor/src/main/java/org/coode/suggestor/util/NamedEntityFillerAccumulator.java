@@ -9,29 +9,27 @@
  */
 package org.coode.suggestor.util;
 
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLIndividual;
-import org.semanticweb.owlapi.model.OWLObjectExactCardinality;
-import org.semanticweb.owlapi.model.OWLObjectHasValue;
-import org.semanticweb.owlapi.model.OWLObjectMinCardinality;
-import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
-import org.semanticweb.owlapi.model.OWLPropertyExpression;
-import org.semanticweb.owlapi.model.OWLRestriction;
+import javax.annotation.Nullable;
+
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 /** Includes both named class fillers and individuals */
 public class NamedEntityFillerAccumulator extends FillerAccumulator<OWLEntity> {
-    /** @param r
-     *            reasoner to use */
+
+    /**
+     * @param r
+     *        reasoner to use
+     */
     public NamedEntityFillerAccumulator(OWLReasoner r) {
         super(r);
     }
 
     @Override
-    protected RestrictionVisitor getVisitor(OWLPropertyExpression prop,
-            Class<? extends OWLRestriction> type) {
+    protected RestrictionVisitor getVisitor(@Nullable OWLPropertyExpression prop,
+        @Nullable Class<? extends OWLRestriction> type) {
         return new RestrictionVisitor(r, prop, type) {
+
             @Override
             public void visit(OWLObjectSomeValuesFrom desc) {
                 super.visit(desc);
@@ -48,7 +46,7 @@ public class NamedEntityFillerAccumulator extends FillerAccumulator<OWLEntity> {
                 super.visit(desc);
                 if (desc.getCardinality() > 0 && props.contains(desc.getProperty())) {
                     OWLClassExpression filler = desc.getFiller();
-                    if (filler != null && !filler.isAnonymous()) {
+                    if (!filler.isAnonymous()) {
                         add(filler.asOWLClass());
                     }
                 }
@@ -59,7 +57,7 @@ public class NamedEntityFillerAccumulator extends FillerAccumulator<OWLEntity> {
                 super.visit(desc);
                 if (desc.getCardinality() > 0 && props.contains(desc.getProperty())) {
                     OWLClassExpression filler = desc.getFiller();
-                    if (filler != null && !filler.isAnonymous()) {
+                    if (!filler.isAnonymous()) {
                         add(filler.asOWLClass());
                     }
                 }

@@ -38,11 +38,16 @@
  */
 package org.semanticweb.owlapi.apibinding.configurables;
 
-/** @author ignazio
+import javax.annotation.Nullable;
+
+/**
+ * @author ignazio
  * @param <V>
- *            computed type */
+ *        computed type
+ */
 public abstract class ComputableAllThrowables<V> implements Computable<V> {
-    protected Throwable exception;
+
+    protected @Nullable Throwable exception;
 
     @Override
     public boolean hasThrownException() {
@@ -50,7 +55,7 @@ public abstract class ComputableAllThrowables<V> implements Computable<V> {
     }
 
     @Override
-    public Throwable thrownException() {
+    public @Nullable Throwable thrownException() {
         return exception;
     }
 }

@@ -1,2 +1,2 @@
 @javax.annotation.ParametersAreNonnullByDefault
-package utils.cachedreasoner;
+package org.semanticweb.owlapitools.cachedreasoner;

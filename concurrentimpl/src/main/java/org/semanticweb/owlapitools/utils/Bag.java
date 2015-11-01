@@ -1,14 +1,9 @@
 package org.semanticweb.owlapitools.utils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+
+import javax.annotation.Nullable;
 
 /**
  * bag for counting occurrences of instances of a specified type
@@ -48,7 +43,7 @@ public class Bag<Type> {
      *        instance to check
      * @return number of occurrences for t
      */
-    public long check(Type t) {
+    public long check(@Nullable Type t) {
         AtomicLong l = map.get(t);
         if (l != null) {
             return l.get();
@@ -66,7 +61,7 @@ public class Bag<Type> {
         Collections.sort(toReturn, new Comparator<Type>() {
 
             @Override
-            public int compare(Type o1, Type o2) {
+            public int compare(@Nullable Type o1, @Nullable Type o2) {
                 if (increasing) {
                     return Long.signum(check(o1) - check(o2));
                 } else {

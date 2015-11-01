@@ -9,20 +9,10 @@
  */
 package org.coode.suggestor.test;
 
-import javax.annotation.Nonnull;
-
 import org.junit.After;
 import org.junit.Before;
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.*;
 
 @SuppressWarnings("javadoc")
 public abstract class AbstractSuggestorTest {
@@ -42,7 +32,6 @@ public abstract class AbstractSuggestorTest {
         df = mngr.getOWLDataFactory();
     }
 
-    @Nonnull
     protected OWLOntology createOntology() throws OWLOntologyCreationException {
         return mngr.createOntology();
     }
@@ -53,22 +42,18 @@ public abstract class AbstractSuggestorTest {
         df = null;
     }
 
-    @Nonnull
     protected OWLObjectProperty createObjectProperty(String name) {
         return df.getOWLObjectProperty(IRI.create(BASE + name));
     }
 
-    @Nonnull
     protected OWLDataProperty createDataProperty(String name) {
         return df.getOWLDataProperty(IRI.create(BASE + name));
     }
 
-    @Nonnull
     protected OWLClass createClass(String name) {
         return df.getOWLClass(IRI.create(BASE + name));
     }
 
-    @Nonnull
     protected OWLAnnotationProperty createAnnotationProperty(String name) {
         return df.getOWLAnnotationProperty(IRI.create(BASE + name));
     }

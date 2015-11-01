@@ -11,19 +11,22 @@ package org.coode.suggestor.api;
 
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
-/** <p>
+/**
+ * <p>
  * The PropertySuggestor allows us to explore the relationships between the
  * classes and properties in the ontology.
  * </p>
  * <p>
- * For more general discussion of the suggestor idea please see the <a
- * href="package-summary.html">package summary</a>
+ * For more general discussion of the suggestor idea please see the
+ * <a href="package-summary.html">package summary</a>
  * </p>
  * <p>
  * Using the suggestor, we can ask the following questions:
@@ -48,157 +51,189 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
  * <p>
  * For the definition of StrictSubData/ObjectPropertyOf see the OWLAPI
  * {@link org.semanticweb.owlapi.reasoner.OWLReasoner}.
- * </p> */
+ * </p>
+ */
 public interface PropertySuggestor {
-    /** SubClassOf(c, p some Thing) is entailed
+
+    /**
+     * SubClassOf(c, p some Thing) is entailed
      * 
      * @param c
-     *            a class expression
+     *        a class expression
      * @param p
-     *            an object property
-     * @return true if SubClassOf(c, p some Thing) is entailed */
+     *        an object property
+     * @return true if SubClassOf(c, p some Thing) is entailed
+     */
     boolean isCurrent(OWLClassExpression c, OWLObjectPropertyExpression p);
 
-    /** @param c
-     *            a class expression
+    /**
+     * @param c
+     *        a class expression
      * @param p
-     *            an object property
+     *        an object property
      * @param direct
-     *            (see definition above)
+     *        (see definition above)
      * @return isCurrent(c, p). If direct then there is no q where
-     *         StrictSubObjectPropertyOf(q, p) and isCurrent(c, q) is entailed */
-            boolean
-            isCurrent(OWLClassExpression c, OWLObjectPropertyExpression p, boolean direct);
+     *         StrictSubObjectPropertyOf(q, p) and isCurrent(c, q) is entailed
+     */
+    boolean isCurrent(OWLClassExpression c, OWLObjectPropertyExpression p, boolean direct);
 
-    /** @param c
-     *            a class expression
+    /**
+     * @param c
+     *        a class expression
      * @param p
-     *            a data property
-     * @return true if SubClassOf(c, p some Literal) is entailed */
+     *        a data property
+     * @return true if SubClassOf(c, p some Literal) is entailed
+     */
     boolean isCurrent(OWLClassExpression c, OWLDataProperty p);
 
-    /** @param c
-     *            a class expression
+    /**
+     * @param c
+     *        a class expression
      * @param p
-     *            a data property
+     *        a data property
      * @param direct
-     *            (see definition above)
+     *        (see definition above)
      * @return isCurrent(c, p). If direct then there is no q where
-     *         StrictSubDataPropertyOf(q, p) and isCurrent(c, q) is entailed */
+     *         StrictSubDataPropertyOf(q, p) and isCurrent(c, q) is entailed
+     */
     boolean isCurrent(OWLClassExpression c, OWLDataProperty p, boolean direct);
 
-    /** @param c
-     *            a class expression
+    /**
+     * @param c
+     *        a class expression
      * @param p
-     *            an object property
-     * @return true if isSatisfiable(c and p some Thing) */
+     *        an object property
+     * @return true if isSatisfiable(c and p some Thing)
+     */
     boolean isPossible(OWLClassExpression c, OWLObjectPropertyExpression p);
 
-    /** @param c
-     *            a class expression
+    /**
+     * @param c
+     *        a class expression
      * @param p
-     *            a data property
-     * @return true if isSatisfiable(c and p some Literal) */
+     *        a data property
+     * @return true if isSatisfiable(c and p some Literal)
+     */
     boolean isPossible(OWLClassExpression c, OWLDataProperty p);
 
-    /** Determine if property p is sanctioned for class c by iterating through
+    /**
+     * Determine if property p is sanctioned for class c by iterating through
      * all of the registered property sanction rules until one is successful or
      * all fail. Only possible properties can be sanctioned.
      * 
      * @param c
-     *            a class expression
+     *        a class expression
      * @param p
-     *            an object property
-     * @return true if isPossible(c, p) and ANY property sanction rule is met */
+     *        an object property
+     * @return true if isPossible(c, p) and ANY property sanction rule is met
+     */
     boolean isSanctioned(OWLClassExpression c, OWLObjectPropertyExpression p);
 
-    /** Determine if data property p is sanctioned for class c by iterating
+    /**
+     * Determine if data property p is sanctioned for class c by iterating
      * through all of the registered property sanction rules until one is
      * successful or all fail. Only possible properties can be sanctioned.
      * 
      * @param c
-     *            a class expression
+     *        a class expression
      * @param p
-     *            a data property
-     * @return true if isPossible(c, p) and ANY property sanction rule is met */
+     *        a data property
+     * @return true if isPossible(c, p) and ANY property sanction rule is met
+     */
     boolean isSanctioned(OWLClassExpression c, OWLDataProperty p);
 
-    /** @param c
-     *            a class expression
+    /**
+     * @param c
+     *        a class expression
      * @param direct
-     *            (see definition above)
+     *        (see definition above)
      * @return a set of objectproperties where every p satisfies isCurrent(c, p,
-     *         direct) */
+     *         direct)
+     */
     NodeSet<OWLObjectPropertyExpression> getCurrentObjectProperties(OWLClassExpression c,
-            boolean direct);
+        boolean direct);
 
-    /** @param c
-     *            a class expression
+    /**
+     * @param c
+     *        a class expression
      * @param direct
-     *            (see definition above)
+     *        (see definition above)
      * @return a set of dataproperties where every p satisfies isCurrent(c, p,
-     *         direct) */
-    NodeSet<OWLDataProperty>
-            getCurrentDataProperties(OWLClassExpression c, boolean direct);
+     *         direct)
+     */
+    NodeSet<OWLDataProperty> getCurrentDataProperties(OWLClassExpression c, boolean direct);
 
-    /** @param c
-     *            a class expression
+    /**
+     * @param c
+     *        a class expression
      * @param root
-     *            an ObjectProperty from which we start our search
+     *        an ObjectProperty from which we start our search
      * @param direct
-     *            whether to search the subclasses or descendants of root
+     *        whether to search the subclasses or descendants of root
      * @return a set of objectproperties where every p satisfies
      *         StrictSubPropertyOf(p, root) or DescendantOf(p, root) and
-     *         isPossible(c, p) */
+     *         isPossible(c, p)
+     */
     NodeSet<OWLObjectPropertyExpression> getPossibleObjectProperties(
-            OWLClassExpression c, OWLObjectPropertyExpression root, boolean direct);
+        OWLClassExpression c, @Nullable OWLObjectPropertyExpression root, boolean direct);
 
-    /** @param c
-     *            a class expression
+    /**
+     * @param c
+     *        a class expression
      * @param root
-     *            a DataProperty from which we start our search
+     *        a DataProperty from which we start our search
      * @param direct
-     *            whether to search the subclasses or descendants of root
+     *        whether to search the subclasses or descendants of root
      * @return a set of dataproperties where every p satisfies
      *         StrictSubPropertyOf(p, root) or DescendantOf(p, root) and
-     *         isPossible(c, p) */
+     *         isPossible(c, p)
+     */
     NodeSet<OWLDataProperty> getPossibleDataProperties(OWLClassExpression c,
-            OWLDataProperty root, boolean direct);
+        @Nullable OWLDataProperty root, boolean direct);
 
-    /** @param c
-     *            a class expression
+    /**
+     * @param c
+     *        a class expression
      * @param root
-     *            an ObjectProperty from which we start our search
+     *        an ObjectProperty from which we start our search
      * @param direct
-     *            whether to search the subclasses or descendants of root
+     *        whether to search the subclasses or descendants of root
      * @return a set of objectproperties where every p satisfies
      *         StrictSubPropertyOf(p, root) or DescendantOf(p, root) and
-     *         isSanctioned(c, p) */
+     *         isSanctioned(c, p)
+     */
     Set<OWLObjectPropertyExpression> getSanctionedObjectProperties(OWLClassExpression c,
-            OWLObjectPropertyExpression root, boolean direct);
+        OWLObjectPropertyExpression root, boolean direct);
 
-    /** @param c
-     *            a class expression
+    /**
+     * @param c
+     *        a class expression
      * @param root
-     *            a DataProperty from which we start our search
+     *        a DataProperty from which we start our search
      * @param direct
-     *            whether to search the subclasses or descendants of root
+     *        whether to search the subclasses or descendants of root
      * @return a set of dataproperties where every p satisfies
      *         StrictSubPropertyOf(p, root) or DescendantOf(p, root) and
-     *         isSanctioned(c, p) */
+     *         isSanctioned(c, p)
+     */
     Set<OWLDataProperty> getSanctionedDataProperties(OWLClassExpression c,
-            OWLDataProperty root, boolean direct);
+        OWLDataProperty root, boolean direct);
 
-    /** Add a PropertySanctionRule to the end of the rules used for sanctioning
+    /**
+     * Add a PropertySanctionRule to the end of the rules used for sanctioning
      * 
      * @param rule
-     *            the rule to add */
+     *        the rule to add
+     */
     void addSanctionRule(PropertySanctionRule rule);
 
-    /** Remove this PropertySanctionRule from the rules used for sanctioning
+    /**
+     * Remove this PropertySanctionRule from the rules used for sanctioning
      * 
      * @param rule
-     *            the rule to remove */
+     *        the rule to remove
+     */
     void removeSanctionRule(PropertySanctionRule rule);
 
     /** @return get the reasoner used by this suggestor instance */

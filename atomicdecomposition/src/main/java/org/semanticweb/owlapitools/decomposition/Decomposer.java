@@ -1,10 +1,14 @@
 package org.semanticweb.owlapitools.decomposition;
 
+import static org.semanticweb.owlapi.util.OWLAPIPreconditions.verifyNotNull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.annotation.Nullable;
 
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -15,13 +19,13 @@ import uk.ac.manchester.cs.owlapi.modularity.ModuleType;
 public class Decomposer {
 
     /** atomic structure to build */
-    private AtomList atomList = null;
+    private @Nullable AtomList atomList = null;
     /** modularizer to build modules */
     private Modularizer modularizer;
     /** tautologies of the ontology */
     private List<AxiomWrapper> tautologies = new ArrayList<>();
     /** fake atom that represents the whole ontology */
-    private OntologyAtom rootAtom = null;
+    private @Nullable OntologyAtom rootAtom = null;
     /** module type for current AOS creation */
     private ModuleType type;
     private List<AxiomWrapper> axioms;
@@ -61,7 +65,7 @@ public class Decomposer {
             if (p.isUsed()) {
                 // check whether an axiom is local wrt its own signature
                 modularizer.extract(p, new Signature(p.getAxiom()
-                        .getSignature()), type);
+                    .getSignature()), type);
                 if (modularizer.isTautology(p.getAxiom(), type)) {
                     tautologies.add(p);
                     p.setUsed(false);
@@ -83,7 +87,7 @@ public class Decomposer {
      * @return module for given axiom AX; use parent atom's module as a base for
      *         the module search
      */
-    private OntologyAtom buildModule(Signature sig, OntologyAtom parent) {
+    private @Nullable OntologyAtom buildModule(Signature sig, OntologyAtom parent) {
         // build a module for a given signature
         modularizer.extract(parent.getModule(), sig, type);
         List<AxiomWrapper> Module = modularizer.getModule();
@@ -97,6 +101,7 @@ public class Decomposer {
             return parent;
         }
         // create new atom with that module
+        assert atomList != null;
         OntologyAtom atom = atomList.newAtom();
         atom.setModule(Module);
         return atom;
@@ -140,7 +145,7 @@ public class Decomposer {
 
     /** @return atom list class */
     public AtomList getAOS() {
-        return atomList;
+        return verifyNotNull(atomList);
     }
 
     /**
@@ -161,6 +166,7 @@ public class Decomposer {
         rootAtom = new OntologyAtom();
         rootAtom.setModule(new HashSet<>(axioms));
         // build the "bottom" atom for an empty signature
+        assert rootAtom != null;
         OntologyAtom bottomAtom = buildModule(new Signature(), rootAtom);
         if (bottomAtom != null) {
             bottomAtom.addAxioms(bottomAtom.getModule());
@@ -168,6 +174,7 @@ public class Decomposer {
         // create atoms for all the axioms in the ontology
         for (AxiomWrapper p : axioms) {
             if (p.isUsed() && p.getAtom() == null) {
+                assert rootAtom != null;
                 createAtom(p, rootAtom);
             }
         }
@@ -175,8 +182,9 @@ public class Decomposer {
         restoreTautologies();
         rootAtom = null;
         // reduce graph
+        assert atomList != null;
         atomList.reduceGraph();
-        return atomList;
+        return verifyNotNull(atomList);
     }
 
     /**
@@ -187,7 +195,7 @@ public class Decomposer {
      * @return a set of axioms that corresponds to the atom with the id INDEX
      */
     public Set<OWLAxiom> getNonLocal(Set<OWLEntity> signature,
-            ModuleType moduletype) {
+        ModuleType moduletype) {
         // init signature
         Signature sig = new Signature(signature);
         sig.setLocality(false);
@@ -212,7 +220,7 @@ public class Decomposer {
      * @return a set of axioms that corresponds to the atom with the id INDEX
      */
     public Collection<AxiomWrapper> getModule(Set<OWLEntity> signature,
-            boolean useSemantics, ModuleType moduletype) {
+        boolean useSemantics, ModuleType moduletype) {
         // init signature
         Signature Sig = new Signature(signature);
         Sig.setLocality(false);

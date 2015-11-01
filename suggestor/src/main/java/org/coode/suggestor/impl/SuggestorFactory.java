@@ -9,20 +9,23 @@
  */
 package org.coode.suggestor.impl;
 
+import static org.semanticweb.owlapi.util.OWLAPIPreconditions.checkNotNull;
+
 import org.coode.suggestor.api.FillerSuggestor;
 import org.coode.suggestor.api.PropertySuggestor;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 /** Implementation binding. */
 public class SuggestorFactory {
+
     private final OWLReasoner r;
 
-    /** @param r
-     *            reasoner to use */
+    /**
+     * @param r
+     *        reasoner to use
+     */
     public SuggestorFactory(OWLReasoner r) {
-        if (r == null) {
-            throw new IllegalArgumentException("Reasoner cannot be null");
-        }
+        checkNotNull(r, "Reasoner cannot be null");
         this.r = r;
     }
 

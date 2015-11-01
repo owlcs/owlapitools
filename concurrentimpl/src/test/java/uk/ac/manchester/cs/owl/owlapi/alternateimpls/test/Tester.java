@@ -41,13 +41,12 @@ package uk.ac.manchester.cs.owl.owlapi.alternateimpls.test;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 
 @SuppressWarnings("javadoc")
 public class Tester {
+
     public static final int _10 = 10;
     public static final int _10000 = 10000;
     protected List<IRI> iriClasses = new ArrayList<>();
@@ -111,33 +110,27 @@ public class Tester {
         }
     }
 
-    private static void
-            singleRunClasses(OWLDataFactory toTest, @Nonnull IRI iri) {
+    private static void singleRunClasses(OWLDataFactory toTest, IRI iri) {
         toTest.getOWLClass(iri);
     }
 
-    private static void singleRunObjectProp(OWLDataFactory toTest,
-            @Nonnull IRI iri) {
+    private static void singleRunObjectProp(OWLDataFactory toTest, IRI iri) {
         toTest.getOWLObjectProperty(iri);
     }
 
-    private static void singleRunDataprop(OWLDataFactory toTest,
-            @Nonnull IRI iri) {
+    private static void singleRunDataprop(OWLDataFactory toTest, IRI iri) {
         toTest.getOWLDataProperty(iri);
     }
 
-    private static void singleRunDatatype(OWLDataFactory toTest,
-            @Nonnull IRI iri) {
+    private static void singleRunDatatype(OWLDataFactory toTest, IRI iri) {
         toTest.getOWLDatatype(iri);
     }
 
-    private static void singleRunIndividuals(OWLDataFactory toTest,
-            @Nonnull IRI iri) {
+    private static void singleRunIndividuals(OWLDataFactory toTest, IRI iri) {
         toTest.getOWLNamedIndividual(iri);
     }
 
-    private static void singleRunAnnotations(OWLDataFactory toTest,
-            @Nonnull IRI iri) {
+    private static void singleRunAnnotations(OWLDataFactory toTest, IRI iri) {
         toTest.getOWLAnnotationProperty(iri);
     }
 }

@@ -1,2 +1,2 @@
 @javax.annotation.ParametersAreNonnullByDefault
-package utils;
+package org.semanticweb.owlapitools.utils;

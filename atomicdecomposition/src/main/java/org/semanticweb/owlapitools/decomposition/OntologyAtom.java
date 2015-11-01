@@ -1,11 +1,8 @@
 package org.semanticweb.owlapitools.decomposition;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
+import javax.annotation.Nullable;
 
 /**
  * An ontology atom including module and dependencies information.
@@ -16,8 +13,9 @@ public class OntologyAtom {
 
     static Comparator<OntologyAtom> comparator = new Comparator<OntologyAtom>() {
 
+        @SuppressWarnings("null")
         @Override
-        public int compare(OntologyAtom arg0, OntologyAtom arg1) {
+        public int compare(@Nullable OntologyAtom arg0, @Nullable OntologyAtom arg1) {
             return arg0.getId() - arg1.getId();
         }
     };
@@ -93,7 +91,7 @@ public class OntologyAtom {
      * @param atom
      *        add atom to the dependency set
      */
-    public void addDepAtom(OntologyAtom atom) {
+    public void addDepAtom(@Nullable OntologyAtom atom) {
         if (atom != null && atom != this) {
             dependencies.add(atom);
         }

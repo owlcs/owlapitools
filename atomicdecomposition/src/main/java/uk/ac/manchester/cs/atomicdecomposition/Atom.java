@@ -1,22 +1,28 @@
 package uk.ac.manchester.cs.atomicdecomposition;
 
+import static org.semanticweb.owlapi.util.OWLAPIPreconditions.verifyNotNull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 /** An atom in the atomic decomposition */
 public class Atom {
+
     private final Collection<OWLAxiom> axioms;
-    private List<OWLEntity> signature;
-    private Collection<OWLEntity> label;
+    // XXX cache properly
+    private @Nullable List<OWLEntity> signature;
+    private @Nullable Collection<OWLEntity> label;
     private int hashcode;
 
     /**
      * @param ax
-     *            axiom
+     *        axiom
      * @return true if ax is in this atom
      */
     public boolean contains(OWLAxiom ax) {
@@ -44,7 +50,7 @@ public class Atom {
     /** @return signature for the atom */
     public Collection<OWLEntity> getSignature() {
         initSignature();
-        return signature;
+        return verifyNotNull(signature);
     }
 
     /** @return axioms in the atom */
@@ -53,6 +59,7 @@ public class Atom {
     }
 
     /** @return label for the atom */
+    @Nullable
     public Collection<OWLEntity> getLabel() {
         return label;
     }
@@ -66,7 +73,7 @@ public class Atom {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (obj == this) {
             return true;
         }

@@ -9,13 +9,9 @@
  */
 package org.coode.suggestor.util;
 
-import org.semanticweb.owlapi.model.OWLDataExactCardinality;
-import org.semanticweb.owlapi.model.OWLDataHasValue;
-import org.semanticweb.owlapi.model.OWLDataMinCardinality;
-import org.semanticweb.owlapi.model.OWLDataSomeValuesFrom;
-import org.semanticweb.owlapi.model.OWLObject;
-import org.semanticweb.owlapi.model.OWLPropertyExpression;
-import org.semanticweb.owlapi.model.OWLRestriction;
+import javax.annotation.Nullable;
+
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 /** Get all fillers in restrictions using the given data property. */
@@ -30,8 +26,8 @@ public class DataFillerAccumulator extends FillerAccumulator<OWLObject> {
     }
 
     @Override
-    protected RestrictionVisitor getVisitor(OWLPropertyExpression prop,
-            Class<? extends OWLRestriction> type) {
+    protected RestrictionVisitor getVisitor(@Nullable OWLPropertyExpression prop,
+        @Nullable Class<? extends OWLRestriction> type) {
         return new RestrictionVisitor(r, prop, type) {
 
             @Override
@@ -46,7 +42,7 @@ public class DataFillerAccumulator extends FillerAccumulator<OWLObject> {
             public void visit(OWLDataMinCardinality desc) {
                 super.visit(desc);
                 if (desc.getCardinality() > 0
-                        && props.contains(desc.getProperty())) {
+                    && props.contains(desc.getProperty())) {
                     add(desc.getFiller());
                 }
             }
@@ -55,7 +51,7 @@ public class DataFillerAccumulator extends FillerAccumulator<OWLObject> {
             public void visit(OWLDataExactCardinality desc) {
                 super.visit(desc);
                 if (desc.getCardinality() > 0
-                        && props.contains(desc.getProperty())) {
+                    && props.contains(desc.getProperty())) {
                     add(desc.getFiller());
                 }
             }

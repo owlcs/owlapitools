@@ -48,18 +48,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.annotation.Nonnull;
-
 import org.junit.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
-import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
+import org.semanticweb.owlapi.model.*;
 
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.test.RaceCallback;
 
@@ -87,9 +78,7 @@ public class RaceTestCase {
 
     static class RaceTestCaseRunner {
 
-        @Nonnull
         private static final String A_CLASS = "http://www.race.org#testclass";
-        @Nonnull
         public static final String NS = "http://www.race.org#";
         protected RaceCallback callback;
         private Runnable writer = new Runnable() {
@@ -122,11 +111,8 @@ public class RaceTestCase {
             private AtomicInteger counter = new AtomicInteger();
             OWLDataFactory factory;
             OWLOntologyManager manager;
-            @Nonnull
             OWLOntology ontology;
-            @Nonnull
             OWLClass x;
-            @Nonnull
             OWLClass y;
 
             public SubClassLHSCallback() throws OWLOntologyCreationException {
@@ -154,8 +140,7 @@ public class RaceTestCase {
                 return ontology.getSubClassAxiomsForSubClass(x).size();
             }
 
-            @Nonnull
-            public Set<OWLAxiom> computeChanges(@Nonnull OWLClass middle) {
+            public Set<OWLAxiom> computeChanges(OWLClass middle) {
                 OWLAxiom axiom1 = factory.getOWLSubClassOfAxiom(x, middle);
                 OWLAxiom axiom2 = factory.getOWLSubClassOfAxiom(middle, y);
                 Set<OWLAxiom> axioms = new HashSet<>();
@@ -189,7 +174,6 @@ public class RaceTestCase {
                     factory.getOWLClass(IRI.create(A_CLASS)));
             }
 
-            @Nonnull
             public OWLClass createMiddleClass(int i) {
                 return factory.getOWLClass(IRI.create(NS + "P" + i));
             }

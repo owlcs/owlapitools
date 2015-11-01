@@ -1,2 +1,2 @@
 @javax.annotation.ParametersAreNonnullByDefault
-package utils.threadedreasoner;
+package org.semanticweb.owlapitools.threadedreasoner;
