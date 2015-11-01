@@ -9,7 +9,13 @@
  */
 package org.coode.suggestor.util;
 
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLDataExactCardinality;
+import org.semanticweb.owlapi.model.OWLDataHasValue;
+import org.semanticweb.owlapi.model.OWLDataMinCardinality;
+import org.semanticweb.owlapi.model.OWLDataSomeValuesFrom;
+import org.semanticweb.owlapi.model.OWLObject;
+import org.semanticweb.owlapi.model.OWLPropertyExpression;
+import org.semanticweb.owlapi.model.OWLRestriction;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 /** Get all fillers in restrictions using the given data property. */
@@ -25,7 +31,7 @@ public class DataFillerAccumulator extends FillerAccumulator<OWLObject> {
 
     @Override
     protected RestrictionVisitor getVisitor(OWLPropertyExpression prop,
-        Class<? extends OWLRestriction> type) {
+            Class<? extends OWLRestriction> type) {
         return new RestrictionVisitor(r, prop, type) {
 
             @Override

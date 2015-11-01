@@ -10,13 +10,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-/** bag for counting occurrences of instances of a specified type
+/**
+ * bag for counting occurrences of instances of a specified type
  * 
  * @author ignazio
  * @param <Type>
- *            type */
+ *        type
+ */
 public class Bag<Type> {
-    Map<Type, AtomicLong> map = new LinkedHashMap<Type, AtomicLong>();
+
+    Map<Type, AtomicLong> map = new LinkedHashMap<>();
     int size = 0;
 
     /** @return size of the bag (all occurrences) */
@@ -24,9 +27,11 @@ public class Bag<Type> {
         return size;
     }
 
-    /** @param t
+    /**
+     * @param t
      *            instance to add to the bag
-     * @return new number of occurrences */
+     * @return new number of occurrences
+     */
     public long add(Type t) {
         size++;
         AtomicLong l = map.get(t);
@@ -38,9 +43,11 @@ public class Bag<Type> {
         }
     }
 
-    /** @param t
+    /**
+     * @param t
      *            instance to check
-     * @return number of occurrences for t */
+     * @return number of occurrences for t
+     */
     public long check(Type t) {
         AtomicLong l = map.get(t);
         if (l != null) {
@@ -49,11 +56,13 @@ public class Bag<Type> {
         return 0;
     }
 
-    /** @param increasing
+    /**
+     * @param increasing
      *            true for ascending sorting
-     * @return list of distinct instances */
+     * @return list of distinct instances
+     */
     public List<Type> sortedList(final boolean increasing) {
-        List<Type> toReturn = new ArrayList<Type>(map.keySet());
+        List<Type> toReturn = new ArrayList<>(map.keySet());
         Collections.sort(toReturn, new Comparator<Type>() {
             @Override
             public int compare(Type o1, Type o2) {

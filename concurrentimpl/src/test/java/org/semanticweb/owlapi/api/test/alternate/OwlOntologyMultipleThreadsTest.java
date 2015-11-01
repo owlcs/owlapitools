@@ -56,15 +56,17 @@ import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.parameters.AxiomAnnotations;
 import org.semanticweb.owlapi.model.parameters.Imports;
-import org.semanticweb.owlapi.model.parameters.Search;
 
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.test.MultiThreadChecker;
 import uk.ac.manchester.cs.owl.owlapi.alternateimpls.test.TestMultithreadCallBack;
 
 @SuppressWarnings("javadoc")
 public class OwlOntologyMultipleThreadsTest {
+
     private static class TestCallback implements TestMultithreadCallBack {
+
         private final OWLOntology o1;
         private final OWLOntology o2;
 
@@ -223,18 +225,18 @@ public class OwlOntologyMultipleThreadsTest {
                     assert ax != null;
                     o1.containsAxiom(ax);
                     o1.containsAxiom(ax, Imports.INCLUDED,
-                            Search.IGNORE_ANNOTATIONS);
+                            AxiomAnnotations.IGNORE_AXIOM_ANNOTATIONS);
                     o1.containsAxiom(ax, Imports.EXCLUDED,
-                            Search.IGNORE_ANNOTATIONS);
+                            AxiomAnnotations.IGNORE_AXIOM_ANNOTATIONS);
                 }
                 for (OWLAxiom ax : o1.getLogicalAxioms()) {
                     assert ax != null;
                     o1.containsAxiom(ax, Imports.EXCLUDED,
-                            Search.CONSIDER_ANNOTATIONS);
+                            AxiomAnnotations.IGNORE_AXIOM_ANNOTATIONS);
                     o1.containsAxiom(ax, Imports.INCLUDED,
-                            Search.CONSIDER_ANNOTATIONS);
+                            AxiomAnnotations.IGNORE_AXIOM_ANNOTATIONS);
                     o1.containsAxiom(ax, Imports.EXCLUDED,
-                            Search.CONSIDER_ANNOTATIONS);
+                            AxiomAnnotations.IGNORE_AXIOM_ANNOTATIONS);
                 }
                 for (OWLAxiom ax : o1.getLogicalAxioms()) {
                     assert ax != null;

@@ -3,14 +3,16 @@ package utils.reasonercomparator;
 import java.util.ArrayList;
 import java.util.List;
 
-/** column
+/**
+ * column
  * 
- * @author ignazio */
+ * @author ignazio
+ */
 public class Column {
     /** header */
     public MethodNames header;
     /** values */
-    public List<Long> values = new ArrayList<Long>();
+    public List<Long> values = new ArrayList<>();
 
     Column(MethodNames s) {
         header = s;

@@ -23,18 +23,16 @@ public class PerformanceComparator {
      * @param factories
      *        the factories
      * @return the list
-     * @throws Exception
-     *         the exception
      */
     public static List<ReasonerPerformanceResult> runTest(OWLOntology o1,
-            OWLReasonerFactory... factories) throws Exception {
+            OWLReasonerFactory... factories) {
         Checker checker = new Checker(1);
         OWL2DLProfile profile = new OWL2DLProfile();
         OWLProfileReport report = profile.checkOntology(o1);
-        for (OWLProfileViolation<?> v : report.getViolations()) {
+        for (OWLProfileViolation v : report.getViolations()) {
             System.out.println(v);
         }
-        List<ReasonerPerformanceResult> toReturn = new ArrayList<ReasonerPerformanceResult>();
+        List<ReasonerPerformanceResult> toReturn = new ArrayList<>();
         // TODO number of runs
         ComparisonExecutor ccb = new ComparisonExecutor(o1, null, factories);
         checker.check(ccb);
@@ -54,12 +52,10 @@ public class PerformanceComparator {
      * @param factories
      *        the factories
      * @return the string
-     * @throws Exception
-     *         the exception
      */
     public static String run(Collection<OWLOntology> ontologies,
-            OWLReasonerFactory... factories) throws Exception {
-        Map<String, List<ReasonerPerformanceResult>> list = new HashMap<String, List<ReasonerPerformanceResult>>();
+            OWLReasonerFactory... factories) {
+        Map<String, List<ReasonerPerformanceResult>> list = new HashMap<>();
         for (OWLOntology o : ontologies) {
             list.put(o.getOntologyID().getOntologyIRI().toString(),
                     runTest(o, factories));

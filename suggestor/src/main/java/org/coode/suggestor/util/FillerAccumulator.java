@@ -24,15 +24,17 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
  * @param <O>
  *        type accumulated
  */
-abstract class FillerAccumulator<O extends OWLObject> extends RestrictionAccumulator {
+abstract class FillerAccumulator<O extends OWLObject> extends
+        RestrictionAccumulator {
 
-    private final Set<O> fillers = new HashSet<O>();
+    private final Set<O> fillers = new HashSet<>();
 
     public FillerAccumulator(OWLReasoner r) {
         super(r);
     }
 
-    public Set<O> getFillers(OWLClassExpression descr, OWLPropertyExpression prop) {
+    public Set<O> getFillers(OWLClassExpression descr,
+            OWLPropertyExpression prop) {
         fillers.clear();
         accummulateRestrictions(descr, prop, null);
         return Collections.unmodifiableSet(fillers);

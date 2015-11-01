@@ -9,7 +9,12 @@
  */
 package org.coode.suggestor.util;
 
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLObjectExactCardinality;
+import org.semanticweb.owlapi.model.OWLObjectMinCardinality;
+import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
+import org.semanticweb.owlapi.model.OWLPropertyExpression;
+import org.semanticweb.owlapi.model.OWLRestriction;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 /**
@@ -17,7 +22,7 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
  * property.
  */
 public class ExistentialObjectFillerAccumulator extends
-    FillerAccumulator<OWLClassExpression> {
+        FillerAccumulator<OWLClassExpression> {
 
     /**
      * @param r
@@ -29,7 +34,7 @@ public class ExistentialObjectFillerAccumulator extends
 
     @Override
     protected RestrictionVisitor getVisitor(OWLPropertyExpression prop,
-        Class<? extends OWLRestriction> type) {
+            Class<? extends OWLRestriction> type) {
         return new RestrictionVisitor(r, prop, type) {
 
             @Override
@@ -43,22 +48,20 @@ public class ExistentialObjectFillerAccumulator extends
             @Override
             public void visit(OWLObjectMinCardinality desc) {
                 super.visit(desc);
-                if (desc.getCardinality() > 0 && props.contains(desc.getProperty())) {
+                if (desc.getCardinality() > 0
+                        && props.contains(desc.getProperty())) {
                     OWLClassExpression filler = desc.getFiller();
-                    if (filler != null) {
-                        add(filler);
-                    }
+                    add(filler);
                 }
             }
 
             @Override
             public void visit(OWLObjectExactCardinality desc) {
                 super.visit(desc);
-                if (desc.getCardinality() > 0 && props.contains(desc.getProperty())) {
+                if (desc.getCardinality() > 0
+                        && props.contains(desc.getProperty())) {
                     OWLClassExpression filler = desc.getFiller();
-                    if (filler != null) {
-                        add(filler);
-                    }
+                    add(filler);
                 }
             }
         };

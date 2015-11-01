@@ -11,7 +11,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 /** class to hold the signature of a module */
 public class Signature {
     /** set to keep all the elements in signature */
-    private final Set<OWLEntity> set = new HashSet<OWLEntity>();
+    private final Set<OWLEntity> set = new HashSet<>();
     /** true if concept TOP-locality; false if concept BOTTOM-locality */
     private boolean topCLocality = false;
     /** true if role TOP-locality; false if role BOTTOM-locality */
@@ -20,35 +20,45 @@ public class Signature {
     /** empty signature */
     public Signature() {}
 
-    /** @param sig
-     *            signature elements */
+    /**
+     * @param sig
+     *        signature elements
+     */
     public Signature(Collection<OWLEntity> sig) {
         addAll(sig);
     }
 
-    /** @param p
+    /**
+     * @param p
      *            entity to add to signature
-     * @return true if p was not in the signature already */
+     * @return true if p was not in the signature already
+     */
     public boolean add(OWLEntity p) {
         return set.add(p);
     }
 
-    /** @param p
-     *            all entities to add */
+    /**
+     * @param p
+     *        all entities to add
+     */
     public void addAll(Collection<OWLEntity> p) {
         set.addAll(p);
     }
 
-    /** @param top
-     *            set new locality polarity */
+    /**
+     * @param top
+     *        set new locality polarity
+     */
     public void setLocality(boolean top) {
         this.setLocality(top, top);
     }
 
-    /** @param topC
+    /**
+     * @param topC
      *            new concept locality polarity
      * @param topR
-     *            new role locality polarity */
+     *        new role locality polarity
+     */
     public void setLocality(boolean topC, boolean topR) {
         topCLocality = topC;
         topRLocality = topR;
@@ -73,9 +83,11 @@ public class Signature {
         return set.hashCode();
     }
 
-    /** @param p
+    /**
+     * @param p
      *            entity to find
-     * @return true iff signature contains p */
+     * @return true iff signature contains p
+     */
     public boolean contains(OWLEntity p) {
         return set.contains(p);
     }
@@ -95,12 +107,14 @@ public class Signature {
         return topRLocality;
     }
 
-    /** @param s2
+    /**
+     * @param s2
      *            signature to intersect
-     * @return intersection */
+     * @return intersection
+     */
     public List<OWLEntity> intersect(Signature s2) {
-        List<OWLEntity> ret = new ArrayList<OWLEntity>();
-        Set<OWLEntity> s = new HashSet<OWLEntity>(set);
+        List<OWLEntity> ret = new ArrayList<>();
+        Set<OWLEntity> s = new HashSet<>(set);
         s.retainAll(s2.set);
         ret.addAll(s);
         return ret;

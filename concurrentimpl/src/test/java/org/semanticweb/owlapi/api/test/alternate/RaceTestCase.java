@@ -48,6 +48,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.annotation.Nonnull;
+
 import org.junit.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
@@ -85,7 +87,9 @@ public class RaceTestCase {
 
     static class RaceTestCaseRunner {
 
+        @Nonnull
         private static final String A_CLASS = "http://www.race.org#testclass";
+        @Nonnull
         public static final String NS = "http://www.race.org#";
         protected RaceCallback callback;
         private Runnable writer = new Runnable() {
@@ -118,8 +122,11 @@ public class RaceTestCase {
             private AtomicInteger counter = new AtomicInteger();
             OWLDataFactory factory;
             OWLOntologyManager manager;
+            @Nonnull
             OWLOntology ontology;
+            @Nonnull
             OWLClass x;
+            @Nonnull
             OWLClass y;
 
             public SubClassLHSCallback() throws OWLOntologyCreationException {
@@ -148,10 +155,11 @@ public class RaceTestCase {
                 return ontology.getSubClassAxiomsForSubClass(x).size();
             }
 
-            public Set<OWLAxiom> computeChanges(OWLClass middle) {
+            @Nonnull
+            public Set<OWLAxiom> computeChanges(@Nonnull OWLClass middle) {
                 OWLAxiom axiom1 = factory.getOWLSubClassOfAxiom(x, middle);
                 OWLAxiom axiom2 = factory.getOWLSubClassOfAxiom(middle, y);
-                Set<OWLAxiom> axioms = new HashSet<OWLAxiom>();
+                Set<OWLAxiom> axioms = new HashSet<>();
                 axioms.add(axiom1);
                 axioms.add(axiom2);
                 return axioms;
@@ -185,6 +193,7 @@ public class RaceTestCase {
                         .create(A_CLASS)));
             }
 
+            @Nonnull
             public OWLClass createMiddleClass(int i) {
                 return factory.getOWLClass(IRI.create(NS + "P" + i));
             }

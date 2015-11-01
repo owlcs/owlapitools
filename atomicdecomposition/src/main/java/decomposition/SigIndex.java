@@ -21,8 +21,8 @@ public class SigIndex {
     /** locality checker */
     private LocalityChecker checker;
     /** sets of axioms non-local wrt the empty signature */
-    private List<AxiomWrapper> NonLocalTrue = new ArrayList<AxiomWrapper>();
-    private List<AxiomWrapper> NonLocalFalse = new ArrayList<AxiomWrapper>();
+    private List<AxiomWrapper> NonLocalTrue = new ArrayList<>();
+    private List<AxiomWrapper> NonLocalFalse = new ArrayList<>();
     /** empty signature to test the non-locality */
     private Signature emptySig = new Signature();
     /** number of registered axioms */

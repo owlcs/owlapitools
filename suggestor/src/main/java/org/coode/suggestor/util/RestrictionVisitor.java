@@ -3,7 +3,27 @@ package org.coode.suggestor.util;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataAllValuesFrom;
+import org.semanticweb.owlapi.model.OWLDataExactCardinality;
+import org.semanticweb.owlapi.model.OWLDataHasValue;
+import org.semanticweb.owlapi.model.OWLDataMaxCardinality;
+import org.semanticweb.owlapi.model.OWLDataMinCardinality;
+import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLDataRestriction;
+import org.semanticweb.owlapi.model.OWLDataSomeValuesFrom;
+import org.semanticweb.owlapi.model.OWLObjectAllValuesFrom;
+import org.semanticweb.owlapi.model.OWLObjectExactCardinality;
+import org.semanticweb.owlapi.model.OWLObjectHasSelf;
+import org.semanticweb.owlapi.model.OWLObjectHasValue;
+import org.semanticweb.owlapi.model.OWLObjectIntersectionOf;
+import org.semanticweb.owlapi.model.OWLObjectMaxCardinality;
+import org.semanticweb.owlapi.model.OWLObjectMinCardinality;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLObjectRestriction;
+import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
+import org.semanticweb.owlapi.model.OWLPropertyExpression;
+import org.semanticweb.owlapi.model.OWLRestriction;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.util.OWLClassExpressionVisitorAdapter;
 
@@ -17,21 +37,21 @@ class RestrictionVisitor extends OWLClassExpressionVisitorAdapter {
     protected final OWLPropertyExpression prop;
     protected final Set<OWLPropertyExpression> props;
     private final Class<? extends OWLRestriction> type;
-    final Set<OWLRestriction> restrs = new HashSet<OWLRestriction>();
+    final Set<OWLRestriction> restrs = new HashSet<>();
 
     RestrictionVisitor(OWLReasoner r, OWLPropertyExpression prop,
-        Class<? extends OWLRestriction> type) {
+            Class<? extends OWLRestriction> type) {
         this.r = r;
         this.prop = prop;
         this.type = type;
-        props = new HashSet<OWLPropertyExpression>();
+        props = new HashSet<>();
         props.add(prop);
         if (prop instanceof OWLObjectProperty) {
-            props.addAll(r.getSubObjectProperties((OWLObjectProperty) prop, false)
-                .getFlattened());
+            props.addAll(r.getSubObjectProperties((OWLObjectProperty) prop,
+                    false).getFlattened());
         } else if (prop instanceof OWLDataProperty) {
             props.addAll(r.getSubDataProperties((OWLDataProperty) prop, false)
-                .getFlattened());
+                    .getFlattened());
         }
     }
 

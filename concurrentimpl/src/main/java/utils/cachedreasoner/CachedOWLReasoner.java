@@ -8,8 +8,12 @@
  */
 package utils.cachedreasoner;
 
+import static org.semanticweb.owlapi.util.OWLAPIPreconditions.verifyNotNull;
+
 import java.util.List;
 import java.util.Set;
+
+import javax.annotation.Nonnull;
 
 import org.semanticweb.owlapi.apibinding.configurables.Computable;
 import org.semanticweb.owlapi.apibinding.configurables.ComputableAllThrowables;
@@ -51,9 +55,11 @@ public final class CachedOWLReasoner implements OWLReasoner,
     protected final OWLReasoner delegate;
 
     private final class Entailer extends ComputableAllThrowables<Object> {
+
+        @Nonnull
         private final OWLClassExpression classExpression;
 
-        public Entailer(OWLClassExpression classExpression) {
+        public Entailer(@Nonnull OWLClassExpression classExpression) {
             this.classExpression = classExpression;
         }
 
@@ -70,6 +76,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
     }
 
     private static final class BoolKey {
+
         final Object o;
         final boolean b;
 
@@ -91,6 +98,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
     }
 
     private static final class RegKey {
+
         final Object o1;
         final Object o2;
 
@@ -112,13 +120,14 @@ public final class CachedOWLReasoner implements OWLReasoner,
     }
 
     private final static class CachedReasoner {
+
         public static final Object makeKey(Object o1, boolean o2) {
             return new BoolKey(o1, o2);
         }
 
         public CachedReasoner() {}
 
-        MemoizingCache<CacheKeys, MemoizingCache<Object, Object>> mainCache = new MemoizingCache<CacheKeys, MemoizingCache<Object, Object>>();
+        MemoizingCache<CacheKeys, MemoizingCache<Object, Object>> mainCache = new MemoizingCache<>();
 
         public void clear() {
             mainCache.clear();
@@ -126,10 +135,11 @@ public final class CachedOWLReasoner implements OWLReasoner,
 
         public <T> T get(CacheKeys cachekey, Object key, Computable<Object> c) {
             Computable<MemoizingCache<Object, Object>> cacheinit = new ComputableAllThrowables<MemoizingCache<Object, Object>>() {
+
                 @Override
                 public MemoizingCache<Object, Object> compute() {
                     try {
-                        return new MemoizingCache<Object, Object>();
+                        return new MemoizingCache<>();
                     } catch (Throwable e) {
                         exception = e;
                         return null;
@@ -148,11 +158,12 @@ public final class CachedOWLReasoner implements OWLReasoner,
     }
 
     private final CachedReasoner cache = new CachedReasoner();
+    @Nonnull
     private final OWLOntology rootOntology;
 
     /**
      * @param reasoner
-     *            reasoner
+     *        reasoner
      * @param manager
      *        manager
      */
@@ -226,7 +237,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
     }
 
     @Override
-    public List<OWLOntologyChange<?>> getPendingChanges() {
+    public List<OWLOntologyChange> getPendingChanges() {
         return delegate.getPendingChanges();
     }
 
@@ -328,6 +339,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             AxiomNotInProfileException, FreshEntitiesException,
             InconsistentOntologyException {
         ComputableAllThrowables<Object> entailer = new ComputableAllThrowables<Object>() {
+
             @Override
             @SuppressWarnings("boxing")
             public Object compute() {
@@ -378,7 +390,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             AxiomNotInProfileException, FreshEntitiesException,
             InconsistentOntologyException {
         for (OWLAxiom ax : axioms) {
-            if (!isEntailed(ax)) {
+            if (!isEntailed(verifyNotNull(ax))) {
                 return false;
             }
         }
@@ -408,6 +420,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
         final CacheKeys key = direct ? CacheKeys.subclassesDirect
                 : CacheKeys.subclasses;
         Computable<Object> checker = new ComputableAllThrowables<Object>() {
+
             @Override
             public Object compute() {
                 try {
@@ -451,7 +464,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -462,6 +475,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
         final CacheKeys key = direct ? CacheKeys.superclassesDirect
                 : CacheKeys.superclasses;
         Computable<Object> checker = new ComputableAllThrowables<Object>() {
+
             @Override
             public Object compute() {
                 try {
@@ -500,7 +514,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             throw new RuntimeException("Failure asking for superclasses of "
                     + ce + " " + direct, e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -510,6 +524,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             ReasonerInterruptedException, TimeOutException {
         final CacheKeys key = CacheKeys.equivclasses;
         Computable<Object> checker = new ComputableAllThrowables<Object>() {
+
             @Override
             public Object compute() {
                 try {
@@ -549,7 +564,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -558,6 +573,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             FreshEntitiesException, InconsistentOntologyException {
         final CacheKeys key = CacheKeys.disjointclasses;
         Computable<Object> checker = new ComputableAllThrowables<Object>() {
+
             @Override
             public Object compute() {
                 try {
@@ -598,7 +614,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -619,6 +635,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
         final CacheKeys key = direct ? CacheKeys.subobjectpropertiesDirect
                 : CacheKeys.subobjectproperties;
         Computable<Object> checker = new ComputableAllThrowables<Object>() {
+
             @Override
             public Object compute() {
                 try {
@@ -659,7 +676,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -670,6 +687,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
         final CacheKeys key = direct ? CacheKeys.superobjectpropertiesDirect
                 : CacheKeys.superobjectproperties;
         Computable<Object> checker = new ComputableAllThrowables<Object>() {
+
             @Override
             public Object compute() {
                 try {
@@ -710,7 +728,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -720,6 +738,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             ReasonerInterruptedException, TimeOutException {
         final CacheKeys key = CacheKeys.equivobjectproperties;
         Computable<Object> checker = new ComputableAllThrowables<Object>() {
+
             @Override
             public Object compute() {
                 try {
@@ -760,7 +779,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -770,6 +789,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             ReasonerInterruptedException, TimeOutException {
         final CacheKeys key = CacheKeys.disjointobjectproperties;
         Computable<Object> checker = new ComputableAllThrowables<Object>() {
+
             @Override
             public Object compute() {
                 try {
@@ -810,7 +830,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -820,6 +840,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             ReasonerInterruptedException, TimeOutException {
         final CacheKeys key = CacheKeys.inverseobjectproperties;
         Computable<Object> checker = new ComputableAllThrowables<Object>() {
+
             @Override
             public Object compute() {
                 try {
@@ -860,7 +881,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -871,6 +892,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
         final CacheKeys key = direct ? CacheKeys.objectpropertiesdomainsDirect
                 : CacheKeys.objectpropertiesdomains;
         Computable<Object> checker = new ComputableAllThrowables<Object>() {
+
             @Override
             public Object compute() {
                 try {
@@ -911,7 +933,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -922,6 +944,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
         final CacheKeys key = direct ? CacheKeys.objectpropertiesrangesDirect
                 : CacheKeys.objectpropertiesranges;
         Computable<Object> checker = new ComputableAllThrowables<Object>() {
+
             @Override
             public Object compute() {
                 try {
@@ -962,7 +985,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -983,6 +1006,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
         final CacheKeys key = direct ? CacheKeys.subdatapropertiesDirect
                 : CacheKeys.subdataproperties;
         Computable<Object> checker = new ComputableAllThrowables<Object>() {
+
             @Override
             public Object compute() {
                 try {
@@ -1023,7 +1047,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1034,6 +1058,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
         final CacheKeys key = direct ? CacheKeys.superdatapropertiesDirect
                 : CacheKeys.superdataproperties;
         Computable<Object> checker = new ComputableAllThrowables<Object>() {
+
             @Override
             public Object compute() {
                 try {
@@ -1074,7 +1099,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1084,6 +1109,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             TimeOutException {
         final CacheKeys key = CacheKeys.equivdataproperties;
         Computable<Object> checker = new ComputableAllThrowables<Object>() {
+
             @Override
             public Object compute() {
                 try {
@@ -1124,7 +1150,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1134,6 +1160,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             ReasonerInterruptedException, TimeOutException {
         final CacheKeys key = CacheKeys.disjointdataproperties;
         Computable<Object> checker = new ComputableAllThrowables<Object>() {
+
             @Override
             public Object compute() {
                 try {
@@ -1174,7 +1201,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1185,6 +1212,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
         final CacheKeys key = direct ? CacheKeys.datapropertiesdomainsDirect
                 : CacheKeys.datapropertiesdomains;
         Computable<Object> checker = new ComputableAllThrowables<Object>() {
+
             @Override
             public Object compute() {
                 try {
@@ -1225,7 +1253,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1235,6 +1263,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             TimeOutException {
         final CacheKeys key = direct ? CacheKeys.typesDirect : CacheKeys.types;
         Computable<Object> checker = new ComputableAllThrowables<Object>() {
+
             @Override
             public Object compute() {
                 try {
@@ -1275,7 +1304,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1287,6 +1316,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
         final CacheKeys key = direct ? CacheKeys.instancesDirect
                 : CacheKeys.instances;
         Computable<Object> checker = new ComputableAllThrowables<Object>() {
+
             @Override
             public Object compute() {
                 try {
@@ -1327,7 +1357,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1337,6 +1367,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             ReasonerInterruptedException, TimeOutException {
         final CacheKeys key = CacheKeys.objectpropertiesvalues;
         Computable<Object> checker = new ComputableAllThrowables<Object>() {
+
             @Override
             public Object compute() {
                 try {
@@ -1377,7 +1408,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1387,6 +1418,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             TimeOutException {
         final CacheKeys key = CacheKeys.datapropertiesvalues;
         Computable<Object> checker = new ComputableAllThrowables<Object>() {
+
             @Override
             public Object compute() {
                 try {
@@ -1427,7 +1459,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1437,6 +1469,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             TimeOutException {
         final CacheKeys key = CacheKeys.sameindividual;
         Computable<Object> checker = new ComputableAllThrowables<Object>() {
+
             @Override
             public Object compute() {
                 try {
@@ -1477,7 +1510,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1487,6 +1520,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             TimeOutException {
         final CacheKeys key = CacheKeys.diffindividual;
         Computable<Object> checker = new ComputableAllThrowables<Object>() {
+
             @Override
             public Object compute() {
                 try {
@@ -1527,7 +1561,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
             }
             throw new RuntimeException(e);
         }
-        return toReturn;
+        return verifyNotNull(toReturn);
     }
 
     @Override
@@ -1552,7 +1586,7 @@ public final class CachedOWLReasoner implements OWLReasoner,
     }
 
     @Override
-    public void ontologiesChanged(List<? extends OWLOntologyChange<?>> changes) {
+    public void ontologiesChanged(List<? extends OWLOntologyChange> changes) {
         // only invalidate the caches, the changes are supposed to go to the
         // reasoner via its own listener
         cache.clear();

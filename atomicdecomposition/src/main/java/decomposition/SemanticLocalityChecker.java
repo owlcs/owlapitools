@@ -135,7 +135,7 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor,
             }
         }
         // register all the objects in the ontology signature
-        Set<OWLAxiom> declarationAxioms = new HashSet<OWLAxiom>();
+        Set<OWLAxiom> declarationAxioms = new HashSet<>();
         for (OWLEntity p : s.getSignature()) {
             declarationAxioms.add(df.getOWLDeclarationAxiom(p));
         }
@@ -156,7 +156,7 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor,
     @Override
     public void visit(OWLEquivalentClassesAxiom axiom) {
         isLocal = false;
-        List<OWLClassExpression> arguments = new ArrayList<OWLClassExpression>(
+        List<OWLClassExpression> arguments = new ArrayList<>(
                 axiom.getClassExpressions());
         int size = arguments.size();
         OWLClassExpression C = arguments.get(0);
@@ -172,7 +172,7 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor,
     @Override
     public void visit(OWLDisjointClassesAxiom axiom) {
         isLocal = false;
-        List<OWLClassExpression> arguments = new ArrayList<OWLClassExpression>(
+        List<OWLClassExpression> arguments = new ArrayList<>(
                 axiom.getClassExpressions());
         int size = arguments.size();
         for (int i = 0; i < size; i++) {
@@ -197,7 +197,7 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor,
             return;
         }
         // check disjoint(C1...Cn)
-        List<OWLClassExpression> arguments = new ArrayList<OWLClassExpression>(
+        List<OWLClassExpression> arguments = new ArrayList<>(
                 axiom.getClassExpressions());
         int size = arguments.size();
         for (int i = 0; i < size; i++) {
@@ -214,7 +214,7 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor,
     @Override
     public void visit(OWLEquivalentObjectPropertiesAxiom axiom) {
         isLocal = false;
-        List<OWLObjectPropertyExpression> arguments = new ArrayList<OWLObjectPropertyExpression>(
+        List<OWLObjectPropertyExpression> arguments = new ArrayList<>(
                 axiom.getProperties());
         int size = arguments.size();
         OWLObjectPropertyExpression R = arguments.get(0);
@@ -232,7 +232,7 @@ public class SemanticLocalityChecker implements OWLAxiomVisitor,
     @Override
     public void visit(OWLEquivalentDataPropertiesAxiom axiom) {
         isLocal = false;
-        List<OWLDataPropertyExpression> arguments = new ArrayList<OWLDataPropertyExpression>(
+        List<OWLDataPropertyExpression> arguments = new ArrayList<>(
                 axiom.getProperties());
         OWLDataPropertyExpression R = arguments.get(0);
         for (int i = 1; i < arguments.size(); i++) {

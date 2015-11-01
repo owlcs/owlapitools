@@ -7,9 +7,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/** An ontology atom including module and dependencies information.
+/**
+ * An ontology atom including module and dependencies information.
  * 
- * @author ignazio */
+ * @author ignazio
+ */
 public class OntologyAtom {
     static Comparator<OntologyAtom> comparator = new Comparator<OntologyAtom>() {
         @Override
@@ -18,13 +20,13 @@ public class OntologyAtom {
         }
     };
     /** set of axioms in the atom */
-    private List<AxiomWrapper> axioms = new ArrayList<AxiomWrapper>();
+    private List<AxiomWrapper> axioms = new ArrayList<>();
     /** set of axioms in the module (Atom's ideal) */
-    private List<AxiomWrapper> module = new ArrayList<AxiomWrapper>();
+    private List<AxiomWrapper> module = new ArrayList<>();
     /** set of atoms current one depends on */
-    private Set<OntologyAtom> dependencies = new HashSet<OntologyAtom>();
+    private Set<OntologyAtom> dependencies = new HashSet<>();
     /** set of all atoms current one depends on */
-    private Set<OntologyAtom> allDependencies = new HashSet<OntologyAtom>();
+    private Set<OntologyAtom> allDependencies = new HashSet<>();
     /** unique atom's identifier */
     private int id = 0;
 
@@ -35,10 +37,12 @@ public class OntologyAtom {
         }
     }
 
-    /** build all dep atoms; filter them from DepAtoms
+    /**
+     * build all dep atoms; filter them from DepAtoms
      * 
      * @param checked
-     *            sets of atoms to check */
+     *        sets of atoms to check
+     */
     public void buildAllDepAtoms(Set<OntologyAtom> checked) {
         // first gather all dep atoms from all known dep atoms
         for (OntologyAtom p : dependencies) {
@@ -54,42 +58,52 @@ public class OntologyAtom {
     }
 
     // fill in the sets
-    /** set the module axioms
+    /**
+     * set the module axioms
      * 
      * @param module
-     *            the module axioms */
+     *        the module axioms
+     */
     public void setModule(Collection<AxiomWrapper> module) {
-        this.module = new ArrayList<AxiomWrapper>(module);
+        this.module = new ArrayList<>(module);
     }
 
-    /** @param ax
-     *            axiom to add to the atom */
+    /**
+     * @param ax
+     *        axiom to add to the atom
+     */
     public void addAxiom(AxiomWrapper ax) {
         axioms.add(ax);
         ax.setAtom(this);
     }
 
-    /** @param axs
-     *            axioms to add to the atom */
+    /**
+     * @param axs
+     *        axioms to add to the atom
+     */
     public void addAxioms(Collection<AxiomWrapper> axs) {
         for (AxiomWrapper ax : axs) {
             addAxiom(ax);
         }
     }
 
-    /** @param atom
-     *            add atom to the dependency set */
+    /**
+     * @param atom
+     *        add atom to the dependency set
+     */
     public void addDepAtom(OntologyAtom atom) {
         if (atom != null && atom != this) {
             dependencies.add(atom);
         }
     }
 
-    /** get all the atoms the current one depends on; build this set if necessary
+    /**
+     * get all the atoms the current one depends on; build this set if necessary
      * 
      * @param checked
      *            atoms to check
-     * @return all dependencies */
+     * @return all dependencies
+     */
     public Set<OntologyAtom> getAllDepAtoms(Set<OntologyAtom> checked) {
         if (checked.contains(this)) {
             buildAllDepAtoms(checked);
@@ -118,8 +132,10 @@ public class OntologyAtom {
         return id;
     }
 
-    /** @param id
-     *            the id value */
+    /**
+     * @param id
+     *        the id value
+     */
     public void setId(int id) {
         this.id = id;
     }

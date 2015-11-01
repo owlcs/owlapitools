@@ -1,31 +1,46 @@
 package uk.ac.manchester.cs.atomicdecomposition;
 
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
-import decomposition.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
+
 import uk.ac.manchester.cs.chainsaw.FastSet;
 import uk.ac.manchester.cs.owlapi.modularity.ModuleType;
 
-import java.util.*;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+
+import decomposition.AxiomSelector;
+import decomposition.AxiomWrapper;
+import decomposition.Decomposer;
+import decomposition.IdentityMultiMap;
+import decomposition.OntologyAtom;
+import decomposition.SyntacticLocalityChecker;
 
 /** atomc decomposition implementation */
 public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
+
     Set<OWLAxiom> globalAxioms;
     Set<OWLAxiom> tautologies;
     final Multimap<OWLEntity, Atom> termBasedIndex = LinkedHashMultimap
             .create();
     List<Atom> atoms;
-    Map<Atom, Integer> atomIndex = new HashMap<Atom, Integer>();
-    IdentityMultiMap<Atom, Atom> dependents = new IdentityMultiMap<Atom, Atom>();
-    IdentityMultiMap<Atom, Atom> dependencies = new IdentityMultiMap<Atom, Atom>();
+    Map<Atom, Integer> atomIndex = new HashMap<>();
+    IdentityMultiMap<Atom, Atom> dependents = new IdentityMultiMap<>();
+    IdentityMultiMap<Atom, Atom> dependencies = new IdentityMultiMap<>();
     Decomposer decomposer;
     private final ModuleType type;
 
     Set<OWLAxiom> asSet(Collection<AxiomWrapper> c) {
-        Set<OWLAxiom> toReturn = new HashSet<OWLAxiom>();
+        Set<OWLAxiom> toReturn = new HashSet<>();
         for (AxiomWrapper p : c) {
             toReturn.add(p.getAxiom());
         }
@@ -42,7 +57,7 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
 
     /**
      * @param o
-     *            o
+     *        o
      * @param type
      *        type
      */
@@ -52,7 +67,7 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
 
     /**
      * @param axioms
-     *            axioms
+     *        axioms
      * @param type
      *        type
      */
@@ -61,9 +76,10 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
         decomposer = new Decomposer(AxiomSelector.wrap(axioms),
                 new SyntacticLocalityChecker());
         int size = decomposer.getAOS(this.type).size();
-        atoms = new ArrayList<Atom>();
+        atoms = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            final Atom atom = new Atom(asSet(decomposer.getAOS().get(i).getAtomAxioms()));
+            final Atom atom = new Atom(asSet(decomposer.getAOS().get(i)
+                    .getAtomAxioms()));
             atoms.add(atom);
             atomIndex.put(atom, i);
             for (OWLEntity e : atom.getSignature()) {
@@ -86,7 +102,7 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
 
     @Override
     public Set<Atom> getAtoms() {
-        return new HashSet<Atom>(atoms);
+        return new HashSet<>(atoms);
     }
 
     @Override
@@ -140,17 +156,18 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
         return explore(atom, direct, dependents);
     }
 
-    Set<Atom> explore(Atom atom, boolean direct, IdentityMultiMap<Atom, Atom> multimap) {
+    Set<Atom> explore(Atom atom, boolean direct,
+            IdentityMultiMap<Atom, Atom> multimap) {
         if (direct) {
-            Set<Atom> hashSet = new HashSet<Atom>(multimap.get(atom));
+            Set<Atom> hashSet = new HashSet<>(multimap.get(atom));
             for (Atom a : multimap.get(atom)) {
                 hashSet.removeAll(multimap.get(a));
             }
             return hashSet;
         }
-        Map<Atom, Atom> toReturn = new HashMap<Atom, Atom>();
+        Map<Atom, Atom> toReturn = new HashMap<>();
         toReturn.put(atom, atom);
-        List<Atom> toDo = new ArrayList<Atom>();
+        List<Atom> toDo = new ArrayList<>();
         toDo.add(atom);
         for (int i = 0; i < toDo.size(); i++) {
             final Atom key = toDo.get(i);
@@ -181,7 +198,7 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
     }
 
     Set<Atom> asSet(Iterable<Integer> keys) {
-        Set<Atom> s = new HashSet<Atom>();
+        Set<Atom> s = new HashSet<>();
         for (int i : keys) {
             s.add(atoms.get(i));
         }
@@ -189,7 +206,7 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
     }
 
     Set<Atom> asSet(FastSet keys) {
-        Set<Atom> s = new HashSet<Atom>();
+        Set<Atom> s = new HashSet<>();
         for (int i = 0; i < keys.size(); i++) {
             s.add(atoms.get(keys.get(i)));
         }
@@ -222,9 +239,9 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
 
     @Override
     public Map<OWLEntity, Set<Atom>> getTermBasedIndex() {
-        Map<OWLEntity, Set<Atom>> toReturn = new HashMap<OWLEntity, Set<Atom>>();
+        Map<OWLEntity, Set<Atom>> toReturn = new HashMap<>();
         for (OWLEntity e : termBasedIndex.keySet()) {
-            toReturn.put(e, new HashSet<Atom>(termBasedIndex.get(e)));
+            toReturn.put(e, new HashSet<>(termBasedIndex.get(e)));
         }
         return toReturn;
     }
@@ -234,15 +251,15 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
      * id INDEX
      * 
      * @param index
-     *            index
+     *        index
      * @return module at index
      */
     Collection<AxiomWrapper> getAtomModule(int index) {
         return decomposer.getAOS().get(index).getModule();
     }
 
-    Collection<AxiomWrapper> getModule(Set<OWLEntity> signature, boolean useSemantics,
-            ModuleType moduletype) {
+    Collection<AxiomWrapper> getModule(Set<OWLEntity> signature,
+            boolean useSemantics, ModuleType moduletype) {
         return decomposer.getModule(signature, useSemantics, moduletype);
     }
 }

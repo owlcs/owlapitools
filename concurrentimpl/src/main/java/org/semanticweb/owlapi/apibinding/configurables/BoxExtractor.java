@@ -40,15 +40,17 @@ package org.semanticweb.owlapi.apibinding.configurables;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.annotation.Nonnull;
 
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.parameters.Imports;
-import org.semanticweb.owlapi.util.CollectionFactory;
 import org.semanticweb.owlapi.util.OWLObjectVisitorExAdapter;
 
 /**
@@ -68,10 +70,12 @@ import org.semanticweb.owlapi.util.OWLObjectVisitorExAdapter;
  * implementation is itself threadsafe. A single instance can be reused for
  * extracting the same Box from different ontologies without side effects.
  */
-public class BoxExtractor extends OWLObjectVisitorExAdapter<Set<OWLAxiom>> implements
-    OWLObjectVisitorEx<Set<OWLAxiom>> {
+public class BoxExtractor extends OWLObjectVisitorExAdapter<Set<OWLAxiom>>
+        implements OWLObjectVisitorEx<Set<OWLAxiom>> {
 
+    @Nonnull
     private final Collection<AxiomType<?>> types;
+    @Nonnull
     private final Imports closure;
 
     /**
@@ -81,15 +85,16 @@ public class BoxExtractor extends OWLObjectVisitorExAdapter<Set<OWLAxiom>> imple
      *        if true, the imports closure is included in the search, otherwise
      *        only the visited ontology is included
      */
-    public BoxExtractor(Collection<AxiomType<?>> types, Imports importsClosure) {
+    public BoxExtractor(@Nonnull Collection<AxiomType<?>> types,
+            @Nonnull Imports importsClosure) {
         super(Collections.<OWLAxiom> emptySet());
-        this.types = new ArrayList<AxiomType<?>>(types);
+        this.types = new ArrayList<>(types);
         closure = importsClosure;
     }
 
     @Override
     public Set<OWLAxiom> visit(OWLOntology ontology) {
-        Set<OWLAxiom> toReturn = new HashSet<OWLAxiom>();
+        Set<OWLAxiom> toReturn = new HashSet<>();
         for (AxiomType<?> t : types) {
             assert t != null;
             toReturn.addAll(ontology.getAxioms(t, closure));

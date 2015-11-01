@@ -11,15 +11,25 @@ package org.coode.suggestor.impl;
 
 import org.coode.suggestor.api.PropertySanctionRule;
 import org.coode.suggestor.api.PropertySuggestor;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLAnnotation;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLProperty;
+import org.semanticweb.owlapi.model.OWLPropertyExpression;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.search.Searcher;
 
 /**
  * Checks the class to see if it has an annotation (specified by the
  * constructor) matching the URI of the property. If recursive is true, then all
  * ancestors of the class are also checked.
  */
-public class SimpleAnnotationPropertySanctionRule implements PropertySanctionRule {
+public class SimpleAnnotationPropertySanctionRule implements
+        PropertySanctionRule {
 
     private OWLReasoner r;
     private final OWLAnnotationProperty annotationProperty;
@@ -31,8 +41,8 @@ public class SimpleAnnotationPropertySanctionRule implements PropertySanctionRul
      * @param recursive
      *        true if recursive
      */
-    public SimpleAnnotationPropertySanctionRule(OWLAnnotationProperty annotationProperty,
-        boolean recursive) {
+    public SimpleAnnotationPropertySanctionRule(
+            OWLAnnotationProperty annotationProperty, boolean recursive) {
         this.annotationProperty = annotationProperty;
         this.recursive = recursive;
     }
@@ -43,7 +53,8 @@ public class SimpleAnnotationPropertySanctionRule implements PropertySanctionRul
     }
 
     @Override
-    public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p) {
+    public boolean meetsSanction(OWLClassExpression c,
+            OWLObjectPropertyExpression p) {
         return hasAnnotation(c, p);
     }
 
@@ -52,15 +63,17 @@ public class SimpleAnnotationPropertySanctionRule implements PropertySanctionRul
         return hasAnnotation(c, p);
     }
 
-    private boolean hasAnnotation(OWLClassExpression c, OWLPropertyExpression p) {
+    private boolean
+            hasAnnotation(OWLClassExpression c, OWLPropertyExpression p) {
         if (!p.isAnonymous()) {
             if (!c.isAnonymous()
-                && hasSanctionAnnotation(c.asOWLClass(), (OWLProperty) p)) {
+                    && hasSanctionAnnotation(c.asOWLClass(), (OWLProperty) p)) {
                 return true;
             }
             if (recursive) {
                 // check the ancestors
-                for (OWLClass superCls : r.getSuperClasses(c, true).getFlattened()) {
+                for (OWLClass superCls : r.getSuperClasses(c, true)
+                        .getFlattened()) {
                     if (hasAnnotation(superCls, p)) {
                         return true;
                     }

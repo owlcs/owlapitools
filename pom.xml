@@ -16,7 +16,7 @@
 	<groupId>net.sourceforge.owlapi</groupId>
 	<artifactId>owlapitools-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>3.5.4</version>
+	<version>4.0.1</version>
 	<name>OWLAPI_TOOLS</name>
 	<description>OWLAPI_TOOLS is a collection of add-ons for OWL API</description>
 	<url>http://owlapitools.sourceforge.net/</url>

@@ -14,24 +14,28 @@ public class Atom {
     private Collection<OWLEntity> label;
     private int hashcode;
 
-    /** @param ax
+    /**
+     * @param ax
      *            axiom
-     * @return true if ax is in this atom */
+     * @return true if ax is in this atom
+     */
     public boolean contains(OWLAxiom ax) {
         return axioms.contains(ax);
     }
 
     private void initSignature() {
         if (signature == null) {
-            signature = new ArrayList<OWLEntity>();
+            signature = new ArrayList<>();
             for (OWLAxiom ax : axioms) {
                 signature.addAll(ax.getSignature());
             }
         }
     }
 
-    /** @param axioms
-     *            build an atom out of a set of axioms */
+    /**
+     * @param axioms
+     *        build an atom out of a set of axioms
+     */
     public Atom(Collection<OWLAxiom> axioms) {
         this.axioms = axioms;
         hashcode = this.axioms.hashCode();
@@ -53,8 +57,10 @@ public class Atom {
         return label;
     }
 
-    /** @param labelSignature
-     *            the label for the atom */
+    /**
+     * @param labelSignature
+     *        the label for the atom
+     */
     public void setLabel(Collection<OWLEntity> labelSignature) {
         label = labelSignature;
     }

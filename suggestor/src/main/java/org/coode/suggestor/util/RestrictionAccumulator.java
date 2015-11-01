@@ -45,7 +45,7 @@ public class RestrictionAccumulator {
      * @return restrictions
      */
     public Set<OWLRestriction> getRestrictions(OWLClassExpression cls,
-        OWLPropertyExpression prop) {
+            OWLPropertyExpression prop) {
         return accummulateRestrictions(cls, prop, null);
     }
 
@@ -62,8 +62,8 @@ public class RestrictionAccumulator {
      */
     @SuppressWarnings("unchecked")
     public <T extends OWLRestriction> Set<T> getRestrictions(
-        OWLClassExpression cls, OWLPropertyExpression prop, Class<T> type) {
-        Set<T> results = new HashSet<T>();
+            OWLClassExpression cls, OWLPropertyExpression prop, Class<T> type) {
+        Set<T> results = new HashSet<>();
         for (OWLRestriction restr : accummulateRestrictions(cls, prop, type)) {
             results.add((T) restr);
         }
@@ -71,9 +71,10 @@ public class RestrictionAccumulator {
     }
 
     protected Set<OWLRestriction> accummulateRestrictions(
-        OWLClassExpression cls, OWLPropertyExpression prop,
-        Class<? extends OWLRestriction> type) {
-        Set<OWLClass> relevantClasses = r.getSuperClasses(cls, false).getFlattened();
+            OWLClassExpression cls, OWLPropertyExpression prop,
+            Class<? extends OWLRestriction> type) {
+        Set<OWLClass> relevantClasses = r.getSuperClasses(cls, false)
+                .getFlattened();
         RestrictionVisitor v = getVisitor(prop, type);
         if (!cls.isAnonymous()) {
             relevantClasses.add(cls.asOWLClass());
@@ -100,7 +101,7 @@ public class RestrictionAccumulator {
     }
 
     protected RestrictionVisitor getVisitor(OWLPropertyExpression prop,
-        Class<? extends OWLRestriction> type) {
+            Class<? extends OWLRestriction> type) {
         return new RestrictionVisitor(r, prop, type);
     }
 }

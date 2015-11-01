@@ -52,22 +52,26 @@ import java.util.concurrent.FutureTask;
 
 import org.semanticweb.owlapi.util.CollectionFactory;
 
-/** @author ignazio Cache where values computation is carried out with
- *         Computables and multithread safe - no stale data, no multiple
- *         computations for the same value
+/**
+ * @author ignazio Cache where values computation is carried out with Computables
+ *         and multithread safe - no stale data, no multiple computations for
+ *         the same value
  * @param <A>
  *            type of key
  * @param <V>
- *            type of value */
+ *        type of value
+ */
 public class MemoizingCache<A, V> implements Map<A, V> {
     private final ConcurrentHashMap<A, FutureTask<V>> cache = CollectionFactory
             .createSyncMap();
 
-    /** @param computant
+    /**
+     * @param computant
      *            the object that carries out the copmutation
      * @param key
      *            the key
-     * @return the computed value */
+     * @return the computed value
+     */
     public V get(final Computable<V> computant, final A key) {
         while (true) {
             FutureTask<V> f = cache.get(key);
@@ -79,7 +83,7 @@ public class MemoizingCache<A, V> implements Map<A, V> {
                         return compute;
                     }
                 };
-                FutureTask<V> ft = new FutureTask<V>(eval);
+                FutureTask<V> ft = new FutureTask<>(eval);
                 f = cache.putIfAbsent(key, ft);
                 if (f == null) {
                     f = ft;
@@ -94,16 +98,19 @@ public class MemoizingCache<A, V> implements Map<A, V> {
                 throw new RuntimeException(e);
             } catch (InterruptedException e) {
                 cache.remove(key);
-                throw new RuntimeException("Unexpected interrupted exception", e);
+                throw new RuntimeException("Unexpected interrupted exception",
+                        e);
             }
         }
     }
 
-    /** @param computed
+    /**
+     * @param computed
      *            the value
      * @param key
      *            the key
-     * @return computed */
+     * @return computed
+     */
     public V get(final V computed, final A key) {
         while (true) {
             FutureTask<V> f = cache.get(key);
@@ -114,7 +121,7 @@ public class MemoizingCache<A, V> implements Map<A, V> {
                         return computed;
                     }
                 };
-                FutureTask<V> ft = new FutureTask<V>(eval);
+                FutureTask<V> ft = new FutureTask<>(eval);
                 f = cache.putIfAbsent(key, ft);
                 if (f == null) {
                     f = ft;
@@ -129,7 +136,8 @@ public class MemoizingCache<A, V> implements Map<A, V> {
                 throw new RuntimeException(e);
             } catch (InterruptedException e) {
                 cache.remove(key);
-                throw new RuntimeException("Unexpected interrupted exception", e);
+                throw new RuntimeException("Unexpected interrupted exception",
+                        e);
             }
         }
     }
@@ -199,10 +207,12 @@ public class MemoizingCache<A, V> implements Map<A, V> {
         return cache.keySet();
     }
 
-    /** This method should not be used for a MemoizingCache; the preferred way is
+    /**
+     * This method should not be used for a MemoizingCache; the preferred way is
      * to provide a Computable and use the get(Computable, A) method Notice that
      * the returned value might not be the last previous stored value but one of
-     * the values stored before the new value */
+     * the values stored before the new value
+     */
     @Override
     public V put(A key, final V value) {
         V toReturn = this.get(key);
@@ -230,7 +240,7 @@ public class MemoizingCache<A, V> implements Map<A, V> {
 
     @Override
     public Collection<V> values() {
-        List<V> toReturn = new ArrayList<V>();
+        List<V> toReturn = new ArrayList<>();
         for (A key : cache.keySet()) {
             toReturn.add(get(key));
         }

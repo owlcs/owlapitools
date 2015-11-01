@@ -19,8 +19,10 @@ import uk.ac.manchester.cs.atomicdecomposition.AtomicDecomposition;
 
 @SuppressWarnings("javadoc")
 public class AtomicDecomposerDepedenciesTest {
+
     @Test
-    public void atomicDecomposerDepedenciesTest() throws OWLOntologyCreationException {
+    public void atomicDecomposerDepedenciesTest()
+            throws OWLOntologyCreationException {
         // given
         OWLOntology o = getOntology();
         assertEquals(3, o.getAxiomCount());
@@ -37,7 +39,8 @@ public class AtomicDecomposerDepedenciesTest {
         assertEquals(0, dependencies.size());
     }
 
-    private static OWLOntology getOntology() throws OWLOntologyCreationException {
+    private static OWLOntology getOntology()
+            throws OWLOntologyCreationException {
         OWLOntologyManager m = OWLManager.createOWLOntologyManager();
         OWLOntology o = m.createOntology();
         OWLDataFactory f = m.getOWLDataFactory();

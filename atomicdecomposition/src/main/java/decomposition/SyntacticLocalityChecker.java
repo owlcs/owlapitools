@@ -1,7 +1,7 @@
 package decomposition;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationPropertyDomainAxiom;
@@ -13,7 +13,6 @@ import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
-import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLDatatypeDefinitionAxiom;
 import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
@@ -50,7 +49,9 @@ import org.semanticweb.owlapi.model.OWLTransitiveObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.SWRLRule;
 
 /** syntactic locality checker for DL axioms */
-public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecker {
+public class SyntacticLocalityChecker implements OWLAxiomVisitor,
+        LocalityChecker {
+
     private Signature sig = new Signature();
     /** top evaluator */
     TopEquivalenceEvaluator TopEval;
@@ -71,12 +72,6 @@ public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecke
     public boolean isBotEquivalent(OWLObject expr) {
         final boolean botEquivalent = BotEval.isBotEquivalent(expr);
         return botEquivalent;
-    }
-
-    /** @return true iff role expression in equivalent to const wrt locality */
-    @Override
-    public boolean isREquivalent(OWLObject expr) {
-        return sig.topRLocal() ? isTopEquivalent(expr) : isBotEquivalent(expr);
     }
 
     /** init c'tor */
@@ -104,54 +99,61 @@ public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecke
         return isLocal;
     }
 
-    // TODO check
     @Override
     public void visit(OWLDeclarationAxiom axiom) {
         isLocal = true;
     }
 
-    @Override
-    public void visit(OWLEquivalentClassesAxiom axiom) {
+    private boolean localEquivalentExpressions(Set<? extends OWLObject> args) {
         // 1 element => local
-        if (axiom.getClassExpressions().size() < 2) {
-            isLocal = true;
-            return;
+        if (args.size() < 2) {
+            return true;
         }
-        // axiom is local iff all the classes are either top- or bot-local
-        isLocal = false;
-        List<OWLClassExpression> args = axiom.getClassExpressionsAsList();
-        int[] flags = new int[args.size()];
-        for (int i = 0; i < args.size(); i++) {
-            if (isBotEquivalent(args.get(i))) {
-                flags[i] = -1;
-            } else if (isTopEquivalent(args.get(i))) {
-                flags[i] = 1;
+        // axiom is local iff all the elements are either top- or bot-local
+        Boolean pos = null;
+        for (OWLObject arg : args) {
+            if (pos == null) {	// setup polarity of an equivalence
+                if (isTopEquivalent(arg)) {
+                    pos = true;
+                } else if (isBotEquivalent(arg)) {
+                    pos = false;
+                } else {
+                    return false;
+        }
             } else {
-                flags[i] = 0;
+                if (pos && !isTopEquivalent(arg)) {
+                    return false;
+                } else if (!pos && !isBotEquivalent(arg)) {
+                    return false;
             }
         }
-        int total = 0;
-        for (int i : flags) {
-            total += i;
         }
-        isLocal = Math.abs(total) == flags.length;
+        return true;
     }
 
-    @Override
-    public void visit(OWLDisjointClassesAxiom axiom) {
-        // local iff at most 1 concept is not bot-equiv
+    private boolean localDisjointExpressions(Set<? extends OWLObject> args) {
+        // local iff at most 1 element is not bot-equiv
         boolean hasNBE = false;
-        isLocal = true;
-        for (OWLClassExpression p : axiom.getClassExpressions()) {
-            if (!isBotEquivalent(p)) {
+        for (OWLObject arg : args) {
+            if (!isBotEquivalent(arg)) {
                 if (hasNBE) {
-                    isLocal = false;
-                    return;
+                    return false;		// non-local
                 } else {
                     hasNBE = true;
                 }
             }
         }
+        return true;
+    }
+
+    @Override
+    public void visit(OWLEquivalentClassesAxiom axiom) {
+        isLocal = localEquivalentExpressions(axiom.getClassExpressions());
+    }
+
+    @Override
+    public void visit(OWLDisjointClassesAxiom axiom) {
+        isLocal = localDisjointExpressions(axiom.getClassExpressions());
     }
 
     @Override
@@ -193,69 +195,23 @@ public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecke
 
     @Override
     public void visit(OWLEquivalentObjectPropertiesAxiom axiom) {
-        isLocal = true;
-        if (axiom.getProperties().size() < 2) {
-            return;
+        isLocal = localEquivalentExpressions(axiom.getProperties());
         }
-        for (OWLObjectPropertyExpression p : axiom.getProperties()) {
-            if (!isREquivalent(p)) {
-                isLocal = false;
-                return;
-            }
-        }
-    }
 
     @Override
     public void visit(OWLEquivalentDataPropertiesAxiom axiom) {
-        isLocal = true;
-        if (axiom.getProperties().size() < 2) {
-            return;
-        }
-        for (OWLDataPropertyExpression p : axiom.getProperties()) {
-            if (!isREquivalent(p)) {
-                isLocal = false;
-                return;
-            }
-        }
+        isLocal = localEquivalentExpressions(axiom.getProperties());
     }
 
     @Override
     public void visit(OWLDisjointObjectPropertiesAxiom axiom) {
-        isLocal = false;
-        if (sig.topRLocal()) {
-            return;
+        isLocal = localDisjointExpressions(axiom.getProperties());
         }
-        boolean hasNBE = false;
-        for (OWLObjectPropertyExpression p : axiom.getProperties()) {
-            if (!isREquivalent(p)) {
-                if (hasNBE) {
-                    return; // false here
-                } else {
-                    hasNBE = true;
-                }
-            }
-        }
-        isLocal = true;
-    }
 
     @Override
     public void visit(OWLDisjointDataPropertiesAxiom axiom) {
-        isLocal = false;
-        if (sig.topRLocal()) {
-            return;
-        }
-        boolean hasNBE = false;
-        for (OWLDataPropertyExpression p : axiom.getProperties()) {
-            if (!isREquivalent(p)) {
-                if (hasNBE) {
-                    return; // false here
-                } else {
-                    hasNBE = true;
+        isLocal = localDisjointExpressions(axiom.getProperties());
                 }
-            }
-        }
-        isLocal = true;
-    }
 
     @Override
     public void visit(OWLSameIndividualAxiom axiom) {
@@ -269,8 +225,10 @@ public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecke
 
     @Override
     public void visit(OWLInverseObjectPropertiesAxiom axiom) {
-        isLocal = isREquivalent(axiom.getFirstProperty())
-                && isREquivalent(axiom.getSecondProperty());
+        OWLObjectPropertyExpression p1 = axiom.getFirstProperty();
+        OWLObjectPropertyExpression p2 = axiom.getSecondProperty();
+        isLocal = isBotEquivalent(p1) && isBotEquivalent(p2)
+                || isTopEquivalent(p1) && isTopEquivalent(p2);
     }
 
     @Override
@@ -311,7 +269,8 @@ public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecke
 
     @Override
     public void visit(OWLTransitiveObjectPropertyAxiom axiom) {
-        isLocal = isREquivalent(axiom.getProperty());
+        isLocal = isBotEquivalent(axiom.getProperty())
+                || isTopEquivalent(axiom.getProperty());
     }
 
     /** as BotRole is irreflexive, the only local axiom is topEquivalent(R) */
@@ -327,7 +286,8 @@ public class SyntacticLocalityChecker implements OWLAxiomVisitor, LocalityChecke
 
     @Override
     public void visit(OWLSymmetricObjectPropertyAxiom axiom) {
-        isLocal = isREquivalent(axiom.getProperty());
+        isLocal = isBotEquivalent(axiom.getProperty())
+                || isTopEquivalent(axiom.getProperty());
     }
 
     @Override
