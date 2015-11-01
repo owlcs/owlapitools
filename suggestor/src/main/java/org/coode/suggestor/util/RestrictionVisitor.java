@@ -1,5 +1,7 @@
 package org.coode.suggestor.util;
 
+import static org.semanticweb.owlapi.util.OWLAPIStreamUtils.add;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -7,13 +9,12 @@ import javax.annotation.Nullable;
 
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import org.semanticweb.owlapi.util.OWLClassExpressionVisitorAdapter;
 
 /**
  * @author Nick Drummond, The University Of Manchester, Bio Health Informatics
  *         Group, Date: Jul 12, 2011
  */
-class RestrictionVisitor extends OWLClassExpressionVisitorAdapter {
+class RestrictionVisitor implements OWLClassExpressionVisitor {
 
     protected final OWLReasoner r;
     protected final @Nullable OWLPropertyExpression prop;
@@ -29,11 +30,9 @@ class RestrictionVisitor extends OWLClassExpressionVisitorAdapter {
         props = new HashSet<>();
         props.add(prop);
         if (prop instanceof OWLObjectProperty) {
-            props.addAll(r.getSubObjectProperties((OWLObjectProperty) prop,
-                false).getFlattened());
+            add(props, r.getSubObjectProperties(prop.asOWLObjectProperty()).entities());
         } else if (prop instanceof OWLDataProperty) {
-            props.addAll(r.getSubDataProperties((OWLDataProperty) prop, false)
-                .getFlattened());
+            add(props, r.getSubDataProperties(prop.asOWLDataProperty()).entities());
         }
     }
 
@@ -56,9 +55,7 @@ class RestrictionVisitor extends OWLClassExpressionVisitorAdapter {
     // flattening the description should be enough
     @Override
     public void visit(OWLObjectIntersectionOf and) {
-        for (OWLClassExpression desc : and.getOperands()) {
-            desc.accept(this);
-        }
+        and.operands().forEach(d -> d.accept(this));
     }
 
     @Override

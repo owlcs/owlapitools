@@ -59,7 +59,7 @@ public class RaceTestCase {
 
     @Test
     public void testSubClassLHS() throws Exception {
-        final int totalRepetitions = 10000;
+        final int totalRepetitions = 1000;
         int repetitions = 0;
         RaceTestCaseRunner r;
         do {
@@ -81,18 +81,14 @@ public class RaceTestCase {
         private static final String A_CLASS = "http://www.race.org#testclass";
         public static final String NS = "http://www.race.org#";
         protected RaceCallback callback;
-        private Runnable writer = new Runnable() {
-
-            @Override
-            public void run() {
-                while (!done.get()) {
-                    callback.add();
-                }
-                callback.add();
-            }
-        };
         final AtomicBoolean done = new AtomicBoolean(false);
         ExecutorService exec = Executors.newFixedThreadPool(5);
+        private Runnable writer = () -> {
+            while (!done.get()) {
+                callback.add();
+            }
+            callback.add();
+        };
 
         RaceTestCaseRunner() throws OWLOntologyCreationException {
             callback = new SubClassLHSCallback();
@@ -116,7 +112,7 @@ public class RaceTestCase {
             OWLClass y;
 
             public SubClassLHSCallback() throws OWLOntologyCreationException {
-                manager = OWLManager.createOWLOntologyManager();
+                manager = OWLManager.createConcurrentOWLOntologyManager();
                 factory = manager.getOWLDataFactory();
                 ontology = manager.createOntology();
                 x = factory.getOWLClass(IRI.create(NS + "X"));

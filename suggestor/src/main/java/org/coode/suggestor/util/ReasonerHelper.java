@@ -10,6 +10,7 @@
 package org.coode.suggestor.util;
 
 import static org.semanticweb.owlapi.util.OWLAPIPreconditions.checkNotNull;
+import static org.semanticweb.owlapi.util.OWLAPIStreamUtils.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -165,12 +166,9 @@ public class ReasonerHelper {
         Set<OWLObjectPropertyExpression> ancestors = new HashSet<>(r
             .getSuperObjectProperties(p, false).getFlattened());
         ancestors.add(p);
-        for (OWLOntology ont : r.getRootOntology().getImportsClosure()) {
-            for (OWLObjectPropertyExpression ancestor : ancestors) {
-                Collection<OWLClassExpression> searcher = Searcher.range(ont
-                    .getObjectPropertyRangeAxioms(ancestor));
-                assertedRanges.addAll(searcher);
-            }
+        for (OWLObjectPropertyExpression ancestor : ancestors) {
+            add(assertedRanges, Searcher.range(Imports.INCLUDED.stream(r.getRootOntology()).flatMap(o -> o
+                .objectPropertyRangeAxioms(ancestor))));
         }
         if (!assertedRanges.isEmpty()) {
             // filter to remove redundant ranges (supers of others) as
@@ -201,15 +199,11 @@ public class ReasonerHelper {
     public OWLDataRange getGlobalAssertedRange(OWLDataProperty p) {
         OWLDataRange range = df.getTopDatatype();
         Set<OWLDataRange> assertedRanges = new HashSet<>();
-        Set<OWLDataProperty> ancestors = new HashSet<>(r
-            .getSuperDataProperties(p, false).getFlattened());
+        Set<OWLDataProperty> ancestors = asSet(r.getSuperDataProperties(p, false).entities());
         ancestors.add(p);
-        for (OWLOntology ont : r.getRootOntology().getImportsClosure()) {
-            for (OWLDataProperty ancestor : ancestors) {
-                Collection<OWLDataRange> searcher = Searcher.range(ont
-                    .getDataPropertyRangeAxioms(ancestor));
-                assertedRanges.addAll(searcher);
-            }
+        for (OWLDataProperty ancestor : ancestors) {
+            add(assertedRanges, Searcher.range(Imports.INCLUDED.stream(r.getRootOntology()).flatMap(o -> o
+                .dataPropertyRangeAxioms(ancestor))));
         }
         if (!assertedRanges.isEmpty()) {
             if (assertedRanges.size() == 1) {
@@ -299,7 +293,7 @@ public class ReasonerHelper {
             throw new RuntimeException("Cannot find a candidate property for datatype subsumption checking");
         }
         Set<OWLDatatype> subs = new HashSet<>();
-        if (range.isDatatype()) {
+        if (range.isOWLDatatype()) {
             subs.add(range.asOWLDatatype());
         }
         OWLDataSomeValuesFrom pSomeRange = df
