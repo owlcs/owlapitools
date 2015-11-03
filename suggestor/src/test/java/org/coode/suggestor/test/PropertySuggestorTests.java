@@ -171,14 +171,14 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
             .getCurrentObjectProperties(ca, true);
         assertTrue(direct.containsEntity(op));
         assertTrue(direct.containsEntity(oq));
-        assertEquals(2, direct.getNodes().size());
+        assertEquals(2L, direct.nodes().count());
         NodeSet<OWLObjectPropertyExpression> all = ps
             .getCurrentObjectProperties(ca, false);
         assertTrue(all.containsEntity(op));
         assertTrue(all.containsEntity(oq));
         assertTrue(all.containsEntity(or));
         assertTrue(all.containsEntity(df.getOWLTopObjectProperty()));
-        assertEquals(4, all.getNodes().size());
+        assertEquals(4L, all.nodes().count());
     }
 
     public void testGetCurrentDataProperties() throws Exception {
@@ -190,11 +190,11 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
         // FillerSuggestor fs = fac.getFillerSuggestor();
         NodeSet<OWLDataProperty> direct = ps.getCurrentDataProperties(ca, true);
         assertTrue(direct.containsEntity(dx));
-        assertEquals(1, direct.getNodes().size());
+        assertEquals(1L, direct.nodes().count());
         NodeSet<OWLDataProperty> all = ps.getCurrentDataProperties(ca, false);
         assertTrue(all.containsEntity(dx));
         assertTrue(all.containsEntity(df.getOWLTopDataProperty()));
-        assertEquals(2, all.getNodes().size());
+        assertEquals(2L, all.nodes().count());
     }
 
     /*
@@ -217,13 +217,13 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
             .getCurrentObjectProperties(ca, true);
         assertTrue(direct.containsEntity(op));
         assertTrue(direct.containsEntity(oq));
-        assertEquals(1, direct.getNodes().size());
+        assertEquals(1L, direct.nodes().count());
         NodeSet<OWLObjectPropertyExpression> all = ps
             .getCurrentObjectProperties(ca, false);
         assertTrue(all.containsEntity(op));
         assertTrue(all.containsEntity(oq));
         assertTrue(all.containsEntity(df.getOWLTopObjectProperty()));
-        assertEquals(2, all.getNodes().size());
+        assertEquals(2L, all.nodes().count());
     }
 
     public void testGetPossibleObjectProperties() throws Exception {
@@ -235,7 +235,7 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
         // FillerSuggestor fs = fac.getFillerSuggestor();
         NodeSet<OWLObjectPropertyExpression> specific = ps
             .getPossibleObjectProperties(ca, null, true);
-        assertEquals(7, specific.getNodes().size());
+        assertEquals(7L, specific.nodes().count());
         assertTrue(specific.containsEntity(op));
         assertTrue(specific.containsEntity(df.getOWLObjectInverseOf(op)));
         assertTrue(specific.containsEntity(or));
@@ -245,7 +245,7 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
         assertTrue(specific.containsEntity(df.getOWLObjectInverseOf(os)));
         NodeSet<OWLObjectPropertyExpression> all = ps
             .getPossibleObjectProperties(ca, null, false);
-        assertEquals(9, all.getNodes().size());
+        assertEquals(9L, all.nodes().count());
         assertTrue(all.containsEntity(op));
         assertTrue(all.containsEntity(df.getOWLObjectInverseOf(op)));
         assertTrue(all.containsEntity(oq));
@@ -285,55 +285,48 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
         // current direct
         NodeSet<OWLObjectPropertyExpression> direct = ps
             .getCurrentObjectProperties(ca, true);
-        for (OWLObjectProperty p : ont.getObjectPropertiesInSignature()) {
-            assert p != null;
+        ont.objectPropertiesInSignature().forEach(p -> {
             if (ps.isCurrent(ca, p, true)) {
                 assertTrue(direct.containsEntity(p));
             } else {
                 assertFalse(direct.containsEntity(p));
             }
-        }
+        });
         // current indirect
         NodeSet<OWLObjectPropertyExpression> indirect = ps
             .getCurrentObjectProperties(ca, false);
-        for (OWLObjectProperty p : ont.getObjectPropertiesInSignature()) {
-            assert p != null;
+        ont.objectPropertiesInSignature().forEach(p -> {
             if (ps.isCurrent(ca, p, false)) {
                 assertTrue(indirect.containsEntity(p));
             } else {
                 assertFalse(indirect.containsEntity(p));
             }
-        }
+        });
         // possible direct
         // check for all properties in the ontology
-        for (OWLObjectProperty p : ont.getObjectPropertiesInSignature()) {
-            assert p != null;
-            NodeSet<OWLObjectPropertyExpression> posdirect = ps
-                .getPossibleObjectProperties(ca, p, true);
-            for (Node<OWLObjectPropertyExpression> q : r
-                .getSubObjectProperties(p, true)) {
-                final OWLObjectPropertyExpression qRep = q
-                    .getRepresentativeElement();
+        ont.objectPropertiesInSignature().forEach(p -> {
+            NodeSet<OWLObjectPropertyExpression> posdirect = ps.getPossibleObjectProperties(ca, p, true);
+            for (Node<OWLObjectPropertyExpression> q : r.getSubObjectProperties(p, true)) {
+                final OWLObjectPropertyExpression qRep = q.getRepresentativeElement();
                 if (ps.isPossible(ca, qRep)) {
-                    assertTrue("Cannot find " + q
-                        + " in direct possible properties of " + p, posdirect.containsEntity(qRep));
+                    assertTrue("Cannot find " + q + " in direct possible properties of " + p, posdirect.containsEntity(
+                        qRep));
                 } else {
-                    assertFalse("Found " + q
-                        + " in direct possible properties of " + p, posdirect.containsEntity(qRep));
+                    assertFalse("Found " + q + " in direct possible properties of " + p, posdirect.containsEntity(
+                        qRep));
                 }
             }
-        }
+        });
         // possible indirect
         NodeSet<OWLObjectPropertyExpression> posindirect = ps
             .getPossibleObjectProperties(ca, null, false);
-        for (OWLObjectProperty p : ont.getObjectPropertiesInSignature()) {
-            assert p != null;
+        ont.objectPropertiesInSignature().forEach(p -> {
             if (ps.isPossible(ca, p)) {
                 assertTrue(posindirect.containsEntity(p));
             } else {
                 assertFalse(posindirect.containsEntity(p));
             }
-        }
+        });
     }
 
     public void testAnnotationPropertySanctioning() throws Exception {

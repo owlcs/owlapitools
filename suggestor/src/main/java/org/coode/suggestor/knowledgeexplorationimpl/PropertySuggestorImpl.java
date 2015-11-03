@@ -9,6 +9,8 @@
  */
 package org.coode.suggestor.knowledgeexplorationimpl;
 
+import static org.semanticweb.owlapi.util.OWLAPIStreamUtils.*;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -169,26 +171,14 @@ class PropertySuggestorImpl implements PropertySuggestor {
     @Override
     public Set<OWLObjectPropertyExpression> getSanctionedObjectProperties(OWLClassExpression c,
         OWLObjectPropertyExpression root, boolean direct) {
-        Set<OWLObjectPropertyExpression> props = new HashSet<>();
-        for (OWLObjectPropertyExpression pNode : getPossibleObjectProperties(c, root, direct).getFlattened()) {
-            if (meetsOPSanctions(c, pNode)) {
-                props.add(pNode);
-            }
-        }
-        return props;
+        return asSet(getPossibleObjectProperties(c, root, direct).entities().filter(pNode -> meetsOPSanctions(c,
+            pNode)));
     }
 
     @Override
     public Set<OWLDataProperty> getSanctionedDataProperties(OWLClassExpression c, OWLDataProperty root,
         boolean direct) {
-        Set<OWLDataProperty> props = new HashSet<>();
-        for (OWLDataProperty pNode : getPossibleDataProperties(c, root, direct)
-            .getFlattened()) {
-            if (meetsDPSanctions(c, pNode)) {
-                props.add(pNode);
-            }
-        }
-        return props;
+        return asSet(getPossibleDataProperties(c, root, direct).entities().filter(pNode -> meetsDPSanctions(c, pNode)));
     }
 
     // INTERNALS
@@ -258,7 +248,7 @@ class PropertySuggestorImpl implements PropertySuggestor {
             final P p = root.getRepresentativeElement();
             if (isMatch(c, p)) {
                 for (Node<P> sub : getDirectSubs(p)) {
-                    nodes.addAll(getLeaves(c, sub, direct).getNodes());
+                    add(nodes, getLeaves(c, sub, direct).nodes());
                 }
                 if (!direct || nodes.isEmpty() && !root.isTopNode()) {
                     nodes.add(root);
@@ -274,7 +264,7 @@ class PropertySuggestorImpl implements PropertySuggestor {
                 if (isMatch(c, sub.getRepresentativeElement())) {
                     nodes.add(sub);
                     if (!direct) {
-                        nodes.addAll(getRoots(c, sub, direct).getNodes());
+                        add(nodes, getRoots(c, sub, direct).nodes());
                     }
                 }
             }

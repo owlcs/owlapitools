@@ -1,12 +1,13 @@
 package org.semanticweb.owlapitools.decomposition.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.semanticweb.owlapi.util.OWLAPIStreamUtils.asSet;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -447,9 +448,9 @@ public class SyntacticLocalityTestCase {
 
     @Test
     public void shouldBeLocalswrlRule() {
-        Set<SWRLAtom> head = new HashSet<SWRLAtom>(Arrays.asList(df
+        Set<SWRLAtom> head = new HashSet<>(Arrays.asList(df
             .getSWRLClassAtom(a, df.getSWRLIndividualArgument(x))));
-        Set<SWRLAtom> body = new HashSet<SWRLAtom>(Arrays.asList(df
+        Set<SWRLAtom> body = new HashSet<>(Arrays.asList(df
             .getSWRLClassAtom(b, df.getSWRLIndividualArgument(y))));
         axiom = df.getSWRLRule(head, body);
         // signature intersects
@@ -462,7 +463,7 @@ public class SyntacticLocalityTestCase {
     public void shouldResetSignature() {
         OWLSubClassOfAxiom ax = df.getOWLSubClassOfAxiom(a, b);
         testSubject.preprocessOntology(Arrays.asList(new AxiomWrapper(ax)));
-        Assert.assertEquals(ax.getSignature(), testSubject.getSignature()
+        assertEquals(asSet(ax.signature()), testSubject.getSignature()
             .getSignature());
     }
 
@@ -508,7 +509,7 @@ public class SyntacticLocalityTestCase {
     }
 
     private void set(OWLEntity... entities) {
-        testSubject.setSignatureValue(new Signature(Arrays.asList(entities)));
+        testSubject.setSignatureValue(new Signature(Stream.of(entities)));
     }
 
     private void test(OWLAxiom ax, boolean expected, OWLEntity... entities) {

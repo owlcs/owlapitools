@@ -1,13 +1,14 @@
 package org.semanticweb.owlapitools.decomposition;
 
-import org.semanticweb.owlapi.model.AxiomType;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
+import static org.semanticweb.owlapi.model.AxiomType.LOGICAL_AXIOMS_AND_DECLARATIONS_TYPES;
+import static org.semanticweb.owlapi.util.OWLAPIStreamUtils.asList;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.semanticweb.owlapi.model.AxiomType.AXIOM_TYPES;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.parameters.Imports;
 
 /**
  * A filter for axioms
@@ -22,17 +23,8 @@ public class AxiomSelector {
      * @return list of declarations and logical axioms
      */
     public static List<OWLAxiom> selectAxioms(OWLOntology o) {
-        List<OWLAxiom> axioms = new ArrayList<>();
-        for (OWLOntology ont : o.getImportsClosure()) {
-            for (AxiomType<? extends OWLAxiom> type : AXIOM_TYPES) {
-                if (type.isLogical() || type.equals(AxiomType.DECLARATION)) {
-                    for (OWLAxiom ax : ont.getAxioms(type)) {
-                        axioms.add(ax);
-                    }
-                }
-            }
-        }
-        return axioms;
+        return asList(
+            LOGICAL_AXIOMS_AND_DECLARATIONS_TYPES.stream().flatMap(type -> o.axioms(type, Imports.INCLUDED)));
     }
 
     /**

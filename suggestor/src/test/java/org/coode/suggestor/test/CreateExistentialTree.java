@@ -9,9 +9,11 @@
  */
 package org.coode.suggestor.test;
 
+import static org.semanticweb.owlapi.util.OWLAPIStreamUtils.asList;
+
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.coode.suggestor.api.FillerSuggestor;
 import org.coode.suggestor.api.PropertySuggestor;
@@ -77,19 +79,21 @@ public class CreateExistentialTree extends AbstractSuggestorTest {
         for (int i = 0; i < indent; i++) {
             System.out.print("    ");
         }
-        boolean started = false;
-        final Set<OWLObject> entities = new TreeSet<>(node.getEntities());
-        for (OWLObject o : entities) {
-            if (started) {
+        List<? extends OWLObject> l = asList(node.entities().sorted());
+        if (l.size() > 0) {
+            out(l.get(0));
+            if (l.size() > 1) {
                 System.out.print(" == ");
-            } else {
-                started = true;
+                l.stream().skip(1).forEach(s -> out(s));
             }
-            if (o instanceof OWLEntity) {
-                System.out.print(((OWLEntity) o).getIRI().getShortForm());
-            } else {
-                System.out.print(o);
-            }
+        }
+    }
+
+    private static void out(OWLObject o) {
+        if (o instanceof OWLEntity) {
+            System.out.print(((OWLEntity) o).getIRI().getShortForm());
+        } else {
+            System.out.print(o);
         }
     }
 }

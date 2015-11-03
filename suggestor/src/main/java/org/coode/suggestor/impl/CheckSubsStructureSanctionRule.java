@@ -9,19 +9,17 @@
  */
 package org.coode.suggestor.impl;
 
+import static org.semanticweb.owlapi.util.OWLAPIStreamUtils.asList;
+
 import org.coode.suggestor.api.PropertySanctionRule;
 import org.coode.suggestor.api.PropertySuggestor;
 import org.coode.suggestor.util.RestrictionAccumulator;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLDataAllValuesFrom;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLObjectAllValuesFrom;
-import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
-/** <p>
+/**
+ * <p>
  * Looks at the direct subclasses to determine which properties are restricted.
  * </p>
  * <p>
@@ -30,8 +28,10 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
  * </p>
  * <p>
  * NNF is used when evaluating candidate restrictions.
- * </p> */
+ * </p>
+ */
 public class CheckSubsStructureSanctionRule implements PropertySanctionRule {
+
     private OWLReasoner r;
 
     @Override
@@ -43,7 +43,7 @@ public class CheckSubsStructureSanctionRule implements PropertySanctionRule {
     public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p) {
         for (Node<OWLClass> sub : r.getSubClasses(c, true)) {
             RestrictionAccumulator acc = new RestrictionAccumulator(r);
-            for (OWLClass s : sub.getEntities()) {
+            for (OWLClass s : asList(sub.entities())) {
                 for (OWLClassExpression restr : acc.getRestrictions(s, p)) {
                     restr = restr.getNNF();
                     if (restr instanceof OWLObjectAllValuesFrom) {
@@ -59,7 +59,7 @@ public class CheckSubsStructureSanctionRule implements PropertySanctionRule {
     public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p) {
         for (Node<OWLClass> sub : r.getSubClasses(c, true)) {
             RestrictionAccumulator acc = new RestrictionAccumulator(r);
-            for (OWLClass s : sub.getEntities()) {
+            for (OWLClass s : asList(sub.entities())) {
                 for (OWLClassExpression restr : acc.getRestrictions(s, p)) {
                     restr = restr.getNNF();
                     if (restr instanceof OWLDataAllValuesFrom) {

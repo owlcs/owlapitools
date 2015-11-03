@@ -1,14 +1,15 @@
 package org.semanticweb.owlapitools.decomposition;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.util.OWLAPIStreamUtils;
 
 /** class to hold the signature of a module */
 public class Signature {
@@ -27,7 +28,7 @@ public class Signature {
      * @param sig
      *        signature elements
      */
-    public Signature(Collection<OWLEntity> sig) {
+    public Signature(Stream<OWLEntity> sig) {
         addAll(sig);
     }
 
@@ -44,8 +45,8 @@ public class Signature {
      * @param p
      *        all entities to add
      */
-    public void addAll(Collection<OWLEntity> p) {
-        set.addAll(p);
+    public void addAll(Stream<OWLEntity> p) {
+        OWLAPIStreamUtils.add(set, p);
     }
 
     /**

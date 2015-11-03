@@ -38,24 +38,14 @@
  */
 package org.semanticweb.owlapi.api.test.alternate;
 
-import java.util.Set;
+import static org.semanticweb.owlapi.util.OWLAPIStreamUtils.asList;
+
+import java.util.List;
 
 import org.junit.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.io.StringDocumentSource;
-import org.semanticweb.owlapi.model.AxiomType;
-import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLAnnotationSubject;
-import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLDatatype;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.AxiomAnnotations;
 import org.semanticweb.owlapi.model.parameters.Imports;
 
@@ -79,139 +69,139 @@ public class OwlOntologyMultipleThreadsTest {
         public void execute() {
             for (int index = 0; index < 100; index++) {
                 o1.isEmpty();
-                o1.getAnnotations();
-                o1.getSignature(Imports.INCLUDED);
-                o1.getSignature(Imports.EXCLUDED);
-                Set<OWLEntity> entities = o1.getSignature();
+                asList(o1.annotations());
+                asList(o1.signature(Imports.INCLUDED));
+                asList(o1.signature(Imports.EXCLUDED));
+                List<OWLEntity> entities = asList(o1.signature());
                 o1.getOWLOntologyManager();
                 o1.getOntologyID();
                 o1.isAnonymous();
-                o1.getDirectImportsDocuments();
-                o1.getDirectImports();
-                o1.getImports();
-                o1.getImportsClosure();
-                o1.getImportsDeclarations();
-                o1.getAxioms();
+                asList(o1.directImportsDocuments());
+                asList(o1.directImports());
+                asList(o1.imports());
+                asList(o1.importsClosure());
+                asList(o1.importsDeclarations());
+                asList(o1.axioms());
                 o1.getAxiomCount();
-                Set<OWLClass> classes = o1.getClassesInSignature();
-                o1.getClassesInSignature(Imports.INCLUDED);
-                o1.getClassesInSignature(Imports.EXCLUDED);
-                Set<OWLObjectProperty> objectProperties = o1
-                        .getObjectPropertiesInSignature(Imports.INCLUDED);
-                o1.getObjectPropertiesInSignature(Imports.EXCLUDED);
-                o1.getObjectPropertiesInSignature();
-                Set<OWLDataProperty> dataProperties = o1
-                        .getDataPropertiesInSignature();
-                o1.getDataPropertiesInSignature(Imports.INCLUDED);
-                o1.getDataPropertiesInSignature(Imports.EXCLUDED);
-                Set<OWLNamedIndividual> individuals = o1
-                        .getIndividualsInSignature();
-                o1.getIndividualsInSignature(Imports.INCLUDED);
-                o1.getIndividualsInSignature(Imports.EXCLUDED);
-                Set<OWLAnonymousIndividual> anonIndividuals = o1
-                        .getReferencedAnonymousIndividuals(Imports.EXCLUDED);
-                o1.getDatatypesInSignature();
-                o1.getDatatypesInSignature(Imports.INCLUDED);
-                o1.getDatatypesInSignature(Imports.EXCLUDED);
-                o1.getAnnotationPropertiesInSignature(Imports.EXCLUDED);
+                List<OWLClass> classes = asList(o1.classesInSignature());
+                asList(o1.classesInSignature(Imports.INCLUDED));
+                asList(o1.classesInSignature(Imports.EXCLUDED));
+                List<OWLObjectProperty> objectProperties = asList(o1
+                    .objectPropertiesInSignature(Imports.INCLUDED));
+                asList(o1.objectPropertiesInSignature(Imports.EXCLUDED));
+                asList(o1.objectPropertiesInSignature());
+                List<OWLDataProperty> dataProperties = asList(o1
+                    .dataPropertiesInSignature());
+                asList(o1.dataPropertiesInSignature(Imports.INCLUDED));
+                asList(o1.dataPropertiesInSignature(Imports.EXCLUDED));
+                List<OWLNamedIndividual> individuals = asList(o1
+                    .individualsInSignature());
+                asList(o1.individualsInSignature(Imports.INCLUDED));
+                asList(o1.individualsInSignature(Imports.EXCLUDED));
+                List<OWLAnonymousIndividual> anonIndividuals = asList(o1
+                    .referencedAnonymousIndividuals(Imports.EXCLUDED));
+                asList(o1.datatypesInSignature());
+                asList(o1.datatypesInSignature(Imports.INCLUDED));
+                asList(o1.datatypesInSignature(Imports.EXCLUDED));
+                asList(o1.annotationPropertiesInSignature(Imports.EXCLUDED));
                 for (OWLObjectProperty o : objectProperties) {
-                    o1.getAxioms(o, Imports.EXCLUDED);
+                    asList(o1.axioms(o, Imports.EXCLUDED));
                     o1.containsObjectPropertyInSignature(o.getIRI(),
-                            Imports.EXCLUDED);
+                        Imports.EXCLUDED);
                     o1.containsObjectPropertyInSignature(o.getIRI(),
-                            Imports.INCLUDED);
+                        Imports.INCLUDED);
                     o1.containsObjectPropertyInSignature(o.getIRI(),
-                            Imports.EXCLUDED);
-                    o1.getObjectSubPropertyAxiomsForSubProperty(o);
-                    o1.getObjectSubPropertyAxiomsForSuperProperty(o);
-                    o1.getObjectPropertyDomainAxioms(o);
-                    o1.getObjectPropertyRangeAxioms(o);
-                    o1.getInverseObjectPropertyAxioms(o);
-                    o1.getEquivalentObjectPropertiesAxioms(o);
-                    o1.getDisjointObjectPropertiesAxioms(o);
-                    o1.getFunctionalObjectPropertyAxioms(o);
-                    o1.getInverseFunctionalObjectPropertyAxioms(o);
-                    o1.getSymmetricObjectPropertyAxioms(o);
-                    o1.getAsymmetricObjectPropertyAxioms(o);
-                    o1.getReflexiveObjectPropertyAxioms(o);
-                    o1.getIrreflexiveObjectPropertyAxioms(o);
-                    o1.getTransitiveObjectPropertyAxioms(o);
+                        Imports.EXCLUDED);
+                    asList(o1.objectSubPropertyAxiomsForSubProperty(o));
+                    asList(o1.objectSubPropertyAxiomsForSuperProperty(o));
+                    asList(o1.objectPropertyDomainAxioms(o));
+                    asList(o1.objectPropertyRangeAxioms(o));
+                    asList(o1.inverseObjectPropertyAxioms(o));
+                    asList(o1.equivalentObjectPropertiesAxioms(o));
+                    asList(o1.disjointObjectPropertiesAxioms(o));
+                    asList(o1.functionalObjectPropertyAxioms(o));
+                    asList(o1.inverseFunctionalObjectPropertyAxioms(o));
+                    asList(o1.symmetricObjectPropertyAxioms(o));
+                    asList(o1.asymmetricObjectPropertyAxioms(o));
+                    asList(o1.reflexiveObjectPropertyAxioms(o));
+                    asList(o1.irreflexiveObjectPropertyAxioms(o));
+                    asList(o1.transitiveObjectPropertyAxioms(o));
                 }
                 for (OWLClass c : classes) {
-                    o1.getAxioms(c, Imports.EXCLUDED);
+                    asList(o1.axioms(c, Imports.EXCLUDED));
                     o1.containsClassInSignature(c.getIRI(), Imports.EXCLUDED);
                     o1.containsClassInSignature(c.getIRI(), Imports.INCLUDED);
                     o1.containsClassInSignature(c.getIRI(), Imports.EXCLUDED);
-                    o1.getSubClassAxiomsForSubClass(c);
-                    o1.getSubClassAxiomsForSuperClass(c);
-                    o1.getEquivalentClassesAxioms(c);
-                    o1.getDisjointClassesAxioms(c);
-                    o1.getDisjointUnionAxioms(c);
-                    o1.getHasKeyAxioms(c);
-                    o1.getClassAssertionAxioms(c);
+                    asList(o1.subClassAxiomsForSubClass(c));
+                    asList(o1.subClassAxiomsForSuperClass(c));
+                    asList(o1.equivalentClassesAxioms(c));
+                    asList(o1.disjointClassesAxioms(c));
+                    asList(o1.disjointUnionAxioms(c));
+                    asList(o1.hasKeyAxioms(c));
+                    asList(o1.classAssertionAxioms(c));
                 }
                 for (OWLDataProperty p : dataProperties) {
-                    o1.getAxioms(p, Imports.EXCLUDED);
+                    asList(o1.axioms(p, Imports.EXCLUDED));
                     o1.containsDataPropertyInSignature(p.getIRI(),
-                            Imports.EXCLUDED);
+                        Imports.EXCLUDED);
                     o1.containsDataPropertyInSignature(p.getIRI(),
-                            Imports.INCLUDED);
+                        Imports.INCLUDED);
                     o1.containsDataPropertyInSignature(p.getIRI(),
-                            Imports.EXCLUDED);
-                    o1.getDataSubPropertyAxiomsForSubProperty(p);
-                    o1.getDataSubPropertyAxiomsForSuperProperty(p);
-                    o1.getDataPropertyDomainAxioms(p);
-                    o1.getDataPropertyRangeAxioms(p);
-                    o1.getEquivalentDataPropertiesAxioms(p);
-                    o1.getDisjointDataPropertiesAxioms(p);
-                    o1.getFunctionalDataPropertyAxioms(p);
+                        Imports.EXCLUDED);
+                    asList(o1.dataSubPropertyAxiomsForSubProperty(p));
+                    asList(o1.dataSubPropertyAxiomsForSuperProperty(p));
+                    asList(o1.dataPropertyDomainAxioms(p));
+                    asList(o1.dataPropertyRangeAxioms(p));
+                    asList(o1.equivalentDataPropertiesAxioms(p));
+                    asList(o1.disjointDataPropertiesAxioms(p));
+                    asList(o1.functionalDataPropertyAxioms(p));
                 }
                 for (OWLNamedIndividual i : individuals) {
-                    o1.getAxioms(i, Imports.EXCLUDED);
+                    asList(o1.axioms(i, Imports.EXCLUDED));
                     o1.containsIndividualInSignature(i.getIRI(),
-                            Imports.EXCLUDED);
+                        Imports.EXCLUDED);
                     o1.containsIndividualInSignature(i.getIRI(),
-                            Imports.INCLUDED);
+                        Imports.INCLUDED);
                     o1.containsIndividualInSignature(i.getIRI(),
-                            Imports.EXCLUDED);
-                    o1.getClassAssertionAxioms(i);
-                    o1.getDataPropertyAssertionAxioms(i);
-                    o1.getObjectPropertyAssertionAxioms(i);
-                    o1.getNegativeObjectPropertyAssertionAxioms(i);
-                    o1.getNegativeDataPropertyAssertionAxioms(i);
-                    o1.getSameIndividualAxioms(i);
-                    o1.getDifferentIndividualAxioms(i);
+                        Imports.EXCLUDED);
+                    asList(o1.classAssertionAxioms(i));
+                    asList(o1.dataPropertyAssertionAxioms(i));
+                    asList(o1.objectPropertyAssertionAxioms(i));
+                    asList(o1.negativeObjectPropertyAssertionAxioms(i));
+                    asList(o1.negativeDataPropertyAssertionAxioms(i));
+                    asList(o1.sameIndividualAxioms(i));
+                    asList(o1.differentIndividualAxioms(i));
                 }
                 for (OWLAnonymousIndividual i : anonIndividuals) {
                     assert i != null;
-                    o1.getAxioms(i, Imports.EXCLUDED);
+                    asList(o1.axioms(i, Imports.EXCLUDED));
                 }
                 for (AxiomType<?> ax : AxiomType.AXIOM_TYPES) {
                     assert ax != null;
-                    o1.getAxioms(ax);
-                    o1.getAxioms(ax, Imports.INCLUDED);
-                    o1.getAxioms(ax, Imports.EXCLUDED);
+                    asList(o1.axioms(ax));
+                    asList(o1.axioms(ax, Imports.INCLUDED));
+                    asList(o1.axioms(ax, Imports.EXCLUDED));
                 }
-                for (OWLDatatype t : o1.getDatatypesInSignature()) {
-                    o1.getAxioms(t, Imports.EXCLUDED);
+                for (OWLDatatype t : asList(o1.datatypesInSignature())) {
+                    asList(o1.axioms(t, Imports.EXCLUDED));
                     o1.containsDatatypeInSignature(t.getIRI(), Imports.EXCLUDED);
                     o1.containsDatatypeInSignature(t.getIRI(), Imports.INCLUDED);
                     o1.containsDatatypeInSignature(t.getIRI(), Imports.EXCLUDED);
-                    o1.getDatatypeDefinitions(t);
+                    asList(o1.datatypeDefinitions(t));
                 }
-                for (OWLAnnotationProperty p : o1
-                        .getAnnotationPropertiesInSignature(Imports.EXCLUDED)) {
+                for (OWLAnnotationProperty p : asList(o1
+                    .annotationPropertiesInSignature(Imports.EXCLUDED))) {
                     assert p != null;
-                    o1.getAxioms(p, Imports.EXCLUDED);
+                    asList(o1.axioms(p, Imports.EXCLUDED));
                     o1.containsAnnotationPropertyInSignature(p.getIRI(),
-                            Imports.EXCLUDED);
+                        Imports.EXCLUDED);
                     o1.containsAnnotationPropertyInSignature(p.getIRI(),
-                            Imports.INCLUDED);
+                        Imports.INCLUDED);
                     o1.containsAnnotationPropertyInSignature(p.getIRI(),
-                            Imports.EXCLUDED);
-                    o1.getSubAnnotationPropertyOfAxioms(p);
-                    o1.getAnnotationPropertyDomainAxioms(p);
-                    o1.getAnnotationPropertyRangeAxioms(p);
+                        Imports.EXCLUDED);
+                    asList(o1.subAnnotationPropertyOfAxioms(p));
+                    asList(o1.annotationPropertyDomainAxioms(p));
+                    asList(o1.annotationPropertyRangeAxioms(p));
                 }
                 for (AxiomType<?> ax : AxiomType.AXIOM_TYPES) {
                     assert ax != null;
@@ -219,61 +209,61 @@ public class OwlOntologyMultipleThreadsTest {
                     o1.getAxiomCount(ax, Imports.INCLUDED);
                     o1.getAxiomCount(ax, Imports.EXCLUDED);
                 }
-                o1.getLogicalAxioms();
+                asList(o1.logicalAxioms());
                 o1.getLogicalAxiomCount();
-                for (OWLAxiom ax : o1.getLogicalAxioms()) {
+                for (OWLAxiom ax : asList(o1.logicalAxioms())) {
                     assert ax != null;
                     o1.containsAxiom(ax);
                     o1.containsAxiom(ax, Imports.INCLUDED,
-                            AxiomAnnotations.IGNORE_AXIOM_ANNOTATIONS);
+                        AxiomAnnotations.IGNORE_AXIOM_ANNOTATIONS);
                     o1.containsAxiom(ax, Imports.EXCLUDED,
-                            AxiomAnnotations.IGNORE_AXIOM_ANNOTATIONS);
+                        AxiomAnnotations.IGNORE_AXIOM_ANNOTATIONS);
                 }
-                for (OWLAxiom ax : o1.getLogicalAxioms()) {
+                for (OWLAxiom ax : asList(o1.logicalAxioms())) {
                     assert ax != null;
                     o1.containsAxiom(ax, Imports.EXCLUDED,
-                            AxiomAnnotations.IGNORE_AXIOM_ANNOTATIONS);
+                        AxiomAnnotations.IGNORE_AXIOM_ANNOTATIONS);
                     o1.containsAxiom(ax, Imports.INCLUDED,
-                            AxiomAnnotations.IGNORE_AXIOM_ANNOTATIONS);
+                        AxiomAnnotations.IGNORE_AXIOM_ANNOTATIONS);
                     o1.containsAxiom(ax, Imports.EXCLUDED,
-                            AxiomAnnotations.IGNORE_AXIOM_ANNOTATIONS);
+                        AxiomAnnotations.IGNORE_AXIOM_ANNOTATIONS);
                 }
-                for (OWLAxiom ax : o1.getLogicalAxioms()) {
+                for (OWLAxiom ax : asList(o1.logicalAxioms())) {
                     assert ax != null;
-                    o1.getAxiomsIgnoreAnnotations(ax, Imports.EXCLUDED);
-                    o1.getAxiomsIgnoreAnnotations(ax, Imports.INCLUDED);
-                    o1.getAxiomsIgnoreAnnotations(ax, Imports.EXCLUDED);
+                    asList(o1.axiomsIgnoreAnnotations(ax, Imports.EXCLUDED));
+                    asList(o1.axiomsIgnoreAnnotations(ax, Imports.INCLUDED));
+                    asList(o1.axiomsIgnoreAnnotations(ax, Imports.EXCLUDED));
                 }
-                o1.getGeneralClassAxioms();
+                asList(o1.generalClassAxioms());
                 for (OWLAnonymousIndividual i : anonIndividuals) {
                     assert i != null;
-                    o1.getReferencingAxioms(i, Imports.EXCLUDED);
+                    asList(o1.referencingAxioms(i, Imports.EXCLUDED));
                 }
                 for (OWLEntity e : entities) {
                     assert e != null;
-                    o1.getReferencingAxioms(e, Imports.EXCLUDED);
-                    o1.getReferencingAxioms(e, Imports.INCLUDED);
-                    o1.getReferencingAxioms(e, Imports.EXCLUDED);
-                    o1.getDeclarationAxioms(e);
+                    asList(o1.referencingAxioms(e, Imports.EXCLUDED));
+                    asList(o1.referencingAxioms(e, Imports.INCLUDED));
+                    asList(o1.referencingAxioms(e, Imports.EXCLUDED));
+                    asList(o1.declarationAxioms(e));
                     o1.containsEntityInSignature(e, Imports.INCLUDED);
                     o1.containsEntityInSignature(e, Imports.EXCLUDED);
                     o1.containsEntityInSignature(e);
                     o1.containsEntityInSignature(e.getIRI(), Imports.EXCLUDED);
                     o1.containsEntityInSignature(e.getIRI(), Imports.INCLUDED);
-                    o1.getEntitiesInSignature(e.getIRI());
-                    o1.getEntitiesInSignature(e.getIRI(), Imports.EXCLUDED);
-                    o1.getEntitiesInSignature(e.getIRI(), Imports.INCLUDED);
+                    asList(o1.entitiesInSignature(e.getIRI()));
+                    asList(o1.entitiesInSignature(e.getIRI(), Imports.EXCLUDED));
+                    asList(o1.entitiesInSignature(e.getIRI(), Imports.INCLUDED));
                     o1.isDeclared(e);
                     o1.isDeclared(e, Imports.INCLUDED);
                     o1.isDeclared(e, Imports.EXCLUDED);
                     if (e instanceof OWLAnnotationSubject) {
-                        o1.getAnnotationAssertionAxioms((OWLAnnotationSubject) e);
+                        asList(o1.annotationAssertionAxioms((OWLAnnotationSubject) e));
                     }
                 }
-                Set<OWLAxiom> axioms = o1.getAxioms();
+                List<OWLAxiom> axioms = asList(o1.axioms());
                 for (OWLAxiom ax : axioms) {
-                    o1.getOWLOntologyManager().addAxiom(o2, ax);
-                    o1.getOWLOntologyManager().removeAxiom(o2, ax);
+                    o1.add(ax);
+                    o2.remove(ax);
                 }
             }
         }
@@ -287,257 +277,257 @@ public class OwlOntologyMultipleThreadsTest {
     @Test
     public void testLockingOwlOntologyImpl() {
         String koala = "<?xml version=\"1.0\"?>\n"
-                + "<rdf:RDF\n"
-                + "    xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n"
-                + "    xmlns:rdfs=\"http://www.w3.org/2000/01/rdf-schema#\"\n"
-                + "    xmlns:owl=\"http://www.w3.org/2002/07/owl#\"\n"
-                + "    xmlns=\"http://protege.stanford.edu/plugins/owl/owl-library/koala.owl#\"\n"
-                + "  xml:base=\"http://protege.stanford.edu/plugins/owl/owl-library/koala.owl\">\n"
-                + "  <owl:Ontology rdf:about=\"\"/>\n"
-                + "  <owl:Class rdf:ID=\"Female\">\n"
-                + "    <owl:equivalentClass>\n"
-                + "      <owl:Restriction>\n"
-                + "        <owl:onProperty>\n"
-                + "          <owl:FunctionalProperty rdf:about=\"#hasGender\"/>\n"
-                + "        </owl:onProperty>\n"
-                + "        <owl:hasValue>\n"
-                + "          <Gender rdf:ID=\"female\"/>\n"
-                + "        </owl:hasValue>\n"
-                + "      </owl:Restriction>\n"
-                + "    </owl:equivalentClass>\n"
-                + "  </owl:Class>\n"
-                + "  <owl:Class rdf:ID=\"Marsupials\">\n"
-                + "    <owl:disjointWith>\n"
-                + "      <owl:Class rdf:about=\"#Person\"/>\n"
-                + "    </owl:disjointWith>\n"
-                + "    <rdfs:subClassOf>\n"
-                + "      <owl:Class rdf:about=\"#Animal\"/>\n"
-                + "    </rdfs:subClassOf>\n"
-                + "  </owl:Class>\n"
-                + "  <owl:Class rdf:ID=\"Student\">\n"
-                + "    <owl:equivalentClass>\n"
-                + "      <owl:Class>\n"
-                + "        <owl:intersectionOf rdf:parseType=\"Collection\">\n"
-                + "          <owl:Class rdf:about=\"#Person\"/>\n"
-                + "          <owl:Restriction>\n"
-                + "            <owl:onProperty>\n"
-                + "              <owl:FunctionalProperty rdf:about=\"#isHardWorking\"/>\n"
-                + "            </owl:onProperty>\n"
-                + "            <owl:hasValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#boolean\"\n"
-                + "            >true</owl:hasValue>\n"
-                + "          </owl:Restriction>\n"
-                + "          <owl:Restriction>\n"
-                + "            <owl:someValuesFrom>\n"
-                + "              <owl:Class rdf:about=\"#University\"/>\n"
-                + "            </owl:someValuesFrom>\n"
-                + "            <owl:onProperty>\n"
-                + "              <owl:ObjectProperty rdf:about=\"#hasHabitat\"/>\n"
-                + "            </owl:onProperty>\n"
-                + "          </owl:Restriction>\n"
-                + "        </owl:intersectionOf>\n"
-                + "      </owl:Class>\n"
-                + "    </owl:equivalentClass>\n"
-                + "  </owl:Class>\n"
-                + "  <owl:Class rdf:ID=\"KoalaWithPhD\">\n"
-                + "    <owl:versionInfo>1.2</owl:versionInfo>\n"
-                + "    <owl:equivalentClass>\n"
-                + "      <owl:Class>\n"
-                + "        <owl:intersectionOf rdf:parseType=\"Collection\">\n"
-                + "          <owl:Restriction>\n"
-                + "            <owl:hasValue>\n"
-                + "              <Degree rdf:ID=\"PhD\"/>\n"
-                + "            </owl:hasValue>\n"
-                + "            <owl:onProperty>\n"
-                + "              <owl:ObjectProperty rdf:about=\"#hasDegree\"/>\n"
-                + "            </owl:onProperty>\n"
-                + "          </owl:Restriction>\n"
-                + "          <owl:Class rdf:about=\"#Koala\"/>\n"
-                + "        </owl:intersectionOf>\n"
-                + "      </owl:Class>\n"
-                + "    </owl:equivalentClass>\n"
-                + "  </owl:Class>\n"
-                + "  <owl:Class rdf:ID=\"University\">\n"
-                + "    <rdfs:subClassOf>\n"
-                + "      <owl:Class rdf:ID=\"Habitat\"/>\n"
-                + "    </rdfs:subClassOf>\n"
-                + "  </owl:Class>\n"
-                + "  <owl:Class rdf:ID=\"Koala\">\n"
-                + "    <rdfs:subClassOf>\n"
-                + "      <owl:Restriction>\n"
-                + "        <owl:hasValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#boolean\"\n"
-                + "        >false</owl:hasValue>\n"
-                + "        <owl:onProperty>\n"
-                + "          <owl:FunctionalProperty rdf:about=\"#isHardWorking\"/>\n"
-                + "        </owl:onProperty>\n"
-                + "      </owl:Restriction>\n"
-                + "    </rdfs:subClassOf>\n"
-                + "    <rdfs:subClassOf>\n"
-                + "      <owl:Restriction>\n"
-                + "        <owl:someValuesFrom>\n"
-                + "          <owl:Class rdf:about=\"#DryEucalyptForest\"/>\n"
-                + "        </owl:someValuesFrom>\n"
-                + "        <owl:onProperty>\n"
-                + "          <owl:ObjectProperty rdf:about=\"#hasHabitat\"/>\n"
-                + "        </owl:onProperty>\n"
-                + "      </owl:Restriction>\n"
-                + "    </rdfs:subClassOf>\n"
-                + "    <rdfs:subClassOf rdf:resource=\"#Marsupials\"/>\n"
-                + "  </owl:Class>\n"
-                + "  <owl:Class rdf:ID=\"Animal\">\n"
-                + "    <rdfs:seeAlso>Male</rdfs:seeAlso>\n"
-                + "    <rdfs:subClassOf>\n"
-                + "      <owl:Restriction>\n"
-                + "        <owl:onProperty>\n"
-                + "          <owl:ObjectProperty rdf:about=\"#hasHabitat\"/>\n"
-                + "        </owl:onProperty>\n"
-                + "        <owl:minCardinality rdf:datatype=\"http://www.w3.org/2001/XMLSchema#int\"\n"
-                + "        >1</owl:minCardinality>\n"
-                + "      </owl:Restriction>\n"
-                + "    </rdfs:subClassOf>\n"
-                + "    <rdfs:subClassOf>\n"
-                + "      <owl:Restriction>\n"
-                + "        <owl:cardinality rdf:datatype=\"http://www.w3.org/2001/XMLSchema#int\"\n"
-                + "        >1</owl:cardinality>\n"
-                + "        <owl:onProperty>\n"
-                + "          <owl:FunctionalProperty rdf:about=\"#hasGender\"/>\n"
-                + "        </owl:onProperty>\n"
-                + "      </owl:Restriction>\n"
-                + "    </rdfs:subClassOf>\n"
-                + "    <owl:versionInfo>1.1</owl:versionInfo>\n"
-                + "  </owl:Class>\n"
-                + "  <owl:Class rdf:ID=\"Forest\">\n"
-                + "    <rdfs:subClassOf rdf:resource=\"#Habitat\"/>\n"
-                + "  </owl:Class>\n"
-                + "  <owl:Class rdf:ID=\"Rainforest\">\n"
-                + "    <rdfs:subClassOf rdf:resource=\"#Forest\"/>\n"
-                + "  </owl:Class>\n"
-                + "  <owl:Class rdf:ID=\"GraduateStudent\">\n"
-                + "    <rdfs:subClassOf>\n"
-                + "      <owl:Restriction>\n"
-                + "        <owl:onProperty>\n"
-                + "          <owl:ObjectProperty rdf:about=\"#hasDegree\"/>\n"
-                + "        </owl:onProperty>\n"
-                + "        <owl:someValuesFrom>\n"
-                + "          <owl:Class>\n"
-                + "            <owl:oneOf rdf:parseType=\"Collection\">\n"
-                + "              <Degree rdf:ID=\"BA\"/>\n"
-                + "              <Degree rdf:ID=\"BS\"/>\n"
-                + "            </owl:oneOf>\n"
-                + "          </owl:Class>\n"
-                + "        </owl:someValuesFrom>\n"
-                + "      </owl:Restriction>\n"
-                + "    </rdfs:subClassOf>\n"
-                + "    <rdfs:subClassOf rdf:resource=\"#Student\"/>\n"
-                + "  </owl:Class>\n"
-                + "  <owl:Class rdf:ID=\"Parent\">\n"
-                + "    <owl:equivalentClass>\n"
-                + "      <owl:Class>\n"
-                + "        <owl:intersectionOf rdf:parseType=\"Collection\">\n"
-                + "          <owl:Class rdf:about=\"#Animal\"/>\n"
-                + "          <owl:Restriction>\n"
-                + "            <owl:onProperty>\n"
-                + "              <owl:ObjectProperty rdf:about=\"#hasChildren\"/>\n"
-                + "            </owl:onProperty>\n"
-                + "            <owl:minCardinality rdf:datatype=\"http://www.w3.org/2001/XMLSchema#int\"\n"
-                + "            >1</owl:minCardinality>\n"
-                + "          </owl:Restriction>\n"
-                + "        </owl:intersectionOf>\n"
-                + "      </owl:Class>\n"
-                + "    </owl:equivalentClass>\n"
-                + "    <rdfs:subClassOf rdf:resource=\"#Animal\"/>\n"
-                + "  </owl:Class>\n"
-                + "  <owl:Class rdf:ID=\"DryEucalyptForest\">\n"
-                + "    <rdfs:subClassOf rdf:resource=\"#Forest\"/>\n"
-                + "  </owl:Class>\n"
-                + "  <owl:Class rdf:ID=\"Quokka\">\n"
-                + "    <rdfs:subClassOf>\n"
-                + "      <owl:Restriction>\n"
-                + "        <owl:hasValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#boolean\"\n"
-                + "        >true</owl:hasValue>\n"
-                + "        <owl:onProperty>\n"
-                + "          <owl:FunctionalProperty rdf:about=\"#isHardWorking\"/>\n"
-                + "        </owl:onProperty>\n"
-                + "      </owl:Restriction>\n"
-                + "    </rdfs:subClassOf>\n"
-                + "    <rdfs:subClassOf rdf:resource=\"#Marsupials\"/>\n"
-                + "  </owl:Class>\n"
-                + "  <owl:Class rdf:ID=\"TasmanianDevil\">\n"
-                + "    <rdfs:subClassOf rdf:resource=\"#Marsupials\"/>\n"
-                + "  </owl:Class>\n"
-                + "  <owl:Class rdf:ID=\"MaleStudentWith3Daughters\">\n"
-                + "    <owl:equivalentClass>\n"
-                + "      <owl:Class>\n"
-                + "        <owl:intersectionOf rdf:parseType=\"Collection\">\n"
-                + "          <owl:Class rdf:about=\"#Student\"/>\n"
-                + "          <owl:Restriction>\n"
-                + "            <owl:onProperty>\n"
-                + "              <owl:FunctionalProperty rdf:about=\"#hasGender\"/>\n"
-                + "            </owl:onProperty>\n"
-                + "            <owl:hasValue>\n"
-                + "              <Gender rdf:ID=\"male\"/>\n"
-                + "            </owl:hasValue>\n"
-                + "          </owl:Restriction>\n"
-                + "          <owl:Restriction>\n"
-                + "            <owl:onProperty>\n"
-                + "              <owl:ObjectProperty rdf:about=\"#hasChildren\"/>\n"
-                + "            </owl:onProperty>\n"
-                + "            <owl:cardinality rdf:datatype=\"http://www.w3.org/2001/XMLSchema#int\"\n"
-                + "            >3</owl:cardinality>\n"
-                + "          </owl:Restriction>\n"
-                + "          <owl:Restriction>\n"
-                + "            <owl:allValuesFrom rdf:resource=\"#Female\"/>\n"
-                + "            <owl:onProperty>\n"
-                + "              <owl:ObjectProperty rdf:about=\"#hasChildren\"/>\n"
-                + "            </owl:onProperty>\n"
-                + "          </owl:Restriction>\n"
-                + "        </owl:intersectionOf>\n"
-                + "      </owl:Class>\n"
-                + "    </owl:equivalentClass>\n"
-                + "  </owl:Class>\n"
-                + "  <owl:Class rdf:ID=\"Degree\"/>\n"
-                + "  <owl:Class rdf:ID=\"Male\">\n"
-                + "    <owl:equivalentClass>\n"
-                + "      <owl:Restriction>\n"
-                + "        <owl:hasValue rdf:resource=\"#male\"/>\n"
-                + "        <owl:onProperty>\n"
-                + "          <owl:FunctionalProperty rdf:about=\"#hasGender\"/>\n"
-                + "        </owl:onProperty>\n"
-                + "      </owl:Restriction>\n"
-                + "    </owl:equivalentClass>\n"
-                + "  </owl:Class>\n"
-                + "  <owl:Class rdf:ID=\"Gender\"/>\n"
-                + "  <owl:Class rdf:ID=\"Person\">\n"
-                + "    <rdfs:subClassOf rdf:resource=\"#Animal\"/>\n"
-                + "    <owl:disjointWith rdf:resource=\"#Marsupials\"/>\n"
-                + "  </owl:Class>\n"
-                + "  <owl:ObjectProperty rdf:ID=\"hasHabitat\">\n"
-                + "    <rdfs:range rdf:resource=\"#Habitat\"/>\n"
-                + "    <rdfs:domain rdf:resource=\"#Animal\"/>\n"
-                + "  </owl:ObjectProperty>\n"
-                + "  <owl:ObjectProperty rdf:ID=\"hasDegree\">\n"
-                + "    <rdfs:domain rdf:resource=\"#Person\"/>\n"
-                + "    <rdfs:range rdf:resource=\"#Degree\"/>\n"
-                + "  </owl:ObjectProperty>\n"
-                + "  <owl:ObjectProperty rdf:ID=\"hasChildren\">\n"
-                + "    <rdfs:range rdf:resource=\"#Animal\"/>\n"
-                + "    <rdfs:domain rdf:resource=\"#Animal\"/>\n"
-                + "  </owl:ObjectProperty>\n"
-                + "  <owl:FunctionalProperty rdf:ID=\"hasGender\">\n"
-                + "    <rdfs:range rdf:resource=\"#Gender\"/>\n"
-                + "    <rdf:type rdf:resource=\"http://www.w3.org/2002/07/owl#ObjectProperty\"/>\n"
-                + "    <rdfs:domain rdf:resource=\"#Animal\"/>\n"
-                + "  </owl:FunctionalProperty>\n"
-                + "  <owl:FunctionalProperty rdf:ID=\"isHardWorking\">\n"
-                + "    <rdfs:range rdf:resource=\"http://www.w3.org/2001/XMLSchema#boolean\"/>\n"
-                + "    <rdfs:domain rdf:resource=\"#Person\"/>\n"
-                + "    <rdf:type rdf:resource=\"http://www.w3.org/2002/07/owl#DatatypeProperty\"/>\n"
-                + "  </owl:FunctionalProperty>\n"
-                + "  <Degree rdf:ID=\"MA\"/>\n" + "</rdf:RDF>";
+            + "<rdf:RDF\n"
+            + "    xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n"
+            + "    xmlns:rdfs=\"http://www.w3.org/2000/01/rdf-schema#\"\n"
+            + "    xmlns:owl=\"http://www.w3.org/2002/07/owl#\"\n"
+            + "    xmlns=\"http://protege.stanford.edu/plugins/owl/owl-library/koala.owl#\"\n"
+            + "  xml:base=\"http://protege.stanford.edu/plugins/owl/owl-library/koala.owl\">\n"
+            + "  <owl:Ontology rdf:about=\"\"/>\n"
+            + "  <owl:Class rdf:ID=\"Female\">\n"
+            + "    <owl:equivalentClass>\n"
+            + "      <owl:Restriction>\n"
+            + "        <owl:onProperty>\n"
+            + "          <owl:FunctionalProperty rdf:about=\"#hasGender\"/>\n"
+            + "        </owl:onProperty>\n"
+            + "        <owl:hasValue>\n"
+            + "          <Gender rdf:ID=\"female\"/>\n"
+            + "        </owl:hasValue>\n"
+            + "      </owl:Restriction>\n"
+            + "    </owl:equivalentClass>\n"
+            + "  </owl:Class>\n"
+            + "  <owl:Class rdf:ID=\"Marsupials\">\n"
+            + "    <owl:disjointWith>\n"
+            + "      <owl:Class rdf:about=\"#Person\"/>\n"
+            + "    </owl:disjointWith>\n"
+            + "    <rdfs:subClassOf>\n"
+            + "      <owl:Class rdf:about=\"#Animal\"/>\n"
+            + "    </rdfs:subClassOf>\n"
+            + "  </owl:Class>\n"
+            + "  <owl:Class rdf:ID=\"Student\">\n"
+            + "    <owl:equivalentClass>\n"
+            + "      <owl:Class>\n"
+            + "        <owl:intersectionOf rdf:parseType=\"Collection\">\n"
+            + "          <owl:Class rdf:about=\"#Person\"/>\n"
+            + "          <owl:Restriction>\n"
+            + "            <owl:onProperty>\n"
+            + "              <owl:FunctionalProperty rdf:about=\"#isHardWorking\"/>\n"
+            + "            </owl:onProperty>\n"
+            + "            <owl:hasValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#boolean\"\n"
+            + "            >true</owl:hasValue>\n"
+            + "          </owl:Restriction>\n"
+            + "          <owl:Restriction>\n"
+            + "            <owl:someValuesFrom>\n"
+            + "              <owl:Class rdf:about=\"#University\"/>\n"
+            + "            </owl:someValuesFrom>\n"
+            + "            <owl:onProperty>\n"
+            + "              <owl:ObjectProperty rdf:about=\"#hasHabitat\"/>\n"
+            + "            </owl:onProperty>\n"
+            + "          </owl:Restriction>\n"
+            + "        </owl:intersectionOf>\n"
+            + "      </owl:Class>\n"
+            + "    </owl:equivalentClass>\n"
+            + "  </owl:Class>\n"
+            + "  <owl:Class rdf:ID=\"KoalaWithPhD\">\n"
+            + "    <owl:versionInfo>1.2</owl:versionInfo>\n"
+            + "    <owl:equivalentClass>\n"
+            + "      <owl:Class>\n"
+            + "        <owl:intersectionOf rdf:parseType=\"Collection\">\n"
+            + "          <owl:Restriction>\n"
+            + "            <owl:hasValue>\n"
+            + "              <Degree rdf:ID=\"PhD\"/>\n"
+            + "            </owl:hasValue>\n"
+            + "            <owl:onProperty>\n"
+            + "              <owl:ObjectProperty rdf:about=\"#hasDegree\"/>\n"
+            + "            </owl:onProperty>\n"
+            + "          </owl:Restriction>\n"
+            + "          <owl:Class rdf:about=\"#Koala\"/>\n"
+            + "        </owl:intersectionOf>\n"
+            + "      </owl:Class>\n"
+            + "    </owl:equivalentClass>\n"
+            + "  </owl:Class>\n"
+            + "  <owl:Class rdf:ID=\"University\">\n"
+            + "    <rdfs:subClassOf>\n"
+            + "      <owl:Class rdf:ID=\"Habitat\"/>\n"
+            + "    </rdfs:subClassOf>\n"
+            + "  </owl:Class>\n"
+            + "  <owl:Class rdf:ID=\"Koala\">\n"
+            + "    <rdfs:subClassOf>\n"
+            + "      <owl:Restriction>\n"
+            + "        <owl:hasValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#boolean\"\n"
+            + "        >false</owl:hasValue>\n"
+            + "        <owl:onProperty>\n"
+            + "          <owl:FunctionalProperty rdf:about=\"#isHardWorking\"/>\n"
+            + "        </owl:onProperty>\n"
+            + "      </owl:Restriction>\n"
+            + "    </rdfs:subClassOf>\n"
+            + "    <rdfs:subClassOf>\n"
+            + "      <owl:Restriction>\n"
+            + "        <owl:someValuesFrom>\n"
+            + "          <owl:Class rdf:about=\"#DryEucalyptForest\"/>\n"
+            + "        </owl:someValuesFrom>\n"
+            + "        <owl:onProperty>\n"
+            + "          <owl:ObjectProperty rdf:about=\"#hasHabitat\"/>\n"
+            + "        </owl:onProperty>\n"
+            + "      </owl:Restriction>\n"
+            + "    </rdfs:subClassOf>\n"
+            + "    <rdfs:subClassOf rdf:resource=\"#Marsupials\"/>\n"
+            + "  </owl:Class>\n"
+            + "  <owl:Class rdf:ID=\"Animal\">\n"
+            + "    <rdfs:seeAlso>Male</rdfs:seeAlso>\n"
+            + "    <rdfs:subClassOf>\n"
+            + "      <owl:Restriction>\n"
+            + "        <owl:onProperty>\n"
+            + "          <owl:ObjectProperty rdf:about=\"#hasHabitat\"/>\n"
+            + "        </owl:onProperty>\n"
+            + "        <owl:minCardinality rdf:datatype=\"http://www.w3.org/2001/XMLSchema#int\"\n"
+            + "        >1</owl:minCardinality>\n"
+            + "      </owl:Restriction>\n"
+            + "    </rdfs:subClassOf>\n"
+            + "    <rdfs:subClassOf>\n"
+            + "      <owl:Restriction>\n"
+            + "        <owl:cardinality rdf:datatype=\"http://www.w3.org/2001/XMLSchema#int\"\n"
+            + "        >1</owl:cardinality>\n"
+            + "        <owl:onProperty>\n"
+            + "          <owl:FunctionalProperty rdf:about=\"#hasGender\"/>\n"
+            + "        </owl:onProperty>\n"
+            + "      </owl:Restriction>\n"
+            + "    </rdfs:subClassOf>\n"
+            + "    <owl:versionInfo>1.1</owl:versionInfo>\n"
+            + "  </owl:Class>\n"
+            + "  <owl:Class rdf:ID=\"Forest\">\n"
+            + "    <rdfs:subClassOf rdf:resource=\"#Habitat\"/>\n"
+            + "  </owl:Class>\n"
+            + "  <owl:Class rdf:ID=\"Rainforest\">\n"
+            + "    <rdfs:subClassOf rdf:resource=\"#Forest\"/>\n"
+            + "  </owl:Class>\n"
+            + "  <owl:Class rdf:ID=\"GraduateStudent\">\n"
+            + "    <rdfs:subClassOf>\n"
+            + "      <owl:Restriction>\n"
+            + "        <owl:onProperty>\n"
+            + "          <owl:ObjectProperty rdf:about=\"#hasDegree\"/>\n"
+            + "        </owl:onProperty>\n"
+            + "        <owl:someValuesFrom>\n"
+            + "          <owl:Class>\n"
+            + "            <owl:oneOf rdf:parseType=\"Collection\">\n"
+            + "              <Degree rdf:ID=\"BA\"/>\n"
+            + "              <Degree rdf:ID=\"BS\"/>\n"
+            + "            </owl:oneOf>\n"
+            + "          </owl:Class>\n"
+            + "        </owl:someValuesFrom>\n"
+            + "      </owl:Restriction>\n"
+            + "    </rdfs:subClassOf>\n"
+            + "    <rdfs:subClassOf rdf:resource=\"#Student\"/>\n"
+            + "  </owl:Class>\n"
+            + "  <owl:Class rdf:ID=\"Parent\">\n"
+            + "    <owl:equivalentClass>\n"
+            + "      <owl:Class>\n"
+            + "        <owl:intersectionOf rdf:parseType=\"Collection\">\n"
+            + "          <owl:Class rdf:about=\"#Animal\"/>\n"
+            + "          <owl:Restriction>\n"
+            + "            <owl:onProperty>\n"
+            + "              <owl:ObjectProperty rdf:about=\"#hasChildren\"/>\n"
+            + "            </owl:onProperty>\n"
+            + "            <owl:minCardinality rdf:datatype=\"http://www.w3.org/2001/XMLSchema#int\"\n"
+            + "            >1</owl:minCardinality>\n"
+            + "          </owl:Restriction>\n"
+            + "        </owl:intersectionOf>\n"
+            + "      </owl:Class>\n"
+            + "    </owl:equivalentClass>\n"
+            + "    <rdfs:subClassOf rdf:resource=\"#Animal\"/>\n"
+            + "  </owl:Class>\n"
+            + "  <owl:Class rdf:ID=\"DryEucalyptForest\">\n"
+            + "    <rdfs:subClassOf rdf:resource=\"#Forest\"/>\n"
+            + "  </owl:Class>\n"
+            + "  <owl:Class rdf:ID=\"Quokka\">\n"
+            + "    <rdfs:subClassOf>\n"
+            + "      <owl:Restriction>\n"
+            + "        <owl:hasValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#boolean\"\n"
+            + "        >true</owl:hasValue>\n"
+            + "        <owl:onProperty>\n"
+            + "          <owl:FunctionalProperty rdf:about=\"#isHardWorking\"/>\n"
+            + "        </owl:onProperty>\n"
+            + "      </owl:Restriction>\n"
+            + "    </rdfs:subClassOf>\n"
+            + "    <rdfs:subClassOf rdf:resource=\"#Marsupials\"/>\n"
+            + "  </owl:Class>\n"
+            + "  <owl:Class rdf:ID=\"TasmanianDevil\">\n"
+            + "    <rdfs:subClassOf rdf:resource=\"#Marsupials\"/>\n"
+            + "  </owl:Class>\n"
+            + "  <owl:Class rdf:ID=\"MaleStudentWith3Daughters\">\n"
+            + "    <owl:equivalentClass>\n"
+            + "      <owl:Class>\n"
+            + "        <owl:intersectionOf rdf:parseType=\"Collection\">\n"
+            + "          <owl:Class rdf:about=\"#Student\"/>\n"
+            + "          <owl:Restriction>\n"
+            + "            <owl:onProperty>\n"
+            + "              <owl:FunctionalProperty rdf:about=\"#hasGender\"/>\n"
+            + "            </owl:onProperty>\n"
+            + "            <owl:hasValue>\n"
+            + "              <Gender rdf:ID=\"male\"/>\n"
+            + "            </owl:hasValue>\n"
+            + "          </owl:Restriction>\n"
+            + "          <owl:Restriction>\n"
+            + "            <owl:onProperty>\n"
+            + "              <owl:ObjectProperty rdf:about=\"#hasChildren\"/>\n"
+            + "            </owl:onProperty>\n"
+            + "            <owl:cardinality rdf:datatype=\"http://www.w3.org/2001/XMLSchema#int\"\n"
+            + "            >3</owl:cardinality>\n"
+            + "          </owl:Restriction>\n"
+            + "          <owl:Restriction>\n"
+            + "            <owl:allValuesFrom rdf:resource=\"#Female\"/>\n"
+            + "            <owl:onProperty>\n"
+            + "              <owl:ObjectProperty rdf:about=\"#hasChildren\"/>\n"
+            + "            </owl:onProperty>\n"
+            + "          </owl:Restriction>\n"
+            + "        </owl:intersectionOf>\n"
+            + "      </owl:Class>\n"
+            + "    </owl:equivalentClass>\n"
+            + "  </owl:Class>\n"
+            + "  <owl:Class rdf:ID=\"Degree\"/>\n"
+            + "  <owl:Class rdf:ID=\"Male\">\n"
+            + "    <owl:equivalentClass>\n"
+            + "      <owl:Restriction>\n"
+            + "        <owl:hasValue rdf:resource=\"#male\"/>\n"
+            + "        <owl:onProperty>\n"
+            + "          <owl:FunctionalProperty rdf:about=\"#hasGender\"/>\n"
+            + "        </owl:onProperty>\n"
+            + "      </owl:Restriction>\n"
+            + "    </owl:equivalentClass>\n"
+            + "  </owl:Class>\n"
+            + "  <owl:Class rdf:ID=\"Gender\"/>\n"
+            + "  <owl:Class rdf:ID=\"Person\">\n"
+            + "    <rdfs:subClassOf rdf:resource=\"#Animal\"/>\n"
+            + "    <owl:disjointWith rdf:resource=\"#Marsupials\"/>\n"
+            + "  </owl:Class>\n"
+            + "  <owl:ObjectProperty rdf:ID=\"hasHabitat\">\n"
+            + "    <rdfs:range rdf:resource=\"#Habitat\"/>\n"
+            + "    <rdfs:domain rdf:resource=\"#Animal\"/>\n"
+            + "  </owl:ObjectProperty>\n"
+            + "  <owl:ObjectProperty rdf:ID=\"hasDegree\">\n"
+            + "    <rdfs:domain rdf:resource=\"#Person\"/>\n"
+            + "    <rdfs:range rdf:resource=\"#Degree\"/>\n"
+            + "  </owl:ObjectProperty>\n"
+            + "  <owl:ObjectProperty rdf:ID=\"hasChildren\">\n"
+            + "    <rdfs:range rdf:resource=\"#Animal\"/>\n"
+            + "    <rdfs:domain rdf:resource=\"#Animal\"/>\n"
+            + "  </owl:ObjectProperty>\n"
+            + "  <owl:FunctionalProperty rdf:ID=\"hasGender\">\n"
+            + "    <rdfs:range rdf:resource=\"#Gender\"/>\n"
+            + "    <rdf:type rdf:resource=\"http://www.w3.org/2002/07/owl#ObjectProperty\"/>\n"
+            + "    <rdfs:domain rdf:resource=\"#Animal\"/>\n"
+            + "  </owl:FunctionalProperty>\n"
+            + "  <owl:FunctionalProperty rdf:ID=\"isHardWorking\">\n"
+            + "    <rdfs:range rdf:resource=\"http://www.w3.org/2001/XMLSchema#boolean\"/>\n"
+            + "    <rdfs:domain rdf:resource=\"#Person\"/>\n"
+            + "    <rdf:type rdf:resource=\"http://www.w3.org/2002/07/owl#DatatypeProperty\"/>\n"
+            + "  </owl:FunctionalProperty>\n"
+            + "  <Degree rdf:ID=\"MA\"/>\n" + "</rdf:RDF>";
         OWLOntologyManager m = OWLManager.createOWLOntologyManager();
         OWLOntology o = null;
         try {
             o = m.loadOntologyFromOntologyDocument(new StringDocumentSource(
-                    koala));
+                koala));
             MultiThreadChecker checker = new MultiThreadChecker(10);
             checker.check(new TestCallback(o, m.createOntology()));
             String trace = checker.getTrace();

@@ -48,7 +48,7 @@ public class ReasonerHelper {
     /** @return referenced properties */
     public Set<OWLObjectProperty> getReferencedObjectProperties() {
         final OWLOntology root = r.getRootOntology();
-        Set<OWLObjectProperty> p = new HashSet<>(root.getObjectPropertiesInSignature(Imports.INCLUDED));
+        Set<OWLObjectProperty> p = asSet(root.objectPropertiesInSignature(Imports.INCLUDED));
         p.add(df.getOWLTopObjectProperty());
         p.add(df.getOWLBottomObjectProperty());
         return p;
@@ -57,7 +57,7 @@ public class ReasonerHelper {
     /** @return referenced properties */
     public Set<OWLDataProperty> getReferencedDataProperties() {
         final OWLOntology root = r.getRootOntology();
-        Set<OWLDataProperty> p = new HashSet<>(root.getDataPropertiesInSignature(Imports.INCLUDED));
+        Set<OWLDataProperty> p = asSet(root.dataPropertiesInSignature(Imports.INCLUDED));
         p.add(df.getOWLTopDataProperty());
         p.add(df.getOWLBottomDataProperty());
         return p;
@@ -163,8 +163,8 @@ public class ReasonerHelper {
     public OWLClassExpression getGlobalAssertedRange(OWLObjectPropertyExpression p) {
         OWLClassExpression range = df.getOWLThing();
         Set<OWLClassExpression> assertedRanges = new HashSet<>();
-        Set<OWLObjectPropertyExpression> ancestors = new HashSet<>(r
-            .getSuperObjectProperties(p, false).getFlattened());
+        Set<OWLObjectPropertyExpression> ancestors = asSet(r
+            .getSuperObjectProperties(p, false).entities());
         ancestors.add(p);
         for (OWLObjectPropertyExpression ancestor : ancestors) {
             add(assertedRanges, Searcher.range(Imports.INCLUDED.stream(r.getRootOntology()).flatMap(o -> o
@@ -332,25 +332,16 @@ public class ReasonerHelper {
      */
     @Nullable
     public OWLDataPropertyExpression getCandidatePropForRangeSubsumptionCheck(OWLDataRange range) {
-        for (OWLOntology ont : r.getRootOntology().getImportsClosure()) {
-            for (OWLDataProperty p : ont.getDataPropertiesInSignature()) {
-                if (!p.isTopEntity()
-                    && r.isSatisfiable(df
-                        .getOWLDataSomeValuesFrom(p, range))) {
-                    return p;
-                }
-            }
-        }
-        return null;
+        return r.getRootOntology()
+            .dataPropertiesInSignature(Imports.INCLUDED)
+            .filter(p -> !p.isTopEntity() && r.isSatisfiable(df.getOWLDataSomeValuesFrom(p, range)))
+            .findAny()
+            .orElse(null);
     }
 
     /** @return all datatypes in the ontology import closure */
     public Set<OWLDatatype> getDatatypesInSignature() {
-        Set<OWLDatatype> dts = new HashSet<>();
-        for (OWLOntology ont : r.getRootOntology().getImportsClosure()) {
-            dts.addAll(ont.getDatatypesInSignature());
-        }
-        return dts;
+        return asSet(r.getRootOntology().datatypesInSignature(Imports.INCLUDED));
     }
 
     /**

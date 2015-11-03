@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -450,9 +451,9 @@ public class SemanticLocalityTestCase {
 
     @Test
     public void shouldBeLocalswrlRule() {
-        Set<SWRLAtom> head = new HashSet<SWRLAtom>(Arrays.asList(df
+        Set<SWRLAtom> head = new HashSet<>(Arrays.asList(df
             .getSWRLClassAtom(a, df.getSWRLIndividualArgument(x))));
-        Set<SWRLAtom> body = new HashSet<SWRLAtom>(Arrays.asList(df
+        Set<SWRLAtom> body = new HashSet<>(Arrays.asList(df
             .getSWRLClassAtom(b, df.getSWRLIndividualArgument(y))));
         axiom = df.getSWRLRule(head, body);
         // signature intersects
@@ -508,7 +509,7 @@ public class SemanticLocalityTestCase {
     }
 
     private void set(OWLEntity... entities) {
-        testSubject.getSignature().addAll(Arrays.asList(entities));
+        testSubject.getSignature().addAll(Stream.of(entities));
     }
 
     private void test(OWLAxiom ax, boolean expected, OWLEntity... entities) {

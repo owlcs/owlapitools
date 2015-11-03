@@ -1,6 +1,7 @@
 package uk.ac.manchester.cs.atomicdecomposition;
 
 import static org.semanticweb.owlapi.util.OWLAPIPreconditions.verifyNotNull;
+import static org.semanticweb.owlapi.util.OWLAPIStreamUtils.add;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,9 +33,7 @@ public class Atom {
     private void initSignature() {
         if (signature == null) {
             signature = new ArrayList<>();
-            for (OWLAxiom ax : axioms) {
-                signature.addAll(ax.getSignature());
-            }
+            axioms.forEach(ax -> add(signature, ax.signature()));
         }
     }
 

@@ -1,6 +1,7 @@
 package uk.ac.manchester.cs.atomicdecomposition;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
@@ -247,7 +248,7 @@ public class AtomicDecomposerOWLAPITOOLS implements AtomicDecomposition {
         return decomposer.getAOS().get(index).getModule();
     }
 
-    Collection<AxiomWrapper> getModule(Set<OWLEntity> signature,
+    Collection<AxiomWrapper> getModule(Stream<OWLEntity> signature,
         boolean useSemantics, ModuleType moduletype) {
         return decomposer.getModule(signature, useSemantics, moduletype);
     }

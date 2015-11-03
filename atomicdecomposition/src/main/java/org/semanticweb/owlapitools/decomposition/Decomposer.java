@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
@@ -65,7 +66,7 @@ public class Decomposer {
             if (p.isUsed()) {
                 // check whether an axiom is local wrt its own signature
                 modularizer.extract(p, new Signature(p.getAxiom()
-                    .getSignature()), type);
+                    .signature()), type);
                 if (modularizer.isTautology(p.getAxiom(), type)) {
                     tautologies.add(p);
                     p.setUsed(false);
@@ -122,7 +123,7 @@ public class Decomposer {
             return atom;
         }
         // build an atom: use a module to find atomic dependencies
-        atom = buildModule(new Signature(ax.getAxiom().getSignature()), parent);
+        atom = buildModule(new Signature(ax.getAxiom().signature()), parent);
         // no empty modules should be here
         assert atom != null;
         // register axiom as a part of an atom
@@ -194,7 +195,7 @@ public class Decomposer {
      *        the module type
      * @return a set of axioms that corresponds to the atom with the id INDEX
      */
-    public Set<OWLAxiom> getNonLocal(Set<OWLEntity> signature,
+    public Set<OWLAxiom> getNonLocal(Stream<OWLEntity> signature,
         ModuleType moduletype) {
         // init signature
         Signature sig = new Signature(signature);
@@ -219,7 +220,7 @@ public class Decomposer {
      *        true if semantic locality should be used
      * @return a set of axioms that corresponds to the atom with the id INDEX
      */
-    public Collection<AxiomWrapper> getModule(Set<OWLEntity> signature,
+    public Collection<AxiomWrapper> getModule(Stream<OWLEntity> signature,
         boolean useSemantics, ModuleType moduletype) {
         // init signature
         Signature Sig = new Signature(signature);

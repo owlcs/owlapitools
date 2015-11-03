@@ -28,11 +28,7 @@ public class Modularizer {
      *        axiom
      */
     private void addAxiomSig(AxiomWrapper axiom) {
-        for (OWLEntity p : axiom.getAxiom().getSignature()) {
-            if (sig.add(p)) {
-                workQueue.add(p);
-            }
-        }
+        axiom.getAxiom().signature().filter(p -> sig.add(p)).forEach(p -> workQueue.add(p));
     }
 
     /**
@@ -156,7 +152,7 @@ public class Modularizer {
      */
     public boolean isTautology(OWLAxiom ax, ModuleType type) {
         boolean topLocality = type == ModuleType.TOP;
-        sig = new Signature(ax.getSignature());
+        sig = new Signature(ax.signature());
         sig.setLocality(topLocality);
         // axiom is a tautology if it is local wrt its own signature
         boolean toReturn = checker.local(ax);

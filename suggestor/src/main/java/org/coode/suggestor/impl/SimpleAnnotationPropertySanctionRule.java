@@ -59,22 +59,18 @@ public class SimpleAnnotationPropertySanctionRule implements
     }
 
     private boolean hasAnnotation(OWLClassExpression c, OWLPropertyExpression p) {
-        if (!p.isAnonymous()) {
-            if (!c.isAnonymous()
-                && hasSanctionAnnotation(c.asOWLClass(), (OWLProperty) p)) {
-                return true;
-            }
-            if (recursive) {
-                // check the ancestors
-                for (OWLClass superCls : r.getSuperClasses(c, true)
-                    .getFlattened()) {
-                    if (hasAnnotation(superCls, p)) {
-                        return true;
-                    }
-                }
-            }
+        if (p.isAnonymous()) {
+            return false;
         }
-        return false;
+        if (!c.isAnonymous()
+            && hasSanctionAnnotation(c.asOWLClass(), (OWLProperty) p)) {
+            return true;
+        }
+        if (!recursive) {
+            return false;
+        }
+        // check the ancestors
+        return r.getSuperClasses(c, true).entities().anyMatch(s -> hasAnnotation(s, p));
     }
 
     private boolean hasSanctionAnnotation(OWLClass c, OWLProperty p) {
