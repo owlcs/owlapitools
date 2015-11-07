@@ -233,8 +233,8 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
-        NodeSet<OWLObjectPropertyExpression> specific = ps
-            .getPossibleObjectProperties(ca, null, true);
+        NodeSet<OWLObjectPropertyExpression> specific = ps.getPossibleProperties(ca, df.getOWLTopObjectProperty(),
+            true);
         assertEquals(7L, specific.nodes().count());
         assertTrue(specific.containsEntity(op));
         assertTrue(specific.containsEntity(df.getOWLObjectInverseOf(op)));
@@ -243,8 +243,7 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
         assertTrue(specific.containsEntity(ot));
         assertTrue(specific.containsEntity(df.getOWLObjectInverseOf(ot)));
         assertTrue(specific.containsEntity(df.getOWLObjectInverseOf(os)));
-        NodeSet<OWLObjectPropertyExpression> all = ps
-            .getPossibleObjectProperties(ca, null, false);
+        NodeSet<OWLObjectPropertyExpression> all = ps.getPossibleProperties(ca, df.getOWLTopObjectProperty(), false);
         assertEquals(9L, all.nodes().count());
         assertTrue(all.containsEntity(op));
         assertTrue(all.containsEntity(df.getOWLObjectInverseOf(op)));
@@ -264,8 +263,7 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
-        NodeSet<OWLObjectPropertyExpression> properties = ps
-            .getPossibleObjectProperties(ca, null, false);
+        NodeSet<OWLObjectPropertyExpression> properties = ps.getPossibleProperties(ca, null, false);
         assertFalse(properties.containsEntity(os));
         assertFalse(properties.containsEntity(or)); // any ancestor of s will
                                                     // also be impossible
@@ -305,7 +303,7 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
         // possible direct
         // check for all properties in the ontology
         ont.objectPropertiesInSignature().forEach(p -> {
-            NodeSet<OWLObjectPropertyExpression> posdirect = ps.getPossibleObjectProperties(ca, p, true);
+            NodeSet<OWLObjectPropertyExpression> posdirect = ps.getPossibleProperties(ca, p, true);
             for (Node<OWLObjectPropertyExpression> q : r.getSubObjectProperties(p, true)) {
                 final OWLObjectPropertyExpression qRep = q.getRepresentativeElement();
                 if (ps.isPossible(ca, qRep)) {
@@ -319,7 +317,7 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
         });
         // possible indirect
         NodeSet<OWLObjectPropertyExpression> posindirect = ps
-            .getPossibleObjectProperties(ca, null, false);
+            .getPossibleProperties(ca, null, false);
         ont.objectPropertiesInSignature().forEach(p -> {
             if (ps.isPossible(ca, p)) {
                 assertTrue(posindirect.containsEntity(p));

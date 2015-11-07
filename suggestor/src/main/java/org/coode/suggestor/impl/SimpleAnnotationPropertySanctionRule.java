@@ -48,13 +48,7 @@ public class SimpleAnnotationPropertySanctionRule implements
     }
 
     @Override
-    public boolean meetsSanction(OWLClassExpression c,
-        OWLObjectPropertyExpression p) {
-        return hasAnnotation(c, p);
-    }
-
-    @Override
-    public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p) {
+    public <T extends OWLPropertyExpression> boolean meetsSanction(OWLClassExpression c, T p) {
         return hasAnnotation(c, p);
     }
 

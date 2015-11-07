@@ -11,7 +11,8 @@ import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.impl.OWLDatatypeNodeSet;
 
 abstract class AbstractDPMatcher extends
-        AbstractMatcher<OWLDataRange, OWLDatatype, OWLDataPropertyExpression> {
+    AbstractMatcher<OWLDataRange, OWLDatatype, OWLDataPropertyExpression> {
+
     private ReasonerHelper helper;
 
     public AbstractDPMatcher(ReasonerHelper h) {

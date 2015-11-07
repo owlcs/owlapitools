@@ -13,23 +13,19 @@ import org.coode.suggestor.api.PropertySanctionRule;
 import org.coode.suggestor.api.PropertySuggestor;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
+import org.semanticweb.owlapi.model.OWLPropertyExpression;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
-/** <p>
+/**
  * Looks at the direct subclasses to determine which properties are used as they
- * may be considered distinguishing features.
- * </p>
- * <p>
+ * may be considered distinguishing features. <br>
  * Sanction is met if for all d where DirectStrictSubClassOf(c, d) if
- * isCurrent(d, p, true) is entailed.
- * </p>
- * <p>
+ * isCurrent(d, p, true) is entailed. <br>
  * See {@link OWLReasoner} for definition of DirectStrictSubClassOf
- * </p> */
+ */
 public class CheckSubsSanctionRule implements PropertySanctionRule {
+
     private OWLReasoner r;
     private PropertySuggestor ps;
 
@@ -40,17 +36,7 @@ public class CheckSubsSanctionRule implements PropertySanctionRule {
     }
 
     @Override
-    public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p) {
-        for (Node<OWLClass> sub : r.getSubClasses(c, true)) {
-            if (ps.isCurrent(sub.getRepresentativeElement(), p, true)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p) {
+    public <T extends OWLPropertyExpression> boolean meetsSanction(OWLClassExpression c, T p) {
         for (Node<OWLClass> sub : r.getSubClasses(c, true)) {
             if (ps.isCurrent(sub.getRepresentativeElement(), p, true)) {
                 return true;

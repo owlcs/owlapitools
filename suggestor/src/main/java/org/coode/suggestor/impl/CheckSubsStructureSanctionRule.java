@@ -19,16 +19,11 @@ import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 /**
- * <p>
  * Looks at the direct subclasses to determine which properties are restricted.
- * </p>
- * <p>
+ * <br>
  * Sanction is met if for all d where DirectStrictSubClassOf(c, d) if
- * SubClassOf(d, p only x) is asserted (where x is any class expression).
- * </p>
- * <p>
+ * SubClassOf(d, p only x) is asserted (where x is any class expression). <br>
  * NNF is used when evaluating candidate restrictions.
- * </p>
  */
 public class CheckSubsStructureSanctionRule implements PropertySanctionRule {
 
@@ -40,29 +35,14 @@ public class CheckSubsStructureSanctionRule implements PropertySanctionRule {
     }
 
     @Override
-    public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p) {
+    public <T extends OWLPropertyExpression> boolean meetsSanction(OWLClassExpression c, T p) {
+        Class<? extends OWLRestriction> class1 = p.isOWLDataProperty() ? OWLDataAllValuesFrom.class
+            : OWLObjectAllValuesFrom.class;
         for (Node<OWLClass> sub : r.getSubClasses(c, true)) {
             RestrictionAccumulator acc = new RestrictionAccumulator(r);
             for (OWLClass s : asList(sub.entities())) {
-                for (OWLClassExpression restr : acc.getRestrictions(s, p)) {
-                    restr = restr.getNNF();
-                    if (restr instanceof OWLObjectAllValuesFrom) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p) {
-        for (Node<OWLClass> sub : r.getSubClasses(c, true)) {
-            RestrictionAccumulator acc = new RestrictionAccumulator(r);
-            for (OWLClass s : asList(sub.entities())) {
-                for (OWLClassExpression restr : acc.getRestrictions(s, p)) {
-                    restr = restr.getNNF();
-                    if (restr instanceof OWLDataAllValuesFrom) {
+                for (OWLClassExpression restr : acc.getRestrictions(s, p, class1)) {
+                    if (class1.isInstance(restr.getNNF())) {
                         return true;
                     }
                 }

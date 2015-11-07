@@ -10,14 +10,11 @@
 package org.coode.suggestor.api;
 
 import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
+import org.semanticweb.owlapi.model.OWLPropertyExpression;
 
 /**
- * <p>
  * A pluggable way of determining if a property is "interesting" for a given
  * class.
- * </p>
  */
 public interface PropertySanctionRule {
 
@@ -34,19 +31,11 @@ public interface PropertySanctionRule {
      * @param c
      *        a class expression
      * @param p
-     *        an object property
+     *        a property
+     * @param <T>
+     *        object or data property
      * @return true if p is an "interesting" property to use in the axiom
      *         SubClassOf(c, p some x)
      */
-    boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p);
-
-    /**
-     * @param c
-     *        a class expression
-     * @param p
-     *        a data property
-     * @return true if p is an "interesting" property to use in the axiom
-     *         SubClassOf(c, p some x)
-     */
-    boolean meetsSanction(OWLClassExpression c, OWLDataProperty p);
+    <T extends OWLPropertyExpression> boolean meetsSanction(OWLClassExpression c, T p);
 }

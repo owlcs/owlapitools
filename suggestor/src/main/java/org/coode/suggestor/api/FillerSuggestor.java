@@ -22,20 +22,13 @@ import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 /**
- * <p>
  * The FillerSuggestor allows us to explore the relationships between the
- * classes in the ontology.
- * </p>
- * <p>
+ * classes in the ontology. <br>
  * For more general discussion of the suggestor idea please see the
- * <a href="package-summary.html">package summary</a>
- * </p>
- * <p>
- * To help with the notion of "property values" or "local ranges".
- * </p>
- * <p>
+ * <a href="package-summary.html">package summary</a> <br>
+ * To help with the notion of "property values" or "local ranges". <br>
  * Filler level questions - Given a class description and an object property:
- * </p>
+ * <br>
  * <ol>
  * <li>What are the named fillers on these properties?</li>
  * <li>What are the possible named fillers for a new existential restriction?
@@ -43,19 +36,13 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
  * <li>What are the sanctioned named fillers for a new existential restriction?
  * </li>
  * </ol>
- * <p>
  * The following definitions are used in the API definition:
- * </p>
- * <h3>Direct</h3>
- * <p>
- * The direct flag is used to control redundancy. If filler f holds for a query
- * in the general case then the direct case only holds if there is no g where
- * StrictSubClassOf(g, f) and isCurrent(c, p, g) is entailed
- * </p>
- * <p>
+ * <h3>Direct</h3> The direct flag is used to control redundancy. If filler f
+ * holds for a query in the general case then the direct case only holds if
+ * there is no g where StrictSubClassOf(g, f) and isCurrent(c, p, g) is entailed
+ * <br>
  * For the definition of StrictSubClassOf see the OWLAPI
  * {@link org.semanticweb.owlapi.reasoner.OWLReasoner}.
- * </p>
  */
 public interface FillerSuggestor {
 

@@ -13,36 +13,43 @@ import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 
-/** <p>
+/**
  * A pluggable way of determining if a certain filler is "interesting" for a
  * given (class, property) pair
- * </p> */
+ */
 public interface FillerSanctionRule {
-    /** Called by the suggestor when the rule has been registered (in case the
+
+    /**
+     * Called by the suggestor when the rule has been registered (in case the
      * rule requires suggestor methods)
      * 
      * @param fs
-     *            the FillerSuggestor */
+     *        the FillerSuggestor
+     */
     void setSuggestor(FillerSuggestor fs);
 
-    /** @param c
-     *            a class expression
+    /**
+     * @param c
+     *        a class expression
      * @param p
-     *            an object property
+     *        an object property
      * @param f
-     *            a filler class expression
+     *        a filler class expression
      * @return true if f is an "interesting" filler to use in the axiom
-     *         SubClassOf(c, p some f) */
+     *         SubClassOf(c, p some f)
+     */
     boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p,
-            OWLClassExpression f);
+        OWLClassExpression f);
 
-    /** @param c
-     *            a class expression
+    /**
+     * @param c
+     *        a class expression
      * @param p
-     *            a data property
+     *        a data property
      * @param f
-     *            a filler data range
+     *        a filler data range
      * @return true if f is an "interesting" filler to use in the axiom
-     *         SubClassOf(c, p some f) */
+     *         SubClassOf(c, p some f)
+     */
     boolean meetsSanction(OWLClassExpression c, OWLDataProperty p, OWLDataRange f);
 }

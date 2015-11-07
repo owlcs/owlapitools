@@ -19,6 +19,7 @@ import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 
 /** Checks if the filler is in the asserted range. */
 public class InRangeFillerSanctionRule implements FillerSanctionRule {
+
     private ReasonerHelper reasonerHelper;
 
     @Override
@@ -28,7 +29,7 @@ public class InRangeFillerSanctionRule implements FillerSanctionRule {
 
     @Override
     public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p,
-            OWLClassExpression f) {
+        OWLClassExpression f) {
         return reasonerHelper.isInAssertedRange(p, f);
     }
 

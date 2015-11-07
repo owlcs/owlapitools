@@ -14,13 +14,14 @@ import org.coode.suggestor.api.PropertySuggestor;
 import org.coode.suggestor.util.RestrictionAccumulator;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataAllValuesFrom;
-import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLObjectAllValuesFrom;
-import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
+import org.semanticweb.owlapi.model.OWLPropertyExpression;
+import org.semanticweb.owlapi.model.OWLRestriction;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 /** Check the restrictions on the class for universals */
 public class UniversalRestrictionsSanctionRule implements PropertySanctionRule {
+
     private OWLReasoner r;
 
     @Override
@@ -29,14 +30,10 @@ public class UniversalRestrictionsSanctionRule implements PropertySanctionRule {
     }
 
     @Override
-    public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p) {
+    public <T extends OWLPropertyExpression> boolean meetsSanction(OWLClassExpression c, T p) {
         RestrictionAccumulator acc = new RestrictionAccumulator(r);
-        return !acc.getRestrictions(c, p, OWLObjectAllValuesFrom.class).isEmpty();
-    }
-
-    @Override
-    public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p) {
-        RestrictionAccumulator acc = new RestrictionAccumulator(r);
-        return !acc.getRestrictions(c, p, OWLDataAllValuesFrom.class).isEmpty();
+        Class<? extends OWLRestriction> class1 = p.isOWLDataProperty() ? OWLDataAllValuesFrom.class
+            : OWLObjectAllValuesFrom.class;
+        return !acc.getRestrictions(c, (OWLPropertyExpression) p, class1).isEmpty();
     }
 }

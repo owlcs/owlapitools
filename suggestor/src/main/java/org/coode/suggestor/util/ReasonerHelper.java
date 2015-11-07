@@ -151,9 +151,7 @@ public class ReasonerHelper {
     }
 
     /**
-     * <p>
      * Check the ontologies for range assertions on p and all ancestors of p.
-     * </p>
      * 
      * @param p
      *        the object property for which a range is wanted
@@ -184,13 +182,9 @@ public class ReasonerHelper {
     }
 
     /**
-     * <p>
-     * Find the asserted ranges on this property and all of its ancestors.
-     * </p>
-     * <p>
+     * Find the asserted ranges on this property and all of its ancestors. <br>
      * If multiple ranges are found, they are pulled together into an
      * intersection.
-     * </p>
      * 
      * @param p
      *        the property we are querying
@@ -316,14 +310,10 @@ public class ReasonerHelper {
     }
 
     /**
-     * <p>
-     * Find a candidate property for datatype subsumption checking.
-     * </p>
-     * <p>
+     * Find a candidate property for datatype subsumption checking. <br>
      * If {O} is the set of ontologies loaded into the reasoner, a candidate is
      * ANY data property (APART FROM Top) in the signature of {O} that satifies
      * the criteria isSatisfiable(SomeValuesFrom(p, range).
-     * </p>
      * 
      * @param range
      *        the data range from which will be used in the above test

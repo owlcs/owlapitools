@@ -11,7 +11,8 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.impl.OWLClassNodeSet;
 
 abstract class AbstractOPMatcher extends
-        AbstractMatcher<OWLClassExpression, OWLClass, OWLObjectPropertyExpression> {
+    AbstractMatcher<OWLClassExpression, OWLClass, OWLObjectPropertyExpression> {
+
     private OWLReasoner r;
 
     public AbstractOPMatcher(OWLReasoner r) {
