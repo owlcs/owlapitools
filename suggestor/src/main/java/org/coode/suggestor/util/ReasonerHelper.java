@@ -341,18 +341,10 @@ public class ReasonerHelper {
      *        range
      * @return true if range is asserted
      */
-    public boolean isInAssertedRange(OWLObjectPropertyExpression p, OWLClassExpression f) {
-        return isDescendantOf(f, getGlobalAssertedRange(p));
-    }
-
-    /**
-     * @param p
-     *        property
-     * @param f
-     *        range
-     * @return true if range is asserted
-     */
-    public boolean isInAssertedRange(OWLDataProperty p, OWLDataRange f) {
-        return isSubtype(f, getGlobalAssertedRange(p));
+    public <T extends OWLPropertyExpression> boolean isInAssertedRange(T p, OWLPropertyRange f) {
+        if (p.isOWLDataProperty()) {
+            return isSubtype((OWLDataRange) f, getGlobalAssertedRange(p.asOWLDataProperty()));
+        }
+        return isDescendantOf((OWLClassExpression) f, getGlobalAssertedRange(p.asObjectPropertyExpression()));
     }
 }

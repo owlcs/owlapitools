@@ -15,9 +15,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.profiles.Profiles;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
 @SuppressWarnings("javadoc")
 @Ignore
@@ -29,9 +29,7 @@ public class ReasonerTests {
     public void testReasoner() throws Exception {
         OWLOntologyManager mngr = OWLManager.createOWLOntologyManager();
         OWLOntology ont = mngr.createOntology();
-        final OWLReasonerFactory fac = (OWLReasonerFactory) Class.forName(JFACT_FACTORY)
-            .newInstance();
-        OWLReasoner r = fac.createNonBufferingReasoner(ont);
+        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
         OWLDataFactory df = mngr.getOWLDataFactory();
         OWLClass a = df.getOWLClass(IRI.create("http://example.com/a"));
         OWLClass b = df.getOWLClass(IRI.create("http://example.com/b"));
@@ -60,9 +58,7 @@ public class ReasonerTests {
     public void testReasoner4() throws Exception {
         OWLOntologyManager mngr = OWLManager.createOWLOntologyManager();
         OWLOntology ont = mngr.createOntology();
-        final OWLReasonerFactory fac = (OWLReasonerFactory) Class.forName(JFACT_FACTORY)
-            .newInstance();
-        OWLReasoner r = fac.createNonBufferingReasoner(ont);
+        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
         assertTrue(r.getTopDataPropertyNode().entities().count() > 0);
     }
 }

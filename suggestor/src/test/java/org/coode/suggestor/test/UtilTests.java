@@ -19,9 +19,9 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.profiles.Profiles;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.vocab.OWLFacet;
 
 @SuppressWarnings("javadoc")
@@ -29,13 +29,12 @@ public class UtilTests extends AbstractSuggestorTest {
 
     public void testGetSubDatatypes() throws Exception {
         OWLOntology ont = createOntology();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY)
-            .newInstance()).createNonBufferingReasoner(ont);
+        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
         // SuggestorFactory fac = new SuggestorFactory(r);
         // PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
         // this is not supported by reasoners
-        final ReasonerHelper helper = new ReasonerHelper(r);
+        ReasonerHelper helper = new ReasonerHelper(r);
         OWLDataProperty p = df.getOWLDataProperty(IRI.create("http://example.com/p"));
         OWLDatatype integer = df.getIntegerOWLDatatype();
         OWLDatatype flt = df.getFloatOWLDatatype();

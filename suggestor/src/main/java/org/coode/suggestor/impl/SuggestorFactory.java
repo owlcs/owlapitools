@@ -30,12 +30,12 @@ public class SuggestorFactory {
     }
 
     /** @return new property suggestor */
-    public final PropertySuggestor getPropertySuggestor() {
+    public PropertySuggestor getPropertySuggestor() {
         return new PropertySuggestorImpl(r);
     }
 
     /** @return new filler suggestor */
-    public final FillerSuggestor getFillerSuggestor() {
+    public FillerSuggestor getFillerSuggestor() {
         return new FillerSuggestorImpl(r);
     }
 }

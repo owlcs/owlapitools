@@ -13,9 +13,8 @@ import org.coode.suggestor.api.FillerSanctionRule;
 import org.coode.suggestor.api.FillerSuggestor;
 import org.coode.suggestor.util.ReasonerHelper;
 import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLDataRange;
-import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
+import org.semanticweb.owlapi.model.OWLPropertyExpression;
+import org.semanticweb.owlapi.model.OWLPropertyRange;
 
 /** Checks if the filler is in the asserted range. */
 public class InRangeFillerSanctionRule implements FillerSanctionRule {
@@ -28,13 +27,7 @@ public class InRangeFillerSanctionRule implements FillerSanctionRule {
     }
 
     @Override
-    public boolean meetsSanction(OWLClassExpression c, OWLObjectPropertyExpression p,
-        OWLClassExpression f) {
-        return reasonerHelper.isInAssertedRange(p, f);
-    }
-
-    @Override
-    public boolean meetsSanction(OWLClassExpression c, OWLDataProperty p, OWLDataRange f) {
+    public <T extends OWLPropertyExpression> boolean meetsSanction(OWLClassExpression c, T p, OWLPropertyRange f) {
         return reasonerHelper.isInAssertedRange(p, f);
     }
 }

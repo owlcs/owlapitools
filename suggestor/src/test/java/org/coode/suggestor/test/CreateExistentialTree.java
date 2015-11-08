@@ -19,9 +19,9 @@ import org.coode.suggestor.api.FillerSuggestor;
 import org.coode.suggestor.api.PropertySuggestor;
 import org.coode.suggestor.impl.SuggestorFactory;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.profiles.Profiles;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
 @SuppressWarnings("javadoc")
 public class CreateExistentialTree extends AbstractSuggestorTest {
@@ -36,8 +36,7 @@ public class CreateExistentialTree extends AbstractSuggestorTest {
 
     public void testCreateTree() throws Exception {
         OWLOntology ont = createOntology();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY).newInstance())
-            .createNonBufferingReasoner(ont);
+        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         FillerSuggestor fs = fac.getFillerSuggestor();
@@ -53,7 +52,7 @@ public class CreateExistentialTree extends AbstractSuggestorTest {
     private void printClass(Node<OWLClass> cNode, int indent, PropertySuggestor ps, OWLReasoner r, FillerSuggestor fs) {
         print(cNode, indent);
         if (visited.add(cNode)) {
-            final OWLClassExpression c = cNode.getRepresentativeElement();
+            OWLClassExpression c = cNode.getRepresentativeElement();
             for (Node<OWLObjectPropertyExpression> p : ps
                 .getCurrentObjectProperties(c, true)) {
                 printProperty(c, p, indent + 3, fs);

@@ -11,10 +11,8 @@ package org.coode.suggestor.impl;
 
 import org.coode.suggestor.api.PropertySanctionRule;
 import org.coode.suggestor.api.PropertySuggestor;
-import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLPropertyExpression;
-import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 /**
@@ -37,11 +35,6 @@ public class CheckSubsSanctionRule implements PropertySanctionRule {
 
     @Override
     public <T extends OWLPropertyExpression> boolean meetsSanction(OWLClassExpression c, T p) {
-        for (Node<OWLClass> sub : r.getSubClasses(c, true)) {
-            if (ps.isCurrent(sub.getRepresentativeElement(), p, true)) {
-                return true;
-            }
-        }
-        return false;
+        return r.getSubClasses(c, true).nodes().anyMatch(sub -> ps.isCurrent(sub.getRepresentativeElement(), p, true));
     }
 }

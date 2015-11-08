@@ -9,8 +9,6 @@
  */
 package org.coode.suggestor.impl;
 
-import static org.semanticweb.owlapi.util.OWLAPIStreamUtils.asList;
-
 import org.coode.suggestor.api.PropertySanctionRule;
 import org.coode.suggestor.api.PropertySuggestor;
 import org.coode.suggestor.util.RestrictionAccumulator;
@@ -38,16 +36,13 @@ public class CheckSubsStructureSanctionRule implements PropertySanctionRule {
     public <T extends OWLPropertyExpression> boolean meetsSanction(OWLClassExpression c, T p) {
         Class<? extends OWLRestriction> class1 = p.isOWLDataProperty() ? OWLDataAllValuesFrom.class
             : OWLObjectAllValuesFrom.class;
-        for (Node<OWLClass> sub : r.getSubClasses(c, true)) {
-            RestrictionAccumulator acc = new RestrictionAccumulator(r);
-            for (OWLClass s : asList(sub.entities())) {
-                for (OWLClassExpression restr : acc.getRestrictions(s, p, class1)) {
-                    if (class1.isInstance(restr.getNNF())) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
+        return r.getSubClasses(c, true).nodes().anyMatch(sub -> match(c, p, class1, sub));
+    }
+
+    protected <T extends OWLPropertyExpression> boolean match(OWLClassExpression c, T p,
+        Class<? extends OWLRestriction> class1, Node<OWLClass> sub) {
+        RestrictionAccumulator acc = new RestrictionAccumulator(r);
+        return sub.entities().flatMap(s -> acc.accummulateRestrictions(c, p, class1)).anyMatch(restr -> class1
+            .isInstance(restr.getNNF()));
     }
 }

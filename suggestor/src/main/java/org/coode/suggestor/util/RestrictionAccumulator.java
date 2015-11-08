@@ -11,8 +11,8 @@ package org.coode.suggestor.util;
 
 import static org.semanticweb.owlapi.util.OWLAPIStreamUtils.asSet;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
@@ -49,7 +49,7 @@ public class RestrictionAccumulator {
      */
     public Set<OWLRestriction> getRestrictions(OWLClassExpression cls,
         OWLPropertyExpression prop) {
-        return accummulateRestrictions(cls, prop, null);
+        return asSet(accummulateRestrictions(cls, prop, null));
     }
 
     /**
@@ -63,19 +63,25 @@ public class RestrictionAccumulator {
      *        type
      * @return set of restrictions
      */
-    @SuppressWarnings("unchecked")
     public <T extends OWLRestriction> Set<T> getRestrictions(
         OWLClassExpression cls, OWLPropertyExpression prop, Class<T> type) {
-        Set<T> results = new HashSet<>();
-        for (OWLRestriction restr : accummulateRestrictions(cls, prop, type)) {
-            results.add((T) restr);
-        }
-        return results;
+        return asSet(accummulateRestrictions(cls, prop, type));
     }
 
-    protected Set<OWLRestriction> accummulateRestrictions(
+    /**
+     * @param cls
+     *        class
+     * @param prop
+     *        property
+     * @param type
+     *        type
+     * @param <T>
+     *        type
+     * @return set of restrictions
+     */
+    public <T extends OWLRestriction> Stream<T> accummulateRestrictions(
         OWLClassExpression cls, @Nullable OWLPropertyExpression prop,
-        @Nullable Class<? extends OWLRestriction> type) {
+        @Nullable Class<T> type) {
         Set<OWLClass> relevantClasses = asSet(r.getSuperClasses(cls, false).entities());
         RestrictionVisitor v = getVisitor(prop, type);
         if (!cls.isAnonymous()) {
@@ -91,7 +97,7 @@ public class RestrictionAccumulator {
                     restr -> restr.accept(v));
             }
         });
-        return v.restrs;
+        return (Stream<T>) v.restrs.stream();
     }
 
     protected RestrictionVisitor getVisitor(@Nullable OWLPropertyExpression prop,

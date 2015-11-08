@@ -17,11 +17,6 @@ import org.semanticweb.owlapi.model.*;
 @SuppressWarnings("javadoc")
 public abstract class AbstractSuggestorTest {
 
-    protected static final String HERMIT_FACTORY = "org.semanticweb.HermiT.Reasoner$ReasonerFactory";
-    protected static final String FACTPLUSPLUS_FACTORY = "uk.ac.manchester.cs.factplusplus.owlapiv3.FaCTPlusPlusReasonerFactory";
-    protected static final String JFACT_FACTORY = "uk.ac.manchester.cs.jfact.JFactFactory";
-    protected static final String PELLET_FACTORY = "com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory";
-    public static final String DEFAULT_REASONER_FACTORY = JFACT_FACTORY;
     private static final String BASE = "http://example.com#";
     protected OWLOntologyManager mngr;
     protected OWLDataFactory df;

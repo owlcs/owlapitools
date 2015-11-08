@@ -30,11 +30,7 @@ public class MinCardinalitySanctionRule implements PropertySanctionRule {
         RestrictionAccumulator acc = new RestrictionAccumulator(r);
         Class<? extends OWLRestriction> class1 = p.isOWLDataProperty() ? OWLDataMinCardinality.class
             : OWLObjectMinCardinality.class;
-        for (OWLRestriction restr : acc.getRestrictions(c, p, class1)) {
-            if (((OWLCardinalityRestriction<?>) restr).getCardinality() == 0) {
-                return true;
-            }
-        }
-        return false;
+        return acc.accummulateRestrictions(c, p, class1)
+            .anyMatch(restr -> ((OWLCardinalityRestriction<?>) restr).getCardinality() == 0);
     }
 }

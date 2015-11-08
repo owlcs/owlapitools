@@ -15,9 +15,9 @@ import javax.annotation.Nullable;
 
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
+import org.semanticweb.owlapi.model.OWLPropertyExpression;
+import org.semanticweb.owlapi.model.OWLPropertyRange;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
@@ -50,95 +50,55 @@ public interface FillerSuggestor {
      * @param c
      *        a class expression
      * @param p
-     *        an object property
+     *        a property
      * @param f
-     *        a filler class expression
+     *        a filler expression
+     * @param <T>
+     *        object or data property
      * @return true if SubClassOf(c, p some f) is entailed
      */
-    boolean isCurrent(OWLClassExpression c, OWLObjectPropertyExpression p, OWLClassExpression f);
+    <T extends OWLPropertyExpression> boolean isCurrent(OWLClassExpression c, T p, OWLPropertyRange f);
 
     /**
      * @param c
      *        a class expression
      * @param p
-     *        an object property
+     *        a property
      * @param f
-     *        a filler class expression
+     *        a filler expression
      * @param direct
      *        (see definition above)
-     * @return isCurrent(c, p, f). If direct then there is no g where
-     *         StrictSubClassOf(g, f) and isCurrent(c, p, g) is true
-     */
-    boolean isCurrent(OWLClassExpression c, OWLObjectPropertyExpression p, OWLClassExpression f, boolean direct);
-
-    /**
-     * @param c
-     *        a class expression
-     * @param p
-     *        a data property
-     * @param f
-     *        a filler data range
+     * @param <T>
+     *        object or data property
      * @return true if SubClassOf(c, p some f) is entailed
      */
-    boolean isCurrent(OWLClassExpression c, OWLDataProperty p, OWLDataRange f);
-
-    // TODO: how do we determine if there is a more specific range on c??
-    /**
-     * @param c
-     *        class
-     * @param p
-     *        property
-     * @param f
-     *        filler
-     * @param direct
-     *        direct
-     * @return true if current
-     */
-    boolean isCurrent(OWLClassExpression c, OWLDataProperty p, OWLDataRange f, boolean direct);
+    <T extends OWLPropertyExpression> boolean isCurrent(OWLClassExpression c, T p, OWLPropertyRange f, boolean direct);
 
     /**
      * @param c
      *        a class expression
      * @param p
-     *        an object property
+     *        a property
      * @param f
      *        a filler class expression
+     * @param <T>
+     *        object or data property
      * @return true if isSatisfiable(c and p some f)
      */
-    boolean isPossible(OWLClassExpression c, OWLObjectPropertyExpression p, OWLClassExpression f);
+    <T extends OWLPropertyExpression> boolean isPossible(OWLClassExpression c, T p, OWLPropertyRange f);
 
     /**
      * @param c
      *        a class expression
      * @param p
-     *        a data property
-     * @param f
-     *        a filler data range
-     * @return true if isSatisfiable(c and p some f)
-     */
-    boolean isPossible(OWLClassExpression c, OWLDataProperty p, OWLDataRange f);
-
-    /**
-     * @param c
-     *        a class expression
-     * @param p
-     *        an object property
+     *        a property
      * @param f
      *        a filler class expression
+     * @param <T>
+     *        object or data property
      * @return true if isPossible(c, p, f) and ANY filler sanction rule is met
      */
-    boolean isSanctioned(OWLClassExpression c, OWLObjectPropertyExpression p, OWLClassExpression f);
-
-    /**
-     * @param c
-     *        a class expression
-     * @param p
-     *        a data property
-     * @param f
-     *        a filler data range
-     * @return true if isPossible(c, p, f) and ANY filler sanction rule is met
-     */
-    boolean isSanctioned(OWLClassExpression c, OWLDataProperty p, OWLDataRange f);
+    <T extends OWLPropertyExpression> boolean isSanctioned(OWLClassExpression c, T p, OWLPropertyRange f);
 
     /**
      * Roughly speaking, would adding SubClassOf(c, p some f) fail to usefully

@@ -34,7 +34,7 @@ public class NamedEntityFillerAccumulator extends FillerAccumulator<OWLEntity> {
             public void visit(OWLObjectSomeValuesFrom desc) {
                 super.visit(desc);
                 if (props.contains(desc.getProperty())) {
-                    final OWLClassExpression filler = desc.getFiller();
+                    OWLClassExpression filler = desc.getFiller();
                     if (!filler.isAnonymous()) {
                         add(filler.asOWLClass());
                     }
@@ -67,7 +67,7 @@ public class NamedEntityFillerAccumulator extends FillerAccumulator<OWLEntity> {
             public void visit(OWLObjectHasValue desc) {
                 super.visit(desc);
                 if (props.contains(desc.getProperty())) {
-                    final OWLIndividual ind = desc.getFiller();
+                    OWLIndividual ind = desc.getFiller();
                     if (!ind.isAnonymous()) {
                         add(ind.asOWLNamedIndividual());
                     }

@@ -18,10 +18,10 @@ import org.coode.suggestor.api.PropertySuggestor;
 import org.coode.suggestor.impl.SimpleAnnotationPropertySanctionRule;
 import org.coode.suggestor.impl.SuggestorFactory;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.profiles.Profiles;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
-import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
 @SuppressWarnings("javadoc")
 public class PropertySuggestorTests extends AbstractSuggestorTest {
@@ -78,13 +78,12 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
 
     public void testIsCurrentObjectProperties() throws Exception {
         OWLOntology ont = createModelA();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY).newInstance())
-            .createNonBufferingReasoner(ont);
+        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
-        final OWLObjectProperty topOP = df.getOWLTopObjectProperty();
-        final OWLDataProperty topDP = df.getOWLTopDataProperty();
+        OWLObjectProperty topOP = df.getOWLTopObjectProperty();
+        OWLDataProperty topDP = df.getOWLTopDataProperty();
         assertTrue(ps.isCurrent(ca, op));
         assertTrue(ps.isCurrent(ca, oq));
         assertTrue(ps.isCurrent(ca, or));
@@ -122,8 +121,7 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
 
     public void testIsPossibleObjectProperties() throws Exception {
         OWLOntology ont = createModelA();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY).newInstance())
-            .createNonBufferingReasoner(ont);
+        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
@@ -148,8 +146,7 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
 
     public void testIsImpossibleObjectProperties() throws Exception {
         OWLOntology ont = createModelB();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY).newInstance())
-            .createNonBufferingReasoner(ont);
+        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
@@ -162,8 +159,7 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
 
     public void testGetCurrentObjectProperties() throws Exception {
         OWLOntology ont = createModelA();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY).newInstance())
-            .createNonBufferingReasoner(ont);
+        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
@@ -183,8 +179,7 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
 
     public void testGetCurrentDataProperties() throws Exception {
         OWLOntology ont = createModelA();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY).newInstance())
-            .createNonBufferingReasoner(ont);
+        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
@@ -202,8 +197,7 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
      */
     public void testCurrentObjectPropertiesSynonyms() throws Exception {
         OWLOntology ont = createOntology();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY).newInstance())
-            .createNonBufferingReasoner(ont);
+        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
@@ -228,8 +222,7 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
 
     public void testGetPossibleObjectProperties() throws Exception {
         OWLOntology ont = createModelA();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY).newInstance())
-            .createNonBufferingReasoner(ont);
+        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
@@ -258,8 +251,7 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
 
     public void testGetImpossibleObjectProperties() throws Exception {
         OWLOntology ont = createModelB();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY).newInstance())
-            .createNonBufferingReasoner(ont);
+        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
@@ -275,8 +267,7 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
      */
     public void testGettersAgainstBooleanMethods() throws Exception {
         OWLOntology ont = createModelA();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY).newInstance())
-            .createNonBufferingReasoner(ont);
+        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
@@ -305,7 +296,7 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
         ont.objectPropertiesInSignature().forEach(p -> {
             NodeSet<OWLObjectPropertyExpression> posdirect = ps.getPossibleProperties(ca, p, true);
             for (Node<OWLObjectPropertyExpression> q : r.getSubObjectProperties(p, true)) {
-                final OWLObjectPropertyExpression qRep = q.getRepresentativeElement();
+                OWLObjectPropertyExpression qRep = q.getRepresentativeElement();
                 if (ps.isPossible(ca, qRep)) {
                     assertTrue("Cannot find " + q + " in direct possible properties of " + p, posdirect.containsEntity(
                         qRep));
@@ -329,8 +320,7 @@ public class PropertySuggestorTests extends AbstractSuggestorTest {
 
     public void testAnnotationPropertySanctioning() throws Exception {
         OWLOntology ont = createOntology();
-        OWLReasoner r = ((OWLReasonerFactory) Class.forName(DEFAULT_REASONER_FACTORY).newInstance())
-            .createNonBufferingReasoner(ont);
+        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
