@@ -53,6 +53,11 @@
 			<version>5.0.0-ALPHA-SNAPSHOT</version>
 		</dependency>
 		<dependency>
+			<groupId>net.sourceforge.owlapi</groupId>
+			<artifactId>jfact</artifactId>
+			<version>5.0.0-ALPHA</version>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>

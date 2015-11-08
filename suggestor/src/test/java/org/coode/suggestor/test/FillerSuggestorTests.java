@@ -68,15 +68,11 @@ public class FillerSuggestorTests extends AbstractSuggestorTest {
         SuggestorFactory fac = new SuggestorFactory(r);
         // PropertySuggestor ps = fac.getPropertySuggestor();
         FillerSuggestor fs = fac.getFillerSuggestor();
-        // TODO add a generic reasoner to implement these tests
-        // OWLReasoner test=new
-        // JFactFactory().createReasoner(fs.getReasoner().getRootOntology());
-        // System.out.println("FillerSuggestorTests.testIsCurrentFiller()
-        // subclasses of thing test \n"+test.getSubClasses(f.getOWLThing(), //
-        // true));
-        // System.out.println("FillerSuggestorTests.testIsCurrentFiller()
-        // subclasses of thing test\n"+test.getSubClasses(f.getOWLThing(), //
-        // false));
+        OWLReasoner test = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
+        System.out.println("FillerSuggestorTests.testIsCurrentFiller() subclasses of thing test \n" + test
+            .getSubClasses(df.getOWLThing(), true));
+        System.out.println("FillerSuggestorTests.testIsCurrentFiller() subclasses of thing test\n" + test.getSubClasses(
+            df.getOWLThing(), false));
         assertTrue(fs.isCurrent(ca, oa, cb1, true));
         assertFalse(fs.isCurrent(ca, oa, cb, true));
         assertFalse(fs.isCurrent(ca, oa, df.getOWLObjectIntersectionOf(cb, df.getOWLObjectSomeValuesFrom(ob, cc)),

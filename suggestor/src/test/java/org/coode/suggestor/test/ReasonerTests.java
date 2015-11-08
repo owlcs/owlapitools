@@ -11,7 +11,6 @@ package org.coode.suggestor.test;
 
 import static org.junit.Assert.*;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
@@ -20,7 +19,6 @@ import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 @SuppressWarnings("javadoc")
-@Ignore
 public class ReasonerTests {
 
     public static final String JFACT_FACTORY = "uk.ac.manchester.cs.jfact.JFactFactory";
