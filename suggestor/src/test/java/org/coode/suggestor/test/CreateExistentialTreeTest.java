@@ -18,25 +18,26 @@ import java.util.Set;
 import org.coode.suggestor.api.FillerSuggestor;
 import org.coode.suggestor.api.PropertySuggestor;
 import org.coode.suggestor.impl.SuggestorFactory;
+import org.junit.Test;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.profiles.Profiles;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 @SuppressWarnings("javadoc")
-public class CreateExistentialTree extends AbstractSuggestorTest {
+public class CreateExistentialTreeTest extends AbstractSuggestorTest {
 
     private final Set<Node<OWLClass>> visited = new HashSet<>();
 
     @Override
     protected OWLOntology createOntology() throws OWLOntologyCreationException {
-        return mngr.loadOntologyFromOntologyDocument(IRI
-            .create("http://www.co-ode.org/ontologies/pizza/pizza.owl"));
+        return mngr.loadOntologyFromOntologyDocument(getClass().getResourceAsStream("/pizza.owl"));
     }
 
+    @Test
     public void testCreateTree() throws Exception {
         OWLOntology ont = createOntology();
-        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
+        OWLReasoner r = factory.createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         FillerSuggestor fs = fac.getFillerSuggestor();

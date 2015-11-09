@@ -10,20 +10,24 @@
 package org.coode.suggestor.test;
 
 import static org.junit.Assert.*;
+import static org.semanticweb.owlapi.util.OWLAPIStreamUtils.asSet;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.coode.suggestor.api.FillerSuggestor;
 import org.coode.suggestor.impl.SuggestorFactory;
+import org.junit.Test;
+import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.profiles.Profiles;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.vocab.OWLFacet;
 
+import com.google.common.collect.Sets;
+
 @SuppressWarnings("javadoc")
-public class FillerSuggestorTests extends AbstractSuggestorTest {
+public class FillerSuggestorTest extends AbstractSuggestorTest {
 
     private OWLClass ca = createClass("ca");
     private OWLClass ca1 = createClass("ca1");
@@ -45,30 +49,51 @@ public class FillerSuggestorTests extends AbstractSuggestorTest {
      */
     private OWLOntology createModelA() throws Exception {
         OWLOntology ont = createOntology();
-        List<OWLOntologyChange> changes = new ArrayList<>();
-        changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(cb1, cb)));
-        changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(ca1, ca)));
-        changes.add(new AddAxiom(ont, df
-            .getOWLSubObjectPropertyOfAxiom(ob1, ob)));
-        changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(ca, df.getOWLObjectSomeValuesFrom(oa, cb))));
-        changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(ca, df.getOWLDataSomeValuesFrom(da, df
-            .getIntegerOWLDatatype()))));
-        changes.add(new AddAxiom(ont, df.getOWLEquivalentClassesAxiom(cd, df.getOWLObjectSomeValuesFrom(oa, cb))));
-        changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(cd, df.getOWLObjectSomeValuesFrom(oa, ce))));
-        changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(ca, df.getOWLObjectSomeValuesFrom(oa, cb1))));
-        changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(ca, df.getOWLObjectSomeValuesFrom(ob1, cb))));
-        changes.add(new AddAxiom(ont, df.getOWLSubClassOfAxiom(cc1, cc)));
-        mngr.applyChanges(changes);
+        // Prefix(owl:=<http://www.w3.org/2002/07/owl#>)
+        // Prefix(rdf:=<http://www.w3.org/1999/02/22-rdf-syntax-ns#>)
+        // Prefix(xml:=<http://www.w3.org/XML/1998/namespace>)
+        // Prefix(xsd:=<http://www.w3.org/2001/XMLSchema#>)
+        // Prefix(rdfs:=<http://www.w3.org/2000/01/rdf-schema#>)
+        // Ontology(
+        //
+        // SubObjectPropertyOf(<ob1> <ob>)
+        //
+        // SubClassOf(<ca> ObjectSomeValuesFrom(<oa> <cb>))
+        // SubClassOf(<ca> ObjectSomeValuesFrom(<oa> <cb1>))
+        // SubClassOf(<ca> ObjectSomeValuesFrom(<ob1> <cb>))
+        // SubClassOf(<ca> DataSomeValuesFrom(<da> xsd:integer))
+        //
+        // SubClassOf(<ca1> <ca>)
+        //
+        // SubClassOf(<cb1> <cb>)
+        //
+        // SubClassOf(<cc1> <cc>)
+        //
+        // EquivalentClasses(<cd> ObjectSomeValuesFrom(<oa> <cb>))
+        // SubClassOf(<cd> ObjectSomeValuesFrom(<oa> <ce>))
+        // )
+        ont.add(df.getOWLSubClassOfAxiom(cb1, cb));
+        ont.add(df.getOWLSubClassOfAxiom(ca1, ca));
+        ont.add(df.getOWLSubObjectPropertyOfAxiom(ob1, ob));
+        ont.add(df.getOWLSubClassOfAxiom(ca, df.getOWLObjectSomeValuesFrom(oa, cb)));
+        ont.add(df.getOWLSubClassOfAxiom(ca, df.getOWLDataSomeValuesFrom(da, df.getIntegerOWLDatatype())));
+        ont.add(df.getOWLEquivalentClassesAxiom(cd, df.getOWLObjectSomeValuesFrom(oa, cb)));
+        ont.add(df.getOWLSubClassOfAxiom(cd, df.getOWLObjectSomeValuesFrom(oa, ce)));
+        ont.add(df.getOWLSubClassOfAxiom(ca, df.getOWLObjectSomeValuesFrom(oa, cb1)));
+        ont.add(df.getOWLSubClassOfAxiom(ca, df.getOWLObjectSomeValuesFrom(ob1, cb)));
+        ont.add(df.getOWLSubClassOfAxiom(cc1, cc));
+        ont.saveOntology(new FunctionalSyntaxDocumentFormat(), System.out);
         return ont;
     }
 
+    @Test
     public void testIsCurrentFiller() throws Exception {
         OWLOntology ont = createModelA();
-        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
+        OWLReasoner r = factory.createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         // PropertySuggestor ps = fac.getPropertySuggestor();
         FillerSuggestor fs = fac.getFillerSuggestor();
-        OWLReasoner test = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
+        OWLReasoner test = factory.createNonBufferingReasoner(ont);
         System.out.println("FillerSuggestorTests.testIsCurrentFiller() subclasses of thing test \n" + test
             .getSubClasses(df.getOWLThing(), true));
         System.out.println("FillerSuggestorTests.testIsCurrentFiller() subclasses of thing test\n" + test.getSubClasses(
@@ -108,9 +133,10 @@ public class FillerSuggestorTests extends AbstractSuggestorTest {
         return ont;
     }
 
+    @Test
     public void testIsPossibleFiller() throws Exception {
         OWLOntology ont = createModelB();
-        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
+        OWLReasoner r = factory.createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         // PropertySuggestor ps = fac.getPropertySuggestor();
         FillerSuggestor fs = fac.getFillerSuggestor();
@@ -124,9 +150,10 @@ public class FillerSuggestorTests extends AbstractSuggestorTest {
     /*
      * ca -> oa some cb ca -> ob some cc ca -> ob some cd ob -> oa cd -> cc
      */
+    @Test
     public void testGetCurrentFillers() throws Exception {
         OWLOntology ont = createOntology();
-        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
+        OWLReasoner r = factory.createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         // PropertySuggestor ps = fac.getPropertySuggestor();
         FillerSuggestor fs = fac.getFillerSuggestor();
@@ -153,14 +180,15 @@ public class FillerSuggestorTests extends AbstractSuggestorTest {
         assertEquals(2L, direct.nodes().count());
     }
 
+    @Test
     public void testGetPossibleFillers() throws Exception {
         OWLOntology ont = createModelA();
-        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
+        OWLReasoner r = factory.createNonBufferingReasoner(ont);
         SuggestorFactory fac = new SuggestorFactory(r);
         // PropertySuggestor ps = fac.getPropertySuggestor();
         FillerSuggestor fs = fac.getFillerSuggestor();
         NodeSet<OWLClass> pSuccessorsA = fs.getPossibleNamedFillers(ca, oa, null, false);
-        assertEquals(8L, pSuccessorsA.nodes().count());
+        assertEquals(Sets.newHashSet(ca, ca1, cb, cb1, cc, cc1, cd, ce), asSet(pSuccessorsA.entities()));
         assertTrue(pSuccessorsA.containsEntity(ca));
         assertTrue(pSuccessorsA.containsEntity(ca1));
         assertTrue(pSuccessorsA.containsEntity(cb));

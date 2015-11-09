@@ -9,32 +9,21 @@
  */
 package org.coode.suggestor.test;
 
-import org.junit.After;
-import org.junit.Before;
+import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
 @SuppressWarnings("javadoc")
 public abstract class AbstractSuggestorTest {
 
     private static final String BASE = "http://example.com#";
-    protected OWLOntologyManager mngr;
-    protected OWLDataFactory df;
-
-    @Before
-    public void setUp() {
-        mngr = OWLManager.createOWLOntologyManager();
-        df = mngr.getOWLDataFactory();
-    }
+    protected OWLOntologyManager mngr = OWLManager.createOWLOntologyManager();
+    protected OWLDataFactory df = OWLManager.getOWLDataFactory();
+    protected OWLReasonerFactory factory = new Reasoner.ReasonerFactory();// Profiles.instantiateFactory(Profiles.HermiT);
 
     protected OWLOntology createOntology() throws OWLOntologyCreationException {
         return mngr.createOntology();
-    }
-
-    @After
-    public void tearDown() {
-        mngr = null;
-        df = null;
     }
 
     protected OWLObjectProperty createObjectProperty(String name) {

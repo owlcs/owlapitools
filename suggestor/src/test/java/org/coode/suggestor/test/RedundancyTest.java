@@ -14,17 +14,18 @@ import static org.junit.Assert.*;
 import java.util.*;
 
 import org.coode.suggestor.util.ReasonerHelper;
+import org.junit.Test;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.profiles.Profiles;
 import org.semanticweb.owlapi.reasoner.BufferingMode;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 @SuppressWarnings("javadoc")
-public class RedundancyTests extends AbstractSuggestorTest {
-
+public class RedundancyTest extends AbstractSuggestorTest {
+    @Test
     public void testFilterClasses() throws Exception {
         OWLOntology ont = createOntology();
-        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
+        OWLReasoner r = factory.createNonBufferingReasoner(ont);
         // SuggestorFactory fac = new SuggestorFactory(r);
         // PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
@@ -54,10 +55,10 @@ public class RedundancyTests extends AbstractSuggestorTest {
             Collections.shuffle(data, ran);
         }
     }
-
+    @Test
     public void testFilters() throws Exception {
         OWLOntology ont = createOntology();
-        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
+        OWLReasoner r = factory.createNonBufferingReasoner(ont);
         // SuggestorFactory fac = new SuggestorFactory(r);
         // PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();

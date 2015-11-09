@@ -19,15 +19,14 @@ import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 @SuppressWarnings("javadoc")
-public class ReasonerTests {
+public class ReasonerTests extends AbstractSuggestorTest {
 
-    public static final String JFACT_FACTORY = "uk.ac.manchester.cs.jfact.JFactFactory";
 
     @Test
     public void testReasoner() throws Exception {
         OWLOntologyManager mngr = OWLManager.createOWLOntologyManager();
         OWLOntology ont = mngr.createOntology();
-        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
+        OWLReasoner r = factory.createNonBufferingReasoner(ont);
         OWLDataFactory df = mngr.getOWLDataFactory();
         OWLClass a = df.getOWLClass(IRI.create("http://example.com/a"));
         OWLClass b = df.getOWLClass(IRI.create("http://example.com/b"));
@@ -56,7 +55,7 @@ public class ReasonerTests {
     public void testReasoner4() throws Exception {
         OWLOntologyManager mngr = OWLManager.createOWLOntologyManager();
         OWLOntology ont = mngr.createOntology();
-        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
+        OWLReasoner r = factory.createNonBufferingReasoner(ont);
         assertTrue(r.getTopDataPropertyNode().entities().count() > 0);
     }
 }

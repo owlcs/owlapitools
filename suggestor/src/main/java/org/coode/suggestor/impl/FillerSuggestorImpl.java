@@ -12,6 +12,7 @@ package org.coode.suggestor.impl;
 import static org.semanticweb.owlapi.util.OWLAPIStreamUtils.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -216,10 +217,11 @@ class FillerSuggestorImpl implements FillerSuggestor {
 
         protected NodeSet<? extends OWLPropertyRange> createNodeSet(Stream<Node<? extends OWLPropertyRange>> nodes,
             OWLPropertyExpression p) {
-            if (p instanceof OWLClassExpression) {
-                return new OWLClassNodeSet(nodes.map(n -> (Node<OWLClass>) n));
+            if (p.isOWLDataProperty()) {
+                return new OWLDatatypeNodeSet(nodes.map(n -> (Node<OWLDatatype>) n));
             }
-            return new OWLDatatypeNodeSet(nodes.map(n -> (Node<OWLDatatype>) n));
+            List<Node<? extends OWLPropertyRange>> l = asList(nodes);
+            return new OWLClassNodeSet(l.stream().map(n -> (Node<OWLClass>) n));
         }
 
         /**
@@ -257,11 +259,13 @@ class FillerSuggestorImpl implements FillerSuggestor {
             RootNode root = reasoner.getRoot(c);
             if (p.isOWLDataProperty()) {
                 Stream<Node<? extends OWLPropertyRange>> toReturn = dataProperties(reasoner, root)
+                    .filter(p1 -> p1 != null)
                     .flatMap(p1 -> dataFillers(p1, reasoner, root))
                     .map(pointer -> dataLabel(direct, reasoner, pointer));
                 return createNodeSet(toReturn, p);
             }
             Stream<Node<? extends OWLPropertyRange>> toReturn = objectProperties(reasoner, root)
+                .filter(p1 -> p1 != null)
                 .flatMap(p1 -> objectFillers(p1, reasoner, root))
                 .map(pointer -> objectLabel(direct, reasoner, pointer));
             return createNodeSet(toReturn, p);

@@ -19,7 +19,7 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 @SuppressWarnings("javadoc")
-public class OWLSandbox {
+public class OWLSandboxTest {
     @Test
     public void testNNF() {
         OWLOntologyManager mngr = OWLManager.createOWLOntologyManager();

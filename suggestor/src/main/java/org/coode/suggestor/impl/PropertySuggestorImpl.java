@@ -198,7 +198,7 @@ class PropertySuggestorImpl implements PropertySuggestor {
 
         protected <T extends OWLPropertyExpression> NodeSet<T> getDirectSubs(T p) {
             return p.isDataPropertyExpression() ? (NodeSet<T>) r.getSubDataProperties(p.asOWLDataProperty(), true)
-                : (NodeSet<T>) r.getSubObjectProperties(p.asOWLObjectProperty(), true);
+                : (NodeSet<T>) r.getSubObjectProperties(p.asObjectPropertyExpression(), true);
         }
 
         protected <P extends OWLPropertyExpression> NodeSet<P> createNodeSet(Stream<Node<P>> nodes, P p) {

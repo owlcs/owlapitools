@@ -14,6 +14,7 @@ import static org.junit.Assert.*;
 import java.util.Arrays;
 
 import org.coode.suggestor.util.ReasonerHelper;
+import org.junit.Test;
 import org.semanticweb.owlapi.model.AddAxiom;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLDataProperty;
@@ -25,11 +26,11 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.vocab.OWLFacet;
 
 @SuppressWarnings("javadoc")
-public class UtilTests extends AbstractSuggestorTest {
-
+public class UtilTest extends AbstractSuggestorTest {
+    @Test
     public void testGetSubDatatypes() throws Exception {
         OWLOntology ont = createOntology();
-        OWLReasoner r = Profiles.instantiateFactory(Profiles.JFact).createNonBufferingReasoner(ont);
+        OWLReasoner r = factory.createNonBufferingReasoner(ont);
         // SuggestorFactory fac = new SuggestorFactory(r);
         // PropertySuggestor ps = fac.getPropertySuggestor();
         // FillerSuggestor fs = fac.getFillerSuggestor();
@@ -71,6 +72,4 @@ public class UtilTests extends AbstractSuggestorTest {
             df.getOWLDatatypeRestriction(integer,
                 df.getOWLFacetRestriction(OWLFacet.MIN_INCLUSIVE, 2))));
     }
-
-    public void testAssertedRange() {}
 }
