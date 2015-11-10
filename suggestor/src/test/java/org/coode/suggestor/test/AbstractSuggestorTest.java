@@ -13,6 +13,7 @@ import org.semanticweb.HermiT.Reasoner;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
+import org.semanticweb.owlapitools.cachedreasoner.CachedReasonerFactory;
 
 @SuppressWarnings("javadoc")
 public abstract class AbstractSuggestorTest {
@@ -20,7 +21,7 @@ public abstract class AbstractSuggestorTest {
     private static final String BASE = "http://example.com#";
     protected OWLOntologyManager mngr = OWLManager.createOWLOntologyManager();
     protected OWLDataFactory df = OWLManager.getOWLDataFactory();
-    protected OWLReasonerFactory factory = new Reasoner.ReasonerFactory();// Profiles.instantiateFactory(Profiles.HermiT);
+    protected OWLReasonerFactory factory = new CachedReasonerFactory(new Reasoner.ReasonerFactory());
 
     protected OWLOntology createOntology() throws OWLOntologyCreationException {
         return mngr.createOntology();

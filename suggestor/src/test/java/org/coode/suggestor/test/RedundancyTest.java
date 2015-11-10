@@ -16,7 +16,6 @@ import java.util.*;
 import org.coode.suggestor.util.ReasonerHelper;
 import org.junit.Test;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.profiles.Profiles;
 import org.semanticweb.owlapi.reasoner.BufferingMode;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 

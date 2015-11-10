@@ -9,4 +9,11 @@
 		<version>5.0.0-SNAPSHOT</version>
 		<relativePath>../</relativePath>
 	</parent>
+	<dependencies>
+		<dependency>
+			<groupId>net.sourceforge.owlapi</groupId>
+			<artifactId>owlapitools-concurrentimpl</artifactId>
+			<version>5.0.0-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 </project>

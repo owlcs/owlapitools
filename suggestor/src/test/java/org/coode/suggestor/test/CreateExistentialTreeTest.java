@@ -20,7 +20,6 @@ import org.coode.suggestor.api.PropertySuggestor;
 import org.coode.suggestor.impl.SuggestorFactory;
 import org.junit.Test;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.profiles.Profiles;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
