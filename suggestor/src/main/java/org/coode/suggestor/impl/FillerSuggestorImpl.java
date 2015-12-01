@@ -165,7 +165,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
             if (!match) {
                 return false;
             }
-            return getDirectSubs(f).nodes()
+            return getDirectSubs(f)
                 .map(node -> node.getRepresentativeElement())
                 .anyMatch(e -> isMatch(c, p, e));
         }
@@ -187,7 +187,7 @@ class FillerSuggestorImpl implements FillerSuggestor {
         public NodeSet<? extends OWLPropertyRange> getRoots(OWLClassExpression c, OWLPropertyExpression p,
             OWLPropertyRange start, boolean direct) {
             Set<Node<? extends OWLPropertyRange>> nodes = new HashSet<>();
-            getDirectSubs(start).nodes()
+            getDirectSubs(start)
                 .filter(sub -> isMatch(c, p, sub.getRepresentativeElement()))
                 .forEach(sub -> collect(c, p, direct, nodes, sub));
             return createNodeSet(nodes.stream(), p);
@@ -201,11 +201,12 @@ class FillerSuggestorImpl implements FillerSuggestor {
             }
         }
 
-        protected NodeSet<? extends OWLPropertyRange> getDirectSubs(OWLPropertyRange f) {
+        protected <T extends OWLPropertyRange> Stream<Node<T>> getDirectSubs(T f) {
             if (f instanceof OWLClassExpression) {
-                return r.getSubClasses((OWLClassExpression) f, true);
+                return r.getSubClasses((OWLClassExpression) f, true).nodes().filter(n -> n.getSize() > 0).map(
+                    n -> (Node<T>) n);
             }
-            return helper.getSubtypes((OWLDataRange) f);
+            return helper.getSubtypes((OWLDataRange) f).nodes().filter(n -> n.getSize() > 0).map(n -> (Node<T>) n);
         }
 
         protected Node<? extends OWLPropertyRange> getEquivalents(OWLPropertyRange f) {

@@ -22,6 +22,7 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.reasoner.knowledgeexploration.OWLKnowledgeExplorerReasoner;
 
 @SuppressWarnings("javadoc")
 public class PropertySuggestorTest extends AbstractSuggestorTest {
@@ -235,26 +236,32 @@ public class PropertySuggestorTest extends AbstractSuggestorTest {
         // FillerSuggestor fs = fac.getFillerSuggestor();
         NodeSet<OWLObjectPropertyExpression> specific = ps.getPossibleProperties(ca, df.getOWLTopObjectProperty(),
             true);
-        assertEquals(3L, specific.nodes().count());
-        assertTrue(specific.containsEntity(op));
-        // assertTrue(specific.containsEntity(df.getOWLObjectInverseOf(op)));
-        assertTrue(specific.containsEntity(or));
-        // assertTrue(specific.containsEntity(df.getOWLObjectInverseOf(or)));
-        assertTrue(specific.containsEntity(ot));
-        // assertTrue(specific.containsEntity(df.getOWLObjectInverseOf(ot)));
-        // assertTrue(specific.containsEntity(df.getOWLObjectInverseOf(os)));
         NodeSet<OWLObjectPropertyExpression> all = ps.getPossibleProperties(ca, df.getOWLTopObjectProperty(),
             false);
-        assertEquals(4L, all.nodes().count());
+        // On JFact you get back inverses too
+        if (r instanceof OWLKnowledgeExplorerReasoner || factory.getReasonerName().equals("JFact cached")) {
+            assertEquals(7L, specific.nodes().count());
+            assertEquals(9L, all.nodes().count());
+            assertTrue(specific.containsEntity(df.getOWLObjectInverseOf(ot)));
+            assertTrue(specific.containsEntity(df.getOWLObjectInverseOf(os)));
+            assertTrue(specific.containsEntity(df.getOWLObjectInverseOf(op)));
+            assertTrue(specific.containsEntity(df.getOWLObjectInverseOf(or)));
+            assertTrue(all.containsEntity(df.getOWLObjectInverseOf(op)));
+            assertTrue(all.containsEntity(df.getOWLObjectInverseOf(oq)));
+            assertTrue(all.containsEntity(df.getOWLObjectInverseOf(or)));
+            assertTrue(all.containsEntity(df.getOWLObjectInverseOf(os)));
+            assertTrue(all.containsEntity(df.getOWLObjectInverseOf(ot)));
+        } else {
+            assertEquals(3L, specific.nodes().count());
+            assertEquals(4L, all.nodes().count());
+        }
+        assertTrue(specific.containsEntity(op));
+        assertTrue(specific.containsEntity(or));
+        assertTrue(specific.containsEntity(ot));
         assertTrue(all.containsEntity(op));
-        // assertTrue(all.containsEntity(df.getOWLObjectInverseOf(op)));
         assertTrue(all.containsEntity(oq));
-        // assertTrue(all.containsEntity(df.getOWLObjectInverseOf(oq)));
         assertTrue(all.containsEntity(or));
-        // assertTrue(all.containsEntity(df.getOWLObjectInverseOf(or)));
-        // assertTrue(all.containsEntity(df.getOWLObjectInverseOf(os)));
         assertTrue(all.containsEntity(ot));
-        // assertTrue(all.containsEntity(df.getOWLObjectInverseOf(ot)));
     }
 
     @Test
