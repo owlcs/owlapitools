@@ -22,7 +22,6 @@
 	<url>http://owlapitools.sourceforge.net/</url>
 	<modules>
 		<module>suggestor</module>
-		<module>atomicdecomposition</module>
 		<module>concurrentimpl</module>
 	</modules>
 
