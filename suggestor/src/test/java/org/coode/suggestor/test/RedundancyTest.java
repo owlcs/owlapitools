@@ -21,13 +21,11 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 @SuppressWarnings("javadoc")
 public class RedundancyTest extends AbstractSuggestorTest {
+
     @Test
     public void testFilterClasses() throws Exception {
         OWLOntology ont = createOntology();
         OWLReasoner r = factory.createNonBufferingReasoner(ont);
-        // SuggestorFactory fac = new SuggestorFactory(r);
-        // PropertySuggestor ps = fac.getPropertySuggestor();
-        // FillerSuggestor fs = fac.getFillerSuggestor();
         OWLClass a1 = createClass("a1");
         OWLClass a2 = createClass("a2");
         OWLClass a3 = createClass("a3");
@@ -41,53 +39,43 @@ public class RedundancyTest extends AbstractSuggestorTest {
         mngr.applyChange(new AddAxiom(ont, df.getOWLSubClassOfAxiom(b2, b1)));
         ReasonerHelper helper = new ReasonerHelper(r);
         Random ran = new Random(2);
-        List<OWLClassExpression> data = Arrays.<OWLClassExpression> asList(a2,
-            b2, a3, b1, a1);
+        List<OWLClassExpression> data = Arrays.<OWLClassExpression> asList(a2, b2, a3, b1, a1);
         for (int i = 0; i < 25; i++) {
-            System.out.println(data);
             Set<OWLClassExpression> test = new LinkedHashSet<>(data);
-            Set<OWLClassExpression> result = helper
-                .filterClassExpressions(test);
-            assertEquals(
-                new HashSet<OWLClassExpression>(Arrays.asList(a3, b2)),
-                result);
+            Set<OWLClassExpression> result = helper.filterClassExpressions(test);
+            assertEquals(new HashSet<OWLClassExpression>(Arrays.asList(a3, b2)), result);
             Collections.shuffle(data, ran);
         }
     }
+
     @Test
     public void testFilters() throws Exception {
         OWLOntology ont = createOntology();
         OWLReasoner r = factory.createNonBufferingReasoner(ont);
-        // SuggestorFactory fac = new SuggestorFactory(r);
-        // PropertySuggestor ps = fac.getPropertySuggestor();
-        // FillerSuggestor fs = fac.getFillerSuggestor();
         OWLObjectProperty q = createObjectProperty("q");
         OWLObjectProperty p = createObjectProperty("p");
         OWLClass a = createClass("a");
         OWLClass b = createClass("b");
-        OWLObjectSomeValuesFrom pSomeA = df.getOWLObjectSomeValuesFrom(p,
-            a);
-        OWLObjectSomeValuesFrom qSomeA = df.getOWLObjectSomeValuesFrom(q,
-            a);
-        OWLObjectSomeValuesFrom pSomeB = df.getOWLObjectSomeValuesFrom(p,
-            b);
-        OWLObjectSomeValuesFrom qSomeB = df.getOWLObjectSomeValuesFrom(q,
-            b);
-        mngr.applyChange(new AddAxiom(ont, df.getOWLSubObjectPropertyOfAxiom(p,
-            q)));
+        OWLObjectSomeValuesFrom pSomeA = df.getOWLObjectSomeValuesFrom(p, a);
+        OWLObjectSomeValuesFrom qSomeA = df.getOWLObjectSomeValuesFrom(q, a);
+        OWLObjectSomeValuesFrom pSomeB = df.getOWLObjectSomeValuesFrom(p, b);
+        OWLObjectSomeValuesFrom qSomeB = df.getOWLObjectSomeValuesFrom(q, b);
+        mngr.applyChange(new AddAxiom(ont, df.getOWLSubObjectPropertyOfAxiom(p, q)));
         mngr.applyChange(new AddAxiom(ont, df.getOWLSubClassOfAxiom(a, b)));
         if (r.getBufferingMode().equals(BufferingMode.BUFFERING)) {
             r.flush();
         }
         Set<OWLClassExpression> expressions = new HashSet<>();
         expressions.add(pSomeA);
-        expressions.add(qSomeA); // redundant as p some a is more specific
-        expressions.add(pSomeB); // redundant as p some a is more specific
-        expressions.add(qSomeB); // redundant as p some b and p some a are more
-                                 // specific
+        // redundant as p some a is more specific
+        expressions.add(qSomeA);
+        // redundant as p some a is more specific
+        expressions.add(pSomeB);
+        // redundant as p some b and p some a are more
+        // specific
+        expressions.add(qSomeB);
         ReasonerHelper helper = new ReasonerHelper(r);
-        Set<OWLClassExpression> nonRedundantExpressions = helper
-            .filterClassExpressions(expressions);
+        Set<OWLClassExpression> nonRedundantExpressions = helper.filterClassExpressions(expressions);
         assertEquals(1, nonRedundantExpressions.size());
         assertTrue(nonRedundantExpressions.contains(pSomeA));
     }

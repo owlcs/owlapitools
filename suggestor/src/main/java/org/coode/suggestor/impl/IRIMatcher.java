@@ -20,7 +20,7 @@ public class IRIMatcher implements OWLAnnotationValueVisitorEx<Boolean> {
 
     @Override
     public Boolean visit(IRI iri) {
-        return iri.equals(propertyIRI);
+        return Boolean.valueOf(iri.equals(propertyIRI));
     }
 
     @Override
@@ -31,6 +31,6 @@ public class IRIMatcher implements OWLAnnotationValueVisitorEx<Boolean> {
     @Override
     public Boolean visit(OWLLiteral owlLiteral) {
         IRI vIRI = IRI.create(owlLiteral.getLiteral());
-        return vIRI.equals(propertyIRI);
+        return Boolean.valueOf(vIRI.equals(propertyIRI));
     }
 }

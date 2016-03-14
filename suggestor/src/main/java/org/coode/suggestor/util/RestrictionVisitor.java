@@ -37,7 +37,7 @@ class RestrictionVisitor implements OWLClassExpressionVisitor {
     }
 
     private void handleRestriction(OWLDataRestriction restr) {
-        if (type == null || type.isAssignableFrom(restr.getClass())) {
+        if (type == null || restr.getClass().isInstance(type)) {
             if (prop == null || restr.getProperty().equals(prop)) {
                 restrs.add(restr);
             }
@@ -45,7 +45,7 @@ class RestrictionVisitor implements OWLClassExpressionVisitor {
     }
 
     private void handleRestriction(OWLObjectRestriction restr) {
-        if (type == null || type.isAssignableFrom(restr.getClass())) {
+        if (type == null || restr.getClass().isInstance(type)) {
             if (prop == null || restr.getProperty().equals(prop)) {
                 restrs.add(restr);
             }

@@ -9,10 +9,7 @@
  */
 package org.coode.suggestor.test;
 
-import static org.semanticweb.owlapi.util.OWLAPIStreamUtils.asList;
-
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.coode.suggestor.api.FillerSuggestor;
@@ -40,21 +37,17 @@ public class CreateExistentialTreeTest extends AbstractSuggestorTest {
         SuggestorFactory fac = new SuggestorFactory(r);
         PropertySuggestor ps = fac.getPropertySuggestor();
         FillerSuggestor fs = fac.getFillerSuggestor();
-        long start = System.currentTimeMillis();
         for (int i = 0; i < 20; i++) {
             visited.clear();
             printClass(r.getTopClassNode(), 0, ps, r, fs);
         }
-        long end = System.currentTimeMillis();
-        System.out.println("Complete in " + (end - start) + "ms");
     }
 
     private void printClass(Node<OWLClass> cNode, int indent, PropertySuggestor ps, OWLReasoner r, FillerSuggestor fs) {
         print(cNode, indent);
         if (visited.add(cNode)) {
             OWLClassExpression c = cNode.getRepresentativeElement();
-            for (Node<OWLObjectPropertyExpression> p : ps
-                .getCurrentObjectProperties(c, true)) {
+            for (Node<OWLObjectPropertyExpression> p : ps.getCurrentObjectProperties(c, true)) {
                 printProperty(c, p, indent + 3, fs);
             }
             for (Node<OWLClass> sub : r.getSubClasses(c, true)) {
@@ -73,26 +66,26 @@ public class CreateExistentialTreeTest extends AbstractSuggestorTest {
         }
     }
 
+    @SuppressWarnings("unused")
     private static void print(Node<? extends OWLObject> node, int indent) {
-        System.out.println();
-        for (int i = 0; i < indent; i++) {
-            System.out.print("    ");
-        }
-        List<? extends OWLObject> l = asList(node.entities().sorted());
-        if (l.size() > 0) {
-            out(l.get(0));
-            if (l.size() > 1) {
-                System.out.print(" == ");
-                l.stream().skip(1).forEach(s -> out(s));
-            }
-        }
+        // System.out.println();
+        // for (int i = 0; i < indent; i++) {
+        // System.out.print(" ");
+        // }
+        // List<? extends OWLObject> l = asList(node.entities().sorted());
+        // if (l.size() > 0) {
+        // out(l.get(0));
+        // if (l.size() > 1) {
+        // System.out.print(" == ");
+        // l.stream().skip(1).forEach(s -> out(s));
+        // }
+        // }
     }
-
-    private static void out(OWLObject o) {
-        if (o instanceof OWLEntity) {
-            System.out.print(((OWLEntity) o).getIRI().getShortForm());
-        } else {
-            System.out.print(o);
-        }
-    }
+    // private static void out(OWLObject o) {
+    // if (o instanceof OWLEntity) {
+    // System.out.print(((OWLEntity) o).getIRI().getShortForm());
+    // } else {
+    // System.out.print(o);
+    // }
+    // }
 }

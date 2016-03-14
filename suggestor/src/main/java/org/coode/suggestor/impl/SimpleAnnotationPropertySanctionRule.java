@@ -23,8 +23,7 @@ import org.semanticweb.owlapi.search.Searcher;
  * constructor) matching the URI of the property. If recursive is true, then all
  * ancestors of the class are also checked.
  */
-public class SimpleAnnotationPropertySanctionRule implements
-    PropertySanctionRule {
+public class SimpleAnnotationPropertySanctionRule implements PropertySanctionRule {
 
     private OWLReasoner r;
     private final OWLAnnotationProperty annotationProperty;
@@ -36,8 +35,7 @@ public class SimpleAnnotationPropertySanctionRule implements
      * @param recursive
      *        true if recursive
      */
-    public SimpleAnnotationPropertySanctionRule(
-        OWLAnnotationProperty annotationProperty, boolean recursive) {
+    public SimpleAnnotationPropertySanctionRule(OWLAnnotationProperty annotationProperty, boolean recursive) {
         this.annotationProperty = annotationProperty;
         this.recursive = recursive;
     }
@@ -56,8 +54,7 @@ public class SimpleAnnotationPropertySanctionRule implements
         if (p.isAnonymous()) {
             return false;
         }
-        if (!c.isAnonymous()
-            && hasSanctionAnnotation(c.asOWLClass(), (OWLProperty) p)) {
+        if (!c.isAnonymous() && hasSanctionAnnotation(c.asOWLClass(), (OWLProperty) p)) {
             return true;
         }
         if (!recursive) {
@@ -69,8 +66,9 @@ public class SimpleAnnotationPropertySanctionRule implements
 
     private boolean hasSanctionAnnotation(OWLClass c, OWLProperty p) {
         IRIMatcher iriMatcher = new IRIMatcher(p.getIRI());
-        Stream<OWLAnnotationAssertionAxiom> axioms = r.getRootOntology()
-            .annotationAssertionAxioms(c.getIRI(), Imports.INCLUDED);
-        return Searcher.annotations(axioms, annotationProperty).anyMatch(a -> a.getValue().accept(iriMatcher));
+        Stream<OWLAnnotationAssertionAxiom> axioms = r.getRootOntology().annotationAssertionAxioms(c.getIRI(),
+            Imports.INCLUDED);
+        return Searcher.annotations(axioms, annotationProperty).anyMatch(a -> a.getValue().accept(iriMatcher)
+            .booleanValue());
     }
 }

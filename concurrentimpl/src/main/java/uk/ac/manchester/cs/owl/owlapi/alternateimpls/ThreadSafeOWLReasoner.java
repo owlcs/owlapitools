@@ -40,30 +40,20 @@ package uk.ac.manchester.cs.owl.owlapi.alternateimpls;
 
 import static org.semanticweb.owlapi.util.OWLAPIPreconditions.checkNotNull;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.*;
 import org.semanticweb.owlapi.util.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** @author ignazio a threadsafe wrapper for OWLReasoners */
 public class ThreadSafeOWLReasoner implements OWLReasoner {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ThreadSafeOWLReasoner.class);
     private final OWLReasoner delegate;
-    private boolean log = true;
-
-    /**
-     * @param reasoner
-     *        the reasoner to wrap
-     * @param log
-     *        true if logging is required
-     */
-    public ThreadSafeOWLReasoner(OWLReasoner reasoner, boolean log) {
-        this(reasoner);
-        this.log = log;
-    }
 
     /**
      * @param reasoner
@@ -74,497 +64,346 @@ public class ThreadSafeOWLReasoner implements OWLReasoner {
         delegate = reasoner;
     }
 
-    private void log(String s, Object... objects) {
-        if (log) {
-            System.out.print(Thread.currentThread().getName()
-                + " reasoner." + s + (objects.length == 0 ? "" : Arrays.toString(objects)) + " ... ");
+    private static void log(String s, Object object, boolean b) {
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info(Thread.currentThread().getName() + " reasoner." + s + object + ", " + b + " ... ");
         }
     }
 
-    private <T> T logresult(T t) {
-        if (log) {
-            System.out.println(t);
-            System.out.flush();
+    private static void log(String s, Object object1, Object object2) {
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info(Thread.currentThread().getName() + " reasoner." + s + object1 + ", " + object2 + " ... ");
+        }
+    }
+
+    private static void log(String s, Object object) {
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info(Thread.currentThread().getName() + " reasoner." + s + object + " ... ");
+        }
+    }
+
+    private static void log(String s) {
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info(Thread.currentThread().getName() + " reasoner." + s + " ... ");
+        }
+    }
+
+    private static <T> T logresult(T t) {
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info(t.toString());
+        }
+        return t;
+    }
+
+    private static boolean logresult(boolean t) {
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info(Boolean.toString(t));
         }
         return t;
     }
 
     @Override
-    public String getReasonerName() {
-        synchronized (delegate) {
-            log("getReasonerName()");
-            return logresult(delegate.getReasonerName());
-        }
+    public synchronized String getReasonerName() {
+        log("getReasonerName()");
+        return logresult(delegate.getReasonerName());
     }
 
     @Override
-    public Version getReasonerVersion() {
-        synchronized (delegate) {
-            log("getReasonerVersion()");
-            return logresult(delegate.getReasonerVersion());
-        }
+    public synchronized Version getReasonerVersion() {
+        log("getReasonerVersion()");
+        return logresult(delegate.getReasonerVersion());
     }
 
     @Override
-    public BufferingMode getBufferingMode() {
-        synchronized (delegate) {
-            log("getBufferingMode()");
-            return logresult(delegate.getBufferingMode());
-        }
+    public synchronized BufferingMode getBufferingMode() {
+        log("getBufferingMode()");
+        return logresult(delegate.getBufferingMode());
     }
 
     @Override
-    public void flush() {
-        synchronized (delegate) {
-            log("flush()");
-            delegate.flush();
-        }
+    public synchronized void flush() {
+        log("flush()");
+        delegate.flush();
     }
 
     @Override
-    public List<OWLOntologyChange> getPendingChanges() {
-        synchronized (delegate) {
-            log("getPendingChanges()");
-            return logresult(delegate.getPendingChanges());
-        }
+    public synchronized List<OWLOntologyChange> getPendingChanges() {
+        log("getPendingChanges()");
+        return logresult(delegate.getPendingChanges());
     }
 
     @Override
-    public Set<OWLAxiom> getPendingAxiomAdditions() {
-        synchronized (delegate) {
-            log("getPendingAxiomAdditions()");
-            return logresult(delegate.getPendingAxiomAdditions());
-        }
+    public synchronized Set<OWLAxiom> getPendingAxiomAdditions() {
+        log("getPendingAxiomAdditions()");
+        return logresult(delegate.getPendingAxiomAdditions());
     }
 
     @Override
-    public Set<OWLAxiom> getPendingAxiomRemovals() {
-        synchronized (delegate) {
-            log("getPendingAxiomRemovals()");
-            return logresult(delegate.getPendingAxiomRemovals());
-        }
+    public synchronized Set<OWLAxiom> getPendingAxiomRemovals() {
+        log("getPendingAxiomRemovals()");
+        return logresult(delegate.getPendingAxiomRemovals());
     }
 
     @Override
-    public OWLOntology getRootOntology() {
-        synchronized (delegate) {
-            log("getRootOntology()");
-            return logresult(delegate.getRootOntology());
-        }
+    public synchronized OWLOntology getRootOntology() {
+        log("getRootOntology()");
+        return logresult(delegate.getRootOntology());
     }
 
     @Override
-    public void interrupt() {
-        synchronized (delegate) {
-            log("interrupt()");
-            delegate.interrupt();
-        }
+    public synchronized void interrupt() {
+        log("interrupt()");
+        delegate.interrupt();
     }
 
     @Override
-    public void precomputeInferences(InferenceType... inferenceTypes)
-        throws ReasonerInterruptedException, TimeOutException,
-        InconsistentOntologyException {
-        synchronized (delegate) {
-            log("precomputeInferences()", inferenceTypes);
-            delegate.precomputeInferences(inferenceTypes);
-        }
+    public synchronized void precomputeInferences(InferenceType... inferenceTypes) {
+        log("precomputeInferences()", inferenceTypes);
+        delegate.precomputeInferences(inferenceTypes);
     }
 
     @Override
-    public boolean isPrecomputed(InferenceType inferenceType) {
-        synchronized (delegate) {
-            log("isPrecomputed() " + inferenceType);
-            return logresult(delegate.isPrecomputed(inferenceType));
-        }
+    public synchronized boolean isPrecomputed(InferenceType inferenceType) {
+        log("isPrecomputed() " + inferenceType);
+        return logresult(delegate.isPrecomputed(inferenceType));
     }
 
     @Override
-    public Set<InferenceType> getPrecomputableInferenceTypes() {
-        synchronized (delegate) {
-            log("getPrecomputableInferenceTypes()");
-            return logresult(delegate.getPrecomputableInferenceTypes());
-        }
+    public synchronized Set<InferenceType> getPrecomputableInferenceTypes() {
+        log("getPrecomputableInferenceTypes()");
+        return logresult(delegate.getPrecomputableInferenceTypes());
     }
 
     @Override
-    public boolean isConsistent() throws ReasonerInterruptedException,
-        TimeOutException {
-        synchronized (delegate) {
-            log("isConsistent()");
-            return logresult(delegate.isConsistent());
-        }
+    public synchronized boolean isConsistent() {
+        log("isConsistent()");
+        return logresult(delegate.isConsistent());
     }
 
     @Override
-    public boolean isSatisfiable(OWLClassExpression classExpression)
-        throws ReasonerInterruptedException, TimeOutException,
-        ClassExpressionNotInProfileException, FreshEntitiesException,
-        InconsistentOntologyException {
-        synchronized (delegate) {
-            log("isSatisfiable()", classExpression);
-            return logresult(delegate.isSatisfiable(classExpression));
-        }
+    public synchronized boolean isSatisfiable(OWLClassExpression classExpression) {
+        log("isSatisfiable()", classExpression);
+        return logresult(delegate.isSatisfiable(classExpression));
     }
 
     @Override
-    public Node<OWLClass> getUnsatisfiableClasses()
-        throws ReasonerInterruptedException, TimeOutException,
-        InconsistentOntologyException {
-        synchronized (delegate) {
-            log("getUnsatisfiableClasses()");
-            return logresult(delegate.getUnsatisfiableClasses());
-        }
+    public synchronized Node<OWLClass> getUnsatisfiableClasses() {
+        log("getUnsatisfiableClasses()");
+        return logresult(delegate.getUnsatisfiableClasses());
     }
 
     @Override
-    public boolean isEntailed(OWLAxiom axiom)
-        throws ReasonerInterruptedException,
-        UnsupportedEntailmentTypeException, TimeOutException,
-        AxiomNotInProfileException, FreshEntitiesException,
-        InconsistentOntologyException {
-        synchronized (delegate) {
-            log("isEntailed()", axiom);
-            return logresult(delegate.isEntailed(axiom));
-        }
+    public synchronized boolean isEntailed(OWLAxiom axiom) {
+        log("isEntailed()", axiom);
+        return logresult(delegate.isEntailed(axiom));
     }
 
     @Override
-    public boolean isEntailed(Set<? extends OWLAxiom> axioms)
-        throws ReasonerInterruptedException,
-        UnsupportedEntailmentTypeException, TimeOutException,
-        AxiomNotInProfileException, FreshEntitiesException,
-        InconsistentOntologyException {
-        synchronized (delegate) {
-            log("isEntailed()", axioms);
-            return logresult(delegate.isEntailed(axioms));
-        }
+    public synchronized boolean isEntailed(Set<? extends OWLAxiom> axioms) {
+        log("isEntailed()", axioms);
+        return logresult(delegate.isEntailed(axioms));
     }
 
     @Override
-    public boolean isEntailmentCheckingSupported(AxiomType<?> axiomType) {
-        synchronized (delegate) {
-            log("isEntailmentCheckingSupported()", axiomType);
-            return logresult(delegate.isEntailmentCheckingSupported(axiomType));
-        }
+    public synchronized boolean isEntailmentCheckingSupported(AxiomType<?> axiomType) {
+        log("isEntailmentCheckingSupported()", axiomType);
+        return logresult(delegate.isEntailmentCheckingSupported(axiomType));
     }
 
     @Override
-    public Node<OWLClass> getTopClassNode() {
-        synchronized (delegate) {
-            log("getTopClassNode()");
-            return logresult(delegate.getTopClassNode());
-        }
+    public synchronized Node<OWLClass> getTopClassNode() {
+        log("getTopClassNode()");
+        return logresult(delegate.getTopClassNode());
     }
 
     @Override
-    public Node<OWLClass> getBottomClassNode() {
-        synchronized (delegate) {
-            log("getBottomClassNode()");
-            return logresult(delegate.getBottomClassNode());
-        }
+    public synchronized Node<OWLClass> getBottomClassNode() {
+        log("getBottomClassNode()");
+        return logresult(delegate.getBottomClassNode());
     }
 
     @Override
-    public NodeSet<OWLClass> getSubClasses(OWLClassExpression ce, boolean direct)
-        throws ReasonerInterruptedException, TimeOutException,
-        FreshEntitiesException, InconsistentOntologyException,
-        ClassExpressionNotInProfileException {
-        synchronized (delegate) {
-            log("getSubClasses()", ce, direct);
-            return logresult(delegate.getSubClasses(ce, direct));
-        }
+    public synchronized NodeSet<OWLClass> getSubClasses(OWLClassExpression ce, boolean direct) {
+        log("getSubClasses()", ce, direct);
+        return logresult(delegate.getSubClasses(ce, direct));
     }
 
     @Override
-    public NodeSet<OWLClass> getSuperClasses(OWLClassExpression ce,
-        boolean direct) throws InconsistentOntologyException,
-            ClassExpressionNotInProfileException, FreshEntitiesException,
-            ReasonerInterruptedException, TimeOutException {
-        synchronized (delegate) {
-            log("getSuperClasses()", ce, direct);
-            return logresult(delegate.getSuperClasses(ce, direct));
-        }
+    public synchronized NodeSet<OWLClass> getSuperClasses(OWLClassExpression ce, boolean direct) {
+        log("getSuperClasses()", ce, direct);
+        return logresult(delegate.getSuperClasses(ce, direct));
     }
 
     @Override
-    public Node<OWLClass> getEquivalentClasses(OWLClassExpression ce)
-        throws InconsistentOntologyException,
-        ClassExpressionNotInProfileException, FreshEntitiesException,
-        ReasonerInterruptedException, TimeOutException {
-        synchronized (delegate) {
-            log("getEquivalentClasses()", ce);
-            return logresult(delegate.getEquivalentClasses(ce));
-        }
+    public synchronized Node<OWLClass> getEquivalentClasses(OWLClassExpression ce) {
+        log("getEquivalentClasses()", ce);
+        return logresult(delegate.getEquivalentClasses(ce));
     }
 
     @Override
-    public NodeSet<OWLClass> getDisjointClasses(OWLClassExpression ce)
-        throws ReasonerInterruptedException, TimeOutException,
-        FreshEntitiesException, InconsistentOntologyException {
-        synchronized (delegate) {
-            log("getDisjointClasses()", ce);
-            return logresult(delegate.getDisjointClasses(ce));
-        }
+    public synchronized NodeSet<OWLClass> getDisjointClasses(OWLClassExpression ce) {
+        log("getDisjointClasses()", ce);
+        return logresult(delegate.getDisjointClasses(ce));
     }
 
     @Override
-    public Node<OWLObjectPropertyExpression> getTopObjectPropertyNode() {
-        synchronized (delegate) {
-            log("getTopObjectPropertyNode()");
-            return logresult(delegate.getTopObjectPropertyNode());
-        }
+    public synchronized Node<OWLObjectPropertyExpression> getTopObjectPropertyNode() {
+        log("getTopObjectPropertyNode()");
+        return logresult(delegate.getTopObjectPropertyNode());
     }
 
     @Override
-    public Node<OWLObjectPropertyExpression> getBottomObjectPropertyNode() {
-        synchronized (delegate) {
-            log("getBottomObjectPropertyNode()");
-            return logresult(delegate.getBottomObjectPropertyNode());
-        }
+    public synchronized Node<OWLObjectPropertyExpression> getBottomObjectPropertyNode() {
+        log("getBottomObjectPropertyNode()");
+        return logresult(delegate.getBottomObjectPropertyNode());
     }
 
     @Override
-    public NodeSet<OWLObjectPropertyExpression> getSubObjectProperties(
-        OWLObjectPropertyExpression pe, boolean direct)
-            throws InconsistentOntologyException, FreshEntitiesException,
-            ReasonerInterruptedException, TimeOutException {
-        synchronized (delegate) {
-            log("getSubObjectProperties()", pe, direct);
-            return logresult(delegate.getSubObjectProperties(pe, direct));
-        }
+    public synchronized NodeSet<OWLObjectPropertyExpression> getSubObjectProperties(OWLObjectPropertyExpression pe,
+        boolean direct) {
+        log("getSubObjectProperties()", pe, direct);
+        return logresult(delegate.getSubObjectProperties(pe, direct));
     }
 
     @Override
-    public NodeSet<OWLObjectPropertyExpression> getSuperObjectProperties(
-        OWLObjectPropertyExpression pe, boolean direct)
-            throws InconsistentOntologyException, FreshEntitiesException,
-            ReasonerInterruptedException, TimeOutException {
-        synchronized (delegate) {
-            log("getSuperObjectProperties()", pe, direct);
-            return logresult(delegate.getSuperObjectProperties(pe, direct));
-        }
+    public synchronized NodeSet<OWLObjectPropertyExpression> getSuperObjectProperties(OWLObjectPropertyExpression pe,
+        boolean direct) {
+        log("getSuperObjectProperties()", pe, direct);
+        return logresult(delegate.getSuperObjectProperties(pe, direct));
     }
 
     @Override
-    public Node<OWLObjectPropertyExpression> getEquivalentObjectProperties(
-        OWLObjectPropertyExpression pe)
-            throws InconsistentOntologyException, FreshEntitiesException,
-            ReasonerInterruptedException, TimeOutException {
-        synchronized (delegate) {
-            log("getEquivalentObjectProperties()", pe);
-            return logresult(delegate.getEquivalentObjectProperties(pe));
-        }
+    public synchronized Node<OWLObjectPropertyExpression> getEquivalentObjectProperties(
+        OWLObjectPropertyExpression pe) {
+        log("getEquivalentObjectProperties()", pe);
+        return logresult(delegate.getEquivalentObjectProperties(pe));
     }
 
     @Override
-    public NodeSet<OWLObjectPropertyExpression> getDisjointObjectProperties(
-        OWLObjectPropertyExpression pe)
-            throws InconsistentOntologyException, FreshEntitiesException,
-            ReasonerInterruptedException, TimeOutException {
-        synchronized (delegate) {
-            log("getDisjointObjectProperties()", pe);
-            return logresult(delegate.getDisjointObjectProperties(pe));
-        }
+    public synchronized NodeSet<OWLObjectPropertyExpression> getDisjointObjectProperties(
+        OWLObjectPropertyExpression pe) {
+        log("getDisjointObjectProperties()", pe);
+        return logresult(delegate.getDisjointObjectProperties(pe));
     }
 
     @Override
-    public Node<OWLObjectPropertyExpression> getInverseObjectProperties(
-        OWLObjectPropertyExpression pe)
-            throws InconsistentOntologyException, FreshEntitiesException,
-            ReasonerInterruptedException, TimeOutException {
-        synchronized (delegate) {
-            log("getInverseObjectProperties()", pe);
-            return logresult(delegate.getInverseObjectProperties(pe));
-        }
+    public synchronized Node<OWLObjectPropertyExpression> getInverseObjectProperties(OWLObjectPropertyExpression pe) {
+        log("getInverseObjectProperties()", pe);
+        return logresult(delegate.getInverseObjectProperties(pe));
     }
 
     @Override
-    public NodeSet<OWLClass> getObjectPropertyDomains(
-        OWLObjectPropertyExpression pe, boolean direct)
-            throws InconsistentOntologyException, FreshEntitiesException,
-            ReasonerInterruptedException, TimeOutException {
-        synchronized (delegate) {
-            log("getObjectPropertyDomains()", pe, direct);
-            return logresult(delegate.getObjectPropertyDomains(pe, direct));
-        }
+    public synchronized NodeSet<OWLClass> getObjectPropertyDomains(OWLObjectPropertyExpression pe, boolean direct) {
+        log("getObjectPropertyDomains()", pe, direct);
+        return logresult(delegate.getObjectPropertyDomains(pe, direct));
     }
 
     @Override
-    public NodeSet<OWLClass> getObjectPropertyRanges(
-        OWLObjectPropertyExpression pe, boolean direct)
-            throws InconsistentOntologyException, FreshEntitiesException,
-            ReasonerInterruptedException, TimeOutException {
-        synchronized (delegate) {
-            log("getObjectPropertyRanges() ", pe, direct);
-            return logresult(delegate.getObjectPropertyRanges(pe, direct));
-        }
+    public synchronized NodeSet<OWLClass> getObjectPropertyRanges(OWLObjectPropertyExpression pe, boolean direct) {
+        log("getObjectPropertyRanges() ", pe, direct);
+        return logresult(delegate.getObjectPropertyRanges(pe, direct));
     }
 
     @Override
-    public Node<OWLDataProperty> getTopDataPropertyNode() {
-        synchronized (delegate) {
-            log("getTopDataPropertyNode()");
-            return logresult(delegate.getTopDataPropertyNode());
-        }
+    public synchronized Node<OWLDataProperty> getTopDataPropertyNode() {
+        log("getTopDataPropertyNode()");
+        return logresult(delegate.getTopDataPropertyNode());
     }
 
     @Override
-    public Node<OWLDataProperty> getBottomDataPropertyNode() {
-        synchronized (delegate) {
-            log("getBottomDataPropertyNode()");
-            return logresult(delegate.getBottomDataPropertyNode());
-        }
+    public synchronized Node<OWLDataProperty> getBottomDataPropertyNode() {
+        log("getBottomDataPropertyNode()");
+        return logresult(delegate.getBottomDataPropertyNode());
     }
 
     @Override
-    public NodeSet<OWLDataProperty> getSubDataProperties(OWLDataProperty pe,
-        boolean direct) throws InconsistentOntologyException,
-            FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
-        synchronized (delegate) {
-            log("getSubDataProperties()", pe, direct);
-            return logresult(delegate.getSubDataProperties(pe, direct));
-        }
+    public synchronized NodeSet<OWLDataProperty> getSubDataProperties(OWLDataProperty pe, boolean direct) {
+        log("getSubDataProperties()", pe, direct);
+        return logresult(delegate.getSubDataProperties(pe, direct));
     }
 
     @Override
-    public NodeSet<OWLDataProperty> getSuperDataProperties(OWLDataProperty pe,
-        boolean direct) throws InconsistentOntologyException,
-            FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
-        synchronized (delegate) {
-            log("getSuperDataProperties()", pe, direct);
-            return logresult(delegate.getSuperDataProperties(pe, direct));
-        }
+    public synchronized NodeSet<OWLDataProperty> getSuperDataProperties(OWLDataProperty pe, boolean direct) {
+        log("getSuperDataProperties()", pe, direct);
+        return logresult(delegate.getSuperDataProperties(pe, direct));
     }
 
     @Override
-    public Node<OWLDataProperty> getEquivalentDataProperties(OWLDataProperty pe)
-        throws InconsistentOntologyException,
-        FreshEntitiesException, ReasonerInterruptedException,
-        TimeOutException {
-        synchronized (delegate) {
-            log("getEquivalentDataProperties()", pe);
-            return logresult(delegate.getEquivalentDataProperties(pe));
-        }
+    public synchronized Node<OWLDataProperty> getEquivalentDataProperties(OWLDataProperty pe) {
+        log("getEquivalentDataProperties()", pe);
+        return logresult(delegate.getEquivalentDataProperties(pe));
     }
 
     @Override
-    public NodeSet<OWLDataProperty> getDisjointDataProperties(
-        OWLDataPropertyExpression pe) throws InconsistentOntologyException,
-            FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
-        synchronized (delegate) {
-            log("getDisjointDataProperties()", pe);
-            return logresult(delegate.getDisjointDataProperties(pe));
-        }
+    public synchronized NodeSet<OWLDataProperty> getDisjointDataProperties(OWLDataPropertyExpression pe) {
+        log("getDisjointDataProperties()", pe);
+        return logresult(delegate.getDisjointDataProperties(pe));
     }
 
     @Override
-    public NodeSet<OWLClass> getDataPropertyDomains(OWLDataProperty pe,
-        boolean direct) throws InconsistentOntologyException,
-            FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
-        synchronized (delegate) {
-            log("getDataPropertyDomains()", pe, direct);
-            return logresult(delegate.getDataPropertyDomains(pe, direct));
-        }
+    public synchronized NodeSet<OWLClass> getDataPropertyDomains(OWLDataProperty pe, boolean direct) {
+        log("getDataPropertyDomains()", pe, direct);
+        return logresult(delegate.getDataPropertyDomains(pe, direct));
     }
 
     @Override
-    public NodeSet<OWLClass> getTypes(OWLNamedIndividual ind, boolean direct)
-        throws InconsistentOntologyException, FreshEntitiesException,
-        ReasonerInterruptedException, TimeOutException {
-        synchronized (delegate) {
-            log("getTypes()", ind, direct);
-            return logresult(delegate.getTypes(ind, direct));
-        }
+    public synchronized NodeSet<OWLClass> getTypes(OWLNamedIndividual ind, boolean direct) {
+        log("getTypes()", ind, direct);
+        return logresult(delegate.getTypes(ind, direct));
     }
 
     @Override
-    public NodeSet<OWLNamedIndividual> getInstances(OWLClassExpression ce,
-        boolean direct) throws InconsistentOntologyException,
-            ClassExpressionNotInProfileException, FreshEntitiesException,
-            ReasonerInterruptedException, TimeOutException {
-        synchronized (delegate) {
-            log("getInstances()", ce, direct);
-            return logresult(delegate.getInstances(ce, direct));
-        }
+    public synchronized NodeSet<OWLNamedIndividual> getInstances(OWLClassExpression ce, boolean direct) {
+        log("getInstances()", ce, direct);
+        return logresult(delegate.getInstances(ce, direct));
     }
 
     @Override
-    public NodeSet<OWLNamedIndividual> getObjectPropertyValues(
-        OWLNamedIndividual ind, OWLObjectPropertyExpression pe)
-            throws InconsistentOntologyException, FreshEntitiesException,
-            ReasonerInterruptedException, TimeOutException {
-        synchronized (delegate) {
-            log("getObjectPropertyValues()", ind, pe);
-            return logresult(delegate.getObjectPropertyValues(ind, pe));
-        }
+    public synchronized NodeSet<OWLNamedIndividual> getObjectPropertyValues(OWLNamedIndividual ind,
+        OWLObjectPropertyExpression pe) {
+        log("getObjectPropertyValues()", ind, pe);
+        return logresult(delegate.getObjectPropertyValues(ind, pe));
     }
 
     @Override
-    public Set<OWLLiteral> getDataPropertyValues(OWLNamedIndividual ind,
-        OWLDataProperty pe) throws InconsistentOntologyException,
-            FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
-        synchronized (delegate) {
-            log("getDataPropertyValues()", ind, pe);
-            return logresult(delegate.getDataPropertyValues(ind, pe));
-        }
+    public synchronized Set<OWLLiteral> getDataPropertyValues(OWLNamedIndividual ind, OWLDataProperty pe) {
+        log("getDataPropertyValues()", ind, pe);
+        return logresult(delegate.getDataPropertyValues(ind, pe));
     }
 
     @Override
-    public Node<OWLNamedIndividual> getSameIndividuals(OWLNamedIndividual ind)
-        throws InconsistentOntologyException, FreshEntitiesException,
-        ReasonerInterruptedException, TimeOutException {
-        synchronized (delegate) {
-            log("getSameIndividuals()", ind);
-            return logresult(delegate.getSameIndividuals(ind));
-        }
+    public synchronized Node<OWLNamedIndividual> getSameIndividuals(OWLNamedIndividual ind) {
+        log("getSameIndividuals()", ind);
+        return logresult(delegate.getSameIndividuals(ind));
     }
 
     @Override
-    public NodeSet<OWLNamedIndividual> getDifferentIndividuals(
-        OWLNamedIndividual ind) throws InconsistentOntologyException,
-            FreshEntitiesException, ReasonerInterruptedException,
-            TimeOutException {
-        synchronized (delegate) {
-            log("getDifferentIndividuals()", ind);
-            return logresult(delegate.getDifferentIndividuals(ind));
-        }
+    public synchronized NodeSet<OWLNamedIndividual> getDifferentIndividuals(OWLNamedIndividual ind) {
+        log("getDifferentIndividuals()", ind);
+        return logresult(delegate.getDifferentIndividuals(ind));
     }
 
     @Override
-    public long getTimeOut() {
-        synchronized (delegate) {
-            log("getTimeOut()");
-            return logresult(delegate.getTimeOut());
-        }
+    public synchronized long getTimeOut() {
+        log("getTimeOut()");
+        return logresult(Long.valueOf(delegate.getTimeOut())).longValue();
     }
 
     @Override
-    public FreshEntityPolicy getFreshEntityPolicy() {
-        synchronized (delegate) {
-            log("getFreshEntityPolicy()");
-            return logresult(delegate.getFreshEntityPolicy());
-        }
+    public synchronized FreshEntityPolicy getFreshEntityPolicy() {
+        log("getFreshEntityPolicy()");
+        return logresult(delegate.getFreshEntityPolicy());
     }
 
     @Override
-    public IndividualNodeSetPolicy getIndividualNodeSetPolicy() {
-        synchronized (delegate) {
-            log("getIndividualNodeSetPolicy()");
-            return logresult(delegate.getIndividualNodeSetPolicy());
-        }
+    public synchronized IndividualNodeSetPolicy getIndividualNodeSetPolicy() {
+        log("getIndividualNodeSetPolicy()");
+        return logresult(delegate.getIndividualNodeSetPolicy());
     }
 
     @Override
-    public void dispose() {
-        synchronized (delegate) {
-            log("dispose()");
-            delegate.dispose();
-        }
+    public synchronized void dispose() {
+        log("dispose()");
+        delegate.dispose();
     }
 }
